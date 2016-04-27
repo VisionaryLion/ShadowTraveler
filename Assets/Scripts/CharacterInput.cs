@@ -14,44 +14,72 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     float verticalSpeed;
     [SerializeField]
     float verticalAcceleration;
+    [SerializeField]
+    float friction;
     [Header("Speed in air:")]
     [SerializeField]
     float airSpeed;
     [SerializeField]
     float airAcceleration;
+    [SerializeField]
+    float drag;
     [Header("Jumping:")]
     [SerializeField]
     float gravity;
     [SerializeField]
     float jumpSpeed;
     [SerializeField]
+    float jumpCutSpeed;
+    [SerializeField]
+    int minJumpFrames;
+    [SerializeField]
     int maxJumpExecutionDelay;
     [SerializeField]
     int transToFallWaitFrames;
     [SerializeField]
     public MovementRestrictions movementRestrictions;
+    [Header("Update values:")]
+    [SerializeField]
+    bool shouldUpdateValues;
 
     //External reference
     private CharacterController2D charController;
 
     //State vars
-    private Vector2 velocity;
+    private Vector2 inputVelocity;
+    private Vector2 externalVelocity;
     private bool isJumpPressed;
     private bool isGrounded;
+    private float horizontalAxis;
+    private float verticalAxis;
 
     //Current handling vars
-    private float _gravity;
-    private float _horizontalSpeed;
-    private float _horizontalAcceleration;
-    private float _verticalSpeed;
-    private float _verticalAcceleration;
-    private float _airSpeed;
-    private float _airAcceleration;
-    private float _jumpSpeed;
+    [HideInInspector]
+    public float _gravity;
+    [HideInInspector]
+    public float _horizontalSpeed;
+    [HideInInspector]
+    public float _horizontalAcceleration;
+    [HideInInspector]
+    public float _verticalSpeed;
+    [HideInInspector]
+    public float _verticalAcceleration;
+    [HideInInspector]
+    public float _friction;
+    [HideInInspector]
+    public float _airSpeed;
+    [HideInInspector]
+    public float _airAcceleration;
+    [HideInInspector]
+    public float _drag;
+    [HideInInspector]
+    public float _jumpSpeed;
 
     //Jumpqueque
     private int framesSinceJumpRequest;
     private bool isJumpConsumed;
+    private bool isJumping;
+    private float jumpedFrames;
 
     //Is Grounded
     private int framesSinceLastGrounded;
@@ -80,36 +108,56 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 
     void FixedUpdate()
     {
-        velocity = charController.velocity;
+        if (shouldUpdateValues)
+            ResetMovementVars();
+        inputVelocity = charController.velocity;
         HandleInput();
         if (movementRestrictions.up || movementRestrictions.down)
         {
-            MoveHorizontal(_horizontalAcceleration, _horizontalSpeed);
-            MoveVertical(_verticalAcceleration, _verticalSpeed);
+            MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
+            MoveVertical(ref _verticalAcceleration, ref _verticalSpeed);
         }
         else
         {
-            velocity.y += _gravity;
             if (isGrounded)
             {
-                MoveHorizontal(_horizontalAcceleration, _horizontalSpeed);
+                isJumping = false;
+                MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
                 if (isJumpPressed)
                 {
                     if (movementRestrictions.canJump)
                     {
-                        velocity.y = _jumpSpeed;
+                        inputVelocity.y = _jumpSpeed;
+                        isJumping = true;
+                        jumpedFrames = 0;
                         isGrounded = false;
                     }
                     isJumpConsumed = true;
                 }
+                else
+                    inputVelocity.y = _gravity;
             }
             else
-                MoveHorizontal(_horizontalAcceleration, _horizontalSpeed);
+            {
+                MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
+                if (isJumping)
+                {
+                    jumpedFrames++;
+                    if (!Input.GetButton("Jump") && jumpedFrames >= minJumpFrames)
+                    {
+                        inputVelocity.y = jumpCutSpeed;
+                        isJumping = false;
+                    }
+                }
+                if (inputVelocity.y < 0)
+                    isJumping = false;
+                inputVelocity.y += _gravity;
+            }
         }
-        ApplyExternalRelativeForces();
-        ApplyExternalConstantForces();
-        ApplyExternalForces();
-        charController.move(velocity * Time.fixedDeltaTime);
+        PostProccessVelocitys();
+        if (externalVelocity.y != 0)
+            isJumping = false;
+        charController.move((inputVelocity + externalVelocity) * Time.fixedDeltaTime);
     }
 
     void HandleInput()
@@ -119,7 +167,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
             isGrounded = true;
             oldIsGrounded = true;
         }
-        else if (!isGrounded)
+        else
         {
             if (oldIsGrounded)
             {
@@ -143,73 +191,92 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         isJumpPressed = !isJumpConsumed && framesSinceJumpRequest <= maxJumpExecutionDelay;
     }
 
-    void MoveVertical(float acceleration, float maxSpeed)
+    void MoveVertical(ref float acceleration, ref float maxSpeed)
     {
-        float verticalAxis = Input.GetAxisRaw("Vertical");
+        verticalAxis = Input.GetAxisRaw("Vertical");
         if (verticalAxis == 0)
         {
-            velocity.y = 0;
+            inputVelocity.y = 0;
             return;
         }
         if (verticalAxis > 0)
         {
             if (!movementRestrictions.up)
             {
-                velocity.y = 0;
+                inputVelocity.y = 0;
                 return;
             }
-            if (velocity.y < 0)
-                velocity.y = 0;
+            if (inputVelocity.y < 0)
+                inputVelocity.y = 0;
         }
         else
         {
             if (!movementRestrictions.down)
             {
-                velocity.y = 0;
+                inputVelocity.y = 0;
                 return;
             }
-            if (velocity.y > 0)
-                velocity.y = 0;
-        }
-        velocity.y = Mathf.Clamp(velocity.y + acceleration * verticalAxis, -maxSpeed, maxSpeed);
+            if (inputVelocity.y > 0)
+                inputVelocity.y = 0;
+        }                                                                         
+
+        inputVelocity.y = Mathf.Clamp(inputVelocity.y + acceleration * verticalAxis, -maxSpeed, maxSpeed);
     }
 
-    void MoveHorizontal(float acceleration, float maxSpeed)
+    void MoveHorizontal(ref float acceleration, ref float maxSpeed)
     {
-        float horizontalAxis = Input.GetAxisRaw("Horizontal");
+        horizontalAxis = Input.GetAxisRaw("Horizontal");
+        
         if (horizontalAxis == 0)
         {
-            velocity.x = 0;
+            inputVelocity.x = 0;
             return;
         }
         if (horizontalAxis > 0)
         {
             if (!movementRestrictions.right)
             {
-                velocity.x = 0;
+                inputVelocity.x = 0;
                 return;
             }
-            if (velocity.x < 0)
-                velocity.x = 0;
+            if (inputVelocity.x < 0)
+                inputVelocity.x = 0;
         }
         else
         {
             if (!movementRestrictions.left)
             {
-                velocity.x = 0;
+                inputVelocity.x = 0;
                 return;
             }
-            if (velocity.x > 0)
-                velocity.x = 0;
+            if (inputVelocity.x > 0)
+                inputVelocity.x = 0;
         }
-        velocity.x = Mathf.Clamp(velocity.x + acceleration * horizontalAxis, -maxSpeed, maxSpeed);
+
+        inputVelocity.x = Mathf.Clamp(inputVelocity.x + acceleration * horizontalAxis, -maxSpeed, maxSpeed);
+    }
+
+    void PostProccessVelocitys ()
+    {
+        ApplyExternalConstantForces();
+        ApplyExternalForces();
+        ApplyExternalRelativeForces();
+        if (charController.isGrounded)
+        {
+            ApplyDamping(ref externalVelocity, ref _friction);
+        }
+        else
+        {
+            ApplyDamping(ref externalVelocity, ref _drag);
+        }
+
     }
 
     void ApplyExternalConstantForces()
     {
         for (int i = 0; i < externalConstantForces.Count; i++)
         {
-            velocity += externalConstantForces[i];
+            externalVelocity += externalConstantForces[i];
         }
     }
 
@@ -217,7 +284,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     {
         for (int i = 0; i < externalForces.Count; i++)
         {
-            velocity += externalForces[i]();
+            externalVelocity += externalForces[i]();
         }
         externalForces.Clear();
     }
@@ -227,28 +294,22 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         for (int i = 0; i < externalRelativeForces.Count; i++)
         {
             Vector2 force = externalRelativeForces[i]();
-            if ((velocity.x != 0 ))//&& force.x < 0) || (velocity.x < 0 && force.x > 0))
+            if (inputVelocity.x != 0 )//&& force.x < 0) || (velocity.x < 0 && force.x > 0))
                 force.x = 0;
             if (movementRestrictions.up || movementRestrictions.down)
             {
-                if ((velocity.y != 0))// && force.y < 0) || (velocity.y < 0 && force.y > 0))
+                if ((inputVelocity.y != 0))// && force.y < 0) || (velocity.y < 0 && force.y > 0))
                     force.y = 0;
             }
-            velocity += force;
+            inputVelocity += force;
         }
         externalRelativeForces.Clear();
     }
 
-    public void SetNormalMovementVars(float gravity, float horizontalSpeed, float horizontalAcceleration, float verticalSpeed, float verticalAcceleration, float airSpeed, float airAcceleration, float jumpSpeed)
+    void ApplyDamping(ref Vector2 velocity, ref float damp)
     {
-        _gravity = gravity;
-        _horizontalSpeed = horizontalSpeed;
-        _horizontalAcceleration = horizontalAcceleration;
-        _verticalSpeed = verticalSpeed;
-        _verticalAcceleration = verticalAcceleration;
-        _airSpeed = airSpeed;
-        _airAcceleration = airAcceleration;
-        _jumpSpeed = jumpSpeed;
+        velocity = velocity * (1 - Time.fixedDeltaTime * damp);
+        //velocity += -velocity.normalized * (Mathf.Sqrt(velocity.magnitude) * drag);
     }
 
     public void ResetMovementVars()
@@ -258,8 +319,10 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         _horizontalAcceleration = horizontalAcceleration;
         _verticalSpeed = verticalSpeed;
         _verticalAcceleration = verticalAcceleration;
+        _friction = friction;
         _airSpeed = airSpeed;
         _airAcceleration = airAcceleration;
+        _drag = drag;
         _jumpSpeed = jumpSpeed;
     }
 
@@ -294,7 +357,8 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 
     void OnGUI()
     {
-        GUILayout.Label("velocity = " + velocity);
+        GUILayout.Label("input velocity = " + inputVelocity);
+        GUILayout.Label("external velocity = " + externalVelocity);
         GUILayout.Label("isGrounded = " + isGrounded + "(" + charController.isGrounded + ")");
         GUILayout.Label("shouldJump = " + isJumpPressed + "(" + isJumpConsumed + ")");
     }
