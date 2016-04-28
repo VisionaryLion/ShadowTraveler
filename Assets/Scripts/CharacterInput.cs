@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Prime31;
 using System;
+using System.Collections;
 
 public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 {
@@ -36,6 +37,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     int maxJumpExecutionDelay;
     [SerializeField]
     int transToFallWaitFrames;
+    [Header("WallJumping:")]
     [SerializeField]
     public MovementRestrictions movementRestrictions;
     [Header("Update values:")]
@@ -78,11 +80,9 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     //Jumpqueque
     private int framesSinceJumpRequest;
     private bool isJumpConsumed;
-    private bool isJumping;
-    private float jumpedFrames;
 
     //Is Grounded
-    private int framesSinceLastGrounded;
+    private Coroutine lateIsGrounded;
     private bool oldIsGrounded;
 
     //External Forces
@@ -106,12 +106,17 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         obj.collider.SendMessage("OnFakeCollisionStay2D", this, SendMessageOptions.DontRequireReceiver);
     }
 
+    void Update()
+    {
+        HandleInput();
+    }
+
     void FixedUpdate()
     {
         if (shouldUpdateValues)
             ResetMovementVars();
+
         inputVelocity = charController.velocity;
-        HandleInput();
         if (movementRestrictions.up || movementRestrictions.down)
         {
             MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
@@ -119,44 +124,29 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         }
         else
         {
+            if (!charController.isGrounded)
+                inputVelocity.y += _gravity;
+            else
+                inputVelocity.y = _gravity;
+
             if (isGrounded)
             {
-                isJumping = false;
                 MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
                 if (isJumpPressed)
                 {
                     if (movementRestrictions.canJump)
                     {
                         inputVelocity.y = _jumpSpeed;
-                        isJumping = true;
-                        jumpedFrames = 0;
                         isGrounded = false;
+                        StartCoroutine(AnalogJump());
                     }
                     isJumpConsumed = true;
                 }
-                else
-                    inputVelocity.y = _gravity;
             }
             else
-            {
                 MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
-                if (isJumping)
-                {
-                    jumpedFrames++;
-                    if (!Input.GetButton("Jump") && jumpedFrames >= minJumpFrames)
-                    {
-                        inputVelocity.y = jumpCutSpeed;
-                        isJumping = false;
-                    }
-                }
-                if (inputVelocity.y < 0)
-                    isJumping = false;
-                inputVelocity.y += _gravity;
-            }
         }
         PostProccessVelocitys();
-        if (externalVelocity.y != 0)
-            isJumping = false;
         charController.move((inputVelocity + externalVelocity) * Time.fixedDeltaTime);
     }
 
@@ -164,20 +154,15 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     {
         if (charController.isGrounded)
         {
+            if (!isGrounded && lateIsGrounded != null)
+                StopCoroutine(lateIsGrounded);
             isGrounded = true;
             oldIsGrounded = true;
         }
-        else
+        else if (oldIsGrounded)
         {
-            if (oldIsGrounded)
-            {
-                framesSinceLastGrounded = 0;
-                oldIsGrounded = false;
-            }
-            else if (framesSinceLastGrounded >= transToFallWaitFrames)
-                isGrounded = false;
-            else
-                framesSinceLastGrounded++;
+            oldIsGrounded = false;
+            lateIsGrounded = StartCoroutine(LateIsGrounded());
         }
         if (Input.GetButtonDown("Jump"))
         {
@@ -218,7 +203,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
             }
             if (inputVelocity.y > 0)
                 inputVelocity.y = 0;
-        }                                                                         
+        }
 
         inputVelocity.y = Mathf.Clamp(inputVelocity.y + acceleration * verticalAxis, -maxSpeed, maxSpeed);
     }
@@ -226,7 +211,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     void MoveHorizontal(ref float acceleration, ref float maxSpeed)
     {
         horizontalAxis = Input.GetAxisRaw("Horizontal");
-        
+
         if (horizontalAxis == 0)
         {
             inputVelocity.x = 0;
@@ -256,7 +241,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         inputVelocity.x = Mathf.Clamp(inputVelocity.x + acceleration * horizontalAxis, -maxSpeed, maxSpeed);
     }
 
-    void PostProccessVelocitys ()
+    void PostProccessVelocitys()
     {
         ApplyExternalConstantForces();
         ApplyExternalForces();
@@ -294,7 +279,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         for (int i = 0; i < externalRelativeForces.Count; i++)
         {
             Vector2 force = externalRelativeForces[i]();
-            if (inputVelocity.x != 0 )//&& force.x < 0) || (velocity.x < 0 && force.x > 0))
+            if (inputVelocity.x != 0)//&& force.x < 0) || (velocity.x < 0 && force.x > 0))
                 force.x = 0;
             if (movementRestrictions.up || movementRestrictions.down)
             {
@@ -310,6 +295,39 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     {
         velocity = velocity * (1 - Time.fixedDeltaTime * damp);
         //velocity += -velocity.normalized * (Mathf.Sqrt(velocity.magnitude) * drag);
+    }
+
+    private float jumpedFrames;
+    IEnumerator AnalogJump()
+    {
+        jumpedFrames = 1;
+        yield return new WaitForFixedUpdate();
+        while (!charController.isGrounded && jumpedFrames < minJumpFrames)
+        {
+            yield return new WaitForFixedUpdate();
+            jumpedFrames++;
+        }
+        while (!charController.isGrounded && inputVelocity.y > jumpCutSpeed)
+        {
+            if (!Input.GetButton("Jump"))
+            {
+                charController.velocity.y = jumpCutSpeed;
+                break;
+            }
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    private int framesSinceLastGrounded;
+    IEnumerator LateIsGrounded()
+    {
+        framesSinceLastGrounded = 0;
+        while (framesSinceLastGrounded < transToFallWaitFrames)
+        {
+            yield return new WaitForFixedUpdate();
+            framesSinceLastGrounded++;
+        }
+        isGrounded = false;
     }
 
     public void ResetMovementVars()
