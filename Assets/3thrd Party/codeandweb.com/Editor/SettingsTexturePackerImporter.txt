@@ -1,0 +1,14 @@
+version: 2
+importPivots: 1
+tpsheetFileNames:
+- Assets/codeandweb.com/Example/SpriteSheet/sprites.tpsheet
+- Assets/LitAssets/Peasant.tpsheet
+- Assets/3thrd Party/LitAssets/Peasant.tpsheet
+textureFileNames:
+- Assets/codeandweb.com/Example/SpriteSheet/sprites.png
+- Assets/LitAssets/Peasant.png
+- Assets/3thrd Party/LitAssets/Peasant.png
+normalmapFileNames:
+- Assets/codeandweb.com/Example/SpriteSheet/sprites_n.png
+- Assets/LitAssets/Peasant_n
+- Assets/3thrd Party/LitAssets/Peasant_n

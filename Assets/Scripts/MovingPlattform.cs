@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using Prime31;
 using System.Collections;
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CharacterController2D))]
 public class MovingPlattform : MonoBehaviour
 {
 
@@ -17,19 +18,18 @@ public class MovingPlattform : MonoBehaviour
     [SerializeField]
     float targetRadius = 0.5f;
 
-    new Rigidbody2D rigidbody;
+    CharacterController2D charController;
     float plattformSpeed;
     int nextPointToReach;
     //If set to false, the plattform will not move.
     bool shouldMove = true;
     float targetRadiusSqr;
+    Vector3 velocity;
 
     void Awake()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
-
-        //Make sure the rigidbody is set to kinematic
-        rigidbody.isKinematic = true;
+        charController = GetComponent<CharacterController2D>();
+        charController.onControllerCollidedEvent += CharController_onControllerCollidedEvent;
 
         //Square the targetrad, to avoid root calculation later
         targetRadiusSqr = targetRadius * targetRadius;
@@ -43,6 +43,15 @@ public class MovingPlattform : MonoBehaviour
 
         //Calc the plattform speed
         plattformSpeed = CalcTotalTravelLength() / timeForOneTravel;
+    }
+
+    private void CharController_onControllerCollidedEvent(RaycastHit2D obj)
+    {
+        ICharacterControllerInput2D iInput = obj.collider.GetComponent<ICharacterControllerInput2D>();
+        if (iInput != null)
+        {
+            iInput.AddForce(GetInverseVelocity);
+        }
     }
 
     float CalcTotalTravelLength()
@@ -59,17 +68,17 @@ public class MovingPlattform : MonoBehaviour
             return;
 
         //Calc the direction
-        Vector3 targetDir = points[nextPointToReach].position - transform.position;
+        velocity = points[nextPointToReach].position - transform.position;
 
         //Did we arrive at our target?
-        if (targetDir.sqrMagnitude < targetRadiusSqr)
+        if (velocity.sqrMagnitude < targetRadiusSqr)
         {
             AdvancePointCycle();
         }
 
         //We didnt so move on
-        targetDir.Normalize();
-        rigidbody.velocity = targetDir * plattformSpeed;
+        velocity.Normalize();
+        charController.move(velocity * plattformSpeed * Time.fixedDeltaTime);
     }
 
     void AdvancePointCycle()
@@ -92,6 +101,11 @@ public class MovingPlattform : MonoBehaviour
 
     Vector2 GetVelocity ()
     {
-        return rigidbody.velocity;
+        return charController.velocity;
+    }
+
+    Vector2 GetInverseVelocity()
+    {
+        return velocity;
     }
 }

@@ -4,6 +4,8 @@ using Prime31;
 using System;
 using System.Collections;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(CharacterController2D))]
 public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 {
     [Header("Speed on ground:")]
@@ -50,6 +52,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 
     //External reference
     private CharacterController2D charController;
+    private Animator animator;
 
     //State vars
     private Vector2 inputVelocity;
@@ -58,6 +61,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     private bool isGrounded;
     private float horizontalAxis;
     private float verticalAxis;
+    private bool isTurnedLeft;
 
     //Current handling vars
     [HideInInspector]
@@ -97,12 +101,14 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 
     void Awake()
     {
+        animator = GetComponent<Animator>();
         charController = GetComponent<CharacterController2D>();
         charController.onControllerCollidedEvent += CharController_onControllerCollidedEvent;
         externalConstantForces = new List<Vector2>(2);
         externalForces = new List<GetForce>(2);
         externalRelativeForces = new List<GetForce>(2);
         ResetMovementVars();
+        isTurnedLeft = false;
     }
 
     private void CharController_onControllerCollidedEvent(RaycastHit2D obj)
@@ -122,6 +128,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
             ResetMovementVars();
 
         inputVelocity = charController.velocity;
+        externalVelocity = Vector2.zero;
         if (movementRestrictions.up || movementRestrictions.down)
         {
             MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
@@ -174,6 +181,22 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         }
         PostProccessVelocitys();
         charController.move((inputVelocity + externalVelocity) * Time.fixedDeltaTime);
+        UpdateAnimatorVars();
+    }
+
+    void UpdateAnimatorVars()
+    {
+        if ((inputVelocity.x < 0 && !isTurnedLeft) || (inputVelocity.x > 0 && isTurnedLeft))
+        {
+            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+            isTurnedLeft = !isTurnedLeft;
+        }
+        animator.SetFloat("VelocityX", inputVelocity.x);
+        animator.SetFloat("VelocityY", inputVelocity.y);
+        animator.SetBool("IsGrounded", charController.isGrounded);
+        animator.SetFloat("AbsX", Mathf.Abs(inputVelocity.x));
+        animator.SetFloat("AbsY", Mathf.Abs(inputVelocity.y));
+        animator.SetBool("HasMoveInput",inputVelocity != Vector2.zero);
     }
 
     void HandleInput()
@@ -272,14 +295,14 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         ApplyExternalConstantForces();
         ApplyExternalForces();
         ApplyExternalRelativeForces();
-        if (charController.isGrounded)
+        /*if (charController.isGrounded)
         {
             ApplyDamping(ref externalVelocity, ref _friction);
         }
         else
         {
             ApplyDamping(ref externalVelocity, ref _drag);
-        }
+        }*/
 
     }
 
@@ -312,7 +335,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
                 if ((inputVelocity.y != 0))// && force.y < 0) || (velocity.y < 0 && force.y > 0))
                     force.y = 0;
             }
-            inputVelocity += force;
+            externalVelocity += force;
         }
         externalRelativeForces.Clear();
     }
