@@ -39,6 +39,10 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     int transToFallWaitFrames;
     [Header("WallJumping:")]
     [SerializeField]
+    Vector2 wallJumpForce;
+    [SerializeField]
+    int wallJumpNoControllFrames;
+    [SerializeField]
     public MovementRestrictions movementRestrictions;
     [Header("Update values:")]
     [SerializeField]
@@ -111,6 +115,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         HandleInput();
     }
 
+    private float wallJumpFrame;
     void FixedUpdate()
     {
         if (shouldUpdateValues)
@@ -144,7 +149,28 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
                 }
             }
             else
-                MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
+            {
+                if (isJumpPressed)
+                {
+                    if (charController.collisionState.left)
+                    {
+                        inputVelocity = wallJumpForce;
+                        isJumpConsumed = true;
+                        wallJumpFrame = 0;
+                    }
+                    else if (charController.collisionState.right)
+                    {
+                        inputVelocity.x = -wallJumpForce.x;
+                        inputVelocity.y = wallJumpForce.y;
+                        isJumpConsumed = true;
+                        wallJumpFrame = 0;
+                    }
+                }
+                if (wallJumpFrame > wallJumpNoControllFrames)
+                    MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
+                else
+                    wallJumpFrame++;
+            }
         }
         PostProccessVelocitys();
         charController.move((inputVelocity + externalVelocity) * Time.fixedDeltaTime);
