@@ -7,7 +7,6 @@ using UnityEngine;
 interface ICharacterControllerInput2D
 {
     void ResetMovementVars();
-    void ResetRestrictions();
     void AddConstantForce(Vector2 force);
     void AddForce(CharacterInput.GetForce force);
     void RemoveConstantForce(Vector2 force);

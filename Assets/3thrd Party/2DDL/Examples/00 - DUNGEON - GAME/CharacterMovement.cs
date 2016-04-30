@@ -2,7 +2,8 @@
 using System.Collections;
 using Prime31;
 
-
+//THIS SCRIPT WILL NOT WORK PROPERLY, BECAUSE OF CHANGES IN THE CHARACTERCONTROLLER2D SCRIPT!!!!!!!
+//COMMENTED THIS LINE OF: _controller.move( _velocity * Time.deltaTime);
 public class CharacterMovement : MonoBehaviour
 {
 	// movement config
@@ -162,7 +163,7 @@ public class CharacterMovement : MonoBehaviour
 				}
 
 				yield return new WaitForEndOfFrame();
-				_controller.move( _velocity * Time.deltaTime );
+				//_controller.move( _velocity * Time.deltaTime);
 				
 				// grab our current _velocity to use as a base for all calculations
 				_velocity = _controller.velocity;
@@ -223,7 +224,7 @@ public class CharacterMovement : MonoBehaviour
 				
 
 
-				_controller.move( _velocity * Time.deltaTime );
+				//_controller.move( _velocity * Time.deltaTime );
 				
 				// grab our current _velocity to use as a base for all calculations
 				_velocity = _controller.velocity;

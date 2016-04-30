@@ -78,7 +78,7 @@ public class MovingPlattform : MonoBehaviour
 
         //We didnt so move on
         velocity.Normalize();
-        charController.move(velocity * plattformSpeed * Time.fixedDeltaTime);
+        charController.move(velocity * plattformSpeed * Time.fixedDeltaTime, false);
     }
 
     void AdvancePointCycle()

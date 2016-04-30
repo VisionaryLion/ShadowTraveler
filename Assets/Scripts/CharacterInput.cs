@@ -8,6 +8,9 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController2D))]
 public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 {
+    [Header("External References:")]
+    [SerializeField]
+    Transform spriteRoot;
     [Header("Speed on ground:")]
     [SerializeField]
     float horizontalSpeed;
@@ -45,6 +48,9 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     [SerializeField]
     int wallJumpNoControllFrames;
     [SerializeField]
+    float wallSlidingSpeed;
+
+    [SerializeField]
     public MovementRestrictions movementRestrictions;
     [Header("Update values:")]
     [SerializeField]
@@ -62,6 +68,10 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     private float horizontalAxis;
     private float verticalAxis;
     private bool isTurnedLeft;
+    private bool isWallSliding;
+    private bool shouldUseWallSlidingSpeed;
+    private bool isJumping;
+    private Coroutine wallJump;
 
     //Current handling vars
     [HideInInspector]
@@ -98,6 +108,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
     private List<Vector2> externalConstantForces;
     private List<GetForce> externalForces;
     private List<GetForce> externalRelativeForces;
+    private List<OutFadingForce> externalOutFadingForces;
 
     void Awake()
     {
@@ -107,8 +118,11 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         externalConstantForces = new List<Vector2>(2);
         externalForces = new List<GetForce>(2);
         externalRelativeForces = new List<GetForce>(2);
+        externalOutFadingForces = new List<OutFadingForce>(2);
         ResetMovementVars();
         isTurnedLeft = false;
+        if (spriteRoot.Equals(this))
+            Debug.LogError("The spriteRoot an script should never be attached to the same GameObject");
     }
 
     private void CharController_onControllerCollidedEvent(RaycastHit2D obj)
@@ -121,21 +135,22 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         HandleInput();
     }
 
-    private float wallJumpFrame;
+    private float wallJumpFrames;
     void FixedUpdate()
     {
         if (shouldUpdateValues)
             ResetMovementVars();
 
-        inputVelocity = charController.velocity;
+        inputVelocity = Vector2.zero;
         externalVelocity = Vector2.zero;
-        if (movementRestrictions.up || movementRestrictions.down)
+        if (movementRestrictions.CanMoveVertical)
         {
             MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
             MoveVertical(ref _verticalAcceleration, ref _verticalSpeed);
         }
         else
         {
+            //Apply gravity
             if (!charController.isGrounded)
                 inputVelocity.y += _gravity;
             else
@@ -146,65 +161,87 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
                 MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
                 if (isJumpPressed)
                 {
-                    if (movementRestrictions.canJump)
-                    {
-                        inputVelocity.y = _jumpSpeed;
-                        isGrounded = false;
+                    //Jump
+                    if (movementRestrictions.CanJump)
                         StartCoroutine(AnalogJump());
-                    }
                     isJumpConsumed = true;
                 }
             }
             else
             {
-                if (isJumpPressed)
+                CheckForSideCollisions();
+                if (isWallSliding)
                 {
-                    if (charController.collisionState.left)
-                    {
-                        inputVelocity = wallJumpForce;
-                        isJumpConsumed = true;
-                        wallJumpFrame = 0;
-                    }
-                    else if (charController.collisionState.right)
-                    {
-                        inputVelocity.x = -wallJumpForce.x;
-                        inputVelocity.y = wallJumpForce.y;
-                        isJumpConsumed = true;
-                        wallJumpFrame = 0;
-                    }
+                    if (isJumpPressed)
+                        StartCoroutine(WallJump());
+                    else if (shouldUseWallSlidingSpeed && !isJumping)
+                        inputVelocity.y = wallSlidingSpeed;
                 }
-                if (wallJumpFrame > wallJumpNoControllFrames)
-                    MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
-                else
-                    wallJumpFrame++;
+                MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
             }
         }
-        PostProccessVelocitys();
-        charController.move((inputVelocity + externalVelocity) * Time.fixedDeltaTime);
+        ApplyExternalForces();
+        charController.move((inputVelocity + externalVelocity) * Time.fixedDeltaTime, false);
         UpdateAnimatorVars();
+        SetFace();
     }
 
     void UpdateAnimatorVars()
     {
-        if ((inputVelocity.x < 0 && !isTurnedLeft) || (inputVelocity.x > 0 && isTurnedLeft))
-        {
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-            isTurnedLeft = !isTurnedLeft;
-        }
         animator.SetFloat("VelocityX", inputVelocity.x);
         animator.SetFloat("VelocityY", inputVelocity.y);
         animator.SetBool("IsGrounded", charController.isGrounded);
         animator.SetFloat("AbsX", Mathf.Abs(inputVelocity.x));
         animator.SetFloat("AbsY", Mathf.Abs(inputVelocity.y));
-        animator.SetBool("HasMoveInput",inputVelocity != Vector2.zero);
+        animator.SetBool("HasMoveInput", inputVelocity != Vector2.zero);
+    }
+
+    void SetFace()
+    {
+        if ((inputVelocity.x < 0 && !isTurnedLeft) || (inputVelocity.x > 0 && isTurnedLeft))
+        {
+            spriteRoot.localScale = new Vector3(-spriteRoot.localScale.x, spriteRoot.localScale.y, spriteRoot.localScale.z);
+            isTurnedLeft = !isTurnedLeft;
+        }
+    }
+
+    private const float wallJumpCollisionDistance = 0.01f;
+
+    void CheckForSideCollisions()
+    {
+        if (charController.velocity.x == 0)
+        {
+            charController.manuallyCheckForCollisions(wallJumpCollisionDistance);
+            charController.manuallyCheckForCollisions(-wallJumpCollisionDistance);
+        }
+        else if (charController.velocity.x > 0)
+            charController.manuallyCheckForCollisions(-wallJumpCollisionDistance);
+        else
+            charController.manuallyCheckForCollisions(wallJumpCollisionDistance);
+        if (charController.collisionState.left || charController.collisionState.right)
+            isWallSliding = true;
+        else
+            isWallSliding = false;
     }
 
     void HandleInput()
     {
         if (charController.isGrounded)
         {
-            if (!isGrounded && lateIsGrounded != null)
-                StopCoroutine(lateIsGrounded);
+            if (!isGrounded)
+            {
+                if (wallJump != null)
+                {
+                    StopCoroutine(wallJump);
+                    movementRestrictions.CanMoveHorizontal = true;
+                }
+                if (lateIsGrounded != null)
+                {
+                    StopCoroutine(lateIsGrounded);
+                    isJumping = false;
+                    wallJumpFrames = wallJumpNoControllFrames;
+                }
+            }
             isGrounded = true;
             oldIsGrounded = true;
         }
@@ -227,6 +264,8 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 
     void MoveVertical(ref float acceleration, ref float maxSpeed)
     {
+        if (!movementRestrictions.CanMoveVertical)
+            return;
         verticalAxis = Input.GetAxisRaw("Vertical");
         if (verticalAxis == 0)
         {
@@ -235,7 +274,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         }
         if (verticalAxis > 0)
         {
-            if (!movementRestrictions.up)
+            if (!movementRestrictions.CanMoveUp)
             {
                 inputVelocity.y = 0;
                 return;
@@ -245,7 +284,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         }
         else
         {
-            if (!movementRestrictions.down)
+            if (!movementRestrictions.CanMoveDown)
             {
                 inputVelocity.y = 0;
                 return;
@@ -259,8 +298,10 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
 
     void MoveHorizontal(ref float acceleration, ref float maxSpeed)
     {
-        horizontalAxis = Input.GetAxisRaw("Horizontal");
+        if (!movementRestrictions.CanMoveHorizontal)
+            return;
 
+        horizontalAxis = Input.GetAxisRaw("Horizontal");
         if (horizontalAxis == 0)
         {
             inputVelocity.x = 0;
@@ -268,7 +309,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         }
         if (horizontalAxis > 0)
         {
-            if (!movementRestrictions.right)
+            if (!movementRestrictions.CanMoveRight)
             {
                 inputVelocity.x = 0;
                 return;
@@ -278,7 +319,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         }
         else
         {
-            if (!movementRestrictions.left)
+            if (!movementRestrictions.CanMoveLeft)
             {
                 inputVelocity.x = 0;
                 return;
@@ -290,66 +331,56 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         inputVelocity.x = Mathf.Clamp(inputVelocity.x + acceleration * horizontalAxis, -maxSpeed, maxSpeed);
     }
 
-    void PostProccessVelocitys()
-    {
-        ApplyExternalConstantForces();
-        ApplyExternalForces();
-        ApplyExternalRelativeForces();
-        /*if (charController.isGrounded)
-        {
-            ApplyDamping(ref externalVelocity, ref _friction);
-        }
-        else
-        {
-            ApplyDamping(ref externalVelocity, ref _drag);
-        }*/
-
-    }
-
-    void ApplyExternalConstantForces()
-    {
-        for (int i = 0; i < externalConstantForces.Count; i++)
-        {
-            externalVelocity += externalConstantForces[i];
-        }
-    }
-
     void ApplyExternalForces()
     {
+        //normal forces
         for (int i = 0; i < externalForces.Count; i++)
         {
             externalVelocity += externalForces[i]();
         }
         externalForces.Clear();
-    }
 
-    void ApplyExternalRelativeForces()
-    {
+        //relativ forces
         for (int i = 0; i < externalRelativeForces.Count; i++)
         {
             Vector2 force = externalRelativeForces[i]();
-            if (inputVelocity.x != 0)//&& force.x < 0) || (velocity.x < 0 && force.x > 0))
+            if (inputVelocity.x != 0)
                 force.x = 0;
-            if (movementRestrictions.up || movementRestrictions.down)
+            if (movementRestrictions.CanMoveVertical)
             {
-                if ((inputVelocity.y != 0))// && force.y < 0) || (velocity.y < 0 && force.y > 0))
+                if (inputVelocity.y != 0)
                     force.y = 0;
             }
             externalVelocity += force;
         }
         externalRelativeForces.Clear();
-    }
 
-    void ApplyDamping(ref Vector2 velocity, ref float damp)
-    {
-        velocity = velocity * (1 - Time.fixedDeltaTime * damp);
-        //velocity += -velocity.normalized * (Mathf.Sqrt(velocity.magnitude) * drag);
+        //constant forces
+        for (int i = 0; i < externalConstantForces.Count; i++)
+        {
+            externalVelocity += externalConstantForces[i];
+        }
+
+        //outfading forces
+        for (int i = 0; i < externalOutFadingForces.Count; i++)
+        {
+            externalVelocity += externalOutFadingForces[i].force;
+            externalOutFadingForces[i].DampForce(charController.isGrounded);
+            if (externalOutFadingForces[i].IsForceNull())
+            {
+                externalOutFadingForces.RemoveAt(i);
+                i--;
+            }
+        }
     }
 
     private float jumpedFrames;
     IEnumerator AnalogJump()
     {
         jumpedFrames = 1;
+        isJumping = true;
+        isGrounded = false;
+        AddOutFadingForce(new OutFadingForce(Vector2.up * _jumpSpeed, drag, float.MaxValue));
         yield return new WaitForFixedUpdate();
         while (!charController.isGrounded && jumpedFrames < minJumpFrames)
         {
@@ -365,6 +396,7 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
             }
             yield return new WaitForFixedUpdate();
         }
+        isJumping = false;
     }
 
     private int framesSinceLastGrounded;
@@ -379,6 +411,29 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         isGrounded = false;
     }
 
+    IEnumerator WallJump()
+    {
+        isJumpConsumed = true;
+        wallJumpFrames = 0;
+        shouldUseWallSlidingSpeed = false;
+        Vector2 wallJumpVelocity = wallJumpForce;
+        if (charController.collisionState.right)
+        {
+            wallJumpVelocity.x = -wallJumpVelocity.x;
+        }
+        AddOutFadingForce(new OutFadingForce(wallJumpVelocity, drag, float.MaxValue));
+        movementRestrictions.CanMoveHorizontal = false;
+        while (wallJumpFrames < wallJumpNoControllFrames)
+        {
+            yield return new WaitForFixedUpdate();
+            wallJumpFrames++;
+        }
+        movementRestrictions.CanMoveHorizontal = true;
+        shouldUseWallSlidingSpeed = true;
+    }
+
+    //public
+
     public void ResetMovementVars()
     {
         _gravity = gravity;
@@ -391,15 +446,6 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         _airAcceleration = airAcceleration;
         _drag = drag;
         _jumpSpeed = jumpSpeed;
-    }
-
-    public void ResetRestrictions()
-    {
-        movementRestrictions.up = false;
-        movementRestrictions.down = false;
-        movementRestrictions.left = true;
-        movementRestrictions.right = true;
-        movementRestrictions.canJump = true;
     }
 
     public void AddConstantForce(Vector2 force)
@@ -417,31 +463,163 @@ public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
         externalRelativeForces.Add(force);
     }
 
+    public void AddOutFadingForce(OutFadingForce force)
+    {
+        externalOutFadingForces.Add(force);
+    }
+
     public void RemoveConstantForce(Vector2 force)
     {
         externalConstantForces.Remove(force);
     }
 
+    //debug
+
     void OnGUI()
     {
         GUILayout.Label("input velocity = " + inputVelocity);
         GUILayout.Label("external velocity = " + externalVelocity);
-        GUILayout.Label("isGrounded = " + isGrounded + "(" + charController.isGrounded + ")");
-        GUILayout.Label("shouldJump = " + isJumpPressed + "(" + isJumpConsumed + ")");
+        GUILayout.Label("isGrounded = " + isGrounded + "( raw = " + charController.isGrounded + ")");
+        GUILayout.Label("shouldJump = " + isJumpPressed + "( consumed = " + isJumpConsumed + ")");
+        GUILayout.Label("isWallSliding = " + isWallSliding);
     }
 
     [System.Serializable]
     public class MovementRestrictions
     {
+        public bool CanMoveRight
+        {
+            get { return _right; }
+            set
+            {
+                if (value)
+                    _horizontal = true;
+                _right = value;
+            }
+        }
+        public bool CanMoveLeft
+        {
+            get { return _left; }
+            set
+            {
+                if (value)
+                    _horizontal = true;
+                _left = value;
+            }
+        }
+        public bool CanMoveUp
+        {
+            get { return _up; }
+            set
+            {
+                if (value)
+                {
+                    _vertical = true;
+                    _jump = false;
+                }
+                _up = value;
+            }
+        }
+        public bool CanMoveDown
+        {
+            get { return _down; }
+            set
+            {
+                if (value)
+                {
+                    _vertical = true;
+                    _jump = false;
+                }
+                _down = value;
+            }
+        }
+        public bool CanJump
+        {
+            get { return _jump; }
+            set
+            {
+                if (value)
+                {
+                    _up = false;
+                    _down = false;
+                    _vertical = false;
+                }
+                _jump = value;
+            }
+        }
+        public bool CanMoveVertical
+        {
+            get { return _vertical; }
+            set
+            {
+                _up = value;
+                _down = value;
+                _vertical = value;
+            }
+        }
+        public bool CanMoveHorizontal
+        {
+            get { return _horizontal; }
+            set
+            {
+                _right = value;
+                _left = value;
+                _horizontal = value;
+            }
+        }
+
         [SerializeField]
-        public bool right;
+        private bool _right;
         [SerializeField]
-        public bool left;
+        private bool _left;
         [SerializeField]
-        public bool up;
+        private bool _up;
         [SerializeField]
-        public bool down;
+        private bool _down;
         [SerializeField]
-        public bool canJump;
+        private bool _jump;
+        [SerializeField]
+        private bool _horizontal;
+        [SerializeField]
+        private bool _vertical;
+
+        public void Reset()
+        {
+            _right = true;
+            _left = true;
+            _up = false;
+            _down = false;
+            _jump = true;
+            _horizontal = true;
+            _vertical = false;
+        }
+    }
+
+    public class OutFadingForce
+    {
+        public float drag;
+        public float friction;
+        public Vector2 force;
+
+        public OutFadingForce(Vector2 force, float drag, float friction)
+        {
+            this.drag = drag;
+            this.force = force;
+            this.friction = friction;
+        }
+
+        public void DampForce(bool isGrounded)
+        {
+            if(isGrounded)
+                force = force * (1 - Time.fixedDeltaTime * friction);
+            else
+            force = force * (1 - Time.fixedDeltaTime * drag);
+            //velocity += -velocity.normalized * (Mathf.Sqrt(velocity.magnitude) * drag);
+        }
+
+        public bool IsForceNull()
+        {
+            return force.x < 0.01f && force.y < 0.01f;
+        }
     }
 }
