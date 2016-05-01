@@ -1,625 +1,614 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using Prime31;
-using System;
 using System.Collections;
+using System.Collections.Generic;
 
-[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(CharacterController2D))]
-public class CharacterInput : MonoBehaviour, ICharacterControllerInput2D
+namespace FakePhysics
 {
-    [Header("External References:")]
-    [SerializeField]
-    Transform spriteRoot;
-    [Header("Speed on ground:")]
-    [SerializeField]
-    float horizontalSpeed;
-    [SerializeField]
-    float horizontalAcceleration;
-    [SerializeField]
-    float verticalSpeed;
-    [SerializeField]
-    float verticalAcceleration;
-    [SerializeField]
-    float friction;
-    [Header("Speed in air:")]
-    [SerializeField]
-    float airSpeed;
-    [SerializeField]
-    float airAcceleration;
-    [SerializeField]
-    float drag;
-    [Header("Jumping:")]
-    [SerializeField]
-    float gravity;
-    [SerializeField]
-    float jumpSpeed;
-    [SerializeField]
-    float jumpCutSpeed;
-    [SerializeField]
-    int minJumpFrames;
-    [SerializeField]
-    int maxJumpExecutionDelay;
-    [SerializeField]
-    int transToFallWaitFrames;
-    [Header("WallJumping:")]
-    [SerializeField]
-    Vector2 wallJumpForce;
-    [SerializeField]
-    int wallJumpNoControllFrames;
-    [SerializeField]
-    float wallSlidingSpeed;
-
-    [SerializeField]
-    public MovementRestrictions movementRestrictions;
-    [Header("Update values:")]
-    [SerializeField]
-    bool shouldUpdateValues;
-
-    //External reference
-    private CharacterController2D charController;
-    private Animator animator;
-
-    //State vars
-    private Vector2 inputVelocity;
-    private Vector2 externalVelocity;
-    private bool isJumpPressed;
-    private bool isGrounded;
-    private float horizontalAxis;
-    private float verticalAxis;
-    private bool isTurnedLeft;
-    private bool isWallSliding;
-    private bool shouldUseWallSlidingSpeed;
-    private bool isJumping;
-    private Coroutine wallJump;
-
-    //Current handling vars
-    [HideInInspector]
-    public float _gravity;
-    [HideInInspector]
-    public float _horizontalSpeed;
-    [HideInInspector]
-    public float _horizontalAcceleration;
-    [HideInInspector]
-    public float _verticalSpeed;
-    [HideInInspector]
-    public float _verticalAcceleration;
-    [HideInInspector]
-    public float _friction;
-    [HideInInspector]
-    public float _airSpeed;
-    [HideInInspector]
-    public float _airAcceleration;
-    [HideInInspector]
-    public float _drag;
-    [HideInInspector]
-    public float _jumpSpeed;
-
-    //Jumpqueque
-    private int framesSinceJumpRequest;
-    private bool isJumpConsumed;
-
-    //Is Grounded
-    private Coroutine lateIsGrounded;
-    private bool oldIsGrounded;
-
-    //External Forces
-    public delegate Vector2 GetForce();
-    private List<Vector2> externalConstantForces;
-    private List<GetForce> externalForces;
-    private List<GetForce> externalRelativeForces;
-    private List<OutFadingForce> externalOutFadingForces;
-
-    void Awake()
+    [RequireComponent(typeof(CharacterController2D))]
+    public class CharacterInput : MonoBehaviour, IManagedCharController2D
     {
-        animator = GetComponent<Animator>();
-        charController = GetComponent<CharacterController2D>();
-        charController.onControllerCollidedEvent += CharController_onControllerCollidedEvent;
-        externalConstantForces = new List<Vector2>(2);
-        externalForces = new List<GetForce>(2);
-        externalRelativeForces = new List<GetForce>(2);
-        externalOutFadingForces = new List<OutFadingForce>(2);
-        ResetMovementVars();
-        isTurnedLeft = false;
-        if (spriteRoot.Equals(this))
-            Debug.LogError("The spriteRoot an script should never be attached to the same GameObject");
-    }
-
-    private void CharController_onControllerCollidedEvent(RaycastHit2D obj)
-    {
-        obj.collider.SendMessage("OnFakeCollisionStay2D", this, SendMessageOptions.DontRequireReceiver);
-    }
-
-    void Update()
-    {
-        HandleInput();
-    }
-
-    private float wallJumpFrames;
-    void FixedUpdate()
-    {
-        if (shouldUpdateValues)
-            ResetMovementVars();
-
-        inputVelocity = Vector2.zero;
-        externalVelocity = Vector2.zero;
-        if (movementRestrictions.CanMoveVertical)
+        enum MovementState
         {
-            MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
-            MoveVertical(ref _verticalAcceleration, ref _verticalSpeed);
+            WallSlide,
+            WallJump,
+            Jump,
+            Glide,
+            Fall,
+            HMove,
+            VMove
         }
-        else
-        {
-            //Apply gravity
-            if (!charController.isGrounded)
-                inputVelocity.y += _gravity;
-            else
-                inputVelocity.y = _gravity;
 
-            if (isGrounded)
+        [Header("External References:")]
+        [SerializeField]
+        Transform spriteRoot;
+
+        [Header("Special trigger:")]
+        [SerializeField]
+        string ladderTag;
+        [SerializeField]
+        string frictionTag;
+
+        [Header("Controll easer:")]
+        [SerializeField]
+        int transToFallDelay;
+        [SerializeField]
+        int maxJumpExecutionDelay;
+
+        [Header("Speed on ground:")]
+        [SerializeField]
+        float hMaxSpeed;
+        [SerializeField]
+        float hAcceleration;
+
+        [Header("Jumping:")]
+        [SerializeField]
+        float jumpSpeed;
+        [SerializeField]
+        float jumpCutSpeed;
+        [SerializeField]
+        int minJumpFrames;
+
+        [Header("Gravity:")]
+        [SerializeField]
+        float gravityAcceleration;
+        [SerializeField]
+        float gravityCap;
+        [SerializeField]
+        float slopeGravity;
+        [SerializeField]
+        float friction;
+        [SerializeField]
+        float drag;
+
+        [Header("Glide:")]
+        [SerializeField]
+        float gMaxSpeed;
+        [SerializeField]
+        float gAcceleration;
+        [SerializeField]
+        float glideGravityCap;
+
+        [Header("Wall interaction:")]
+        [SerializeField]
+        float wallSlidingSpeed;
+        [SerializeField]
+        Vector2 wallJumpForce;
+        [SerializeField]
+        int wallJumpNoControllFrames;
+        [SerializeField]
+        float wallLeaveAxisRatio;
+
+        [Header("Vertical move:")]
+        [SerializeField]
+        float vMaxSpeed;
+        [SerializeField]
+        float vAcceleration;
+        [SerializeField]
+        float vhMaxSpeed;
+        [SerializeField]
+        float vhAcceleration;
+
+        [Header("Friction move:")]
+        [SerializeField]
+        float fMaxSpeed;
+        [SerializeField]
+        float fAcceleration;
+
+        //state defining vars
+        MovementState _cState = MovementState.Fall;
+        bool _delayedIsGrounded = true;
+        CharacterController2D _motor;
+        Animator animator;
+        Vector2 _deltaMovement;
+        Vector2 _deltaExternalForces;
+        bool _stateAllowsNormalJumping = true;
+        bool _stateAllowsNormalGravity = true;
+        bool _isJumpButtonPressed = false;
+        bool _isWallSliding;
+        bool _jumpedSinceLastGrounded;
+        bool _startNonAtomic;
+        int _facingDir = 1;
+        PhysicsMaterial2D _cPhysicalMaterial;
+
+        //corroutines
+        Coroutine _CGrounded;
+        Coroutine _CJumpPressed;
+        Coroutine _CAnalogJump;
+        Coroutine _CWallJump;
+
+        //injection
+        bool _shouldInjectX;
+        bool _shouldInjectY;
+        float _injectionValueX;
+        float _injectionValueY;
+
+        //external forces
+        List<Vector2> externalForce;
+        List<GetVelocity> externalVelocity;
+        List<Vector2> externalConstantVelocity;
+        List<GetVelocity> externalPlattformVelocity;
+
+        //Trigger managment
+        int _ladderTriggerCount = 0;
+
+        void Awake()
+        {
+            _motor = GetComponent<CharacterController2D>();
+            _motor.onTriggerEnterEvent += _motor_onTriggerEnterEvent;
+            _motor.onTriggerExitEvent += _motor_onTriggerExitEvent;
+            animator = GetComponent<Animator>();
+            externalForce = new List<Vector2>(2);
+            externalVelocity = new List<GetVelocity>(2);
+            externalConstantVelocity = new List<Vector2>(2);
+            externalPlattformVelocity = new List<GetVelocity>(2);
+        }
+
+        private void _motor_onTriggerExitEvent(Collider2D obj)
+        {
+            if (obj.CompareTag(ladderTag))
             {
-                MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
-                if (isJumpPressed)
+                _ladderTriggerCount--;
+                if (_ladderTriggerCount == 0)
                 {
-                    //Jump
-                    if (movementRestrictions.CanJump)
-                        StartCoroutine(AnalogJump());
-                    isJumpConsumed = true;
+                    if (_motor.isGrounded)
+                        StartNMove();
+                    else
+                        StartFalling();
                 }
             }
-            else
+        }
+
+        private void _motor_onTriggerEnterEvent(Collider2D obj)
+        {
+            if (obj.CompareTag(ladderTag))
             {
-                CheckForSideCollisions();
-                if (isWallSliding)
-                {
-                    if (isJumpPressed)
-                        StartCoroutine(WallJump());
-                    else if (shouldUseWallSlidingSpeed && !isJumping)
-                        inputVelocity.y = wallSlidingSpeed;
-                }
-                MoveHorizontal(ref _horizontalAcceleration, ref _horizontalSpeed);
+                if (_cState != MovementState.VMove)
+                    StartVMove();
+                _ladderTriggerCount++;
             }
         }
-        ApplyExternalForces();
-        charController.move((inputVelocity + externalVelocity) * Time.fixedDeltaTime, false);
-        UpdateAnimatorVars();
-        SetFace();
-    }
 
-    void UpdateAnimatorVars()
-    {
-        animator.SetFloat("VelocityX", inputVelocity.x);
-        animator.SetFloat("VelocityY", inputVelocity.y);
-        animator.SetBool("IsGrounded", charController.isGrounded);
-        animator.SetFloat("AbsX", Mathf.Abs(inputVelocity.x));
-        animator.SetFloat("AbsY", Mathf.Abs(inputVelocity.y));
-        animator.SetBool("HasMoveInput", inputVelocity != Vector2.zero);
-    }
+        void Update()
+        {
+            if (_motor.collisionState.wasGroundedLastFrame && !_motor.isGrounded)
+                OnIsNotGrounded();
+            else if (_motor.collisionState.becameGroundedThisFrame)
+            {
+                OnBecameGrounded();
+                Debug.Log("Became Grounded this frame");
+            }
 
-    void SetFace()
-    {
-        if ((inputVelocity.x < 0 && !isTurnedLeft) || (inputVelocity.x > 0 && isTurnedLeft))
+            if (Input.GetButtonDown("Jump") && !_motor.collisionState.standOnToSteepSlope)
+            {
+                _isJumpButtonPressed = true;
+                if (_CJumpPressed != null)
+                    StopCoroutine(_CJumpPressed);
+            }
+            else if (!Input.GetButton("Jump") && _isJumpButtonPressed)
+                _CJumpPressed = StartCoroutine(DelayForFrames(() => { _isJumpButtonPressed = false; }, transToFallDelay));
+        }
+
+        void FixedUpdate()
+        {
+            _deltaMovement = _motor.velocity;
+            if (_shouldInjectX)
+            {
+                _shouldInjectX = false;
+                _deltaMovement.x = _injectionValueX;
+            }
+            if (_shouldInjectY)
+            {
+                _shouldInjectY = false;
+                _deltaMovement.y = _injectionValueY;
+            }
+            if (_stateAllowsNormalGravity)
+            {
+                _deltaMovement.y = Mathf.Max(_deltaMovement.y + gravityAcceleration, gravityCap);
+            }
+            if (_stateAllowsNormalJumping && _isJumpButtonPressed)
+                StartJumping();
+
+            switch (_cState)
+            {
+                case MovementState.HMove:
+                    _motor.collisionState.belowHit.collider.SendMessage("OnFakeCollisionStay2D", (IManagedCharController2D)this, SendMessageOptions.DontRequireReceiver);
+                    if (_motor.collisionState.belowHit.collider.CompareTag(frictionTag))
+                    {
+                        _cPhysicalMaterial = _motor.collisionState.belowHit.collider.sharedMaterial;
+                        MoveHorizontalWithFriction(ref fAcceleration, ref fMaxSpeed);
+                        if (_motor.collisionState.standOnToSteepSlope)
+                            HandleSlope();
+                    }
+                    else
+                    {
+                        MoveHorizontalAtomic(ref hAcceleration, ref hMaxSpeed);
+                        if (_motor.collisionState.standOnToSteepSlope)
+                            HandleSlope();
+                    }
+                    break;
+                case MovementState.Jump:
+                    MoveHorizontalAtomic(ref hAcceleration, ref hMaxSpeed);
+                    break;
+                case MovementState.Fall:
+                    if (_startNonAtomic)
+                    {
+                        MoveHorizontal(ref hAcceleration, ref hMaxSpeed);
+                        if (Input.GetAxisRaw("Horizontal") != 0)
+                            _startNonAtomic = false;
+                    }
+                    else
+                        MoveHorizontalAtomic(ref hAcceleration, ref hMaxSpeed);
+                    CheckForSideCollisions();
+                    if (_isWallSliding)
+                        StartWallSliding();
+                    if (_isJumpButtonPressed && _jumpedSinceLastGrounded)
+                        StartGliding();
+                    break;
+                case MovementState.WallSlide:
+                    CheckForSideCollisions();
+
+                    _deltaMovement.y = wallSlidingSpeed;
+
+                    if (!_isWallSliding)
+                        StartFalling();
+                    if (_isJumpButtonPressed)
+                        StartWallJumping();
+                    if ((_motor.collisionState.left && Input.GetAxis("Horizontal") > wallLeaveAxisRatio) || (_motor.collisionState.right && Input.GetAxis("Horizontal") < -wallLeaveAxisRatio))
+                        MoveHorizontalAtomic(ref hAcceleration, ref hMaxSpeed);
+                    break;
+                case MovementState.Glide:
+                    _deltaMovement.y = Mathf.Max(_deltaMovement.y + gravityAcceleration, glideGravityCap);
+                    if (_startNonAtomic)
+                    {
+                        MoveHorizontal(ref gAcceleration, ref gMaxSpeed);
+                        if (Input.GetAxisRaw("Horizontal") != 0)
+                            _startNonAtomic = false;
+                    }
+                    else
+                        MoveHorizontalAtomic(ref gAcceleration, ref gMaxSpeed);
+                    if (!Input.GetButton("Jump"))
+                        StartFalling();
+                    break;
+                case MovementState.VMove:
+                    MoveHorizontalAtomic(ref vhAcceleration, ref vhMaxSpeed);
+                    MoveVerticalAtomic(ref vAcceleration, ref vMaxSpeed);
+                    break;
+            }
+            ApplyExternalInput();
+            AdjustFacingDir();
+            UpdateAnimatorVars();
+            _motor.moveSilent(_deltaExternalForces * Time.fixedDeltaTime, false);
+            _motor.move((_deltaMovement + _deltaExternalForces) * Time.fixedDeltaTime, _cState == MovementState.Jump);
+        }
+
+        void OnBecameGrounded()
+        {
+            if (_CGrounded != null)
+                StopCoroutine(_CGrounded);
+            if (_CAnalogJump != null)
+                StopCoroutine(_CAnalogJump);
+            if (_CWallJump != null)
+                StopCoroutine(_CWallJump);
+            if (_cState != MovementState.VMove)
+                StartNMove();
+        }
+
+        void OnIsNotGrounded()
+        {
+            _CGrounded = StartCoroutine(DelayForFrames(() => { _delayedIsGrounded = false; }, transToFallDelay));
+            if (_cState == MovementState.HMove)
+                StartFalling();
+        }
+
+        void MoveHorizontalAtomic(ref float acceleration, ref float cap)
+        {
+            float horizontalAxis = Input.GetAxisRaw("Horizontal");
+            if (horizontalAxis == 0)
+            {
+                _deltaMovement.x = 0;
+                return;
+            }
+            if (horizontalAxis > 0 && _deltaMovement.x < 0)
+                _deltaMovement.x = 0;
+            else if (horizontalAxis < 0 && _deltaMovement.x > 0)
+                _deltaMovement.x = 0;
+            _deltaMovement.x = Mathf.Clamp(_deltaMovement.x + acceleration * horizontalAxis, -cap, cap);
+        }
+
+        void MoveHorizontal(ref float acceleration, ref float cap)
+        {
+            float horizontalAxis = Input.GetAxisRaw("Horizontal");
+            if (horizontalAxis > 0 && _deltaMovement.x < 0)
+                _deltaMovement.x = 0;
+            else if (horizontalAxis < 0 && _deltaMovement.x > 0)
+                _deltaMovement.x = 0;
+            _deltaMovement.x = Mathf.Clamp(_deltaMovement.x + acceleration * horizontalAxis, -cap, cap);
+        }
+
+        void MoveHorizontalWithFriction(ref float acceleration, ref float cap)
+        {
+            float horizontalAxis = Input.GetAxis("Horizontal");
+            AddVelocity(() => { return Vector2.left * _cPhysicalMaterial.friction * _deltaMovement.x; });
+            _deltaMovement.x = Mathf.Clamp(_deltaMovement.x + acceleration * horizontalAxis, -cap, cap);
+        }
+
+        void MoveVerticalAtomic(ref float acceleration, ref float cap)
+        {
+            float verticalAxis = Input.GetAxisRaw("Vertical");
+            if (verticalAxis == 0)
+            {
+                _deltaMovement.y = 0;
+                return;
+            }
+            if (verticalAxis > 0 && _deltaMovement.y < 0)
+                _deltaMovement.y = 0;
+            else if (verticalAxis < 0 && _deltaMovement.y > 0)
+                _deltaMovement.y = 0;
+            _deltaMovement.y = Mathf.Clamp(_deltaMovement.y + acceleration * verticalAxis, -cap, cap);
+        }
+
+        void UpdateAnimatorVars()
+        {
+            animator.SetFloat("VelocityX", _deltaMovement.x);
+            animator.SetFloat("VelocityY", _deltaMovement.y);
+            animator.SetBool("IsGrounded", _motor.isGrounded);
+            animator.SetFloat("AbsX", Mathf.Abs(_deltaMovement.x));
+            animator.SetFloat("AbsY", Mathf.Abs(_deltaMovement.y));
+            animator.SetBool("HasMoveInput", _deltaMovement != Vector2.zero);
+        }
+
+        void HandleSlope()
+        {
+            if (_motor.collisionState.belowHit.normal.x < 0)
+                _deltaMovement += new Vector2(_motor.collisionState.belowHit.normal.y, -_motor.collisionState.belowHit.normal.x) * Vector2.Dot(Vector2.up * slopeGravity, _motor.collisionState.belowHit.normal);
+            else
+                _deltaMovement -= new Vector2(_motor.collisionState.belowHit.normal.y, -_motor.collisionState.belowHit.normal.x) * Vector2.Dot(Vector2.up * slopeGravity, _motor.collisionState.belowHit.normal);
+        }
+
+        void StartJumping()
+        {
+            _isJumpButtonPressed = false;
+            _stateAllowsNormalGravity = true;
+            _stateAllowsNormalJumping = false;
+            _jumpedSinceLastGrounded = true;
+            _startNonAtomic = false;
+            _cState = MovementState.Jump;
+            _CAnalogJump = StartCoroutine(AnalogJump());
+        }
+
+        void StartFalling()
+        {
+            _stateAllowsNormalGravity = true;
+            _stateAllowsNormalJumping = false;
+            _cState = MovementState.Fall;
+        }
+
+        void StartWallSliding()
+        {
+            _stateAllowsNormalGravity = false;
+            _stateAllowsNormalJumping = false;
+            _startNonAtomic = false;
+            _cState = MovementState.WallSlide;
+        }
+
+        void StartGliding()
+        {
+            _isJumpButtonPressed = false;
+            _stateAllowsNormalGravity = false;
+            _stateAllowsNormalJumping = false;
+            _cState = MovementState.Glide;
+        }
+
+        void StartWallJumping()
+        {
+            _isJumpButtonPressed = false;
+            _stateAllowsNormalGravity = true;
+            _stateAllowsNormalJumping = false;
+            _jumpedSinceLastGrounded = true;
+            _startNonAtomic = true;
+            _cState = MovementState.WallJump;
+            Vector2 wallJumpVelocity = wallJumpForce;
+            if (_motor.collisionState.right)
+            {
+                wallJumpVelocity.x = -wallJumpVelocity.x;
+            }
+            _deltaMovement += wallJumpVelocity;
+            _CWallJump = StartCoroutine(DelayForFrames(() => { StartFalling(); }, wallJumpNoControllFrames));
+        }
+
+        void StartVMove()
+        {
+            _stateAllowsNormalGravity = false;
+            _stateAllowsNormalJumping = true;
+            _jumpedSinceLastGrounded = false;
+            _startNonAtomic = false;
+            if (_CGrounded != null)
+                StopCoroutine(_CGrounded);
+            if (_CAnalogJump != null)
+                StopCoroutine(_CAnalogJump);
+            if (_CWallJump != null)
+                StopCoroutine(_CWallJump);
+            _cState = MovementState.VMove;
+        }
+
+        void StartNMove()
+        {
+            _cState = MovementState.HMove;
+            _stateAllowsNormalJumping = true;
+            _stateAllowsNormalGravity = true;
+            _delayedIsGrounded = true;
+            _jumpedSinceLastGrounded = false;
+            _startNonAtomic = false;
+        }
+
+        void FlipFacingDir()
         {
             spriteRoot.localScale = new Vector3(-spriteRoot.localScale.x, spriteRoot.localScale.y, spriteRoot.localScale.z);
-            isTurnedLeft = !isTurnedLeft;
+            _facingDir *= -1;
         }
-    }
 
-    private const float wallJumpCollisionDistance = 0.01f;
-
-    void CheckForSideCollisions()
-    {
-        if (charController.velocity.x == 0)
+        void AdjustFacingDir()
         {
-            charController.manuallyCheckForCollisions(wallJumpCollisionDistance);
-            charController.manuallyCheckForCollisions(-wallJumpCollisionDistance);
+            if (_deltaMovement.x * _facingDir < 0)
+                FlipFacingDir();
         }
-        else if (charController.velocity.x > 0)
-            charController.manuallyCheckForCollisions(-wallJumpCollisionDistance);
-        else
-            charController.manuallyCheckForCollisions(wallJumpCollisionDistance);
-        if (charController.collisionState.left || charController.collisionState.right)
-            isWallSliding = true;
-        else
-            isWallSliding = false;
-    }
 
-    void HandleInput()
-    {
-        if (charController.isGrounded)
+        private const float wallJumpCollisionDistance = 0.01f;
+        void CheckForSideCollisions()
         {
-            if (!isGrounded)
+            if (_motor.velocity.x == 0)
             {
-                if (wallJump != null)
-                {
-                    StopCoroutine(wallJump);
-                    movementRestrictions.CanMoveHorizontal = true;
-                }
-                if (lateIsGrounded != null)
-                {
-                    StopCoroutine(lateIsGrounded);
-                    isJumping = false;
-                    wallJumpFrames = wallJumpNoControllFrames;
-                }
+                _motor.manuallyCheckForCollisions(wallJumpCollisionDistance);
+                _motor.manuallyCheckForCollisions(-wallJumpCollisionDistance);
             }
-            isGrounded = true;
-            oldIsGrounded = true;
-        }
-        else if (oldIsGrounded)
-        {
-            oldIsGrounded = false;
-            lateIsGrounded = StartCoroutine(LateIsGrounded());
-        }
-        if (Input.GetButtonDown("Jump"))
-        {
-            isJumpConsumed = false;
-            framesSinceJumpRequest = 0;
-        }
-        else if (Input.GetButton("Jump"))
-            framesSinceJumpRequest = 0;
-        else if (!isJumpConsumed)
-            framesSinceJumpRequest++;
-        isJumpPressed = !isJumpConsumed && framesSinceJumpRequest <= maxJumpExecutionDelay;
-    }
-
-    void MoveVertical(ref float acceleration, ref float maxSpeed)
-    {
-        if (!movementRestrictions.CanMoveVertical)
-            return;
-        verticalAxis = Input.GetAxisRaw("Vertical");
-        if (verticalAxis == 0)
-        {
-            inputVelocity.y = 0;
-            return;
-        }
-        if (verticalAxis > 0)
-        {
-            if (!movementRestrictions.CanMoveUp)
-            {
-                inputVelocity.y = 0;
-                return;
-            }
-            if (inputVelocity.y < 0)
-                inputVelocity.y = 0;
-        }
-        else
-        {
-            if (!movementRestrictions.CanMoveDown)
-            {
-                inputVelocity.y = 0;
-                return;
-            }
-            if (inputVelocity.y > 0)
-                inputVelocity.y = 0;
-        }
-
-        inputVelocity.y = Mathf.Clamp(inputVelocity.y + acceleration * verticalAxis, -maxSpeed, maxSpeed);
-    }
-
-    void MoveHorizontal(ref float acceleration, ref float maxSpeed)
-    {
-        if (!movementRestrictions.CanMoveHorizontal)
-            return;
-
-        horizontalAxis = Input.GetAxisRaw("Horizontal");
-        if (horizontalAxis == 0)
-        {
-            inputVelocity.x = 0;
-            return;
-        }
-        if (horizontalAxis > 0)
-        {
-            if (!movementRestrictions.CanMoveRight)
-            {
-                inputVelocity.x = 0;
-                return;
-            }
-            if (inputVelocity.x < 0)
-                inputVelocity.x = 0;
-        }
-        else
-        {
-            if (!movementRestrictions.CanMoveLeft)
-            {
-                inputVelocity.x = 0;
-                return;
-            }
-            if (inputVelocity.x > 0)
-                inputVelocity.x = 0;
-        }
-
-        inputVelocity.x = Mathf.Clamp(inputVelocity.x + acceleration * horizontalAxis, -maxSpeed, maxSpeed);
-    }
-
-    void ApplyExternalForces()
-    {
-        //normal forces
-        for (int i = 0; i < externalForces.Count; i++)
-        {
-            externalVelocity += externalForces[i]();
-        }
-        externalForces.Clear();
-
-        //relativ forces
-        for (int i = 0; i < externalRelativeForces.Count; i++)
-        {
-            Vector2 force = externalRelativeForces[i]();
-            if (inputVelocity.x != 0)
-                force.x = 0;
-            if (movementRestrictions.CanMoveVertical)
-            {
-                if (inputVelocity.y != 0)
-                    force.y = 0;
-            }
-            externalVelocity += force;
-        }
-        externalRelativeForces.Clear();
-
-        //constant forces
-        for (int i = 0; i < externalConstantForces.Count; i++)
-        {
-            externalVelocity += externalConstantForces[i];
-        }
-
-        //outfading forces
-        for (int i = 0; i < externalOutFadingForces.Count; i++)
-        {
-            externalVelocity += externalOutFadingForces[i].force;
-            externalOutFadingForces[i].DampForce(charController.isGrounded);
-            if (externalOutFadingForces[i].IsForceNull())
-            {
-                externalOutFadingForces.RemoveAt(i);
-                i--;
-            }
-        }
-    }
-
-    private float jumpedFrames;
-    IEnumerator AnalogJump()
-    {
-        jumpedFrames = 1;
-        isJumping = true;
-        isGrounded = false;
-        AddOutFadingForce(new OutFadingForce(Vector2.up * _jumpSpeed, drag, float.MaxValue));
-        yield return new WaitForFixedUpdate();
-        while (!charController.isGrounded && jumpedFrames < minJumpFrames)
-        {
-            yield return new WaitForFixedUpdate();
-            jumpedFrames++;
-        }
-        while (!charController.isGrounded && inputVelocity.y > jumpCutSpeed)
-        {
-            if (!Input.GetButton("Jump"))
-            {
-                charController.velocity.y = jumpCutSpeed;
-                break;
-            }
-            yield return new WaitForFixedUpdate();
-        }
-        isJumping = false;
-    }
-
-    private int framesSinceLastGrounded;
-    IEnumerator LateIsGrounded()
-    {
-        framesSinceLastGrounded = 0;
-        while (framesSinceLastGrounded < transToFallWaitFrames)
-        {
-            yield return new WaitForFixedUpdate();
-            framesSinceLastGrounded++;
-        }
-        isGrounded = false;
-    }
-
-    IEnumerator WallJump()
-    {
-        isJumpConsumed = true;
-        wallJumpFrames = 0;
-        shouldUseWallSlidingSpeed = false;
-        Vector2 wallJumpVelocity = wallJumpForce;
-        if (charController.collisionState.right)
-        {
-            wallJumpVelocity.x = -wallJumpVelocity.x;
-        }
-        AddOutFadingForce(new OutFadingForce(wallJumpVelocity, drag, float.MaxValue));
-        movementRestrictions.CanMoveHorizontal = false;
-        while (wallJumpFrames < wallJumpNoControllFrames)
-        {
-            yield return new WaitForFixedUpdate();
-            wallJumpFrames++;
-        }
-        movementRestrictions.CanMoveHorizontal = true;
-        shouldUseWallSlidingSpeed = true;
-    }
-
-    //public
-
-    public void ResetMovementVars()
-    {
-        _gravity = gravity;
-        _horizontalSpeed = horizontalSpeed;
-        _horizontalAcceleration = horizontalAcceleration;
-        _verticalSpeed = verticalSpeed;
-        _verticalAcceleration = verticalAcceleration;
-        _friction = friction;
-        _airSpeed = airSpeed;
-        _airAcceleration = airAcceleration;
-        _drag = drag;
-        _jumpSpeed = jumpSpeed;
-    }
-
-    public void AddConstantForce(Vector2 force)
-    {
-        externalConstantForces.Add(force);
-    }
-
-    public void AddForce(GetForce force)
-    {
-        externalForces.Add(force);
-    }
-
-    public void AddRelativeForce(GetForce force)
-    {
-        externalRelativeForces.Add(force);
-    }
-
-    public void AddOutFadingForce(OutFadingForce force)
-    {
-        externalOutFadingForces.Add(force);
-    }
-
-    public void RemoveConstantForce(Vector2 force)
-    {
-        externalConstantForces.Remove(force);
-    }
-
-    //debug
-
-    void OnGUI()
-    {
-        GUILayout.Label("input velocity = " + inputVelocity);
-        GUILayout.Label("external velocity = " + externalVelocity);
-        GUILayout.Label("isGrounded = " + isGrounded + "( raw = " + charController.isGrounded + ")");
-        GUILayout.Label("shouldJump = " + isJumpPressed + "( consumed = " + isJumpConsumed + ")");
-        GUILayout.Label("isWallSliding = " + isWallSliding);
-    }
-
-    [System.Serializable]
-    public class MovementRestrictions
-    {
-        public bool CanMoveRight
-        {
-            get { return _right; }
-            set
-            {
-                if (value)
-                    _horizontal = true;
-                _right = value;
-            }
-        }
-        public bool CanMoveLeft
-        {
-            get { return _left; }
-            set
-            {
-                if (value)
-                    _horizontal = true;
-                _left = value;
-            }
-        }
-        public bool CanMoveUp
-        {
-            get { return _up; }
-            set
-            {
-                if (value)
-                {
-                    _vertical = true;
-                    _jump = false;
-                }
-                _up = value;
-            }
-        }
-        public bool CanMoveDown
-        {
-            get { return _down; }
-            set
-            {
-                if (value)
-                {
-                    _vertical = true;
-                    _jump = false;
-                }
-                _down = value;
-            }
-        }
-        public bool CanJump
-        {
-            get { return _jump; }
-            set
-            {
-                if (value)
-                {
-                    _up = false;
-                    _down = false;
-                    _vertical = false;
-                }
-                _jump = value;
-            }
-        }
-        public bool CanMoveVertical
-        {
-            get { return _vertical; }
-            set
-            {
-                _up = value;
-                _down = value;
-                _vertical = value;
-            }
-        }
-        public bool CanMoveHorizontal
-        {
-            get { return _horizontal; }
-            set
-            {
-                _right = value;
-                _left = value;
-                _horizontal = value;
-            }
-        }
-
-        [SerializeField]
-        private bool _right;
-        [SerializeField]
-        private bool _left;
-        [SerializeField]
-        private bool _up;
-        [SerializeField]
-        private bool _down;
-        [SerializeField]
-        private bool _jump;
-        [SerializeField]
-        private bool _horizontal;
-        [SerializeField]
-        private bool _vertical;
-
-        public void Reset()
-        {
-            _right = true;
-            _left = true;
-            _up = false;
-            _down = false;
-            _jump = true;
-            _horizontal = true;
-            _vertical = false;
-        }
-    }
-
-    public class OutFadingForce
-    {
-        public float drag;
-        public float friction;
-        public Vector2 force;
-
-        public OutFadingForce(Vector2 force, float drag, float friction)
-        {
-            this.drag = drag;
-            this.force = force;
-            this.friction = friction;
-        }
-
-        public void DampForce(bool isGrounded)
-        {
-            if(isGrounded)
-                force = force * (1 - Time.fixedDeltaTime * friction);
+            else if (_motor.velocity.x > 0)
+                _motor.manuallyCheckForCollisions(-wallJumpCollisionDistance);
             else
-            force = force * (1 - Time.fixedDeltaTime * drag);
+                _motor.manuallyCheckForCollisions(wallJumpCollisionDistance);
+            if (_motor.collisionState.left || _motor.collisionState.right)
+                _isWallSliding = true;
+            else
+                _isWallSliding = false;
+        }
+
+        private delegate void DelayedAction();
+        IEnumerator DelayForFrames(DelayedAction action, int delay)
+        {
+            int frameCounter = 0;
+            while (frameCounter < delay)
+            {
+                yield return new WaitForFixedUpdate();
+                frameCounter++;
+            }
+            action();
+        }
+
+        IEnumerator AnalogJump()
+        {
+            float jumpedFrames = 0;
+            bool cutJump = false;
+            InjectSpeedY(jumpSpeed);
+            while (jumpedFrames < minJumpFrames)
+            {
+                if (!Input.GetButton("Jump"))
+                    cutJump = true;
+                yield return new WaitForFixedUpdate();
+                jumpedFrames++;
+            }
+            while (_deltaMovement.y > jumpCutSpeed)
+            {
+                if (!Input.GetButton("Jump") || cutJump)
+                {
+                    InjectSpeedY(jumpCutSpeed);
+                    break;
+                }
+                yield return new WaitForFixedUpdate();
+            }
+            StartFalling();
+        }
+
+        void InjectSpeedX(float newSpeed)
+        {
+            _shouldInjectX = true;
+            _injectionValueX = newSpeed;
+        }
+
+        void InjectSpeedY(float newSpeed)
+        {
+            _shouldInjectY = true;
+            _injectionValueY = newSpeed;
+        }
+
+        Vector2 DampVelocity(ref Vector2 velocity)
+        {
+            if (_motor.isGrounded)
+                velocity = velocity * (1 - Time.fixedDeltaTime * friction);
+            else
+                velocity = velocity * (1 - Time.fixedDeltaTime * drag);
+            return velocity;
             //velocity += -velocity.normalized * (Mathf.Sqrt(velocity.magnitude) * drag);
         }
 
-        public bool IsForceNull()
+        bool IsVelocityAproximatleyZero(ref Vector2 velocity)
         {
-            return force.x < 0.01f && force.y < 0.01f;
+            return Mathf.Abs(velocity.x) < 0.01f && Mathf.Abs(velocity.y) < 0.01f;
+        }
+
+        void ApplyExternalInput()
+        {
+            _deltaExternalForces = Vector2.zero;
+            Vector2 velocity;
+            for (int i = 0; i < externalForce.Count; i++)
+            {
+                velocity = externalForce[i];
+                _deltaExternalForces += velocity;
+                externalForce[i] = DampVelocity(ref velocity);
+                if (IsVelocityAproximatleyZero(ref velocity))
+                {
+                    externalForce.RemoveAt(i);
+                    i--;
+                }
+            }
+            for (int i = 0; i < externalConstantVelocity.Count; i++)
+            {
+                _deltaExternalForces += externalConstantVelocity[i];
+            }
+            for (int i = 0; i < externalVelocity.Count; i++)
+            {
+                _deltaExternalForces += externalVelocity[i]();
+            }
+            externalVelocity.Clear();
+            for (int i = 0; i < externalPlattformVelocity.Count; i++)
+            {
+                velocity = externalPlattformVelocity[i]();
+                if (_deltaMovement.x != 0)
+                    velocity.x = 0;
+                _deltaExternalForces += velocity;
+            }
+            externalPlattformVelocity.Clear();
+        }
+
+        //public
+
+        public void AddForce(Vector2 force)
+        {
+            externalForce.Add(force);
+        }
+
+        public void AddConstantVelocity(Vector2 velocity)
+        {
+            externalConstantVelocity.Add(velocity);
+        }
+
+        public delegate Vector2 GetVelocity();
+        public void AddVelocity(GetVelocity velocity)
+        {
+            externalVelocity.Add(velocity);
+        }
+
+        public void AddPlattformVelocity(GetVelocity velocity)
+        {
+            externalPlattformVelocity.Add(velocity);
+        }
+
+        public void RemoveConstantVelocity(Vector2 velocity)
+        {
+            externalConstantVelocity.Remove(velocity);
+        }
+
+        public Vector2 Velocity {
+            get { return _motor.velocity; }
+        }
+
+        //debug
+
+        void OnGUI()
+        {
+            GUILayout.Label("cState = " + _cState);
+            GUILayout.Label("input velocity = " + _deltaMovement);
+            GUILayout.Label("external velocity = " + _deltaExternalForces);
+            GUILayout.Label("isGrounded = " + _delayedIsGrounded + "( raw = " + _motor.isGrounded + ")");
+            GUILayout.Label("shouldJump = " + _isJumpButtonPressed + "( raw = " + Input.GetButton("Jump") + ")");
         }
     }
 }

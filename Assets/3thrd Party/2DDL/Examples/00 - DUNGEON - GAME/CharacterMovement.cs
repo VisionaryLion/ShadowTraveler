@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Prime31;
+using FakePhysics;
 
 //THIS SCRIPT WILL NOT WORK PROPERLY, BECAUSE OF CHANGES IN THE CHARACTERCONTROLLER2D SCRIPT!!!!!!!
 //COMMENTED THIS LINE OF: _controller.move( _velocity * Time.deltaTime);

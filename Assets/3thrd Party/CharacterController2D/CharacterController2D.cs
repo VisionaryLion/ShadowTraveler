@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace Prime31
+namespace FakePhysics
 {
 
     [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
@@ -295,6 +295,40 @@ namespace Prime31
             ignoreOneWayPlatformsThisFrame = false;
         }
 
+        public void moveSilent(Vector3 deltaMovement, bool isJumping)
+        {
+            _raycastHitsThisFrame.Clear();
+            primeRaycastOrigins();
+
+
+            // first, we check for a slope below us before moving
+            // only check slopes if we are going down and grounded
+            if (deltaMovement.y < 0f && collisionState.wasGroundedLastFrame)
+                handleVerticalSlope(ref deltaMovement);
+
+            // now we check movement in the horizontal dir
+            if (deltaMovement.x != 0f)
+                moveHorizontally(ref deltaMovement, isJumping);
+
+            // next, check movement in the vertical dir
+            if (deltaMovement.y != 0f)
+                moveVertically(ref deltaMovement);
+
+            // move then update our state
+            transform.Translate(deltaMovement, Space.World);
+
+            if (!collisionState.wasGroundedLastFrame && collisionState.below)
+                collisionState.becameGroundedThisFrame = true;
+
+            // send off the collision events if we have a listener
+            if (onControllerCollidedEvent != null)
+            {
+                for (var i = 0; i < _raycastHitsThisFrame.Count; i++)
+                    onControllerCollidedEvent(_raycastHitsThisFrame[i]);
+            }
+
+            ignoreOneWayPlatformsThisFrame = false;
+        }
 
         /// <summary>
         /// moves directly down until grounded
