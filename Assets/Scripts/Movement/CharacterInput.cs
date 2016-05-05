@@ -173,10 +173,7 @@ namespace FakePhysics
             if (_motor.collisionState.wasGroundedLastFrame && !_motor.isGrounded)
                 OnIsNotGrounded();
             else if (_motor.collisionState.becameGroundedThisFrame)
-            {
                 OnBecameGrounded();
-                Debug.Log("Became Grounded this frame");
-            }
 
             if (Input.GetButtonDown("Jump") && !_motor.collisionState.standOnToSteepSlope)
             {
