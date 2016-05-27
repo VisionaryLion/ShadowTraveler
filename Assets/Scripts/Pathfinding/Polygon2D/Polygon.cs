@@ -10,10 +10,12 @@ namespace Polygon2D
         public Bounds Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } }
         public int ContourCount { get { return contours.Count; } }
         public bool IsEmpty { get { return contours.Count == 0; } }
+        public int TotalVertexCount { get { return totalVertexCount; } }
 
         private bool areBoundsValid;
         private Bounds bounds;
         private List<Contour> contours;
+        private int totalVertexCount;
 
         public Polygon(Polygon other)
         {
@@ -39,14 +41,20 @@ namespace Polygon2D
                 bounds.max = Vector2.Max(bounds.max, c.verticies[iVert]);
                 bounds.min = Vector2.Min(bounds.min, c.verticies[iVert]);
             }
+            //Updated vertex count
+            totalVertexCount += c.VertexCount;
         }
 
         public void RemoveContourAt(int pos)
         {
             if (pos < 0 || pos >= contours.Count)// A contour must always hold at least one vertex.
                 return;
+            //Updated vertex count
+            totalVertexCount -= contours[pos].VertexCount;
+
             contours.RemoveAt(pos);
             areBoundsValid = false;
+            
         }
 
         public void RemoveVertexFromContourAt(int iCont, int iVert)
@@ -59,9 +67,12 @@ namespace Polygon2D
             else
                 c.RemoveVertexAt(iVert);
             areBoundsValid = false;
+
+            //Updated vertex count
+            totalVertexCount--;
         }
 
-        public Contour this [int key]
+        public Contour this[int key]
         {
             get { return contours[key]; }
         }
@@ -71,10 +82,20 @@ namespace Polygon2D
             return contours.GetEnumerator();
         }
 
-        public CleanZeroEdges()
+        public void CleanContours()
         {
-            //Removes: edges with length = 0
-
+            for (int i = 0; i < contours.Count; i++)
+            {
+                Contour c = contours[i];
+                totalVertexCount-= c.VertexCount;
+                c.RemoveAllPointEdges();
+                if (c.VertexCount == 0)
+                {
+                    contours.RemoveAt(i);
+                    i--;
+                }
+                totalVertexCount += c.VertexCount;
+            }
         }
 
         private void CalcBounds()
@@ -99,13 +120,13 @@ namespace Polygon2D
         }
     }
 
-    public struct Contour
+    public struct Contour : IEnumerable<Vector2>
     {
         public int VertexCount { get { return verticies.Count; } }
 
         public List<Vector2> verticies;
 
-        public Contour(Vector2[] verticies)
+        public Contour(params Vector2[] verticies)
         {
             this.verticies = new List<Vector2>(verticies);
         }
@@ -115,7 +136,7 @@ namespace Polygon2D
             this.verticies = verticies;
         }
 
-        public void AddVertex(Vector2 v)
+        public void InsertVertex(Vector2 v)
         {
             verticies.Add(v);
         }
@@ -130,6 +151,31 @@ namespace Polygon2D
         public Vector2 this[int key]
         {
             get { return verticies[key]; }
+        }
+
+        public void RemoveAllPointEdges()
+        {
+            //Removes: edges with length = 0
+            for (int i = 0; i < verticies.Count - 1; i++)
+            {
+                if (verticies[i] == verticies[i + 1])
+                {
+                    verticies.RemoveAt(i);
+                    i--;
+                }
+            }
+            if (verticies[0] == verticies[verticies.Count - 1])
+                verticies.RemoveAt(verticies.Count - 1);
+        }
+
+        public IEnumerator<Vector2> GetEnumerator()
+        {
+            return ((IEnumerable<Vector2>)verticies).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<Vector2>)verticies).GetEnumerator();
         }
     }
 }

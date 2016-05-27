@@ -1,7 +1,9 @@
-﻿namespace ValueSetManager
+﻿using System;
+
+namespace Utility
 {
     [System.Serializable]
-    public class PriorityQueueNode
+    public class PriorityQueueNode : IComparable<PriorityQueueNode>
     {
         /// <summary>
         /// The Priority to insert this node at.  Must be set BEFORE adding a node to the queue
@@ -21,5 +23,17 @@
         /// Represents the current position in the queue
         /// </summary>
         public int QueueIndex { get; set; }
+
+        public virtual int CompareTo(PriorityQueueNode other)
+        {
+            if (Priority > other.Priority)
+                return 1;
+            else if (Priority < other.Priority)
+                return -1;
+            else if (InsertionIndex < other.InsertionIndex)
+                return 1;
+            else
+                return -1;
+        }
     }
 }

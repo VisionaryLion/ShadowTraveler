@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace ValueSetManager
+namespace Utility
 {
     /// <summary>
     /// An implementation of a min-Priority Queue using a heap.  Has O(1) .Contains()!
@@ -203,8 +203,7 @@ namespace ValueSetManager
 #endif
         private bool HasHigherPriority(T higher, T lower)
         {
-            return (higher.Priority < lower.Priority ||
-                (higher.Priority == lower.Priority && higher.InsertionIndex < lower.InsertionIndex));
+            return higher.CompareTo(lower) < 0;
         }
 
         /// <summary>
