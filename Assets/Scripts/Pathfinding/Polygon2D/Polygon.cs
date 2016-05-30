@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Polygon2D
 {
-    public struct Polygon : IEnumerable<Contour>
+    public class Polygon : IEnumerable<Contour>
     {
         public Bounds Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } }
         public int ContourCount { get { return contours.Count; } }
@@ -17,12 +17,20 @@ namespace Polygon2D
         private List<Contour> contours;
         private int totalVertexCount;
 
-        public Polygon(Polygon other)
+        public Polygon()
         {
-            this = (Polygon)other.MemberwiseClone();
+            contours = new List<Contour>(1);
         }
 
-        public void AddContours(IEnumerable range)
+        public Polygon(Polygon other)
+        {
+            bounds = other.Bounds;
+            areBoundsValid = other.areBoundsValid;
+            contours = other.contours;
+            totalVertexCount = other.totalVertexCount;
+        }
+
+        public void AddContour(IEnumerable<Contour> range)
         {
             foreach (Contour c in range)
             {
@@ -30,7 +38,15 @@ namespace Polygon2D
             }
         }
 
-        public void AddContour(Contour c)
+        public void AddContour(params Contour[] range)
+        {
+            foreach (Contour c in range)
+            {
+                AddContour(c);
+            }
+        }
+
+        private void AddContour(Contour c)
         {
             if (c.VertexCount == 0)// A contour must always hold at least one vertex.
                 return;
@@ -54,7 +70,7 @@ namespace Polygon2D
 
             contours.RemoveAt(pos);
             areBoundsValid = false;
-            
+
         }
 
         public void RemoveVertexFromContourAt(int iCont, int iVert)
@@ -87,7 +103,7 @@ namespace Polygon2D
             for (int i = 0; i < contours.Count; i++)
             {
                 Contour c = contours[i];
-                totalVertexCount-= c.VertexCount;
+                totalVertexCount -= c.VertexCount;
                 c.RemoveAllPointEdges();
                 if (c.VertexCount == 0)
                 {
@@ -133,7 +149,8 @@ namespace Polygon2D
 
         public Contour(List<Vector2> verticies)
         {
-            this.verticies = verticies;
+            this.verticies = new List<Vector2>();
+            this.verticies.AddRange(verticies);
         }
 
         public void InsertVertex(Vector2 v)

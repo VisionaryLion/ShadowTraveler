@@ -6,7 +6,8 @@ using Polygon2D;
 using System;
 using System.Collections.Generic;
 
-public class NavDebugger : MonoBehaviour {
+public class NavDebugger : MonoBehaviour
+{
     public int circleVertCount;
     //public LayerMask colliderMask;
     //public float slopeLimit;
@@ -14,39 +15,76 @@ public class NavDebugger : MonoBehaviour {
 
     public GameObject gA;
     public GameObject gB;
-    Vector2[] vertBuffer;
-	// Use this for initialization
-	void Start () {
+    public PolygonClipper.BoolOpType op;
+    Polygon result;
+    PolygonClipper.BoolOpType old_op;
+    // Use this for initialization
+    void Start()
+    {
 
     }
-	
-	// Update is called once per frame
-	void Update () {
-       
+
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 
     void OnDrawGizmos()
     {
-        if (Event.current.isMouse && Event.current.button == 0)
+        if ((Event.current.isMouse && Event.current.button == 0) || result == null || old_op != op)
         {
             List<Vector2> verts = new List<Vector2>(10);
             LoadColliderVerts(gA.GetComponent<Collider2D>(), verts);
-            Polygon polyA = new Polygon(verts.ToArray());
+            Polygon polyA = new Polygon();
+            polyA.AddContour(new Contour(verts));
             verts.Clear();
             LoadColliderVerts(gB.GetComponent<Collider2D>(), verts);
-            Polygon polyB = new Polygon(verts.ToArray());
-            Polygon2DBooleanFunc pFunc = new Polygon2DBooleanFunc();
-            vertBuffer = pFunc.Union(polyA, polyB);
-            Debug.Log(vertBuffer.Length);
+            Polygon polyB = new Polygon();
+            polyB.AddContour(new Contour(verts));
+            result = PolygonClipper.Compute(ref polyA, ref polyB, op);
+            old_op = op;
+
+            //DEBUG
+            Debug.Log("Contour count = " + result.ContourCount);
+            for (int iCount = 0; iCount < result.ContourCount; iCount++)
+            {
+                Debug.Log("     Contour[" + iCount + "] vertex count = " + result[iCount].VertexCount);
+                for (int iVert = 0; iVert < result[iCount].VertexCount; iVert ++)
+                {
+                    Debug.Log("          Contour[" + iCount + "]["+iVert+"] vertex = " + result[iCount][iVert]);
+                }
+            }
         }
-        for (int iVert = 0; iVert < vertBuffer.Length; iVert += 2)
+
+        for (int iCount = 0; iCount < result.ContourCount; iCount++)
         {
-            Gizmos.color = DifferentColors.GetColor(iVert);
-            DrawLine(vertBuffer[iVert], vertBuffer[iVert + 1], 2);
-            Gizmos.DrawWireSphere(vertBuffer[iVert], 0.5f);
-            Gizmos.DrawWireSphere(vertBuffer[iVert+1], 0.1f);
-            Debug.Log(vertBuffer[iVert] +" -> "+ vertBuffer[iVert + 1]);
+            Gizmos.color = DifferentColors.GetColor(iCount);
+            for (int iVert = 0; iVert < result[iCount].VertexCount - 1; iVert ++)
+            {
+                DrawLine(result[iCount][iVert], result[iCount][iVert + 1], 2);
+                Gizmos.DrawWireSphere(result[iCount][iVert], 0.5f);
+                Gizmos.DrawWireSphere(result[iCount][iVert + 1], 0.1f);
+            }
+            DrawLine(result[iCount][0], result[iCount][result[iCount].VertexCount - 1], 2);
+            Gizmos.DrawWireSphere(result[iCount][0], 0.5f);
+            Gizmos.DrawWireSphere(result[iCount][result[iCount].VertexCount - 1], 0.1f);
         }
+        /*
+        Gizmos.color = DifferentColors.GetColor(100);
+        List<Vector2> verx = new List<Vector2>(10);
+        LoadColliderVerts(gA.GetComponent<Collider2D>(), verx);
+        for (int iVert = 0; iVert < verx.Count -1; iVert++)
+        {
+            DrawLine(verx[iVert], verx[iVert + 1], 2);
+        }
+        Gizmos.color = DifferentColors.GetColor(101);
+        
+        LoadColliderVerts(gB.GetComponent<Collider2D>(), verx);
+        for (int iVert = 0; iVert < verx.Count - 1; iVert++)
+        {
+            DrawLine(verx[iVert], verx[iVert + 1], 2);
+        }*/
     }
 
     public static void DrawLine(Vector3 p1, Vector3 p2, float width)
@@ -67,7 +105,7 @@ public class NavDebugger : MonoBehaviour {
             Vector3 n = Vector3.Cross(v1, v2); // normal vector
             for (int i = 0; i < count; i++)
             {
-                Vector3 o = n * (0.1f/width)*i;
+                Vector3 o = n * (0.1f / width) * i;
                 Gizmos.DrawLine(p1 + o, p2 + o);
             }
         }
