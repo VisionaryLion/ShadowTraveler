@@ -79,7 +79,7 @@ namespace Polygon2D
             chain.AddLast(p1);
         }
 
-
+        public bool LinkSegment (ref Vector2 p0, ref Vector2 p1)
         {
             Vector2 front = Front;
             Vector2 back = Back;
