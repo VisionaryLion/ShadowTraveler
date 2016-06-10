@@ -2,150 +2,186 @@
 using System.Collections.Generic;
 using System;
 using Polygon2D;
+using Utility;
+using System.Diagnostics;
 
 namespace Pathfinding2D
-{/*
+{
     public class NavMesh2DBuilder
     {
-        public volatile float progress;
-        int _circleVertCount;
-        int _nextNodeId;
+        public int BuildProgress { get { return _progress; } }
+        public int CircleVertCount { get { return _vertCountCircle; } set { _radianPerVert = (Mathf.PI * 2) / value; _vertCountCircle = value; } }
+        public int CollisionLayerMask { get; set; }
 
+        float _radianPerVert; // Which angle should lie between two verts in a circle?
+        int _vertCountCircle; // How many verts should represent a circle?
+        volatile int _progress;
 
-
-        public NavMesh2D Build(int colliderLayer, float slopeLimit, int circleVertCount)
+        public NavMesh2DBuilder(int colliderLayer, int circleVertCount = 10)
         {
-            _circleVertCount = circleVertCount;
-            
-            List<Vector2> colliderVerts = new List<Vector2>(20);
-
-            //Find all collider to process
-            List<Collider2D> allCollider = LoadCollider(colliderLayer);
-            Debug.Log("NavmeshBuilder.Build ["+progress+"%]: Found "+allCollider.Count+" collider to process.");
-
-            //Init the navMesh
-            NavMesh2D navMesh2D = ScriptableObject.CreateInstance<NavMesh2D>();
-            navMesh2D.dynamicNodes = new List<DynamicPathNode>((int)Mathf.Min(5, allCollider.Count / 100));
-            navMesh2D.staticNodes = new List<PathNode>(allCollider.Count);
-
-            float progressStep = 200 / allCollider.Count;
-            Polygon2DBooleanFunc polyUnion = new Polygon2DBooleanFunc();
-            //Process each collider
-            foreach (Collider2D c in allCollider)
-            {
-                colliderVerts.Clear();
-                //First load the collider verts into the colliderVerts array
-                LoadColliderVerts(c, colliderVerts);
-                Debug.Log("NavmeshBuilder.Build [" + progress + "%]: Loaded " + colliderVerts.Count + " verts to process.");
-                if (colliderVerts.Count <= 1)
-                    continue;
-                HandleCollider(c, colliderVerts, slopeLimit, navMesh2D);
-                Debug.Log("NavmeshBuilder.Build [" + progress + "%]: Transformed " + colliderVerts.Count + " to nodes.");
-
-            }
-            return navMesh2D;
+            CircleVertCount = circleVertCount;
+            CollisionLayerMask = colliderLayer;
         }
 
-        private void HandleCollider(Collider2D collider, List<Vector2> colliderVerts, float slopeLimit, NavMesh2D inOutMesh)
+        public LinkedList<PointChain> Build()
         {
-            //Add the first vert at the end
-            colliderVerts.Add(colliderVerts[0]);
-            float xMin = colliderVerts[0].x;
-            float xMax = colliderVerts[0].x;
-            float angle;
-            bool wasLastEdgeWalkable = false;
-            int notWalkableEdges = 0;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            LinkedList<PointChain> inOutList = ReadCollisionGeometry();
+            int itemCount = inOutList.Count;
+            inOutList = UnifyCollisionGeometry(inOutList);
+            stopwatch.Stop();
 
-            for(int i = 0; i < colliderVerts)
+            UnityEngine.Debug.Log("Finished baking NavMesh for "+ itemCount+" items in "+stopwatch.ElapsedMilliseconds+" ms");
+            return inOutList;
+        }
 
-            for (int i = 1; i < colliderVerts.Count; i++)
+        private LinkedList<PointChain> UnifyCollisionGeometry(LinkedList<PointChain> chains)
+        {
+            HeapPriorityQueue<PointChainNode> queue = new HeapPriorityQueue<PointChainNode>(chains.Count * 2);
+
+            //Enqueue pointchains
+            foreach (PointChain pChain in chains)
             {
-                angle = Vector2.Angle(Vector2.left, colliderVerts[i] - colliderVerts[i - 1]);
-                Debug.Log("Angle = "+angle+", "+ (colliderVerts[i] - colliderVerts[i - 1]));
-                if (angle > slopeLimit && angle < 180 - slopeLimit)
+                EnquePointChain(queue, pChain);
+            }
+
+            LinkedList<PointChain> sweepRay = new LinkedList<PointChain>();
+            LinkedList<PointChain> result = new LinkedList<PointChain>();
+
+            while (queue.Count != 0)
+            {
+                PointChainNode pNode = queue.Dequeue();
+                if (pNode.left)
                 {
-                    if (lastWalkableSegment != -1)
+                    LinkedListNode<PointChain> pNodeNode = sweepRay.First;
+                    while (pNodeNode != null)
                     {
-                        Vector2[] vertsOfNode = new Vector2[(i - lastWalkableSegment) + 1];
-                        colliderVerts.CopyTo(lastWalkableSegment, vertsOfNode, 0, vertsOfNode.Length);
-                        if (collider.GetComponent<Rigidbody2D>() != null)
-                            inOutMesh.dynamicNodes.Add(new DynamicPathNode(NextNodeId, xMin, xMax, vertsOfNode, collider));
-                        else
-                            inOutMesh.staticNodes.Add(new PathNode(NextNodeId, xMin, xMax, vertsOfNode));
-                    }
-                    xMin = colliderVerts[i].x;
-                    xMax = colliderVerts[i].x;
-                    lastWalkableSegment = -1;
+                        PointChain[] unifiedResult = PolygonClipper.Compute(pNodeNode.Value, pNode.chain, PolygonClipper.BoolOpType.UNION);
+                        // pNodeNode.Value = 
+                        pNodeNode = pNodeNode.Next;
+                    } 
+                    sweepRay.AddLast(pNode.chain);
                 }
                 else
                 {
-                    xMin = Mathf.Max(colliderVerts[i].x);
-                    xMax = Mathf.Min(colliderVerts[i].x);
-                    if (lastWalkableSegment == -1)
-                        lastWalkableSegment = i - 1;
+                    sweepRay.Remove(pNode.chain);
+                    result.AddLast(pNode.chain);
                 }
             }
-            if (lastWalkableSegment != -1)
-            {
-                Vector2[] vertsOfNode = new Vector2[colliderVerts.Count - lastWalkableSegment];
-                colliderVerts.CopyTo(lastWalkableSegment, vertsOfNode, 0, vertsOfNode.Length);
-                if (collider.GetComponent<Rigidbody2D>() != null)
-                    inOutMesh.dynamicNodes.Add(new DynamicPathNode(NextNodeId, xMin, xMax, vertsOfNode, collider));
-                else
-                    inOutMesh.staticNodes.Add(new PathNode(NextNodeId, xMin, xMax, vertsOfNode));
-            }
+            return result;
         }
 
-        private int NextNodeId
+        private LinkedList<PointChain> ResolveSelfIntersections()
         {
-            get { return _nextNodeId++; }
+            return null;
         }
 
-        private List<Collider2D> LoadCollider(int colliderLayer)
+        private void EnquePointChain(HeapPriorityQueue<PointChainNode> queue, PointChain chain)
         {
-            Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
-            List<Collider2D> selectedCollider = new List<Collider2D>(allCollider.Length);
-            foreach (Collider2D c in allCollider)
+            PointChainNode n1 = new PointChainNode(chain, true);
+            PointChainNode n2 = new PointChainNode(chain, false);
+            n1.other = n2;
+            n2.other = n1;
+            queue.Enqueue(n1);
+            queue.Enqueue(n2);
+        }
+
+        private LinkedList<PointChain> ReadCollisionGeometry()
+        {
+            //Find all collider that fullfill the requirements.
+            // 1. Is within the collision layer
+            // 2. Is activated
+            // 3. Isnt a trigger
+            //Then convert them to a pointchain.
+
+            LinkedList<PointChain> result = new LinkedList<PointChain>();
+            Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>(); //Load all colliders
+            Collider2D pCol;
+
+            for (int iCol = 0; iCol < allCollider.Length; iCol++)
             {
-                if (c.isTrigger)
+                pCol = allCollider[iCol];
+
+                if (((1 << pCol.gameObject.layer) | CollisionLayerMask) != CollisionLayerMask)
                     continue;
-                if (((1 << c.gameObject.layer) | colliderLayer) == colliderLayer)
-                    selectedCollider.Add(c);
+
+                if (pCol.isTrigger)
+                    continue;
+
+                if (!pCol.enabled)
+                    continue;
+                //Collider fullfills the requirements. Now process it!
+                    result.AddLast(ConvertColliderToPointChain(pCol));
             }
-            return selectedCollider;
+            return result;
         }
 
-        private void LoadColliderVerts(Collider2D collider, List<Vector2> verts)
+        private PointChain ConvertColliderToPointChain (Collider2D collider)
         {
-            verts.Clear();
             Type cTyp = collider.GetType();
-
+            Vector2[] verts;
+            Bounds bounds = collider.bounds;
             if (cTyp == typeof(BoxCollider2D))
-                GetBoxColliderVerts((BoxCollider2D)collider, verts);
-            else if (cTyp == typeof(CircleCollider2D))
-                GetCircleColliderVerts((CircleCollider2D)collider, verts, _circleVertCount);
-            else if (cTyp == typeof(EdgeCollider2D))
-                verts.AddRange(((EdgeCollider2D)collider).points);
-            else if (cTyp == typeof(PolygonCollider2D))
-                verts.AddRange(((PolygonCollider2D)collider).points);
-        }
-
-        private static void GetBoxColliderVerts(BoxCollider2D collider, List<Vector2> verts)
-        {
-            Vector2 halfSize = collider.size / 2;
-            verts.Add(collider.transform.TransformPoint(halfSize + collider.offset));
-            verts.Add(collider.transform.TransformPoint(new Vector2(halfSize.x, -halfSize.y) + collider.offset));
-            verts.Add(collider.transform.TransformPoint(-halfSize + collider.offset));
-            verts.Add(collider.transform.TransformPoint(new Vector2(-halfSize.x, halfSize.y) + collider.offset));
-        }
-
-        private static void GetCircleColliderVerts(CircleCollider2D collider, List<Vector2> verts, int circleVertCount)
-        {
-            float anglePerCircleVert = (Mathf.PI * 2) / circleVertCount;
-            for (int i = 0; i < circleVertCount; i++)
             {
-                verts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Sin(anglePerCircleVert * i), collider.radius * Mathf.Sin(anglePerCircleVert * i))));
+                BoxCollider2D pCol = collider as BoxCollider2D;
+                verts = new Vector2[4];
+
+                Vector2 halfSize = pCol.size / 2;
+                verts[0] = pCol.transform.TransformPoint(halfSize + pCol.offset);
+                verts[1] = pCol.transform.TransformPoint(new Vector2(halfSize.x, -halfSize.y) + pCol.offset);
+                verts[2] = pCol.transform.TransformPoint(-halfSize + pCol.offset);
+                verts[3] = pCol.transform.TransformPoint(new Vector2(-halfSize.x, halfSize.y) + pCol.offset);
+            }
+            else if (cTyp == typeof(CircleCollider2D))
+            {
+                CircleCollider2D pCol = collider as CircleCollider2D;
+                verts = new Vector2[_vertCountCircle];
+
+                for (int i = 0; i < _vertCountCircle; i++)
+                {
+                    verts[i] = collider.transform.TransformPoint(new Vector2(pCol.radius * Mathf.Sin(_radianPerVert * i), pCol.radius * Mathf.Sin(_radianPerVert * i)));
+                }
+            }
+            else if (cTyp == typeof(EdgeCollider2D))
+                verts = ((EdgeCollider2D)collider).points;
+            else
+                verts = ((PolygonCollider2D)collider).points;
+
+            PointChain result = new PointChain(verts, true);
+            result.Bounds = bounds;
+            return result;
+        }
+
+        class PointChainNode : PriorityQueueNode
+        {
+            public PointChain chain;
+            public bool left;
+            public PointChainNode other;
+            public Vector2 point;
+
+            public PointChainNode(PointChain chain, bool left)
+            {
+                this.chain = chain;
+                this.left = left;
+                point = (left) ? chain.Bounds.min : chain.Bounds.max;
+            }
+
+            public override int CompareTo(PriorityQueueNode other)
+            {
+                if (other.GetType() == typeof(PointChainNode))
+                {
+                    PointChainNode otherChain = other as PointChainNode;
+                    if (point.x < otherChain.point.x)
+                        return -1;
+                    if (point.x > otherChain.point.x)
+                        return 1;
+                    if (left)
+                        return 1;
+                    return -1;
+                }
+                return base.CompareTo(other);
             }
         }
-    }*/
+    }
 }

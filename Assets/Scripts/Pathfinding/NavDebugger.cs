@@ -9,14 +9,12 @@ using System.Collections.Generic;
 public class NavDebugger : MonoBehaviour
 {
     public int circleVertCount;
-    //public LayerMask colliderMask;
-    //public float slopeLimit;
-    //NavMesh2D navMesh2D;
 
     public GameObject gA;
     public GameObject gB;
     public PolygonClipper.BoolOpType op;
-    Polygon result;
+    public LayerMask collisionMask;
+    PointChain[] result;
     PolygonClipper.BoolOpType old_op;
     // Use this for initialization
     void Start()
@@ -34,60 +32,40 @@ public class NavDebugger : MonoBehaviour
     {
         if ((Event.current.isMouse && Event.current.button == 0) || result == null || old_op != op)
         {
-            List<Vector2> verts = new List<Vector2>(10);
-            LoadColliderVerts(gA.GetComponent<Collider2D>(), verts);
-            Polygon polyA = new Polygon();
-            polyA.AddContour(new Contour(verts));
-            verts.Clear();
-            LoadColliderVerts(gB.GetComponent<Collider2D>(), verts);
-            Polygon polyB = new Polygon();
-            polyB.AddContour(new Contour(verts));
-            result = PolygonClipper.Compute(ref polyA, ref polyB, op);
-            old_op = op;
+            NavMesh2DBuilder builder = new NavMesh2DBuilder(collisionMask, circleVertCount);
+            LinkedList<PointChain> tL = builder.Build();
+            result = new PointChain[tL.Count];
+            tL.CopyTo(result, 0);
 
             //DEBUG
-            Debug.Log("Contour count = " + result.ContourCount);
-            for (int iCount = 0; iCount < result.ContourCount; iCount++)
+            Debug.Log("Contour count = " + result.Length);
+            for (int iCount = 0; iCount < result.Length; iCount++)
             {
-                Debug.Log("     Contour[" + iCount + "] vertex count = " + result[iCount].VertexCount);
-                for (int iVert = 0; iVert < result[iCount].VertexCount; iVert ++)
+                Debug.Log("     Contour[" + iCount + "] vertex count = " + result[iCount].chain.Count);
+                foreach (Vector2 vert in result[iCount].chain)
                 {
-                    Debug.Log("          Contour[" + iCount + "]["+iVert+"] vertex = " + result[iCount][iVert]);
+                    Debug.Log("          Contour[" + iCount + "] vertex = " + vert);
                 }
             }
         }
 
-        for (int iCount = 0; iCount < result.ContourCount; iCount++)
+        for (int iCount = 0; iCount < result.Length; iCount++)
         {
             Gizmos.color = DifferentColors.GetColor(iCount);
-            for (int iVert = 0; iVert < result[iCount].VertexCount - 1; iVert ++)
+            LinkedListNode<Vector2> cNode = result[iCount].chain.First;
+            while ((cNode = cNode.Next) != null)
             {
-                DrawLine(result[iCount][iVert], result[iCount][iVert + 1], 2);
-                Gizmos.DrawWireSphere(result[iCount][iVert], 0.5f);
-                Gizmos.DrawWireSphere(result[iCount][iVert + 1], 0.1f);
+                DrawLine(cNode.Value, cNode.Previous.Value, 2);
+                Gizmos.DrawWireSphere(cNode.Value, 0.5f);
+                Gizmos.DrawWireSphere(cNode.Previous.Value, 0.1f);
             }
-            DrawLine(result[iCount][0], result[iCount][result[iCount].VertexCount - 1], 2);
-            Gizmos.DrawWireSphere(result[iCount][0], 0.5f);
-            Gizmos.DrawWireSphere(result[iCount][result[iCount].VertexCount - 1], 0.1f);
+            DrawLine(result[iCount].chain.Last.Value, result[iCount].chain.First.Value, 2);
+            Gizmos.DrawWireSphere(result[iCount].chain.Last.Value, 0.5f);
+            Gizmos.DrawWireSphere(result[iCount].chain.First.Value, 0.1f);
         }
-        /*
-        Gizmos.color = DifferentColors.GetColor(100);
-        List<Vector2> verx = new List<Vector2>(10);
-        LoadColliderVerts(gA.GetComponent<Collider2D>(), verx);
-        for (int iVert = 0; iVert < verx.Count -1; iVert++)
-        {
-            DrawLine(verx[iVert], verx[iVert + 1], 2);
-        }
-        Gizmos.color = DifferentColors.GetColor(101);
-        
-        LoadColliderVerts(gB.GetComponent<Collider2D>(), verx);
-        for (int iVert = 0; iVert < verx.Count - 1; iVert++)
-        {
-            DrawLine(verx[iVert], verx[iVert + 1], 2);
-        }*/
     }
 
-    public static void DrawLine(Vector3 p1, Vector3 p2, float width)
+    public static void DrawLine(Vector2 p1, Vector2 p2, float width)
     {
         int count = Mathf.CeilToInt(width); // how many lines are needed.
         if (count == 1)
@@ -100,12 +78,12 @@ public class NavDebugger : MonoBehaviour
                 Debug.LogError("Camera.current is null");
                 return;
             }
-            Vector3 v1 = (p2 - p1).normalized; // line direction
-            Vector3 v2 = (c.transform.position - p1).normalized; // direction to camera
-            Vector3 n = Vector3.Cross(v1, v2); // normal vector
+            Vector2 v1 = (p2 - p1).normalized; // line direction
+            Vector2 v2 = ((Vector2)c.transform.position - p1).normalized; // direction to camera
+            Vector2 n = Vector3.Cross(v1, v2); // normal vector
             for (int i = 0; i < count; i++)
             {
-                Vector3 o = n * (0.1f / width) * i;
+                Vector2 o = n * (0.1f / width) * i;
                 Gizmos.DrawLine(p1 + o, p2 + o);
             }
         }
@@ -140,7 +118,7 @@ public class NavDebugger : MonoBehaviour
         float anglePerCircleVert = (Mathf.PI * 2) / circleVertCount;
         for (int i = 0; i < circleVertCount; i++)
         {
-            verts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Sin(anglePerCircleVert * i), collider.radius * Mathf.Sin(anglePerCircleVert * i))));
+            verts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Sin(anglePerCircleVert * i), collider.radius * Mathf.Cos(anglePerCircleVert * i))));
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Utility
 {
-    public class ExtendedMathf
+    public class ExMathf
     {
 
         public static float SignedArea(Vector2 a, Vector2 b, Vector2 c)
