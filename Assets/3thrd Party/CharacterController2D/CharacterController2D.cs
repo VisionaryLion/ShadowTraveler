@@ -148,7 +148,7 @@ namespace FakePhysics
         public CharacterCollisionState2D collisionState = new CharacterCollisionState2D();
         [HideInInspector]
         [NonSerialized]
-        public Vector3 velocity;
+        public Vector2 velocity;
         public bool isGrounded { get { return collisionState.below; } }
 
         const float kSkinWidthFloatFudgeFactor = 0.001f;

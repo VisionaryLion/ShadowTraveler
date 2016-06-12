@@ -109,6 +109,7 @@ namespace FakePhysics
         bool _startNonAtomic;
         int _facingDir = 1;
         PhysicsMaterial2D _cPhysicalMaterial;
+        float _ownBounceness;
 
         //corroutines
         Coroutine _CGrounded;
@@ -141,6 +142,38 @@ namespace FakePhysics
             externalVelocity = new List<GetVelocity>(2);
             externalConstantVelocity = new List<Vector2>(2);
             externalPlattformVelocity = new List<GetVelocity>(2);
+            PhysicsMaterial2D ownMat = GetComponent<Collider2D>().sharedMaterial;
+            _ownBounceness = (ownMat == null) ? 0 : ownMat.bounciness;
+        }
+
+        void OnCollisionEnter2D(Collision2D col)
+        {
+            Rigidbody2D oRi = col.collider.GetComponent<Rigidbody2D>();
+            if (oRi == null)
+                return;
+
+            // Calculate relative velocity
+            Vector2 rv = col.relativeVelocity - _motor.velocity;
+
+            // Calculate relative velocity in terms of the normal direction
+            float velAlongNormal = Vector2.Dot(rv, col.contacts[0].normal);
+            
+
+            // Do not resolve if velocities are separating
+            if (velAlongNormal > 0)
+                return;
+
+            // Calculate restitution
+            float e = Mathf.Min((col.collider.sharedMaterial == null) ? 0 : col.collider.sharedMaterial.bounciness, _ownBounceness);
+
+            // Calculate impulse scalar
+            float j = -(1 + e) * velAlongNormal;
+            j /= 1 / _motor.rigidBody2D.mass + 1 / oRi.mass;
+
+            // Apply impulse
+            Vector2 impulse = j * col.contacts[0].normal;
+            oRi.AddForceAtPosition(-impulse, col.contacts[0].point, ForceMode2D.Impulse);
+            AddVelocity (()=> { return impulse * 1 / _motor.rigidBody2D.mass; });
         }
 
         private void _motor_onTriggerExitEvent(Collider2D obj)
@@ -566,7 +599,6 @@ namespace FakePhysics
         }
 
         //public
-
         public void AddForce(Vector2 force)
         {
             externalForce.Add(force);
@@ -598,7 +630,6 @@ namespace FakePhysics
         }
 
         //debug
-
         void OnGUI()
         {
             GUILayout.Label("cState = " + _cState);
