@@ -148,19 +148,20 @@ namespace FakePhysics
 
         void OnCollisionEnter2D(Collision2D col)
         {
+            
             Rigidbody2D oRi = col.collider.GetComponent<Rigidbody2D>();
             if (oRi == null)
                 return;
 
             // Calculate relative velocity
-            Vector2 rv = col.relativeVelocity - _motor.velocity;
+            Vector2 rv = col.relativeVelocity - (_deltaMovement + _deltaExternalForces);
 
             // Calculate relative velocity in terms of the normal direction
             float velAlongNormal = Vector2.Dot(rv, col.contacts[0].normal);
             
 
             // Do not resolve if velocities are separating
-            if (velAlongNormal > 0)
+            if (velAlongNormal <= 0)
                 return;
 
             // Calculate restitution
@@ -172,8 +173,8 @@ namespace FakePhysics
 
             // Apply impulse
             Vector2 impulse = j * col.contacts[0].normal;
-            oRi.AddForceAtPosition(-impulse, col.contacts[0].point, ForceMode2D.Impulse);
-            AddVelocity (()=> { return impulse * 1 / _motor.rigidBody2D.mass; });
+            oRi.AddForceAtPosition(impulse, col.contacts[0].point, ForceMode2D.Impulse);
+            AddVelocity (()=> { return -impulse * 1 / _motor.rigidBody2D.mass; });
         }
 
         private void _motor_onTriggerExitEvent(Collider2D obj)
