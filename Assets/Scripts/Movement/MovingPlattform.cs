@@ -95,10 +95,5 @@ namespace FakePhysics
                 backwards = false;
             }
         }
-
-        void OnFakeCollisionStay2D(IManagedCharController2D iInput)
-        {
-            iInput.AddPlattformVelocity(()=> { return rigidbody.velocity; });
-        }
     }
 }

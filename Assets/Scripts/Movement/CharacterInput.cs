@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace FakePhysics
+namespace CC2D
 {
     [RequireComponent(typeof(CharacterController2D))]
-    public class CharacterInput : MonoBehaviour, IManagedCharController2D
+    public class CharacterInput : MonoBehaviour
     {
         enum MovementState
         {
@@ -204,19 +204,19 @@ namespace FakePhysics
 
         void Update()
         {
+
             if (_motor.collisionState.wasGroundedLastFrame && !_motor.isGrounded)
                 OnIsNotGrounded();
             else if (_motor.collisionState.becameGroundedThisFrame)
                 OnBecameGrounded();
-
-            if (Input.GetButtonDown("Jump") && !_motor.collisionState.standOnToSteepSlope)
+            if (Input.GetButtonDown(" Jump") && !_motor.collisionState.standOnToSteepSlope)
             {
                 _isJumpButtonPressed = true;
                 if (_CJumpPressed != null)
                     StopCoroutine(_CJumpPressed);
             }
-            else if (!Input.GetButton("Jump") && _isJumpButtonPressed)
-                _CJumpPressed = StartCoroutine(DelayForFrames(() => { _isJumpButtonPressed = false; }, transToFallDelay));
+          //  else if (!Input.GetButton("Jump") && _isJumpButtonPressed)
+            //    _CJumpPressed = StartCoroutine(DelayForFrames(() => { _isJumpButtonPressed = false; }, transToFallDelay));
         }
 
         void FixedUpdate()
@@ -242,7 +242,7 @@ namespace FakePhysics
             switch (_cState)
             {
                 case MovementState.HMove:
-                    _motor.collisionState.belowHit.collider.SendMessage("OnFakeCollisionStay2D", (IManagedCharController2D)this, SendMessageOptions.DontRequireReceiver);
+                   // _motor.collisionState.belowHit.collider.SendMessage("OnFakeCollisionStay2D", (IManagedCharController2D)this, SendMessageOptions.DontRequireReceiver);
                     if (_motor.collisionState.belowHit.collider.CompareTag(frictionTag))
                     {
                         _cPhysicalMaterial = _motor.collisionState.belowHit.collider.sharedMaterial;
@@ -326,7 +326,7 @@ namespace FakePhysics
 
         void OnIsNotGrounded()
         {
-            _CGrounded = StartCoroutine(DelayForFrames(() => { _delayedIsGrounded = false; }, transToFallDelay));
+            //_CGrounded = StartCoroutine(DelayForFrames(() => { _delayedIsGrounded = false; }, transToFallDelay));
             if (_cState == MovementState.HMove)
                 StartFalling();
         }
@@ -444,7 +444,7 @@ namespace FakePhysics
                 wallJumpVelocity.x = -wallJumpVelocity.x;
             }
             _deltaMovement += wallJumpVelocity;
-            _CWallJump = StartCoroutine(DelayForFrames(() => { StartFalling(); }, wallJumpNoControllFrames));
+            //_CWallJump = StartCoroutine(DelayForFrames(() => { StartFalling(); }, wallJumpNoControllFrames));
         }
 
         void StartVMove()
@@ -502,17 +502,7 @@ namespace FakePhysics
                 _isWallSliding = false;
         }
 
-        private delegate void DelayedAction();
-        IEnumerator DelayForFrames(DelayedAction action, int delay)
-        {
-            int frameCounter = 0;
-            while (frameCounter < delay)
-            {
-                yield return new WaitForFixedUpdate();
-                frameCounter++;
-            }
-            action();
-        }
+        
 
         IEnumerator AnalogJump()
         {

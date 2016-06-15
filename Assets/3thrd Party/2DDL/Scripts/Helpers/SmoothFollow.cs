@@ -5,14 +5,14 @@ using FakePhysics;
 
 public class SmoothFollow : MonoBehaviour
 {
-	public Transform target;
+	/*public Transform target;
 	public float smoothDampTime = 0.2f;
 	[HideInInspector]
 	public new Transform transform;
 	public Vector3 cameraOffset;
 	public bool useFixedUpdate = false;
 	
-	private CharacterController2D _playerController;
+	//private CharacterController2D _playerController;
 	private Vector3 _smoothDampVelocity;
 	private float lastZCam;
 	
@@ -21,7 +21,7 @@ public class SmoothFollow : MonoBehaviour
 	{
 		transform = gameObject.transform;
 		lastZCam = transform.position.z;
-		_playerController = target.GetComponent<CharacterController2D>();
+		//_playerController = target.GetComponent<CharacterController2D>();
 	}
 	
 	
@@ -62,6 +62,6 @@ public class SmoothFollow : MonoBehaviour
 		fixZ = new Vector3(transform.position.x, transform.position.y,  lastZCam);
 		transform.position = fixZ;
 
-	}
+	}*/
 	
 }

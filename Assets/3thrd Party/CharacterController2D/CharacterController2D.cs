@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace FakePhysics
+namespace CC2D
 {
 
     [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]

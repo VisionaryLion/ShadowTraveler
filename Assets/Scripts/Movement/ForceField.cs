@@ -5,7 +5,7 @@ namespace FakePhysics
 {
     public class ForceField : MonoBehaviour
     {
-
+        /*
         public Vector2 force;
         public bool linearLess;
         public Vector2 anker;
@@ -35,6 +35,6 @@ namespace FakePhysics
             {
                 Gizmos.DrawRay(anker, force * length);
             }
-        }
+        }*/
     }
 }

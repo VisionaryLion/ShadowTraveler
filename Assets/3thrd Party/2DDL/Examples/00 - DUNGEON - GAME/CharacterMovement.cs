@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-using FakePhysics;
 
 //THIS SCRIPT WILL NOT WORK PROPERLY, BECAUSE OF CHANGES IN THE CHARACTERCONTROLLER2D SCRIPT!!!!!!!
 //COMMENTED THIS LINE OF: _controller.move( _velocity * Time.deltaTime);
+/*
 public class CharacterMovement : MonoBehaviour
 {
 	// movement config
@@ -249,5 +249,5 @@ public class CharacterMovement : MonoBehaviour
 		currentLevel = nextLevel;
 		Application.LoadLevelAsync(currentLevel);
 	}
-
-}
+    
+}*/

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace FakePhysics
+namespace CC2D
 {
     [RequireComponent(typeof(CharacterController2D))]
     public class RigidbodyInteractor : MonoBehaviour
