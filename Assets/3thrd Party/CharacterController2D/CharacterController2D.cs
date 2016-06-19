@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace FakePhysics
+namespace CC2D
 {
 
     [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
@@ -148,7 +148,7 @@ namespace FakePhysics
         public CharacterCollisionState2D collisionState = new CharacterCollisionState2D();
         [HideInInspector]
         [NonSerialized]
-        public Vector3 velocity;
+        public Vector2 velocity;
         public bool isGrounded { get { return collisionState.below; } }
 
         const float kSkinWidthFloatFudgeFactor = 0.001f;
@@ -196,13 +196,14 @@ namespace FakePhysics
             // here, we trigger our properties that have setters with bodies
             skinWidth = _skinWidth;
 
+            /* NOT IF WE WANT RIGIDBODY INTERACTION!!!
             // we want to set our CC2D to ignore all collision layers except what is in our triggerMask
             for (var i = 0; i < 32; i++)
             {
                 // see if our triggerMask contains this layer and if not ignore it
                 if ((triggerMask.value & 1 << i) == 0)
                     Physics2D.IgnoreLayerCollision(gameObject.layer, i);
-            }
+            }*/
         }
 
 
@@ -295,39 +296,37 @@ namespace FakePhysics
             ignoreOneWayPlatformsThisFrame = false;
         }
 
-        public void moveSilent(Vector3 deltaMovement, bool isJumping)
+        public bool manuallyCheckForSteepSlopes(float dir)
         {
-            _raycastHitsThisFrame.Clear();
-            primeRaycastOrigins();
+            var isGoingRight = dir > 0;
+            var rayDistance = Mathf.Abs(dir) + _skinWidth;
+            var rayDirection = isGoingRight ? Vector2.right : -Vector2.right;
+            var initialRayOrigin = isGoingRight ? _raycastOrigins.bottomRight : _raycastOrigins.bottomLeft;
+            var ray = new Vector2(initialRayOrigin.x, initialRayOrigin.y);
 
+            DrawRay(ray, rayDirection * rayDistance, Color.red);
 
-            // first, we check for a slope below us before moving
-            // only check slopes if we are going down and grounded
-            if (deltaMovement.y < 0f && collisionState.wasGroundedLastFrame)
-                handleVerticalSlope(ref deltaMovement);
+            // if we are grounded we will include oneWayPlatforms only on the first ray (the bottom one). this will allow us to
+            // walk up sloped oneWayPlatforms
+            if (collisionState.wasGroundedLastFrame)
+                _raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, platformMask);
+            else
+                _raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, platformMask & ~oneWayPlatformMask);
 
-            // now we check movement in the horizontal dir
-            if (deltaMovement.x != 0f)
-                moveHorizontally(ref deltaMovement, isJumping);
-
-            // next, check movement in the vertical dir
-            if (deltaMovement.y != 0f)
-                moveVertically(ref deltaMovement);
-
-            // move then update our state
-            transform.Translate(deltaMovement, Space.World);
-
-            if (!collisionState.wasGroundedLastFrame && collisionState.below)
-                collisionState.becameGroundedThisFrame = true;
-
-            // send off the collision events if we have a listener
-            if (onControllerCollidedEvent != null)
+            if (_raycastHit)
             {
-                for (var i = 0; i < _raycastHitsThisFrame.Count; i++)
-                    onControllerCollidedEvent(_raycastHitsThisFrame[i]);
-            }
+                float angle = Vector2.Angle(_raycastHit.normal, Vector2.up);
 
-            ignoreOneWayPlatformsThisFrame = false;
+                // disregard 90 degree angles (walls)
+                if (Mathf.RoundToInt(angle) == 90)
+                    return false;
+                // the bottom ray can hit a slope but no other ray can so we have special handling for these cases
+                if (angle >= slopeLimit)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -358,7 +357,7 @@ namespace FakePhysics
             _horizontalDistanceBetweenRays = colliderUseableWidth / (totalVerticalRays - 1);
         }
 
-        public void manuallyCheckForCollisions(float direction)
+        public bool manuallyCheckForCollisionsH(float direction)
         {
             var isGoingRight = direction > 0;
             var rayDistance = Mathf.Abs(direction) + _skinWidth;
@@ -395,9 +394,10 @@ namespace FakePhysics
                     // we add a small fudge factor for the float operations here. if our rayDistance is smaller
                     // than the width + fudge bail out because we have a direct impact
                     if (rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor)
-                        break;
+                        return true;
                 }
             }
+            return false;
         }
 
         #endregion
@@ -592,7 +592,6 @@ namespace FakePhysics
                     }
 
                     _raycastHitsThisFrame.Add(_raycastHit);
-
                     // this is a hack to deal with the top of slopes. if we walk up a slope and reach the apex we can get in a situation
                     // where our ray gets a hit that is less then skinWidth causing us to be ungrounded the next frame due to residual velocity.
                     if (!isGoingUp && deltaMovement.y > 0.00001f)
