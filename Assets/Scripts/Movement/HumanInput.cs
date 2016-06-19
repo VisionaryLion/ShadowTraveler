@@ -18,8 +18,13 @@ namespace CC2D
         {
             if (Input.GetButtonDown("Jump"))
             {
-                bufferedInput.timeOfJumpButtonDown = Time.time;
+                bufferedInput.timeOfLastJumpStateChange = Time.time;
                 bufferedInput.jump = true;
+                bufferedInput.isJumpConsumed = false;
+            }
+            else if (Input.GetButtonUp("Jump"))
+            {
+                bufferedInput.timeOfLastJumpStateChange = Time.time;
             }
             else
                 bufferedInput.jump = Input.GetButton("Jump");

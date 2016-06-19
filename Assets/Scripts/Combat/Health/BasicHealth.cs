@@ -11,9 +11,9 @@ namespace Combat
     public class BasicHealth : IHealth
     {
         [SerializeField]
-        protected float maxHealth;
+        protected float maxHealth = 100;
         [SerializeField]
-        protected float currentHealth;
+        protected float currentHealth = 100;
         protected float lastHealth = 0;
         [SerializeField]
         protected Resistance resistance;
@@ -22,6 +22,7 @@ namespace Combat
         private bool isSilent = false;
         private List<ITimedDamageInfo> dmgBuffer;
         private List<Coroutine> longTimeDamageHandler;
+
 
 
         public void Awake()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Utility.ExtensionMethods
 {
@@ -30,6 +31,11 @@ namespace Utility.ExtensionMethods
                 source.Remove(next);
                 source.AddFirst(next.Value);
             }
+        }
+
+        public static bool IsLayerWithinMask(this LayerMask source, int other)
+        {
+            return source == (source | (1 << other));
         }
     }
 }

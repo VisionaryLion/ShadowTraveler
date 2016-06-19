@@ -13,7 +13,7 @@ namespace FakePhysics
         [SerializeField]
         float timeForOneTravel;
 
-        //After the plattform arrives at the last plattform, it will stop moving.
+        //After the platform arrives at the last platform, it will stop moving.
         [SerializeField]
         MovemenType movemenType;
 
@@ -23,7 +23,7 @@ namespace FakePhysics
         new Rigidbody2D rigidbody;
         float plattformSpeed;
         int nextPointToReach;
-        //If set to false, the plattform will not move.
+        //If set to false, the platform will not move.
         bool shouldMove = true;
         bool backwards;
         float targetRadiusSqr;
@@ -38,7 +38,7 @@ namespace FakePhysics
             //Square the targetrad, to avoid root calculation later
             targetRadiusSqr = targetRadius * targetRadius;
 
-            //Calc the plattform speed
+            //Calc the platform speed
             plattformSpeed = CalcTotalTravelLength() / timeForOneTravel;
         }
 
@@ -64,7 +64,7 @@ namespace FakePhysics
                 AdvancePointCycle();
             }
 
-            //We didnt so move on
+            //We didn't, so move on
             velocity.Normalize();
             rigidbody.velocity = velocity * plattformSpeed;
         }

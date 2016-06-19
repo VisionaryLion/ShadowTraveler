@@ -12,8 +12,6 @@ namespace Combat
         IHealth health;
         [SerializeField]
         float multiplikator = 1;
-        [SerializeField]
-        bool debug = false;
 
         public override IHealth BaseHealth
         {
@@ -32,7 +30,6 @@ namespace Combat
         {
             if (health != null)
             {
-if(debug == true)
                 Debug.Log(name + " recieved " + dmgInf + ", resulting in " + (dmgInf.Damage * multiplikator) + " damage.");
                 dmgInf.Damage *= multiplikator;
                 health.ChangeHealth(dmgInf);
