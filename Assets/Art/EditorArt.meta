@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 3e6e0468519aece499a71293739fdbd4
+guid: a5bb6c8a59da52247a983dd6587e34aa
 folderAsset: yes
+timeCreated: 1462471508
+licenseType: Free
 DefaultImporter:
   userData: 
-<<<<<<< HEAD
   assetBundleName: 
   assetBundleVariant: 
-=======
->>>>>>> refs/remotes/origin/Pathfinding
