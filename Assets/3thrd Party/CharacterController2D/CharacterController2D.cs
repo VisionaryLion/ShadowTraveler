@@ -397,7 +397,14 @@ namespace CC2D
                         return true;
                 }
             }
-            return false;
+            if (isGoingRight)
+            {
+                return collisionState.right;
+            }
+            else
+            {
+                return collisionState.left;
+            }
         }
 
         #endregion
