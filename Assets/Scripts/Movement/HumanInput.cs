@@ -34,7 +34,10 @@ namespace CC2D
         {
             bufferedInput.horizontalRaw = Input.GetAxisRaw("Horizontal");
             bufferedInput.verticalRaw = Input.GetAxisRaw("Vertical");
-           
+
+            bufferedInput.horizontal = Input.GetAxis("Horizontal");
+            bufferedInput.vertical = Input.GetAxis("Vertical");
+
             _motor.CurrentMovementInput = bufferedInput;
         }
     }

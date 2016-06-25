@@ -1,99 +1,93 @@
 ﻿using UnityEngine;
+using Actors;
 
-namespace FakePhysics
+[RequireComponent(typeof(PositionHolder2D))]
+[RequireComponent(typeof(Rigidbody2D))]
+public class MovingPlattform : MonoBehaviour
 {
-    [RequireComponent(typeof(PositionHolder2D))]
-    public class MovingPlattform : MonoBehaviour
+    enum MovemenType
     {
-        enum MovemenType {
-            OneShot,
-            Loop,
-            PingPong
-        }
-        [SerializeField]
-        float timeForOneTravel;
+        OneShot,
+        Loop,
+        PingPong
+    }
+    [AssignActorAutomaticly]
+    public MovingPlatformActor actor;
+    [SerializeField]
+    float timeForOneTravel = 20;
+    [SerializeField]
+    MovemenType movemenType;
+    [SerializeField]
+    float targetRadius = 0.5f;
 
-        //After the platform arrives at the last platform, it will stop moving.
-        [SerializeField]
-        MovemenType movemenType;
+    float plattformSpeed;
+    int nextPointToReach;
+    //If set to false, the platform will not move.
+    bool shouldMove = true;
+    bool backwards;
+    float targetRadiusSqr;
+    Vector3 velocity;
 
-        [SerializeField]
-        float targetRadius = 0.5f;
+    void Awake()
+    {
+        //Square the targetrad, to avoid root calculation later
+        targetRadiusSqr = targetRadius * targetRadius;
 
-        new Rigidbody2D rigidbody;
-        float plattformSpeed;
-        int nextPointToReach;
-        //If set to false, the platform will not move.
-        bool shouldMove = true;
-        bool backwards;
-        float targetRadiusSqr;
-        Vector3 velocity;
-        PositionHolder2D posHolder;
+        //Calc the platform speed
+        plattformSpeed = CalcTotalTravelLength() / timeForOneTravel;
+    }
 
-        void Awake()
+    float CalcTotalTravelLength()
+    {
+        float totalDistance = 0;
+        for (int i = 0; i < actor.PositionHolder2D.positions.Count - 1; i++)
+            totalDistance += Vector3.Distance(actor.PositionHolder2D.positions[i], actor.PositionHolder2D.positions[i + 1]);
+        return totalDistance;
+    }
+
+    void FixedUpdate()
+    {
+        if (!shouldMove)
+            return;
+
+        //Calc the direction
+        velocity = (Vector3)actor.PositionHolder2D.positions[nextPointToReach] - transform.position;
+
+        //Did we arrive at our target?
+        if (velocity.sqrMagnitude < targetRadiusSqr)
         {
-            posHolder = GetComponent<PositionHolder2D>();
-            rigidbody = GetComponent<Rigidbody2D>();
-
-            //Square the targetrad, to avoid root calculation later
-            targetRadiusSqr = targetRadius * targetRadius;
-
-            //Calc the platform speed
-            plattformSpeed = CalcTotalTravelLength() / timeForOneTravel;
+            AdvancePointCycle();
         }
 
-        float CalcTotalTravelLength()
+        //We didn't, so move on
+        velocity.Normalize();
+        actor.Rigidbody2D.velocity = velocity * plattformSpeed;
+    }
+
+    void AdvancePointCycle()
+    {
+        if (backwards)
+            nextPointToReach--;
+        else
+            nextPointToReach++;
+
+        //Finished a complete travel to all points
+        if (nextPointToReach == actor.PositionHolder2D.positions.Count)
         {
-            float totalDistance = 0;
-            for (int i = 0; i < posHolder.positions.Count - 1; i++)
-                totalDistance += Vector3.Distance(posHolder.positions[i], posHolder.positions[i + 1]);
-            return totalDistance;
-        }
-
-        void FixedUpdate()
-        {
-            if (!shouldMove)
-                return;
-
-            //Calc the direction
-            velocity = (Vector3)posHolder.positions[nextPointToReach] - transform.position;
-
-            //Did we arrive at our target?
-            if (velocity.sqrMagnitude < targetRadiusSqr)
+            if (movemenType == MovemenType.PingPong)
             {
-                AdvancePointCycle();
+                backwards = true;
+                nextPointToReach = actor.PositionHolder2D.positions.Count - 2;
             }
-
-            //We didn't, so move on
-            velocity.Normalize();
-            rigidbody.velocity = velocity * plattformSpeed;
-        }
-
-        void AdvancePointCycle()
-        {
-            if (backwards)
-                nextPointToReach--;
+            else if (movemenType == MovemenType.OneShot)
+                shouldMove = false;
             else
-                nextPointToReach++;
-
-            //Finished a complete travel to all points
-            if (nextPointToReach == posHolder.positions.Count)
-            {
-                if (movemenType == MovemenType.PingPong)
-                {
-                    backwards = true;
-                    nextPointToReach = posHolder.positions.Count - 2;
-                }
-                else if (movemenType == MovemenType.OneShot)
-                    shouldMove = false;
-                else
-                    nextPointToReach = 0;
-            }
-            else if (nextPointToReach == -1)
-            {
-                nextPointToReach = 1;
-                backwards = false;
-            }
+                nextPointToReach = 0;
+        }
+        else if (nextPointToReach == -1)
+        {
+            nextPointToReach = 1;
+            backwards = false;
         }
     }
 }

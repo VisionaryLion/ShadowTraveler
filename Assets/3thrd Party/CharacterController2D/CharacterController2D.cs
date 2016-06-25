@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Actors;
 
 
 namespace CC2D
@@ -61,6 +62,10 @@ namespace CC2D
 
         #region events, properties and fields
 
+        [AssignActorAutomaticly]
+        public PlayerActor actor;
+
+
         public event Action<RaycastHit2D> onControllerCollidedEvent;
         public event Action<Collider2D> onTriggerEnterEvent;
         public event Action<Collider2D> onTriggerStayEvent;
@@ -94,17 +99,20 @@ namespace CC2D
         /// <summary>
         /// mask with all layers that the player should interact with
         /// </summary>
+        [RemindToConfigureField]
         public LayerMask platformMask = 0;
 
         /// <summary>
         /// mask with all layers that trigger events should fire when intersected
         /// </summary>
+        [RemindToConfigureField]
         public LayerMask triggerMask = 0;
 
         /// <summary>
         /// mask with all layers that should act as one-way platforms. Note that one-way platforms should always be EdgeCollider2Ds. This is because it does not support being
         /// updated anytime outside of the inspector for now.
         /// </summary>
+        [RemindToConfigureField]
         [SerializeField]
         LayerMask oneWayPlatformMask = 0;
 
@@ -131,17 +139,6 @@ namespace CC2D
         /// to calculate the length of the ray that checks for slopes.
         /// </summary>
         float _slopeLimitTangent = Mathf.Tan(75f * Mathf.Deg2Rad);
-
-
-        [HideInInspector]
-        [NonSerialized]
-        public new Transform transform;
-        [HideInInspector]
-        [NonSerialized]
-        public BoxCollider2D boxCollider;
-        [HideInInspector]
-        [NonSerialized]
-        public Rigidbody2D rigidBody2D;
 
         [HideInInspector]
         [NonSerialized]
@@ -180,18 +177,12 @@ namespace CC2D
         // the reason is so that if we reach the end of the slope we can make an adjustment to stay grounded
         bool _isGoingUpSlope = false;
 
-
         #region Monobehaviour
 
         void Awake()
         {
             // add our one-way platforms to our normal platform mask so that we can land on them from above
             platformMask |= oneWayPlatformMask;
-
-            // cache some components
-            transform = GetComponent<Transform>();
-            boxCollider = GetComponent<BoxCollider2D>();
-            rigidBody2D = GetComponent<Rigidbody2D>();
 
             // here, we trigger our properties that have setters with bodies
             skinWidth = _skinWidth;
@@ -272,7 +263,7 @@ namespace CC2D
                 moveVertically(ref deltaMovement);
 
             // move then update our state
-            transform.Translate(deltaMovement, Space.World);
+            actor.Transform.Translate(deltaMovement, Space.World);
 
             // only calculate velocity if we have a non-zero deltaTime
             if (Time.deltaTime > 0f)
@@ -349,11 +340,11 @@ namespace CC2D
         {
             // figure out the distance between our rays in both directions
             // horizontal
-            var colliderUseableHeight = boxCollider.size.y * Mathf.Abs(transform.localScale.y) - (2f * _skinWidth);
+            var colliderUseableHeight = actor.BoxCollider2D.size.y * Mathf.Abs(actor.Transform.localScale.y) - (2f * _skinWidth);
             _verticalDistanceBetweenRays = colliderUseableHeight / (totalHorizontalRays - 1);
 
             // vertical
-            var colliderUseableWidth = boxCollider.size.x * Mathf.Abs(transform.localScale.x) - (2f * _skinWidth);
+            var colliderUseableWidth = actor.BoxCollider2D.size.x * Mathf.Abs(actor.Transform.localScale.x) - (2f * _skinWidth);
             _horizontalDistanceBetweenRays = colliderUseableWidth / (totalVerticalRays - 1);
         }
 
@@ -421,7 +412,7 @@ namespace CC2D
         void primeRaycastOrigins()
         {
             // our raycasts need to be fired from the bounds inset by the skinWidth
-            var modifiedBounds = boxCollider.bounds;
+            var modifiedBounds = actor.BoxCollider2D.bounds;
             modifiedBounds.Expand(-2f * _skinWidth);
 
             _raycastOrigins.topLeft = new Vector2(modifiedBounds.min.x, modifiedBounds.max.y);
