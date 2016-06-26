@@ -8,6 +8,8 @@ namespace CC2D {
         public float timeOfLastJumpStateChange;
         public float horizontalRaw; //The input for the horizontal axis
         public float verticalRaw; //The input for the vertical axis
+        public float horizontal; //The input for the horizontal axis
+        public float vertical; //The input for the vertical axis
 
         public MovementInput()
         {

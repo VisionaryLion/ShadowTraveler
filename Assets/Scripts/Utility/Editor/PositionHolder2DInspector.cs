@@ -26,8 +26,10 @@ public class PositionHolder2DInspector : Editor
     {
         // Update the serializedProperty
         serializedObject.Update();
-       
+        EditorGUI.BeginChangeCheck();
         showPositions = EditorGUILayout.Foldout(showPositions, "Positions");
+        if (EditorGUI.EndChangeCheck())
+            SceneView.RepaintAll();
         EditorGUI.BeginChangeCheck();
         if (showPositions)
         {
@@ -53,21 +55,35 @@ public class PositionHolder2DInspector : Editor
                 }
             }
         }
-        shouldConnectEnds = EditorGUILayout.Toggle("Connect Last, First", shouldConnectEnds);
+        shouldConnectEnds = EditorGUILayout.Toggle("Connect Last & First", shouldConnectEnds);
         Rect buttonRect = GUILayoutUtility.GetLastRect();
         buttonRect.y += EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight;
-        buttonRect.width = (buttonRect.width - 20) / 2;
+        float inverseSize = buttonRect.width - 40 - 30;
+        buttonRect.width = 20;
         GUI.enabled = showPositions;
+        if (GUI.Button(buttonRect, "+"))
+        {
+            positions.InsertArrayElementAtIndex(positions.arraySize - 1);
+            currentSelectedPosition = positions.arraySize - 1;
+            Repaint();
+        }
+        buttonRect.x += 10 + buttonRect.width;
+        buttonRect.width = inverseSize;
         if (GUI.Button(buttonRect, "Insert"))
         {
             positions.InsertArrayElementAtIndex(currentSelectedPosition);
             currentSelectedPosition++;
             Repaint();
         }
-        buttonRect.x = buttonRect.width + 20;
+        buttonRect.x += buttonRect.width + 10;
+        buttonRect.width = 20;
         if (GUI.Button(buttonRect, "-"))
             RemoveArrayElementAt(positions, currentSelectedPosition);
         GUILayout.Space(EditorGUIUtility.standardVerticalSpacing + EditorGUIUtility.singleLineHeight);
+        if (GUILayout.Button("Set position to node 0"))
+        {
+            ((PositionHolder2D)target).transform.position = positions.GetArrayElementAtIndex(0).vector2Value;
+        }
         GUI.enabled = true;
         if (EditorGUI.EndChangeCheck())
         {
@@ -78,6 +94,9 @@ public class PositionHolder2DInspector : Editor
 
     public void OnSceneGUI()
     {
+        if (!showPositions)
+            return;
+
         Vector3 currentPos;
         Vector3 oldPos = positions.GetArrayElementAtIndex(0).vector2Value;
         bool didChangeHappen = false;
