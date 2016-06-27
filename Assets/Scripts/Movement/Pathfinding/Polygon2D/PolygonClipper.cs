@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Polygon2D
 {
-    public class PolygonClipper
+    public static class PolygonClipper
     {
         public enum BoolOpType { INTERSECTION, UNION, DIFFERENCE, XOR };
 
@@ -47,7 +47,7 @@ namespace Polygon2D
             }
 
             //Init the event queue with the polygon edges
-            HeapPriorityQueue<SweepEvent> eventQueue = new HeapPriorityQueue<SweepEvent>((sp.chain.Count + cp.chain.Count) * 2);
+            HeapPriorityQueue<SweepEvent> eventQueue = new HeapPriorityQueue<SweepEvent>((sp.chain.Count + cp.chain.Count) * 3);
             InsertPolygon(eventQueue, sp, PolygonType.SUBJECT);
             InsertPolygon(eventQueue, cp, PolygonType.CLIPPING);
 

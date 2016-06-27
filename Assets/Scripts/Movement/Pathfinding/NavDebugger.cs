@@ -10,8 +10,9 @@ public class NavDebugger : MonoBehaviour
 {
     public int circleVertCount;
 
-    public GameObject gA;
-    public GameObject gB;
+    public Collider2D gA;
+    public Collider2D gB;
+    public Collider2D gC;
     public PolygonClipper.BoolOpType op;
     public LayerMask collisionMask;
     PointChain[] result;
@@ -30,12 +31,27 @@ public class NavDebugger : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if ((Event.current.isMouse && Event.current.button == 0) || result == null || old_op != op)
+        if ((Event.current.isMouse && Event.current.button==1) || result == null || old_op != op)
         {
-            NavMesh2DBuilder builder = new NavMesh2DBuilder(collisionMask, circleVertCount);
-            LinkedList<PointChain> tL = builder.Build();
-            result = new PointChain[tL.Count];
-            tL.CopyTo(result, 0);
+            List<Vector2> verts = new List<Vector2>(20);
+            LoadColliderVerts(gA, verts);
+            PointChain p1 = new PointChain(verts, true);
+
+            LoadColliderVerts(gB, verts);
+            PointChain p2 = new PointChain(verts, true);
+
+            LoadColliderVerts(gC, verts);
+            PointChain p3 = new PointChain(verts, true);
+
+            result = PolygonClipper.Compute(p1, p2, PolygonClipper.BoolOpType.UNION);
+            List<PointChain> resultBuffer = new List<PointChain>(result.Length);
+
+            foreach (PointChain pPC in result)
+            {
+                resultBuffer.AddRange(PolygonClipper.Compute(pPC, p3, PolygonClipper.BoolOpType.UNION));
+            }
+
+            result = resultBuffer.ToArray();
 
             //DEBUG
             Debug.Log("Contour count = " + result.Length);
@@ -47,6 +63,7 @@ public class NavDebugger : MonoBehaviour
                     Debug.Log("          Contour[" + iCount + "] vertex = " + vert);
                 }
             }
+            old_op = op;
         }
 
         for (int iCount = 0; iCount < result.Length; iCount++)
@@ -99,9 +116,9 @@ public class NavDebugger : MonoBehaviour
         else if (cTyp == typeof(CircleCollider2D))
             GetCircleColliderVerts((CircleCollider2D)collider, verts, circleVertCount);
         else if (cTyp == typeof(EdgeCollider2D))
-            verts.AddRange(((EdgeCollider2D)collider).points);
+            GetEdgeColliderVerts((EdgeCollider2D)collider, verts);
         else if (cTyp == typeof(PolygonCollider2D))
-            verts.AddRange(((PolygonCollider2D)collider).points);
+            GetPolygonColliderVerts((PolygonCollider2D)collider, verts);
     }
 
     private static void GetBoxColliderVerts(BoxCollider2D collider, List<Vector2> verts)
@@ -119,6 +136,24 @@ public class NavDebugger : MonoBehaviour
         for (int i = 0; i < circleVertCount; i++)
         {
             verts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Sin(anglePerCircleVert * i), collider.radius * Mathf.Cos(anglePerCircleVert * i))));
+        }
+    }
+
+    private static void GetPolygonColliderVerts(PolygonCollider2D collider, List<Vector2> verts)
+    {
+        Matrix4x4 localToWorld = collider.transform.localToWorldMatrix;
+        for (int iVert = 0; iVert < collider.points.Length; iVert++)
+        {
+            verts.Add(localToWorld.MultiplyPoint(collider.points[iVert]));
+        }
+    }
+
+    private static void GetEdgeColliderVerts(EdgeCollider2D collider, List<Vector2> verts)
+    {
+        Matrix4x4 localToWorld = collider.transform.localToWorldMatrix;
+        for (int iVert = 0; iVert < collider.points.Length; iVert++)
+        {
+            verts.Add(localToWorld.MultiplyPoint(collider.points[iVert]));
         }
     }
 }
