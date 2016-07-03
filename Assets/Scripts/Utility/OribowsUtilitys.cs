@@ -41,5 +41,29 @@ namespace Utility
             }
             return result;
         }
+
+        public static void DrawLine(Vector2 p1, Vector2 p2, float width)
+        {
+            int count = Mathf.CeilToInt(width); // how many lines are needed.
+            if (count == 1)
+                Gizmos.DrawLine(p1, p2);
+            else
+            {
+                Camera c = Camera.current;
+                if (c == null)
+                {
+                    Debug.LogError("Camera.current is null");
+                    return;
+                }
+                Vector2 v1 = (p2 - p1).normalized; // line direction
+                Vector2 v2 = ((Vector2)c.transform.position - p1).normalized; // direction to camera
+                Vector2 n = Vector3.Cross(v1, v2); // normal vector
+                for (int i = 0; i < count; i++)
+                {
+                    Vector2 o = n * (0.1f / width) * i;
+                    Gizmos.DrawLine(p1 + o, p2 + o);
+                }
+            }
+        }
     }
 }
