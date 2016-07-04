@@ -1,4 +1,5 @@
 ﻿//#define Glide
+//#define DEBUG
 
 using UnityEngine;
 using Utility.ExtensionMethods;
@@ -699,6 +700,7 @@ namespace CC2D
 
         #endregion
 
+#if DEBUG
         #region Debug
 
         void OnGUI()
@@ -714,6 +716,7 @@ namespace CC2D
             GUILayout.Label("isFakedParents = " + (_fakeParent != null));
         }
         #endregion
+#endif
     }
 
     public class Velocity2D
