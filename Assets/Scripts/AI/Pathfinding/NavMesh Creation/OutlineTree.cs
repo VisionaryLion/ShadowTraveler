@@ -6,38 +6,26 @@ namespace NavMesh2D.Core
     public class OutlineTree
     {
 
-        List<Outline> outlines; // root
+        List<Contour> outlines; // root
 
         public OutlineTree()
         {
-            outlines = new List<Outline>();
+            outlines = new List<Contour>();
         }
 
-        public void AddOutline(Outline outline)
+        public void AddOutline(Contour outline)
         {
+            bool isConsumed = false;
             for (int iOut = 0; iOut < outlines.Count; iOut++)
             {
-                if (outlines[iOut].TryAddOutline(outline, this))
-                    return;
-            }
-
-            outlines.Add(outline);
-        }
-
-        public void ReAddOutline(Outline outline)
-        {
-            for (int iOut = 0; iOut < outlines.Count; iOut++)
-            {
-                if (outlines[iOut] == outline)
-                    continue;
-                if (outlines[iOut].TryMergeOutline(outline))
+                if (outlines[iOut].TryAddContour(outline))
                 {
-                    Outline merged = outlines[iOut];
-                    outlines.Remove(outline);
-                    ReAddOutline(merged);
-                    return;
+                    outline = outlines[iOut];
+                    isConsumed = true;
                 }
             }
+            if (!isConsumed)
+                outlines.Add(outline);
         }
 
         public void DrawDebugInfo()

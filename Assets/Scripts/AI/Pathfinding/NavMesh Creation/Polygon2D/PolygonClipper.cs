@@ -7,7 +7,7 @@ namespace Polygon2D
     public static class PolygonClipper
     {
         public enum BoolOpType { INTERSECTION, UNION, DIFFERENCE, XOR };
-        public enum ResultType { Error_NotClosedChain, OnePolygonIsEmpty, BoundingBoxTestFailed, SuccesfullyCliped };
+        public enum ResultType { Error_NotClosedChain, OnePolygonIsEmpty, BoundingBoxTestFailed, SuccesfullyCliped, NoChangesMade };
 
         enum EdgeType { NORMAL, NON_CONTRIBUTING, SAME_TRANSITION, DIFFERENT_TRANSITION };
         enum PolygonType { SUBJECT, CLIPPING };
@@ -70,7 +70,7 @@ namespace Polygon2D
                     // Create a polygon out of the pointchain
                     Debug.Log("<color=green>Ended early. Op = 2, " + (eventQueue.Count + 1) + " events skiped</color>");
                     result = connector.ToArray();
-                    return ResultType.SuccesfullyCliped;
+                    return (NoChangesMade(sp, cp, result)) ? ResultType.NoChangesMade : ResultType.SuccesfullyCliped;
                 }
                 if ((op == BoolOpType.UNION && (cEvent.p.x > minRightBounds)))
                 {
@@ -88,7 +88,7 @@ namespace Polygon2D
                     }
                     Debug.Log("<color=green>Ended early. Op = 3, " + (eventQueue.Count + 1) + " events skiped </color>");
                     result = connector.ToArray();
-                    return ResultType.SuccesfullyCliped;
+                    return (NoChangesMade(sp, cp, result)) ? ResultType.NoChangesMade : ResultType.SuccesfullyCliped;
                 }
 
                 if (cEvent.left)
@@ -135,7 +135,6 @@ namespace Polygon2D
                         HandlePossibleIntersection(eventQueue, cEvent, nextEvent);
                     if (prev != null)
                         HandlePossibleIntersection(eventQueue, cEvent, prev);
-
                 }
                 else
                 {// the line segment must be removed from S
@@ -179,7 +178,7 @@ namespace Polygon2D
                 }
             }
             result = connector.ToArray();
-            return ResultType.SuccesfullyCliped;
+            return (NoChangesMade(sp, cp, result))? ResultType.NoChangesMade : ResultType.SuccesfullyCliped;
         }
 
         public static PointChain[] RemoveSelfIntersections(PointChain sp)
@@ -241,6 +240,18 @@ namespace Polygon2D
                 }
             }
             return connector.ToArray();
+        }
+
+        private static bool NoChangesMade(PointChain sp, PointChain cp, PointChain[] result)
+        {
+            if (result.Length != 2)
+                return false;
+            if (sp.chain.Count == result[0].chain.Count)
+                return cp.chain.Count == result[1].chain.Count;
+            else if ((sp.chain.Count == result[1].chain.Count))
+                return (cp.chain.Count == result[0].chain.Count);
+
+            return false;
         }
 
         private static void InsertPolygon(HeapPriorityQueue<SweepEvent> eventQueue, PointChain p, PolygonType pType)

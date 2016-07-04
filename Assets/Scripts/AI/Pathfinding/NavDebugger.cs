@@ -51,14 +51,10 @@ public class NavDebugger : MonoBehaviour
                 {
                     cgs.DrawDebugInfo();
                 }
-                else
-                    Start();
                 break;
             case DebugWhichSet.OutlineTree:
                 if (outlineTree != null)
                     outlineTree.DrawDebugInfo();
-                else
-                    Start();
                 break;
         }
 

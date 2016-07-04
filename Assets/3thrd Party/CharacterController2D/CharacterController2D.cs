@@ -340,20 +340,20 @@ namespace CC2D
         {
             // figure out the distance between our rays in both directions
             // horizontal
-            var colliderUseableHeight = actor.BoxCollider2D.size.y * Mathf.Abs(actor.Transform.localScale.y) - (2f * _skinWidth);
+            float colliderUseableHeight = actor.BoxCollider2D.size.y * Mathf.Abs(actor.Transform.localScale.y) - (2f * _skinWidth);
             _verticalDistanceBetweenRays = colliderUseableHeight / (totalHorizontalRays - 1);
 
             // vertical
-            var colliderUseableWidth = actor.BoxCollider2D.size.x * Mathf.Abs(actor.Transform.localScale.x) - (2f * _skinWidth);
+            float colliderUseableWidth = actor.BoxCollider2D.size.x * Mathf.Abs(actor.Transform.localScale.x) - (2f * _skinWidth);
             _horizontalDistanceBetweenRays = colliderUseableWidth / (totalVerticalRays - 1);
         }
 
         public bool manuallyCheckForCollisionsH(float direction)
         {
-            var isGoingRight = direction > 0;
-            var rayDistance = Mathf.Abs(direction) + _skinWidth;
-            var rayDirection = isGoingRight ? Vector2.right : -Vector2.right;
-            var initialRayOrigin = isGoingRight ? _raycastOrigins.bottomRight : _raycastOrigins.bottomLeft;
+            bool isGoingRight = direction > 0;
+            float rayDistance = Mathf.Abs(direction) + _skinWidth;
+            Vector2 rayDirection = isGoingRight ? Vector2.right : -Vector2.right;
+            Vector3 initialRayOrigin = isGoingRight ? _raycastOrigins.bottomRight : _raycastOrigins.bottomLeft;
 
             for (var i = 0; i < totalHorizontalRays; i++)
             {

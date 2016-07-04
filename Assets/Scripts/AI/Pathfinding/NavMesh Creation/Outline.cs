@@ -4,108 +4,52 @@ using Polygon2D;
 
 namespace NavMesh2D.Core
 {
-    public class Outline
+    public class Contour
     {
 
         public PointChain pointChain;
-        public List<Outline> children;
+        public List<Contour> children;
         public Bounds Bounds { get { return pointChain.Bounds; } }
         public bool IsSolid { get { return isSolid; } }
 
+        private string name;
         private bool isSolid;
 
-        public Outline(PointChain chain, bool isSolid)
+        public Contour(PointChain chain, bool isSolid, string name)
         {
             pointChain = chain;
-            children = new List<Outline>(1);
+            children = new List<Contour>(1);
             this.isSolid = isSolid;
+            this.name = name;
         }
 
-        public bool TryAddOutline(Outline outline, OutlineTree tree)
+        public bool TryAddContour(Contour outline)
         {
-            if (!DoBoundsIntersect(outline))
+            PointChain[] result;
+            PolygonClipper.ResultType resultType = PolygonClipper.Compute(pointChain, outline.pointChain, (isSolid) ? PolygonClipper.BoolOpType.UNION : PolygonClipper.BoolOpType.DIFFERENCE, out result);
+            if (resultType != PolygonClipper.ResultType.SuccesfullyCliped)
+            {
+                Debug.Log(name + " does not clip with " + outline.name + ". Fehlercode: " + resultType);
                 return false;
+            }
+            else if (result.Length < 1)
+            {
+                Debug.LogError(name + " does not clip with " + outline.name +". Fehlercode: " + resultType);
+                return false;
+            }
+            name = name + "+" + outline.name;
+            pointChain = result[0]; //Update this contour
             for (int iChild = 0; iChild < children.Count; iChild++)
             {
-                if (children[iChild].TryAddOutline(outline, tree))
-                    return true;
+                children[iChild].TryAddContour(outline);
             }
-            /*if (DoesFullyEncompass(outline))
-            {
-                if (!isSolid)
-                {
-                    children.Add(outline);
-                    return true;
-                }
-                else
-                {
-                    for (int iChild = 0; iChild < outline.children.Count; iChild++)
-                        children.Add(outline.children[iChild]);
-                    return true;
-                }
-            }*/
-            if (isSolid && outline.IsSolid)
-            {
-                PointChain[] result;
-                PolygonClipper.ResultType resultType = PolygonClipper.Compute(pointChain, outline.pointChain, PolygonClipper.BoolOpType.UNION, out result);
-                if (resultType != PolygonClipper.ResultType.SuccesfullyCliped || result.Length > 1)
-                    return false;
-                this.pointChain = result[0];
-                //Changed our appearance, so add again.
-                tree.ReAddOutline(outline);
-                Debug.Log(result.Length);
-                return true;
-            }
-            //Do some merge stuff
-            return false;
-        }
 
-        public bool TryMergeOutline(Outline outline)
-        {
-            if (!DoBoundsIntersect(outline))
-                return false;
-            for (int iChild = 0; iChild < children.Count; iChild++)
+            children.Clear();
+            for (int iChain = 1; iChain > result.Length; iChain++)
             {
-                if (children[iChild].TryMergeOutline(outline))
-                    return true;
+                children.Add(new Contour(result[iChain], false, name + "/"));
             }
-            /*if (DoesFullyEncompass(outline))
-            {
-                if (!isSolid)
-                {
-                    children.Add(outline);
-                    return true;
-                }
-                else
-                {
-                    for (int iChild = 0; iChild < outline.children.Count; iChild++)
-                        children.Add(outline.children[iChild]);
-                    return true;
-                }
-            }*/
-            if (isSolid && outline.IsSolid)
-            {
-                PointChain[] result;
-                PolygonClipper.ResultType resultType = PolygonClipper.Compute(pointChain, outline.pointChain, PolygonClipper.BoolOpType.UNION, out result);
-                if (resultType != PolygonClipper.ResultType.SuccesfullyCliped)
-                    return false;
-                this.pointChain = result[0];
-                //Changed our appearance, so add again.
-                Debug.Log(result.Length);
-                return true;
-            }
-            //Do some merge stuff
-            return false;
-        }
-
-        public bool DoBoundsIntersect(Outline outline)
-        {
-            return Bounds.Intersects(outline.Bounds);
-        }
-
-        public bool DoesFullyEncompass(Outline outline)
-        {
-            return Bounds.Contains(outline.Bounds.min) && Bounds.Contains(outline.Bounds.max);
+            return true;
         }
 
         public void DrawForDebug()

@@ -52,7 +52,7 @@ namespace NavMesh2D.Core
                     else
                         LoadPolygonColliderVerts((PolygonCollider2D)collider[iCol], inOutVerts);
 
-                    result.AddCollider(inOutVerts);
+                    result.AddCollider(inOutVerts, collider[iCol].name);
                 }
                 inOutVerts.Clear();
             }

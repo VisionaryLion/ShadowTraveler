@@ -7,6 +7,7 @@ namespace NavMesh2D.Core
     public class CollisionGeometrySet
     {
         public List<Vector2[]> colliderVerts;
+        public List<string> colliderNames;
         public List<Vector2[]> edgeVerts;
         public List<Vector2[]> dynamicColliderVerts;
         public List<Vector2[]> dynamicEdgeVerts;
@@ -14,6 +15,7 @@ namespace NavMesh2D.Core
         public CollisionGeometrySet()
         {
             colliderVerts = new List<Vector2[]>(20);
+            colliderNames = new List<string>();
             edgeVerts = new List<Vector2[]>(5);
             dynamicColliderVerts = new List<Vector2[]>(5);
             dynamicEdgeVerts = new List<Vector2[]>(5);
@@ -24,9 +26,10 @@ namespace NavMesh2D.Core
             edgeVerts.Add(verts.ToArray());
         }
 
-        public void AddCollider(List<Vector2> verts)
+        public void AddCollider(List<Vector2> verts, string name)
         {
             colliderVerts.Add(verts.ToArray());
+            colliderNames.Add(name);
         }
 
         public void AddDynamicCollider(List<Vector2> verts)
