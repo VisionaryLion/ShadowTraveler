@@ -3,38 +3,18 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 
-public class SlotHandler : MonoBehaviour, IDropHandler {
-
-    public int SlotID;
-    public GameObject heldItem;
-
-    void Awake()
+namespace Inventory
+{
+    public class SlotHandler : MonoBehaviour, IDropHandler
     {
-        heldItem = null;
-        SlotID = -1;
-    }
+        public int SlotIndex { set { slotIndex = value; } get { return slotIndex; } }
+        private int slotIndex;
 
-    public void OnDrop(PointerEventData eventData)
-    {
-        DisplayItem droppedItem = eventData.pointerDrag.GetComponent<DisplayItem>(); 
-        if(heldItem == null)            //Slot is empty
+
+        public void OnDrop(PointerEventData eventData)
         {
-            Debug.Log("Item dropped on empty slot:"+SlotID);
-            droppedItem.slotToMoveTo = gameObject;
-            droppedItem.originalParentSlot.GetComponent<SlotHandler>().heldItem = null;
-            heldItem = droppedItem.gameObject;
-        }
-        else
-        {
-            //GameObject toMove = heldItem;
-            droppedItem.slotToMoveTo = gameObject;
-
-            Debug.Log("Moving item:" + heldItem.name + " to slot:" + droppedItem.originalParentSlot.GetComponent<SlotHandler>().SlotID);
-            heldItem.transform.SetParent(droppedItem.originalParentSlot.transform);
-            heldItem.transform.position = droppedItem.originalParentSlot.transform.position;
-
-            droppedItem.originalParentSlot.GetComponent<SlotHandler>().heldItem = heldItem;
-            heldItem = droppedItem.gameObject;
+            DisplayItem droppedItem = eventData.pointerDrag.GetComponent<DisplayItem>();
+            droppedItem.inventory.TryMoveItem(droppedItem.slot.slotIndex, slotIndex);
         }
     }
 }

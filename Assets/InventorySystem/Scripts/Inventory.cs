@@ -4,151 +4,214 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-public class Inventory : MonoBehaviour
+namespace Inventory
 {
-    public int inventorySize; 			//Number of distinct elements the inventory can support 
-    List<GameObject> inventoryCache;
-
-    //Add reference to Inventory Display component 
-    InventoryDisplay invDisplay;
-
-    void Awake()
+    public class Inventory : IInventory
     {
-        //Assign Inventory display component to the reference
-        inventoryCache = new List<GameObject>();
-        invDisplay = GetComponent<InventoryDisplay>();
-    }
+        [SerializeField]
+        int inventorySize;//Number of distinct elements the inventory can support 
+        [SerializeField]
+        InventoryUI inventoryUI;
 
-    //Checks and adds item tothe cache if possible
-    public bool AddItem(GameObject item) //TODO: Add system of return codes
-    {
-        bool toStack = false;
-        //int itemIndex = -1;
-        GameObject itemStacked = null;
-        ItemInterface itemIE = item.GetComponent<ItemInterface>();
-        if(!itemIE)
+        public bool IsInventoryFull { get { return inventorySize == filledSlotCount; } }
+        public int InventorySize { get { return inventorySize; } }
+
+        IItem[] inventoryCache; // Each index represents a unique tile
+        Dictionary<int, Stack<GameObject>> pooledItems;
+        int filledSlotCount = 0;
+
+        void Awake()
         {
-            Debug.LogError("Couldnt find item interface component on object");
-            return false;
+            //Assign Inventory display component to the reference
+            inventoryCache = new IItem[inventorySize];
+            pooledItems = new Dictionary<int, Stack<GameObject>>(inventorySize);
         }
-        if (itemIE.isStackable)
+
+
+        //Will try to add the item as slot saving as possible.
+        public override bool AddItem(IItem item, GameObject itemInstance) //TODO: Add system of return codes
         {
-            foreach (GameObject go in inventoryCache)
+            if (IsInventoryFull)
+                return false;
+
+            if (item.IsStackable && item.StackLimit > item.StackTop)
             {
-                if (go.GetComponent<ItemInterface>().itemID == item.GetComponent<ItemInterface>().itemID
-                    && !go.GetComponent<ItemInterface>().StackLimitReached())
+                for (int iSlot = 0; iSlot < inventorySize; iSlot++)
                 {
-                    itemStacked = go;
-                    toStack = true;
+                    if (inventoryCache[iSlot] == null)
+                        continue;
+                    AddItemToStack(item, inventoryCache[iSlot]);
+                    if (item.StackTop <= 0)
+                    {
+                        ManageItemGameObject(item, itemInstance);
+                        item.OnPickedUp(this);
+                        inventoryUI.UpdateUI();
+                        return true;
+                    }
                 }
-            }
-        }
-        if (toStack)
-        {
-            Debug.Log("Stacking.");
-            if (itemStacked)
-            {
-                itemStacked.GetComponent<ItemInterface>().stackTop++;
-                itemStacked.GetComponent<ItemInterface>().displayItem.Number = itemStacked.GetComponent<ItemInterface>().stackTop.ToString();
-
-                Debug.Log("itemStacked:"+itemStacked.GetComponent<ItemInterface>().itemEquipSlot);
-                Debug.Log("item:"+item.GetComponent<ItemInterface>().itemEquipSlot);
-
-                Destroy(item); 		//verify. Find another way to handle this
-                return true;
+                return AddItemToEmptyTile(item, itemInstance); //Add the remainder
             }
             else
             {
-                Debug.LogError("Couldn't find element to stack.");
-                return false;
+                return AddItemToEmptyTile(item, itemInstance);
             }
-        }
-        else
-        {
-            if (inventoryCache.Count >= inventorySize)
-            {  //Stack of validations. Only checks for limit as of now.
-                Debug.Log("Inventory limit reached.");
-                return false;
-            }
-            GameObject dispSlot = invDisplay.FindEmptySlot();//Grab empty slot in display
-            
-            if (!dispSlot)// Validation
-            {
-                Debug.LogError("Couldnt find an empty slot to attach to.");
-                return false;
-            }
-            invDisplay.AddItemToSlot(dispSlot,item.GetComponent<ItemInterface>()); //Create Display item object based on ItemInterface
-            DisplayItem dispItem = dispSlot.transform.GetComponentInChildren<DisplayItem>();
-            if(!dispItem)
-            {
-                Debug.LogError("Couldnt find item with DisplayItem component attached in slot.");
-                return false;
-            }
-            //Assign item interface and Displayitem references to each other
-            item.GetComponent<ItemInterface>().displayItem = dispItem;
-            dispItem.itemInterface = item.GetComponent<ItemInterface>();
-            //Sync parameters 
-            dispItem.Sync();
-            
-            inventoryCache.Add(item);
-            item.GetComponent<ItemInterface>().DisableAndMove();//Storing reference to object picked up
-            //TODO:Update inventory display
-            return true;
-        }
-    }
-
-    //Find and delete from cache
-    bool RemoveItemFromCache(GameObject item)
-    {
-        int indexRm=inventoryCache.IndexOf(item);
-        if(indexRm < 0)
-        {
-            Debug.Log("Couldnt find element to remove.");
-            return false;
-        }
-        inventoryCache.RemoveAt(indexRm);
-        //TODO: Update inv display
-        return true;
-    }
-
-    //Drop an item from inventory
-    bool DropFromInventory(GameObject item, ref string status)
-    {
-        GameObject toDrop=null;  //Incase of a stackable item, 
-        //need to create an instance of the saved object and then drop it.  
-        ItemInterface ie = item.GetComponent<ItemInterface>();
-        if (!ie) 
-        {
-            status = "ItemInterface not found on object.";
-            return false;
-        }
-        if(ie.stackTop==1)
-        {
-            toDrop = item;
-            if(!RemoveItemFromCache(item))
-            {
-                Debug.Log("Couldn't clear cache");
-            }
-        }
-        else
-        {
-            ie.stackTop -= 1;
-            ie.displayItem.Number = ie.stackTop.ToString();
-            toDrop = (GameObject)Instantiate(item,item.transform.position,item.transform.rotation);
         }
 
-        toDrop.SetActive(true);
-        if(toDrop.GetComponent<MeshRenderer>()!=null)
+        //Adds an item to the next open slot.
+        public override bool AddItemToEmptyTile(IItem item, GameObject itemInstance)
         {
-            toDrop.GetComponent<MeshRenderer>().enabled = true;
+            if (IsInventoryFull)
+                return false;
+
+            for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+            {
+                if (inventoryCache[iSlot] == null)
+                {
+                    inventoryCache[iSlot] = item;
+                    ManageItemGameObject(item, itemInstance);
+                    item.OnPickedUp(this);
+                    filledSlotCount++;
+                    inventoryUI.UpdateUI();
+                    return true;
+                }
+            }
+            return false; //should never happen!
         }
-        if(toDrop.GetComponent<Collider2D>()!=null)
+
+        //Find and delete from cache
+        public void TrashItemAt(int index)
         {
-            toDrop.GetComponent<Collider2D>().enabled = true;
+            if (inventoryCache[index] == null)
+                return;
+
+            if (inventoryCache[index].ShouldPool)
+            {
+                //Should the pool be deleted?
+                bool deltePool = true;
+                for (int iSlot = 0; iSlot < index; iSlot++)
+                {
+                    if (inventoryCache[iSlot].Equals(inventoryCache[index]))
+                    {
+                        deltePool = false;
+                        break;
+                    }
+                }
+                for (int iSlot = index + 1; iSlot < inventorySize; iSlot++)
+                {
+                    if (inventoryCache[iSlot].Equals(inventoryCache[index]))
+                    {
+                        deltePool = false;
+                        break;
+                    }
+                }
+                if (deltePool)
+                    DeletePool(inventoryCache[index]);
+            }
+            inventoryCache[index] = null;
+            filledSlotCount--;
+            inventoryUI.UpdateUI();
         }
-        toDrop.GetComponent<ItemInterface>().enabled = true;
-        toDrop.GetComponent<Transform>().parent = null; //TODO: Possible source of bugs. Assign to parent of player, ideally.
-        return true;
+
+        //Drop an item from inventory
+        public void DropFromInventory(int index)
+        {
+            if (inventoryCache[index] == null)
+                return;
+            IItem item = inventoryCache[index];
+            GameObject newItem;
+            if (item.ShouldPool)
+            {
+                newItem = DepoolItemGameObject(item);
+                newItem.SetActive(true);
+            }
+            else
+                newItem = Instantiate(item.ItemPrefab);
+            item.OnDropped(this, newItem);
+            inventoryUI.UpdateUI();
+        }
+
+        public override bool TryMoveItem(int from, int to)
+        {
+            if (inventoryCache[to] == null)
+            {
+                inventoryCache[to] = inventoryCache[from];
+                inventoryCache[from] = null;
+                inventoryUI.UpdateUI();
+                return true;
+            }
+            else if (inventoryCache[to].CanBeStackedWith(inventoryCache[from]))
+            {
+                AddItemToStack(inventoryCache[from], inventoryCache[to]);
+                //if (inventoryCache[from].StackTop <= 0)
+                //    return true;
+                inventoryUI.UpdateUI();
+                return true; // ambiguous will return true, even if not the whole stack could be moved.
+            }
+            else
+                return false;
+        }
+
+        void AddItemToStack(IItem item, IItem target)
+        {
+            if (!item.CanBeStackedWith(target))
+                return;
+            int freeSpace = target.StackLimit - target.StackTop;
+            if (freeSpace <= 0)
+                return;
+            int itemsToAdd = Mathf.Min(freeSpace, item.StackTop);
+            target.StackTop += itemsToAdd;
+            item.StackTop -= itemsToAdd;
+        }
+
+        void ManageItemGameObject(IItem item, GameObject itemInstance)
+        {
+            if (itemInstance == null)
+                return;
+
+            if (!item.ShouldPool)
+            {
+                Destroy(itemInstance);
+                return;
+            }
+
+            Stack<GameObject> pooledObjs;
+            if (pooledItems.TryGetValue(item.ItemId, out pooledObjs))
+            {
+                if (pooledObjs.Count >= item.PoolLimit)
+                {
+                    Destroy(itemInstance);
+                    return;
+                }
+                itemInstance.SetActive(false);
+                pooledObjs.Push(itemInstance);
+                return;
+            }
+            pooledObjs = new Stack<GameObject>(1);
+            pooledObjs.Push(itemInstance);
+            pooledItems.Add(item.ItemId, pooledObjs);
+            itemInstance.SetActive(false);
+        }
+
+        void DeletePool(IItem item)
+        {
+            pooledItems.Remove(item.ItemId);
+        }
+
+        GameObject DepoolItemGameObject(IItem item)
+        {
+            Stack<GameObject> pooledObjs;
+            if (pooledItems.TryGetValue(item.ItemId, out pooledObjs))
+            {
+                return pooledObjs.Pop();
+            }
+            return Instantiate(item.ItemPrefab);
+        }
+
+        public override IItem GetItem(int index)
+        {
+            return inventoryCache[index];
+        }
     }
 }
