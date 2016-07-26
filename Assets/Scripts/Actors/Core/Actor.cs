@@ -8,16 +8,17 @@ namespace Actors
 
     public class Actor : MonoBehaviour
     {
-
-#if UNITY_EDITOR
-        [HideInInspector]
-        [SerializeField]
-        protected bool _executOnce;
         [HideInInspector]
         [SerializeField]
         new Transform transform;
 
         public Transform Transform { get { return transform; } }
+
+#if UNITY_EDITOR
+        [HideInInspector]
+        [SerializeField]
+        protected bool _executOnce;
+
 
         /// <summary>
         /// Base call strongly suggested!
@@ -30,7 +31,7 @@ namespace Actors
             FillRefAutomaticly();
             transform = GetComponent<Transform>();
         }
-#endif
+
         protected void FillRefAutomaticly()
         {
             MonoBehaviour[] so = GetComponents<MonoBehaviour>();
@@ -121,6 +122,7 @@ namespace Actors
             for (int i = 0; i < 8; i++)
                 UnityEditorInternal.ComponentUtility.MoveComponentUp(this); //Move this script up to the top in the hierarchy!
         }
+#endif
     }
 
     /// <summary>
