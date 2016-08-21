@@ -10,7 +10,6 @@ using Actors;
 namespace CC2D
 {
     [RequireComponent(typeof(CharacterController2D))]
-    [RequireComponent(typeof(Animator))]
     public class CC2DMotor : MonoBehaviour
     {
         #region Inspector vars
@@ -18,7 +17,14 @@ namespace CC2D
         [RemindToConfigureField]
         [SerializeField]
         [Tooltip("Will only be used for flipping the sprite, based on its movement.")]
-        Transform spriteRoot;
+        Transform skeletonFront;
+        [SerializeField]
+        [Tooltip("Will only be used for flipping the sprite, based on its movement.")]
+        Transform skeletonBack;
+        [SerializeField]
+        Animator frontAnimator;
+        [SerializeField]
+        Animator backAnimator;
         [AssignActorAutomaticly]
         public PlayerActor actor;
 
@@ -258,11 +264,17 @@ namespace CC2D
                     //Possible transitions
 #if Glide
                     if (!CurrentMovementInput.isJumpConsumed && CurrentMovementInput.jump && Time.time - CurrentMovementInput.timeOfLastJumpStateChange >= minGlideButtonHoldTime) //Should we glide?
-                        StartGliding();
+                        {
+                    StartGliding();
+                    frontAnimator.SetBool("IsFalling", false);
+                    }
                     else
 #endif 
                     if (ShouldWallSlide())
+                    {
                         StartWallSliding();
+                        
+                    }
                     break;
 
                 case MState.Jump:
@@ -369,7 +381,9 @@ namespace CC2D
             if (obj.CompareTag(climbableTag))
             {
                 if (_cMState != MState.Climb) //If we aren't already climbing, start now!
+                {
                     StartClimbing();
+                }
                 _climbableTriggerCount++;
             }
         }
@@ -429,23 +443,23 @@ namespace CC2D
                 StartFalling();
             }
             FakeTransformParent = null;
+            frontAnimator.SetBool("IsGrounded", false);
         }
 
         void UpdateAnimatorVars()
         {
-            actor.Animator.SetFloat("VelocityX", actor.CharacterController2D.velocity.x);
-            actor.Animator.SetFloat("VelocityY", actor.CharacterController2D.velocity.y);
-            actor.Animator.SetBool("IsGrounded", actor.CharacterController2D.isGrounded);
-            actor.Animator.SetFloat("AbsX", Mathf.Abs(actor.CharacterController2D.velocity.x));
-            actor.Animator.SetFloat("AbsY", Mathf.Abs(actor.CharacterController2D.velocity.y));
-            actor.Animator.SetBool("IsOnWall", _cMState == MState.WallSlide);
-            actor.Animator.SetBool("HasMoveInput", _cVelocity != Vector2.zero);
-            actor.Animator.SetBool("IsOnLadder", _cMState == MState.Climb);
+            frontAnimator.SetFloat("VelocityX", Mathf.Abs(_cVelocity.x));
+            frontAnimator.SetFloat("VelocityY", Mathf.Abs(_cVelocity.y));
+
+            frontAnimator.SetBool("IsFalling", _cMState == MState.Fall);
+            frontAnimator.SetBool("IsWallSliding", _cMState == MState.WallSlide);
+            frontAnimator.SetBool("IsOnLadder", _cMState == MState.Climb);
+            frontAnimator.SetBool("IsGrounded", actor.CC2DMotor._isGrounded);
         }
 
         void FlipFacingDir()
         {
-            spriteRoot.localScale = new Vector3(-spriteRoot.localScale.x, spriteRoot.localScale.y, spriteRoot.localScale.z);
+            skeletonFront.localScale = new Vector3(-skeletonFront.localScale.x, skeletonFront.localScale.y, skeletonFront.localScale.z);
             _cFacingDir *= -1;
         }
 
@@ -633,6 +647,7 @@ namespace CC2D
             _stateStartTime = Time.time;
             CurrentMovementInput.isJumpConsumed = true;
             _cVelocity.y = jumpVAcc;
+            frontAnimator.SetTrigger("Jump");
             _cMState = MState.Jump;
         }
 
@@ -666,7 +681,6 @@ namespace CC2D
             _cVelocity.x = walljumpHVelocity * -_cFacingDir;
             _cVelocity.y = walljumpVVelocity;
             _stateStartTime = Time.time;
-
             _cMState = MState.WallJump;
         }
 
