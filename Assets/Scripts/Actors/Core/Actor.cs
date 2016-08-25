@@ -5,10 +5,10 @@ using System.Reflection;
 
 namespace Actors
 {
-
+    [DisallowMultipleComponent]
     public class Actor : MonoBehaviour
     {
-        [HideInInspector]
+        [ReadOnly]
         [SerializeField]
         new Transform transform;
 

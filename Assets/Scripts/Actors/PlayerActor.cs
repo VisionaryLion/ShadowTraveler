@@ -16,30 +16,28 @@ namespace Actors
     [ExecuteInEditMode]
     public class PlayerActor : Actor
     {
-        [HideInInspector]
+        
+        [ReadOnly]
         [SerializeField]
         CharacterController2D characterController2D;
-        [HideInInspector]
+        [ReadOnly]
         [SerializeField]
         CC2DMotor cC2DMotor;
-        [HideInInspector]
+        [ReadOnly]
         [SerializeField]
         HumanInput humanInput;
-        [HideInInspector]
+        [ReadOnly]
         [SerializeField]
         BasicHealth basicHealth;
-        [HideInInspector]
+        [ReadOnly]
         [SerializeField]
         BasicDamageReceptor basicDamageReceptor;
-        [HideInInspector]
+        [ReadOnly]
         [SerializeField]
-        new Rigidbody2D rigidbody2d;
-        [HideInInspector]
+        Rigidbody2D rigidbody2d;
+        [ReadOnly]
         [SerializeField]
         BoxCollider2D boxCollider2D;
-        [HideInInspector]
-        [SerializeField]
-        Animator animator;
 
         #region public
         public CharacterController2D CharacterController2D { get { return characterController2D; } }
@@ -49,7 +47,6 @@ namespace Actors
         public BasicDamageReceptor BasicDamageReceptor { get { return basicDamageReceptor; } }
         public Rigidbody2D Rigidbody2D { get { return rigidbody2d; } }
         public BoxCollider2D BoxCollider2D { get { return boxCollider2D; } }
-        public Animator Animator { get { return animator; } }
         #endregion
 
 #if UNITY_EDITOR
@@ -58,7 +55,7 @@ namespace Actors
             if (_executOnce) //already executed this script. No need for setting things up
                 return;
             base.Awake();
-
+            
             //Load components
             rigidbody2d = GetComponent<Rigidbody2D>();
             characterController2D = GetComponent<CharacterController2D>();
@@ -67,7 +64,6 @@ namespace Actors
             basicHealth = GetComponent<BasicHealth>();
             basicDamageReceptor = GetComponent<BasicDamageReceptor>();
             boxCollider2D = GetComponent<BoxCollider2D>();
-            animator = GetComponent<Animator>();
 
             //Setup some script vars automatically.
             this.tag = "Player"; //Built-in-Tag can't go wrong.
