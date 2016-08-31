@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 
-namespace Inventory
+namespace ItemHandler
 {
     public class SlotHandler : MonoBehaviour, IDropHandler
     {

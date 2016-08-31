@@ -2,7 +2,7 @@
 /*
 Author: Oribow
 */
-namespace Combat.Hazard
+namespace Combat
 {
     public class BasicDeathHandler : MonoBehaviour
     {

@@ -6,17 +6,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Inventory
+namespace ItemHandler
 {
     public class Inventory : IInventory
     {
         [SerializeField]
         int inventorySize;//Number of distinct elements the inventory can support 
-        [SerializeField]
-        InventoryUI inventoryUI;
 
         public bool IsInventoryFull { get { return inventorySize == filledSlotCount; } }
         public int InventorySize { get { return inventorySize; } }
+
 
         IItem[] inventoryCache; // Each index represents a unique tile
         Dictionary<int, Stack<GameObject>> pooledItems;
@@ -29,13 +28,9 @@ namespace Inventory
             pooledItems = new Dictionary<int, Stack<GameObject>>(inventorySize);
         }
 
-
         //Will try to add the item as slot saving as possible.
         public override bool AddItem(IItem item, GameObject itemInstance) //TODO: Add system of return codes
         {
-            if (IsInventoryFull)
-                return false;
-
             if (item.IsStackable && item.StackLimit > item.StackTop)
             {
                 for (int iSlot = 0; iSlot < inventorySize; iSlot++)
@@ -47,7 +42,8 @@ namespace Inventory
                     {
                         ManageItemGameObject(item, itemInstance);
                         item.OnPickedUp(this);
-                        inventoryUI.UpdateUI();
+
+                        InvokeOnInventoryChanged(this);
                         return true;
                     }
                 }
@@ -73,7 +69,7 @@ namespace Inventory
                     ManageItemGameObject(item, itemInstance);
                     item.OnPickedUp(this);
                     filledSlotCount++;
-                    inventoryUI.UpdateUI();
+                    InvokeOnInventoryChanged(this);
                     return true;
                 }
             }
@@ -81,9 +77,9 @@ namespace Inventory
         }
 
         //Find and delete from cache
-        public void TrashItemAt(int index)
+        public void TrashAllItemsAt(int index)
         {
-            if (inventoryCache[index] == null)
+            if (inventoryCache[index] == null || !inventoryCache[index].CanBeTrashed(this))
                 return;
 
             if (inventoryCache[index].ShouldPool)
@@ -109,17 +105,37 @@ namespace Inventory
                 if (deltePool)
                     DeletePool(inventoryCache[index]);
             }
+            inventoryCache[index].OnTrashed(this);
             inventoryCache[index] = null;
             filledSlotCount--;
-            inventoryUI.UpdateUI();
+            InvokeOnInventoryChanged(this);
+        }
+
+        //Find and delete from cache
+        public void TrashItemAt(int index, int count = 1)
+        {
+            if (inventoryCache[index] == null || !inventoryCache[index].CanBeTrashed(this))
+                return;
+
+            if (inventoryCache[index].StackTop - count <= 0)
+                TrashAllItemsAt(index);
+
+            inventoryCache[index].OnTrashed(this);
+            inventoryCache[index].StackTop -= count;
+
+
+            InvokeOnInventoryChanged(this);
         }
 
         //Drop an item from inventory
-        public void DropFromInventory(int index)
+        public override GameObject DropFromInventory(int index)
         {
-            if (inventoryCache[index] == null)
-                return;
+            Debug.Assert(inventoryCache[index] != null);
             IItem item = inventoryCache[index];
+
+            if (!item.CanBeDropped(this))
+                return null;
+
             GameObject newItem;
             if (item.ShouldPool)
             {
@@ -129,7 +145,29 @@ namespace Inventory
             else
                 newItem = Instantiate(item.ItemPrefab);
             item.OnDropped(this, newItem);
-            inventoryUI.UpdateUI();
+            TrashItemAt(index);
+            InvokeOnInventoryChanged(this);
+            return newItem;
+        }
+
+        public override GameObject EquipItem(int index)
+        {
+            Debug.Assert(inventoryCache[index] != null);
+            IItem item = inventoryCache[index];
+
+            if (!item.IsEquipment)
+                return null;
+
+            GameObject newItem;
+            if (item.ShouldPool)
+            {
+                newItem = DepoolItemGameObject(item);
+                newItem.SetActive(true);
+            }
+            else
+                newItem = Instantiate(item.ItemPrefab);
+            InvokeOnInventoryChanged(this);
+            return newItem;
         }
 
         public override bool TryMoveItem(int from, int to)
@@ -138,7 +176,8 @@ namespace Inventory
             {
                 inventoryCache[to] = inventoryCache[from];
                 inventoryCache[from] = null;
-                inventoryUI.UpdateUI();
+
+                InvokeOnInventoryChanged(this);
                 return true;
             }
             else if (inventoryCache[to].CanBeStackedWith(inventoryCache[from]))
@@ -146,11 +185,46 @@ namespace Inventory
                 AddItemToStack(inventoryCache[from], inventoryCache[to]);
                 //if (inventoryCache[from].StackTop <= 0)
                 //    return true;
-                inventoryUI.UpdateUI();
+                InvokeOnInventoryChanged(this);
                 return true; // ambiguous will return true, even if not the whole stack could be moved.
             }
             else
                 return false;
+        }
+
+        public override void AddGameObjectCopyOfItem(IItem item, GameObject itemInstance)
+        {
+            if (itemInstance == null)
+                return;
+
+            if (!item.ShouldPool)
+            {
+                Destroy(itemInstance);
+                return;
+            }
+
+            if (!ContainsItem(item.ItemId))
+            {
+                Destroy(itemInstance);
+                return;
+            }
+
+            Stack<GameObject> pooledObjs;
+            if (pooledItems.TryGetValue(item.ItemId, out pooledObjs))
+            {
+                if (pooledObjs.Count >= item.PoolLimit)
+                {
+                    Destroy(itemInstance);
+                    return;
+                }
+                itemInstance.SetActive(false);
+                pooledObjs.Push(itemInstance);
+                return;
+            }
+            pooledObjs = new Stack<GameObject>(1);
+            pooledObjs.Push(itemInstance);
+            pooledItems.Add(item.ItemId, pooledObjs);
+            itemInstance.SetActive(false);
         }
 
         void AddItemToStack(IItem item, IItem target)
@@ -212,6 +286,28 @@ namespace Inventory
         public override IItem GetItem(int index)
         {
             return inventoryCache[index];
+        }
+
+        public override int FindItem(int id)
+        {
+            for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+            {
+                if (inventoryCache[iSlot].ItemId == id)
+                {
+                    return iSlot;
+                }
+            }
+            return -1;
+        }
+
+        public override bool ContainsItem(int id)
+        {
+            for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+            {
+                if (inventoryCache[iSlot].ItemId == id)
+                    return true;
+            }
+            return false;
         }
     }
 }

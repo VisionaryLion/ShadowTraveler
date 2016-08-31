@@ -3,20 +3,14 @@
 namespace Actors
 {
     [ExecuteInEditMode]
-    [RequireComponent(typeof(MovingPlattform))] //Requires for it self: PositionHolder2D, Rigidbody2D
-    [RequireComponent(typeof(Collider2D))]
     public class MovingPlatformActor : Actor
     {
-        [HideInInspector]
         [SerializeField]
         MovingPlattform movingPlattform;
-        [HideInInspector]
         [SerializeField]
         PositionHolder2D positionHolder2D;
-        [HideInInspector]
         [SerializeField]
         new Rigidbody2D rigidbody2D;
-        [HideInInspector]
 
         #region public
         public MovingPlattform MovingPlattform { get { return movingPlattform; } }
@@ -25,23 +19,20 @@ namespace Actors
         #endregion
 
 #if UNITY_EDITOR
-        protected override void Awake()
+        public override void Refresh()
         {
-            if (_executOnce) //already executed this script. No need for setting things up
-                return;
-            base.Awake();
+            base.Refresh();
 
             //Load components
-            movingPlattform = GetComponent<MovingPlattform>();
-            positionHolder2D = GetComponent<PositionHolder2D>();
-            rigidbody2D = GetComponent<Rigidbody2D>();
+            movingPlattform = GetComponentInChildren<MovingPlattform>();
+            positionHolder2D = GetComponentInChildren<PositionHolder2D>();
+            rigidbody2D = GetComponentInChildren<Rigidbody2D>();
 
             //Setup some script vars automatically.
             rigidbody2D.isKinematic = true;
 
             //Print some custom reminder.
             Debug.LogWarning(GenerateSetUpReminderShort("Tag"));
-            _executOnce = true;
         }
 #endif
     }

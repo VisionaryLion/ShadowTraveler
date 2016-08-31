@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Inventory
+namespace ItemHandler
 {
     public class InventoryUI : MonoBehaviour
     {
+        [SerializeField]
+        IInventory inventory;
         [SerializeField]
         DisplayItem[] displayItem;
         [SerializeField]
@@ -22,6 +24,7 @@ namespace Inventory
 
         void Start()
         {
+            inventory.InventoryChangeHandler += new Inventory.OnInventoryChanged( UpdateUI);
             for (int iSlot = 0; iSlot < displayItem.Length; iSlot++)
             {
                 displayItem[iSlot].slot.SlotIndex = iSlot;
@@ -29,7 +32,7 @@ namespace Inventory
             }
         }
 
-        public void UpdateUI()
+        public void UpdateUI(IInventory inv)
         {
             for (int iSlot = 0; iSlot < displayItem.Length; iSlot++)
             {

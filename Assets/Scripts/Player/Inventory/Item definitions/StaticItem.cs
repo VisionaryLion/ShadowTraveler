@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-namespace Inventory
+namespace ItemHandler
 {
     [Serializable]
     public class StaticItem : IItem, ICloneable
@@ -13,6 +13,8 @@ namespace Inventory
         bool canBePickedUp = true;
         [SerializeField]
         bool canBeDropped = true;
+        [SerializeField]
+        bool canBeTrashed = true;
 
         int stackTop = 1;
 
@@ -77,7 +79,7 @@ namespace Inventory
         {
             get
             {
-                return dataSrc.title;
+                return dataSrc.itemName;
             }
         }
 
@@ -135,14 +137,21 @@ namespace Inventory
         #endregion
 
         #region Validators
-        public override bool CanBeDropped()
+        public override bool CanBeDropped(IInventory inv)
         {
+            if (dataSrc.canHoldOnlyOne && inv.ContainsItem(dataSrc.itemID))
+                return false;
             return canBePickedUp;
         }
 
-        public override bool CanBePickedUp()
+        public override bool CanBePickedUp(IInventory inv)
         {
             return canBeDropped;
+        }
+
+        public override bool CanBeTrashed(IInventory inv)
+        {
+            return canBeTrashed;
         }
         #endregion
 
@@ -152,21 +161,6 @@ namespace Inventory
             if (!IsStackable || (IsStackable && other.ItemId != ItemId))
                 return false;
             return true;
-        }
-
-        public override void OnPickedUp(Inventory inv)
-        {
-            
-        }
-
-        public override void OnDropped(Inventory inv, GameObject newItem)
-        {
-            
-        }
-
-        public override void OnTrashed(Inventory inv)
-        {
-            
         }
         #endregion
 

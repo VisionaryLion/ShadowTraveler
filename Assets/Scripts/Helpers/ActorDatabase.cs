@@ -76,6 +76,14 @@ namespace Actors
             return null;
         }
 
+        public T FindFirst<T>() where T : Actor
+        {
+            List<Actor> list;
+            if (database.TryGetValue(typeof(T), out list))
+                return (T)list[0];
+            return null;
+        }
+
         public Actor FindByGroupAndTag(Type actorType, string tag)
         {
             List<Actor> list;

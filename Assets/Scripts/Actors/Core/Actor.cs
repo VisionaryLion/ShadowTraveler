@@ -8,33 +8,26 @@ namespace Actors
     [DisallowMultipleComponent]
     public class Actor : MonoBehaviour
     {
-        [ReadOnly]
-        [SerializeField]
-        new Transform transform;
-
-        public Transform Transform { get { return transform; } }
+        void Awake()
+        {
+            ActorDatabase.GetInstance().AddActor(this);
+        }
 
 #if UNITY_EDITOR
-        [HideInInspector]
-        [SerializeField]
-        protected bool _executOnce;
-
 
         /// <summary>
         /// Base call strongly suggested!
         /// </summary>
-        protected virtual void Awake()
+        public virtual void Refresh()
         {
-            ActorDatabase.GetInstance().AddActor(this);
             MoveThisComponentToTop();
             PrintAllReminders();
             FillRefAutomaticly();
-            transform = GetComponent<Transform>();
-        }
+       }
 
         protected void FillRefAutomaticly()
         {
-            MonoBehaviour[] so = GetComponents<MonoBehaviour>();
+            MonoBehaviour[] so = GetComponentsInChildren<MonoBehaviour>();
             foreach (MonoBehaviour s in so)
             {
                 FieldInfo[] fInfo = s.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
@@ -62,7 +55,7 @@ namespace Actors
         /// </summary>
         protected void PrintAllReminders()
         {
-            MonoBehaviour[] so = GetComponents<MonoBehaviour>();
+            MonoBehaviour[] so = GetComponentsInChildren<MonoBehaviour>();
             foreach (MonoBehaviour s in so)
             {
                 PrintReminder(s.GetType());
