@@ -1,43 +1,29 @@
 ﻿using UnityEngine;
 using CC2D;
 using Combat;
+using ItemHandler;
 
 namespace Actors
 {
-    //Movement
-    [RequireComponent(typeof(CharacterController2D))] //Requires for it self: Rigidbody, BoxCollider2D
-    [RequireComponent(typeof(CC2DMotor))] //Requires for it self: Animator, CharacterController2D
-    [RequireComponent(typeof(HumanInput))]
-
-    //Health
-    [RequireComponent(typeof(BasicHealth))]
-    [RequireComponent(typeof(BasicDamageReceptor))]
-
     [ExecuteInEditMode]
     public class PlayerActor : Actor
     {
-        
-        [ReadOnly]
         [SerializeField]
         CharacterController2D characterController2D;
-        [ReadOnly]
         [SerializeField]
         CC2DMotor cC2DMotor;
-        [ReadOnly]
         [SerializeField]
         HumanInput humanInput;
-        [ReadOnly]
         [SerializeField]
         BasicHealth basicHealth;
-        [ReadOnly]
         [SerializeField]
         BasicDamageReceptor basicDamageReceptor;
-        [ReadOnly]
         [SerializeField]
         Rigidbody2D rigidbody2d;
-        [ReadOnly]
         [SerializeField]
         BoxCollider2D boxCollider2D;
+        [SerializeField]
+        Inventory inventory;
 
         #region public
         public CharacterController2D CharacterController2D { get { return characterController2D; } }
@@ -47,33 +33,34 @@ namespace Actors
         public BasicDamageReceptor BasicDamageReceptor { get { return basicDamageReceptor; } }
         public Rigidbody2D Rigidbody2D { get { return rigidbody2d; } }
         public BoxCollider2D BoxCollider2D { get { return boxCollider2D; } }
+        public Inventory Inventory { get { return inventory; } }
         #endregion
 
+
+
 #if UNITY_EDITOR
-        protected override void Awake()
+        public override void Refresh()
         {
-            if (_executOnce) //already executed this script. No need for setting things up
-                return;
-            base.Awake();
+            base.Refresh();
             
             //Load components
-            rigidbody2d = GetComponent<Rigidbody2D>();
-            characterController2D = GetComponent<CharacterController2D>();
-            cC2DMotor = GetComponent<CC2DMotor>();
-            humanInput = GetComponent<HumanInput>();
-            basicHealth = GetComponent<BasicHealth>();
-            basicDamageReceptor = GetComponent<BasicDamageReceptor>();
-            boxCollider2D = GetComponent<BoxCollider2D>();
+            rigidbody2d = GetComponentInChildren<Rigidbody2D>();
+            characterController2D = GetComponentInChildren<CharacterController2D>();
+            cC2DMotor = GetComponentInChildren<CC2DMotor>();
+            humanInput = GetComponentInChildren<HumanInput>();
+            basicHealth = GetComponentInChildren<BasicHealth>();
+            basicDamageReceptor = GetComponentInChildren<BasicDamageReceptor>();
+            boxCollider2D = GetComponentInChildren<BoxCollider2D>();
+            inventory = GetComponentInChildren<Inventory>();
 
             //Setup some script vars automatically.
             this.tag = "Player"; //Built-in-Tag can't go wrong.
             rigidbody2d.isKinematic = true;
-            basicDamageReceptor.BaseHealth = GetComponent<BasicHealth>();
+            basicDamageReceptor.BaseHealth = basicHealth;
 
             //Print some custom reminder.
             Debug.LogWarning(GenerateSetUpReminderShort("Layer"));
             Debug.LogWarning(GenerateSetUpReminder("Controller", "Animator"));
-            _executOnce = true;
         }
 #endif
     }

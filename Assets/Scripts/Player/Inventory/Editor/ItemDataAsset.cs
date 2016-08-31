@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using Utility.Editor;
 
-namespace Inventory
+namespace ItemHandler
 {
     public class ItemDataAsset
     {
