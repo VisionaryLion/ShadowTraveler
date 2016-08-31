@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using Actors;
 
 namespace Manager
 {
     public class GamePlayStateHandler : MonoBehaviour, IGameState
-    {
-        public PauseMenuStateHandler pauseMenuStateHandler;
-        public DeathStateHandler deathState;
+    {    
+        [AssignActorAutomaticly]
+        GameStateActor actor;
 
         GameStateManager stateMan;
 
@@ -21,11 +22,7 @@ namespace Manager
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                stateMan.StartNewState(pauseMenuStateHandler);
-            }
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                stateMan.StartNewState(deathState);
+                stateMan.StartNewState(actor.PauseMenuStateHandler);
             }
         }
 

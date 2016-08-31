@@ -46,5 +46,10 @@ namespace Combat
         public abstract float Damage { get; set; }
         public abstract DamageTyp DmgTyp { get; }
         public abstract object Clone();
+
+        public override string ToString()
+        {
+            return Damage + " " + DamageTypToString((int)DmgTyp);
+        }
     }
 }

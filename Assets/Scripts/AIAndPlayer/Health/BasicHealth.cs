@@ -118,6 +118,7 @@ namespace Combat
         /// </summary>
         public override void ChangeHealth_NoClamping(IDamageInfo dmgInf)
         {
+            Debug.Log(name + " recieved " + dmgInf + ", resulting in " + (dmgInf.Damage * resistance.resistances[(int)dmgInf.DmgTyp]) + " damage.");
             currentHealth += dmgInf.Damage * resistance.resistances[(int)dmgInf.DmgTyp];
             FireEvents(dmgInf);
         }
@@ -127,6 +128,7 @@ namespace Combat
         /// </summary>
         public override void ChangeHealth(IDamageInfo dmgInf)
         {
+            Debug.Log(name + " recieved " + dmgInf + ", resulting in " + (dmgInf.Damage * resistance.resistances[(int)dmgInf.DmgTyp]) + " damage.");
             currentHealth += dmgInf.Damage * resistance.resistances[(int)dmgInf.DmgTyp];
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
             FireEvents(dmgInf);
@@ -138,6 +140,7 @@ namespace Combat
         /// </summary>
         public override void ChangeHealthRaw(IDamageInfo dmgInf)
         {
+            Debug.Log(name + " recieved " + dmgInf + ", resulting in " + dmgInf.Damage + " damage.");
             currentHealth += dmgInf.Damage;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
             FireEvents(dmgInf);
@@ -225,9 +228,9 @@ namespace Combat
             {
                 if (OnDeath != null && !deathTriggered)
                 {
+                    deathTriggered = true;
                     OnDeath.Invoke(this, overrideSaveDmg);
                 }
-                deathTriggered = true;
             }
             else
                 deathTriggered = false;
@@ -303,27 +306,33 @@ namespace Combat
             else if (timedDmgInf.AddBehaivior == ITimedDamageInfo.AddingBehaivior.AddMostDangerous)
             {
                 ITimedDamageInfo output;
-                int index = 0;
-                while ((index = TryGetNextLongTimeDanger(timedDmgInf.DmgTyp, index, out output)) != -1)
+                int index = TryGetNextLongTimeDanger(timedDmgInf.DmgTyp, 0, out output);
+
+                if (index == -1)
+                {
+                    dmgBuffer.Add(timedDmgInf);
+                    longTimeDamageHandler.Add(StartCoroutine(HandleLongTimeDamager(timedDmgInf, healthChangeTyp)));
+                    return;
+                }
+                do
                 {
                     if (output.Damage < timedDmgInf.Damage)
                     {
                         output.Damage = timedDmgInf.Damage;
-                        index = int.MaxValue;
+                        return;
                     }
                     if (output.Frequency < timedDmgInf.Frequency)
                     {
                         output.Frequency = timedDmgInf.Frequency;
-                        index = int.MaxValue;
+                        return;
                     }
-                }
+                } while ((index = TryGetNextLongTimeDanger(timedDmgInf.DmgTyp, index, out output)) != -1);
             }
             else
             {
                 dmgBuffer.Add(timedDmgInf);
                 longTimeDamageHandler.Add(StartCoroutine(HandleLongTimeDamager(timedDmgInf, healthChangeTyp)));
             }
-
         }
 
         public override ITimedDamageInfo TryGetLongTimeDanger(IDamageInfo.DamageTyp typ)

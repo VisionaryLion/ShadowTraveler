@@ -28,14 +28,12 @@ namespace Manager
         {
             //some death fx
             deathUIRoot.SetActive(true);
-            Time.timeScale = 0;
         }
 
         public void OnStateEnd()
         {
             //nothing
             deathUIRoot.SetActive(false);
-            Time.timeScale = 1;
         }
 
         public override string ToString()

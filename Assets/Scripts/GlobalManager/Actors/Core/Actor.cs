@@ -112,7 +112,7 @@ namespace Actors
         protected void MoveThisComponentToTop()
         {
             int componentLength = GetComponents<MonoBehaviour>().Length;
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < componentLength; i++)
                 UnityEditorInternal.ComponentUtility.MoveComponentUp(this); //Move this script up to the top in the hierarchy!
         }
 #endif

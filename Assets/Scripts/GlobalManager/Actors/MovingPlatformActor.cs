@@ -2,7 +2,6 @@
 
 namespace Actors
 {
-    [ExecuteInEditMode]
     public class MovingPlatformActor : Actor
     {
         [SerializeField]

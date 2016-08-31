@@ -22,9 +22,9 @@ namespace CC2D
         [Tooltip("Will only be used for flipping the sprite, based on its movement.")]
         Transform skeletonBack;
         [SerializeField]
-        Animator frontAnimator;
+        public Animator frontAnimator;
         [SerializeField]
-        Animator backAnimator;
+        public Animator backAnimator;
         [AssignActorAutomaticly]
         public PlayerActor actor;
 
@@ -474,7 +474,6 @@ namespace CC2D
             _totalExternalVelocity = CalculateTotalExternalAccerleration();
             actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
 
-            Vector2 deltaVelocity = actor.CharacterController2D.velocity - _cVelocity;
             //We turned out to be slower then our external velocity demanded us. We presumably hit something, so reset forces.
             if (_totalExternalVelocity.x == 0)
                 return;

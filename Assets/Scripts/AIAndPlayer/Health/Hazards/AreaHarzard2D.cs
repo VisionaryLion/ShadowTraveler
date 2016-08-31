@@ -9,7 +9,7 @@ namespace Combat
     public class AreaHarzard2D : MonoBehaviour
     {
         [SerializeField]
-        BasicTimedDamageInfo dmgInf;
+        BasicTimedDamageInfo damgeInfo;
         [SerializeField]
         bool instaKill = false;
         [SerializeField]
@@ -23,8 +23,8 @@ namespace Combat
         void Awake()
         {
             componentBuffer = new Dictionary<int, IDamageReciever>();
-            if (dmgInf.DmgTyp != IDamageInfo.DamageTyp.Healing)
-                dmgInf.Damage *= -1;
+            if (damgeInfo.DmgTyp != IDamageInfo.DamageTyp.Healing)
+                damgeInfo.Damage *= -1;
         }
 
         void OnTriggerEnter2D(Collider2D collider)
@@ -36,36 +36,38 @@ namespace Combat
             {
                 if (reciever == null || reciever.BaseHealth == null)
                     return;
-                reciever.BaseHealth.Kill(dmgInf.DmgTyp);
+                reciever.BaseHealth.Kill(damgeInfo.DmgTyp);
             }
         }
 
         void OnTriggerStay2D(Collider2D collider)
         {
-            if (Time.time - lastTime >= dmgInf.Frequency)
+            if (Time.time - lastTime >= damgeInfo.Frequency)
             {
                 lastTime = Time.time;
                 IDamageReciever reciever;
                 if (componentBuffer.TryGetValue(collider.GetInstanceID(), out reciever))
                 {
-                    if (reciever == null)
-                        return;
-                    if (dmgInf.RunTime <= 0)
-                    {
-                        if (!ignoreMultiplier)
-                            reciever.TakeDamage((IDamageInfo)dmgInf.Clone(), healthChangeTyp);
-                        else
-                            reciever.TakeDamageIgnoreMultiplier((IDamageInfo)dmgInf.Clone(), healthChangeTyp);
-                    }
+                    if (!ignoreMultiplier)
+                        reciever.TakeDamage((IDamageInfo)damgeInfo.Clone(), healthChangeTyp);
                     else
-                        reciever.BaseHealth.AddLongTimeDamager((ITimedDamageInfo)dmgInf.Clone(), healthChangeTyp);
+                        reciever.TakeDamageIgnoreMultiplier((IDamageInfo)damgeInfo.Clone(), healthChangeTyp);
                 }
             }
         }
 
         void OnTriggerExit2D(Collider2D collider)
         {
+            if (damgeInfo.RunTime > 0)
+            {
+                IDamageReciever reciever;
+                if (componentBuffer.TryGetValue(collider.GetInstanceID(), out reciever))
+                {
+                    reciever.BaseHealth.AddLongTimeDamager((ITimedDamageInfo)damgeInfo.Clone(), healthChangeTyp);
+                }
+            }
             componentBuffer.Remove(collider.GetInstanceID());
+            
         }
     }
 }

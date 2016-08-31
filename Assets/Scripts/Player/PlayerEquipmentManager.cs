@@ -19,7 +19,6 @@ namespace ItemHandler
         PlayerActor actor;
 
         GameObject currentPhysicalEquipment;
-        EquipmentButtonBinding currentEquipment;
         IItem currentEquipedItem;
 
         // Update is called once per frame
@@ -29,7 +28,7 @@ namespace ItemHandler
             {
                 if (Input.GetButtonDown(b.button) && actor.Inventory.ContainsItem(b.equipment.itemID))
                 {
-                    if (currentEquipment != null)
+                    if (currentEquipedItem != null)
                     {
                         actor.Inventory.AddGameObjectCopyOfItem(currentEquipedItem, currentPhysicalEquipment);
                     }

@@ -5,7 +5,6 @@ using ItemHandler;
 
 namespace Actors
 {
-    [ExecuteInEditMode]
     public class PlayerActor : Actor
     {
         [SerializeField]
