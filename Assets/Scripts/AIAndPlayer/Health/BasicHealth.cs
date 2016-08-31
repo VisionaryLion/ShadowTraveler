@@ -326,6 +326,7 @@ namespace Combat
                         output.Frequency = timedDmgInf.Frequency;
                         return;
                     }
+                    index++;
                 } while ((index = TryGetNextLongTimeDanger(timedDmgInf.DmgTyp, index, out output)) != -1);
             }
             else

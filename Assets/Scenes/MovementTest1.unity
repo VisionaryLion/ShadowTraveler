@@ -464,6 +464,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1800394313}
+  - {fileID: 717313002}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!1 &271430491
@@ -744,7 +745,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 366895042}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.096, y: -19.03, z: -0.9140625}
+  m_LocalPosition: {x: 7.36, y: 16.06, z: -0.9140625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -1051,15 +1052,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 717313001}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1936018229}
   - {fileID: 1412058787}
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_Father: {fileID: 252720111}
+  m_RootOrder: 1
 --- !u!1 &756866734
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,6 +1373,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 901922739}
+  - 114: {fileID: 901922743}
   - 114: {fileID: 901922742}
   - 114: {fileID: 901922741}
   - 114: {fileID: 901922740}
@@ -1430,6 +1432,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edc10a60ba7941c43a628fa377dc8c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &901922743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 901922738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 289351f3f3ba4c14e8b9623844968751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathStateHandler: {fileID: 901922740}
+  pauseMenuStateHandler: {fileID: 901922741}
+  gamePlayStateHandler: {fileID: 901922742}
 --- !u!1 &914157915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1920,7 +1936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 100
+  currentHealth: 10
   resistance:
     resistances:
     - 1

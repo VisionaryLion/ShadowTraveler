@@ -12,7 +12,7 @@ GameObject:
   - 58: {fileID: 5884936}
   - 50: {fileID: 5008232}
   m_Layer: 0
-  m_Name: PickUpObject
+  m_Name: TechBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
