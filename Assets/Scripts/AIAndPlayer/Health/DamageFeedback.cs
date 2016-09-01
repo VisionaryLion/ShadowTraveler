@@ -32,7 +32,7 @@ namespace Combat
             }
             //if (!waitTillClipFinished || !actor.AudioSource.isPlaying)
             //    actor.AudioSource.PlayOneShot(damgeFeedbackDef.FindAudioClip(e.DmgTyp));
-            if (!actor.CC2DMotor.frontAnimator.GetCurrentAnimatorStateInfo(0).IsName(hitAnimName))
+            if (!actor.CC2DMotor.frontAnimator.GetCurrentAnimatorStateInfo(0).IsName(hitAnimName) && !actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
                 actor.CC2DMotor.frontAnimator.SetTrigger("TakeDamage");
         }
     }

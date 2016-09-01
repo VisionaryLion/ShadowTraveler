@@ -22,6 +22,7 @@ namespace Combat
 
         private void HealthComponent_OnDeath(object sender, IDamageInfo info)
         {
+            actor.PlayerLimitationHandler.LockAnimaionTrigger(true);
             actor.CC2DMotor.frontAnimator.SetTrigger("Death");
             GameStateManager.GetInstance().StartNewState(gameStateActor.DeathStateHandler);
         }

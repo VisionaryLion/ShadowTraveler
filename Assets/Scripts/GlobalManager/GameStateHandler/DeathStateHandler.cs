@@ -32,15 +32,15 @@ namespace Manager
         public void OnStateStart()
         {
             //some death fx
-            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitationHandler.PlayerLimition.BlockPlayerInput);
-            actor.PlayerAnimationEventGrabberFront.DeathAnimFinishedHandler += ActivateGameOverScreen;
+            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitation.BlockMovement, PlayerLimitation.BlockNonMovement);
+            actor.PlayerAnimationBaseLayerEnd.DeathAnimFinishedHandler += ActivateGameOverScreen;
         }
 
         public void OnStateEnd()
         {
             deathUIRoot.SetActive(false);
-            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitationHandler.PlayerLimition.NoLimitation);
-            actor.PlayerAnimationEventGrabberFront.DeathAnimFinishedHandler -= ActivateGameOverScreen;
+            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitation.NoLimitation);
+            actor.PlayerAnimationBaseLayerEnd.DeathAnimFinishedHandler -= ActivateGameOverScreen;
         }
 
         void ActivateGameOverScreen()

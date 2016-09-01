@@ -2,82 +2,89 @@
 using System.Collections;
 using Actors;
 
+public enum PlayerLimitation { NoLimitation, BlockMovement, Freeze, BlockNonMovement, ResetMovementInput, BlockEquipmentUse }
+
 public class PlayerLimitationHandler
 {
-
-    public enum PlayerLimition { NoLimitation, BlockPlayerInput, Freeze, BlockInputAndFreeze, BlockNonMovement }
-
     PlayerActor actor;
-    PlayerLimition limitation;
+    PlayerLimitation[] currentLimitations;
     UnityEventHog eventHog;
+    bool lockAnimationTrigger = false;
 
     public PlayerLimitationHandler(PlayerActor actor, UnityEventHog eventHog)
     {
         this.actor = actor;
         this.eventHog = eventHog;
-        SetLimitation(PlayerLimition.NoLimitation);
+        SetLimitation(PlayerLimitation.NoLimitation);
     }
 
-    public void SetLimitation(PlayerLimition limit)
+    public void SetLimitation(params PlayerLimitation[] limit)
     {
-        limitation = limit;
-
-        if (limitation != PlayerLimition.NoLimitation)
-            ApplyLimitation(PlayerLimition.NoLimitation);
-
         ApplyLimitation(limit);
     }
 
-    public void SetLimitation(PlayerLimition limit, float duration, PlayerLimition fallback)
+    public void SetLimitation(PlayerLimitation[] limit, float duration, PlayerLimitation[] fallback)
     {
         SetLimitation(limit);
         eventHog.DelayActionBySeconds(new UnityEventHog.DelayedAction(SetLimitation), duration, fallback);
     }
 
-    public void SetLimitation(PlayerLimition limit, float duration)
+    public void SetLimitation(float duration, params PlayerLimitation[] limit)
     {
-        PlayerLimition prevLimit = limitation;
+        PlayerLimitation[] prevLimit = currentLimitations;
         SetLimitation(limit);
         eventHog.DelayActionBySeconds(new UnityEventHog.DelayedAction(SetLimitation), duration, prevLimit);
     }
 
-    public void SetLimitationAfter(PlayerLimition limit, float time)
+    public void SetLimitationAfter(float time, params PlayerLimitation[] limit)
     {
         eventHog.DelayActionBySeconds(new UnityEventHog.DelayedAction(SetLimitation), time, limit);
     }
 
-    void SetLimitation(object limit)
+    public bool AreAnimationTriggerLocked()
     {
-        SetLimitation((PlayerLimition)limit);
+        return lockAnimationTrigger;
     }
 
-    void ApplyLimitation(PlayerLimition newLimit)
+    public void LockAnimaionTrigger(bool lockTrigger)
     {
-        limitation = newLimit;
-        switch (limitation)
+        lockAnimationTrigger = lockTrigger;
+    }
+
+    void SetLimitation(object limit)
+    {
+        SetLimitation((PlayerLimitation[])limit);
+    }
+
+    void ApplyLimitation(PlayerLimitation[] newLimit)
+    {
+        currentLimitations = newLimit;
+        foreach (PlayerLimitation l in newLimit)
         {
-            case PlayerLimition.NoLimitation:
-                actor.HumanInput.SetAllowInput(true);
-                actor.PlayerEquipmentManager.allowInput = true;
-                actor.CC2DMotor.IsFroozen = false;
-                break;
-            case PlayerLimition.BlockPlayerInput:
-                actor.HumanInput.SetAllowInput(false);
-                actor.PlayerEquipmentManager.allowInput = false;
-                actor.CC2DMotor.ResetPlayerMovementInput();
-                break;
-            case PlayerLimition.Freeze:
-                actor.CC2DMotor.IsFroozen = true;
-                break;
-            case PlayerLimition.BlockInputAndFreeze:
-                actor.HumanInput.SetAllowInput(false);
-                actor.PlayerEquipmentManager.allowInput = false;
-                actor.CC2DMotor.IsFroozen = true;
-                actor.CC2DMotor.ResetPlayerMovementInput();
-                break;
-            case PlayerLimition.BlockNonMovement:
-                actor.PlayerEquipmentManager.allowInput = false;
-                break;
+            switch (l)
+            {
+                case PlayerLimitation.NoLimitation:
+                    actor.HumanInput.SetAllowInput(true);
+                    actor.PlayerEquipmentManager.allowInput = true;
+                    actor.CC2DMotor.IsFroozen = false;
+                    break;
+                case PlayerLimitation.BlockMovement:
+                    actor.HumanInput.SetAllowInput(false);
+                    actor.PlayerEquipmentManager.allowInput = false;
+                    break;
+                case PlayerLimitation.Freeze:
+                    actor.CC2DMotor.IsFroozen = true;
+                    break;
+                case PlayerLimitation.ResetMovementInput:
+                    actor.CC2DMotor.ResetPlayerMovementInput();
+                    break;
+                case PlayerLimitation.BlockNonMovement:
+                    actor.PlayerEquipmentManager.allowInput = false;
+                    break;
+                case PlayerLimitation.BlockEquipmentUse:
+                    actor.PlayerEquipmentManager.allowInput = false;
+                    break;
+            }
         }
     }   
 }

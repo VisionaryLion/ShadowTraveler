@@ -2,13 +2,24 @@
 using System.Collections;
 using ItemHandler;
 using Actors;
+using System;
 
 namespace Equipment
 {
-    public class Flashlight : MonoBehaviour
+    public class Flashlight : MonoBehaviour, IEquipment
     {
         [SerializeField]
         Light lightSrc;
+
+        public void OnEquiped()
+        {
+            enabled = true;
+        }
+
+        public void OnUnequiped()
+        {
+            enabled = false;
+        }
 
         void Update()
         {

@@ -1,17 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
 
-public class PlayerAnimationEventGrabberFront : MonoBehaviour {
-
-    public delegate void OnDeathAnimFinished ();
+public class PlayerAnimationBaseLayerEnd : StateMachineBehaviour
+{
+    public delegate void OnDeathAnimFinished();
     public event OnDeathAnimFinished DeathAnimFinishedHandler;
 
     public delegate void OnPickUpAnimFinished();
     public event OnPickUpAnimFinished PickUpFinishedHandler;
-
-    public delegate void OnPickUpAnimnReachedItem();
-    public event OnPickUpAnimnReachedItem PickUpReachedItemHandler;
 
     void OnDeathAnimationFinished()
     {
@@ -25,9 +21,16 @@ public class PlayerAnimationEventGrabberFront : MonoBehaviour {
             PickUpFinishedHandler.Invoke();
     }
 
-    void OnPickUpAnimationReachedItem()
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (PickUpReachedItemHandler != null)
-            PickUpReachedItemHandler.Invoke();
+
+    }
+
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        if (stateInfo.IsName("Item_Pick_up_Anim"))
+            OnPickUpAnimationFinished();
+        else if (stateInfo.IsName("Death_Anim"))
+            OnDeathAnimationFinished();
     }
 }

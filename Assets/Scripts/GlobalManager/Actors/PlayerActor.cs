@@ -26,6 +26,10 @@ namespace Actors
         [SerializeField]
         PlayerAnimationEventGrabberFront playerAnimationEventGrabberFront;
         [SerializeField]
+        PlayerAnimationBaseLayerEnd playerAnimationBaseLayerEnd;
+        [SerializeField]
+        PlayerAnimationUpperBodyEnd playerAnimationUpperBodyEnd;
+        [SerializeField]
         PlayerEquipmentManager playerEquipmentManager;
         [SerializeField]
         AudioSource audioSource;
@@ -45,6 +49,8 @@ namespace Actors
         public PlayerAnimationEventGrabberFront PlayerAnimationEventGrabberFront { get { return playerAnimationEventGrabberFront; } }
         public PlayerEquipmentManager PlayerEquipmentManager { get { return playerEquipmentManager; } }
         public AudioSource AudioSource { get { return audioSource; } }
+        public PlayerAnimationUpperBodyEnd PlayerAnimationUpperBodyEnd { get { return playerAnimationUpperBodyEnd; } }
+        public PlayerAnimationBaseLayerEnd PlayerAnimationBaseLayerEnd { get { return playerAnimationBaseLayerEnd; } }
         #endregion
 
         protected override void Awake()
@@ -68,6 +74,8 @@ namespace Actors
             boxCollider2D = GetComponentInChildren<BoxCollider2D>();
             inventory = GetComponentInChildren<Inventory>();
             playerAnimationEventGrabberFront = GetComponentInChildren<PlayerAnimationEventGrabberFront>();
+            playerAnimationBaseLayerEnd = cC2DMotor.frontAnimator.GetBehaviour<PlayerAnimationBaseLayerEnd>();
+            playerAnimationUpperBodyEnd = cC2DMotor.frontAnimator.GetBehaviour<PlayerAnimationUpperBodyEnd>();
             playerEquipmentManager = GetComponentInChildren<PlayerEquipmentManager>();
             audioSource = GetComponentInChildren<AudioSource>();
 
