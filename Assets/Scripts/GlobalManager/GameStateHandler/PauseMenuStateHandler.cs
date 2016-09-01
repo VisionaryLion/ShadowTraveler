@@ -7,18 +7,11 @@ namespace Manager
     {
         public GameObject pauseMenuUIRoot;
 
-        GameStateManager stateMan;
-
-        void Awake()
-        {
-            stateMan = GameStateManager.GetInstance();
-        }
-
         public void OnStateActive()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                stateMan.EndCurrentState();
+                GameStateManager.GetInstance().EndCurrentState();
             }
         }
 

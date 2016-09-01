@@ -23,6 +23,18 @@ namespace Actors
         BoxCollider2D boxCollider2D;
         [SerializeField]
         Inventory inventory;
+        [SerializeField]
+        PlayerAnimationEventGrabberFront playerAnimationEventGrabberFront;
+        [SerializeField]
+        PlayerAnimationBaseLayerEnd playerAnimationBaseLayerEnd;
+        [SerializeField]
+        PlayerAnimationUpperBodyEnd playerAnimationUpperBodyEnd;
+        [SerializeField]
+        PlayerEquipmentManager playerEquipmentManager;
+        [SerializeField]
+        AudioSource audioSource;
+
+        PlayerLimitationHandler playerLimitationHandler;
 
         #region public
         public CharacterController2D CharacterController2D { get { return characterController2D; } }
@@ -33,9 +45,19 @@ namespace Actors
         public Rigidbody2D Rigidbody2D { get { return rigidbody2d; } }
         public BoxCollider2D BoxCollider2D { get { return boxCollider2D; } }
         public Inventory Inventory { get { return inventory; } }
+        public PlayerLimitationHandler PlayerLimitationHandler { get { return playerLimitationHandler; } }
+        public PlayerAnimationEventGrabberFront PlayerAnimationEventGrabberFront { get { return playerAnimationEventGrabberFront; } }
+        public PlayerEquipmentManager PlayerEquipmentManager { get { return playerEquipmentManager; } }
+        public AudioSource AudioSource { get { return audioSource; } }
+        public PlayerAnimationUpperBodyEnd PlayerAnimationUpperBodyEnd { get { return playerAnimationUpperBodyEnd; } }
+        public PlayerAnimationBaseLayerEnd PlayerAnimationBaseLayerEnd { get { return playerAnimationBaseLayerEnd; } }
         #endregion
 
-
+        protected override void Awake()
+        {
+            base.Awake();
+            playerLimitationHandler = new PlayerLimitationHandler(this, UnityEventHog.GetInstance());
+        }
 
 #if UNITY_EDITOR
         public override void Refresh()
@@ -51,6 +73,11 @@ namespace Actors
             basicDamageReceptor = GetComponentInChildren<BasicDamageReceptor>();
             boxCollider2D = GetComponentInChildren<BoxCollider2D>();
             inventory = GetComponentInChildren<Inventory>();
+            playerAnimationEventGrabberFront = GetComponentInChildren<PlayerAnimationEventGrabberFront>();
+            playerAnimationBaseLayerEnd = cC2DMotor.frontAnimator.GetBehaviour<PlayerAnimationBaseLayerEnd>();
+            playerAnimationUpperBodyEnd = cC2DMotor.frontAnimator.GetBehaviour<PlayerAnimationUpperBodyEnd>();
+            playerEquipmentManager = GetComponentInChildren<PlayerEquipmentManager>();
+            audioSource = GetComponentInChildren<AudioSource>();
 
             //Setup some script vars automatically.
             this.tag = "Player"; //Built-in-Tag can't go wrong.

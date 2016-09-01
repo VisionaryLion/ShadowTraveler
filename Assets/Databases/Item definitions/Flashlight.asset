@@ -13,13 +13,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 1
   displaySprite: {fileID: 0}
-  itemPrefab: {fileID: 1000012169664086, guid: 140e7059a5757c1429b9f62952f16b36, type: 2}
+  itemPrefab: {fileID: 1000013772047324, guid: 140e7059a5757c1429b9f62952f16b36, type: 2}
   isEquipment: 1
   isConsumable: 0
   isStackable: 0
   canHoldOnlyOne: 1
   stackLimit: 20
-  poolLimit: 0
+  poolLimit: 1
   itemName: Flashlight
   description: A basic light source
   tooltips: A basic light source

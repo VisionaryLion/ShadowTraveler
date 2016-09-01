@@ -4,7 +4,6 @@ using System;
 namespace ItemHandler
 {
     //Fake interface, to please Unity
-    [Serializable]
     public abstract class IItem : IEquatable<IItem>
     {
         //event delegates

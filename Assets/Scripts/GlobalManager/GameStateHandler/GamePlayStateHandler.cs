@@ -10,19 +10,17 @@ namespace Manager
         [AssignActorAutomaticly]
         GameStateActor actor;
 
-        GameStateManager stateMan;
 
-        void Awake()
+        void Start()
         {
-            stateMan = GameStateManager.GetInstance();
-            stateMan.AssignDefaultState(this);
+            GameStateManager.GetInstance().AssignDefaultState(this);
         }
 
         public void OnStateActive()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                stateMan.StartNewState(actor.PauseMenuStateHandler);
+                GameStateManager.GetInstance().StartNewState(actor.PauseMenuStateHandler);
             }
         }
 

@@ -23,6 +23,16 @@ namespace Actors
 
         Dictionary<Type, List<Actor>> database = new Dictionary<Type, List<Actor>>(10);
 
+        ActorDatabase()
+        {
+            UnityEventHog.GetInstance().AddOnDestroyListener(new UnityEventHog.OnEvent(OnDestroy));
+        }
+
+        void OnDestroy()
+        {
+            instance = null;
+        }
+
         /// <summary>
         /// Adds the entity to the database. It can now be found by search requests.
         /// Note that duplicate entries aren't removed automatically.

@@ -8,14 +8,12 @@ namespace Actors
     [DisallowMultipleComponent]
     public class Actor : MonoBehaviour
     {
-        
-
-#if UNITY_EDITOR
-
-        public virtual void Awake()
+        protected virtual void Awake()
         {
             ActorDatabase.GetInstance().AddActor(this);
+#if UNITY_EDITOR
             Refresh();
+#endif
         }
 
         /// <summary>

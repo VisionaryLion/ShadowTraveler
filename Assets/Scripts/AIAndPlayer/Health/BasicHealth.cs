@@ -70,7 +70,7 @@ namespace Combat
         {
             get
             {
-                return currentHealth < 0;
+                return currentHealth <= 0;
             }
         }
 
