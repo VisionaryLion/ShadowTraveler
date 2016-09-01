@@ -20,7 +20,10 @@ public class SwingCrowbar : MonoBehaviour, IEquipment
     private void HitBox_hitHandler(IDamageReciever reciever)
     {
         if (!actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
+        {
             actor.CC2DMotor.frontAnimator.SetTrigger("Aboard_SwingCrowbar");
+            PlayerAnimationEventGrabberFront_CrowbarSwingFinishedHandler();
+        }
     }
 
     public void OnEquiped()
