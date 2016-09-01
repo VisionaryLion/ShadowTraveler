@@ -11,6 +11,9 @@ namespace Actors
         void Awake()
         {
             ActorDatabase.GetInstance().AddActor(this);
+#if UNITY_EDITOR
+            Refresh();
+#endif
         }
 
 #if UNITY_EDITOR

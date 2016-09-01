@@ -158,6 +158,9 @@ namespace CC2D
             _allExternalVelocitys.Add(velocity);
         }
 
+        [HideInInspector]
+        public bool IsFroozen; 
+
         /// <summary>
         /// If assigned to something different from zero, this motor will act as if it were a child of the assigned object.
         /// </summary>
@@ -221,6 +224,8 @@ namespace CC2D
 
         void FixedUpdate()
         {
+            if (IsFroozen)
+                return;
             //Check, if we are grounded
             if (actor.CharacterController2D.collisionState.wasGroundedLastFrame && !actor.CharacterController2D.isGrounded)
                 OnIsNotGrounded();
