@@ -30,6 +30,8 @@ namespace Combat
         void OnTriggerEnter2D(Collider2D collider)
         {
             IDamageReciever reciever = collider.GetComponent<IDamageReciever>();
+            if (reciever == null)
+                return;
             componentBuffer.Add(collider.GetInstanceID(), reciever);
 
             if (instaKill)

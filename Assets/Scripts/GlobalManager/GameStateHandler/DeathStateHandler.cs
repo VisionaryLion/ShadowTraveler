@@ -32,7 +32,7 @@ namespace Manager
         public void OnStateStart()
         {
             //some death fx
-            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitationHandler.PlayerLimition.Freeze);
+            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitationHandler.PlayerLimition.BlockPlayerInput);
             actor.PlayerAnimationEventGrabberFront.DeathAnimFinishedHandler += ActivateGameOverScreen;
         }
 

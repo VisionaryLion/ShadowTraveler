@@ -27,6 +27,8 @@ namespace Actors
         PlayerAnimationEventGrabberFront playerAnimationEventGrabberFront;
         [SerializeField]
         PlayerEquipmentManager playerEquipmentManager;
+        [SerializeField]
+        AudioSource audioSource;
 
         PlayerLimitationHandler playerLimitationHandler;
 
@@ -42,6 +44,7 @@ namespace Actors
         public PlayerLimitationHandler PlayerLimitationHandler { get { return playerLimitationHandler; } }
         public PlayerAnimationEventGrabberFront PlayerAnimationEventGrabberFront { get { return playerAnimationEventGrabberFront; } }
         public PlayerEquipmentManager PlayerEquipmentManager { get { return playerEquipmentManager; } }
+        public AudioSource AudioSource { get { return audioSource; } }
         #endregion
 
         protected override void Awake()
@@ -66,6 +69,7 @@ namespace Actors
             inventory = GetComponentInChildren<Inventory>();
             playerAnimationEventGrabberFront = GetComponentInChildren<PlayerAnimationEventGrabberFront>();
             playerEquipmentManager = GetComponentInChildren<PlayerEquipmentManager>();
+            audioSource = GetComponentInChildren<AudioSource>();
 
             //Setup some script vars automatically.
             this.tag = "Player"; //Built-in-Tag can't go wrong.
