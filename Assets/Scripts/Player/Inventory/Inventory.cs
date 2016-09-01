@@ -40,19 +40,50 @@ namespace ItemHandler
                     AddItemToStack(item, inventoryCache[iSlot]);
                     if (item.StackTop <= 0)
                     {
-                        ManageItemGameObject(item, itemInstance);
+                        AddGameObjectCopyOfItem(item, itemInstance);
                         item.OnPickedUp(this);
 
                         InvokeOnInventoryChanged(this);
                         return true;
                     }
                 }
-                return AddItemToEmptyTile(item, itemInstance); //Add the remainder
             }
-            else
+            return AddItemToEmptyTile(item, itemInstance);
+        }
+
+        public override bool CouldAddItem(IItem item) //TODO: Add system of return codes
+        {
+            if (item.IsStackable && item.StackLimit > item.StackTop)
             {
-                return AddItemToEmptyTile(item, itemInstance);
+                int fakeItemTop = item.StackTop;
+                for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+                {
+                    if (inventoryCache[iSlot] == null)
+                        continue;
+                    if (!item.CanBeStackedWith(inventoryCache[iSlot]))
+                        continue;
+
+                    int freeSpace = inventoryCache[iSlot].StackLimit - inventoryCache[iSlot].StackTop;
+                    int itemsToAdd = Mathf.Min(freeSpace, item.StackTop);
+                    fakeItemTop -= itemsToAdd;
+
+                    if (fakeItemTop <= 0)
+                    {
+                        return true;
+                    }
+                }
             }
+
+            if (IsInventoryFull)
+                return false;
+            for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+            {
+                if (inventoryCache[iSlot] == null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         //Adds an item to the next open slot.
@@ -66,7 +97,7 @@ namespace ItemHandler
                 if (inventoryCache[iSlot] == null)
                 {
                     inventoryCache[iSlot] = item;
-                    ManageItemGameObject(item, itemInstance);
+                    AddGameObjectCopyOfItem(item, itemInstance);
                     item.OnPickedUp(this);
                     filledSlotCount++;
                     InvokeOnInventoryChanged(this);
@@ -218,6 +249,7 @@ namespace ItemHandler
                     return;
                 }
                 itemInstance.SetActive(false);
+                itemInstance.transform.parent = transform;
                 pooledObjs.Push(itemInstance);
                 return;
             }
@@ -225,6 +257,7 @@ namespace ItemHandler
             pooledObjs.Push(itemInstance);
             pooledItems.Add(item.ItemId, pooledObjs);
             itemInstance.SetActive(false);
+            itemInstance.transform.parent = transform;
         }
 
         void AddItemToStack(IItem item, IItem target)
@@ -237,35 +270,6 @@ namespace ItemHandler
             int itemsToAdd = Mathf.Min(freeSpace, item.StackTop);
             target.StackTop += itemsToAdd;
             item.StackTop -= itemsToAdd;
-        }
-
-        void ManageItemGameObject(IItem item, GameObject itemInstance)
-        {
-            if (itemInstance == null)
-                return;
-
-            if (!item.ShouldPool)
-            {
-                Destroy(itemInstance);
-                return;
-            }
-
-            Stack<GameObject> pooledObjs;
-            if (pooledItems.TryGetValue(item.ItemId, out pooledObjs))
-            {
-                if (pooledObjs.Count >= item.PoolLimit)
-                {
-                    Destroy(itemInstance);
-                    return;
-                }
-                itemInstance.SetActive(false);
-                pooledObjs.Push(itemInstance);
-                return;
-            }
-            pooledObjs = new Stack<GameObject>(1);
-            pooledObjs.Push(itemInstance);
-            pooledItems.Add(item.ItemId, pooledObjs);
-            itemInstance.SetActive(false);
         }
 
         void DeletePool(IItem item)

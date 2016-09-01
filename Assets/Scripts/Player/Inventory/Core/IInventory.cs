@@ -9,6 +9,7 @@ namespace ItemHandler
         public abstract IItem GetItem(int index);
         public abstract bool TryMoveItem(int from, int to);
         public abstract bool AddItem(IItem item, GameObject obj);
+        public abstract bool CouldAddItem(IItem item);
         public abstract bool AddItemToEmptyTile(IItem item, GameObject obj);
         public abstract bool ContainsItem(int id);
         public abstract int FindItem(int id);

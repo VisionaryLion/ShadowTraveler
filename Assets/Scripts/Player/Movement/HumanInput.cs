@@ -1,21 +1,31 @@
 ﻿using UnityEngine;
+using Actors;
 
 namespace CC2D
 {
-    [RequireComponent(typeof(CC2DMotor))]
     public class HumanInput : MonoBehaviour
     {
-        CC2DMotor _motor;
+        [AssignActorAutomaticly]
+        PlayerActor actor;
+
         MovementInput bufferedInput;
+        bool allowInput;
 
         void Awake()
         {
-            _motor = GetComponent<CC2DMotor>();
             bufferedInput = new MovementInput();
+        }
+
+        void Start()
+        {
+            actor.CC2DMotor.CurrentMovementInput = bufferedInput;
         }
 
         void Update()
         {
+            if (!allowInput)
+                return;
+
             if (Input.GetButtonDown("Jump"))
             {
                 bufferedInput.timeOfLastJumpStateChange = Time.time;
@@ -32,13 +42,32 @@ namespace CC2D
 
         void FixedUpdate()
         {
+            if (!allowInput)
+                return;
+
             bufferedInput.horizontalRaw = Input.GetAxisRaw("Horizontal");
             bufferedInput.verticalRaw = Input.GetAxisRaw("Vertical");
 
             bufferedInput.horizontal = Input.GetAxis("Horizontal");
             bufferedInput.vertical = Input.GetAxis("Vertical");
+        }
 
-            _motor.CurrentMovementInput = bufferedInput;
+        public void SetAllowInput(bool enabled)
+        {
+            allowInput = enabled;
+            if (!allowInput)
+                ResetPlayerMovementInput();
+        }
+
+        public void ResetPlayerMovementInput()
+        {
+            bufferedInput.horizontal = 0;
+            bufferedInput.horizontalRaw = 0;
+            bufferedInput.vertical = 0;
+            bufferedInput.verticalRaw = 0;
+            bufferedInput.jump = false;
+            bufferedInput.isJumpConsumed = false;
+            bufferedInput.timeOfLastJumpStateChange = 0;
         }
     }
 }

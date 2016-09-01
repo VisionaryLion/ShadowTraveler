@@ -17,10 +17,7 @@ namespace CC2D
         [RemindToConfigureField]
         [SerializeField]
         [Tooltip("Will only be used for flipping the sprite, based on its movement.")]
-        Transform skeletonFront;
-        [SerializeField]
-        [Tooltip("Will only be used for flipping the sprite, based on its movement.")]
-        Transform skeletonBack;
+        Transform spriteRoot;
         [SerializeField]
         public Animator frontAnimator;
         [SerializeField]
@@ -166,14 +163,20 @@ namespace CC2D
         /// </summary>
         public Transform FakeTransformParent { get { return _fakeParent; } set { _fakeParent = value; } }
 
-        #endregion
+        public void ResetPlayerMovementInput()
+        {
+            _cVelocity.x = 0;
+            _cVelocity.y = Mathf.Min(_cVelocity.y, 0);
+        }
 
-        #region Private
+            #endregion
 
-        /// <summary>
-        /// Current movement state
-        /// </summary>
-        MState _cMState;
+            #region Private
+
+            /// <summary>
+            /// Current movement state
+            /// </summary>
+            MState _cMState;
         /// <summary>
         /// Will change with delay from grounded to not grounded, to help the player.
         /// </summary>
@@ -207,7 +210,6 @@ namespace CC2D
         {
             _cFacingDir = 1; // Assume the sprite starts looking at the right side.
             _allExternalVelocitys = new List<Velocity2D>(1);
-            CurrentMovementInput = new MovementInput();
             if (startWrappedDown)
             {
                 actor.CharacterController2D.warpToGrounded();
@@ -464,7 +466,7 @@ namespace CC2D
 
         void FlipFacingDir()
         {
-            skeletonFront.localScale = new Vector3(-skeletonFront.localScale.x, skeletonFront.localScale.y, skeletonFront.localScale.z);
+            spriteRoot.localScale = new Vector3(-spriteRoot.localScale.x, spriteRoot.localScale.y, spriteRoot.localScale.z);
             _cFacingDir *= -1;
         }
 

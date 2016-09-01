@@ -1,39 +1,51 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Actors;
 
 namespace Manager
 {
     public class DeathStateHandler : MonoBehaviour, IGameState
     {
-        public GameObject deathUIRoot;
+        [SerializeField]
+        GameObject deathUIRoot;
 
-        GameStateManager stateMan;
+        PlayerActor actor;
 
-        void Awake()
+        void Start()
         {
-            stateMan = GameStateManager.GetInstance();
+            actor = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
         }
 
         public void OnStateActive()
         {
-            if (Input.anyKeyDown)
+            if (deathUIRoot.activeInHierarchy)
             {
-                stateMan.EndCurrentState();
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+                if (Input.anyKeyDown)
+                {
+                    GameStateManager.GetInstance().EndCurrentState();
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+                }
             }
         }
 
         public void OnStateStart()
         {
             //some death fx
-            deathUIRoot.SetActive(true);
+            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitationHandler.PlayerLimition.Freeze);
+            actor.PlayerAnimationEventGrabberFront.DeathAnimFinishedHandler += ActivateGameOverScreen;
         }
 
         public void OnStateEnd()
         {
-            //nothing
             deathUIRoot.SetActive(false);
+            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitationHandler.PlayerLimition.NoLimitation);
+            actor.PlayerAnimationEventGrabberFront.DeathAnimFinishedHandler -= ActivateGameOverScreen;
+        }
+
+        void ActivateGameOverScreen()
+        {
+            deathUIRoot.SetActive(true);
         }
 
         public override string ToString()

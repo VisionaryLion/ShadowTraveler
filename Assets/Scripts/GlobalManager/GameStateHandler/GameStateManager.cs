@@ -13,10 +13,15 @@ namespace Manager
         public IGameState CurrentState { get { return stateStack.Peek(); } }
 
         private Stack<IGameState> stateStack;
+        private UnityEventHog.OnEvent update;
+        private UnityEventHog.OnEvent onDestroy;
 
         public GameStateManager()
         {
-            NonMonoUpdate.GetInstance().AddUpdateTarget(new NonMonoUpdate.OnUpdate(Update));
+            update = new UnityEventHog.OnEvent(Update);
+            onDestroy = new UnityEventHog.OnEvent(OnDestroy);
+            UnityEventHog.GetInstance().AddUpdateListener(update);
+            UnityEventHog.GetInstance().AddOnDestroyListener(onDestroy);
             stateStack = new Stack<IGameState>(2);
         }
 
@@ -25,6 +30,12 @@ namespace Manager
             Debug.Assert(CurrentState != null, "No state assigned. This should never happen!");
 
             CurrentState.OnStateActive();
+        }
+
+        void OnDestroy()
+        {
+            stateStack.Clear();
+            instance = null;
         }
 
         public void AssignDefaultState(IGameState target)

@@ -11,7 +11,9 @@ namespace ItemHandler
         [SerializeField]
         EquipmentButtonBinding[] binds; //according to keyboard numbers
         [SerializeField]
-        Transform equipSpawnPoint;
+        public Transform equipSpawnPoint;
+
+        public bool allowInput;
 
         [AssignActorAutomaticly]
         [SerializeField]
@@ -24,9 +26,11 @@ namespace ItemHandler
         // Update is called once per frame
         void Update()
         {
+            if (!allowInput)
+                return;
             foreach (EquipmentButtonBinding b in binds)
             {
-                if (Input.GetButtonDown(b.button) && actor.Inventory.ContainsItem(b.equipment.itemID))
+                if (Input.GetKeyDown(b.key) && actor.Inventory.ContainsItem(b.equipment.itemID))
                 {
                     if (currentEquipedItem != null)
                     {
@@ -46,7 +50,7 @@ namespace ItemHandler
         [Serializable]
         public class EquipmentButtonBinding
         {
-            public string button;
+            public KeyCode key;
             public ItemData equipment;
         }
     }

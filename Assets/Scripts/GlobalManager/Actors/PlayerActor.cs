@@ -23,6 +23,12 @@ namespace Actors
         BoxCollider2D boxCollider2D;
         [SerializeField]
         Inventory inventory;
+        [SerializeField]
+        PlayerAnimationEventGrabberFront playerAnimationEventGrabberFront;
+        [SerializeField]
+        PlayerEquipmentManager playerEquipmentManager;
+
+        PlayerLimitationHandler playerLimitationHandler;
 
         #region public
         public CharacterController2D CharacterController2D { get { return characterController2D; } }
@@ -33,9 +39,16 @@ namespace Actors
         public Rigidbody2D Rigidbody2D { get { return rigidbody2d; } }
         public BoxCollider2D BoxCollider2D { get { return boxCollider2D; } }
         public Inventory Inventory { get { return inventory; } }
+        public PlayerLimitationHandler PlayerLimitationHandler { get { return playerLimitationHandler; } }
+        public PlayerAnimationEventGrabberFront PlayerAnimationEventGrabberFront { get { return playerAnimationEventGrabberFront; } }
+        public PlayerEquipmentManager PlayerEquipmentManager { get { return playerEquipmentManager; } }
         #endregion
 
-
+        protected override void Awake()
+        {
+            base.Awake();
+            playerLimitationHandler = new PlayerLimitationHandler(this, UnityEventHog.GetInstance());
+        }
 
 #if UNITY_EDITOR
         public override void Refresh()
@@ -51,6 +64,8 @@ namespace Actors
             basicDamageReceptor = GetComponentInChildren<BasicDamageReceptor>();
             boxCollider2D = GetComponentInChildren<BoxCollider2D>();
             inventory = GetComponentInChildren<Inventory>();
+            playerAnimationEventGrabberFront = GetComponentInChildren<PlayerAnimationEventGrabberFront>();
+            playerEquipmentManager = GetComponentInChildren<PlayerEquipmentManager>();
 
             //Setup some script vars automatically.
             this.tag = "Player"; //Built-in-Tag can't go wrong.
@@ -62,15 +77,5 @@ namespace Actors
             Debug.LogWarning(GenerateSetUpReminder("Controller", "Animator"));
         }
 #endif
-
-        public void SetInputEnabled(bool enabled)
-        {
-
-        }
-
-        public void SetMovementFreezed(bool enabled)
-        {
-
-        }
     }
 }
