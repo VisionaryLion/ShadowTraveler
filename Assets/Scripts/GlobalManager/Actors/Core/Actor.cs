@@ -8,12 +8,15 @@ namespace Actors
     [DisallowMultipleComponent]
     public class Actor : MonoBehaviour
     {
-        void Awake()
-        {
-            ActorDatabase.GetInstance().AddActor(this);
-        }
+        
 
 #if UNITY_EDITOR
+
+        public virtual void Awake()
+        {
+            ActorDatabase.GetInstance().AddActor(this);
+            Refresh();
+        }
 
         /// <summary>
         /// Base call strongly suggested!
@@ -114,6 +117,11 @@ namespace Actors
             int componentLength = GetComponents<MonoBehaviour>().Length;
             for (int i = 0; i < componentLength; i++)
                 UnityEditorInternal.ComponentUtility.MoveComponentUp(this); //Move this script up to the top in the hierarchy!
+        }
+#else
+        void Awake()
+        {
+            ActorDatabase.GetInstance().AddActor(this);
         }
 #endif
     }

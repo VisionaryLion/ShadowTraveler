@@ -62,5 +62,15 @@ namespace Actors
             Debug.LogWarning(GenerateSetUpReminder("Controller", "Animator"));
         }
 #endif
+
+        public void SetInputEnabled(bool enabled)
+        {
+
+        }
+
+        public void SetMovementFreezed(bool enabled)
+        {
+
+        }
     }
 }
