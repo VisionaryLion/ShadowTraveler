@@ -1,0 +1,4 @@
+{72a261fa-5a13-4f58-914e-8aaf7c59be88} event:/Footsteps/Metal_Footsteps
+{9a408b09-2078-45c2-b7b3-3cfa6be0547a} bus:/
+{cd034e97-e4d6-4f91-bb34-35e4605dfa73} bus:/Reverb
+{0dfd2c1a-1116-4409-b3ee-8767382df08a} bank:/Master Bank
