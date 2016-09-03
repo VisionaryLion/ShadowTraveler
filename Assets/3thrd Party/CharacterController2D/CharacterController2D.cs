@@ -62,8 +62,10 @@ namespace CC2D
 
         #region events, properties and fields
 
+        [SerializeField]
+        [HideInInspector]
         [AssignActorAutomaticly]
-        public PlayerActor actor;
+        public SimpleMovementActor actor;
 
 
         public event Action<RaycastHit2D> onControllerCollidedEvent;

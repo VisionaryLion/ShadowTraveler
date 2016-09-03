@@ -5,7 +5,6 @@ using System.Reflection;
 
 namespace Actors
 {
-    [DisallowMultipleComponent]
     public class Actor : MonoBehaviour
     {
         protected virtual void Awake()
@@ -31,13 +30,18 @@ namespace Actors
             MonoBehaviour[] so = GetComponentsInChildren<MonoBehaviour>();
             foreach (MonoBehaviour s in so)
             {
+                if (s == null || s.GetType().IsSubclassOf(typeof(Actor)))
+                    continue;
                 FieldInfo[] fInfo = s.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                 FieldInfo info;
                 for (int iField = 0; iField < fInfo.Length; iField++)
                 {
                     info = fInfo[iField];
-                    if (!info.FieldType.IsSubclassOf(typeof(Actor)))
+
+                    if (!GetType().IsSubclassOf(info.FieldType) && info.FieldType != GetType())
+                    {
                         continue;
+                    }
 
                     object[] attributes = info.GetCustomAttributes(true);
                     for (int iAttr = 0; iAttr < attributes.Length; iAttr++)
@@ -59,6 +63,7 @@ namespace Actors
             MonoBehaviour[] so = GetComponentsInChildren<MonoBehaviour>();
             foreach (MonoBehaviour s in so)
             {
+                if(s != null)
                 PrintReminder(s.GetType());
             }
         }

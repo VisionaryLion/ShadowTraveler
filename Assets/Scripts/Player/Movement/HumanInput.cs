@@ -1,48 +1,82 @@
 ﻿using UnityEngine;
 using Actors;
+using System;
+using ItemHandler;
 
 namespace CC2D
 {
     public class HumanInput : MonoBehaviour
     {
+        [SerializeField]
+        [HideInInspector]
         [AssignActorAutomaticly]
         PlayerActor actor;
 
+        [SerializeField]
+        EquipmentButtonBinding[] binds; //according to keyboard numbers
+
         MovementInput bufferedInput;
-        bool allowInput;
+        bool allowMovementInput = true;
+        bool allowEquipmentInput = true;
 
         void Awake()
         {
             bufferedInput = new MovementInput();
-        }
-
-        void Start()
-        {
             actor.CC2DMotor.CurrentMovementInput = bufferedInput;
         }
 
         void Update()
         {
-            if (!allowInput)
-                return;
+            if (allowMovementInput)
+            {
+                if (Input.GetButtonDown("Jump"))
+                {
+                    bufferedInput.timeOfLastJumpStateChange = Time.time;
+                    bufferedInput.jump = true;
+                    bufferedInput.isJumpConsumed = false;
+                }
+                else if (Input.GetButtonUp("Jump"))
+                {
+                    bufferedInput.timeOfLastJumpStateChange = Time.time;
+                }
+                else
+                    bufferedInput.jump = Input.GetButton("Jump");
+            }
 
-            if (Input.GetButtonDown("Jump"))
+            if (allowEquipmentInput)
             {
-                bufferedInput.timeOfLastJumpStateChange = Time.time;
-                bufferedInput.jump = true;
-                bufferedInput.isJumpConsumed = false;
+                /*foreach (EquipmentButtonBinding b in binds)
+                {
+                    if (currentBind == b)
+                        continue;
+
+                    if (Input.GetKeyDown(b.key) && actor.MultiSlotsInventory.ContainsItem(b.equipment.itemID) && !actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
+                    {
+                        if (currentEquipedItem != null)
+                        {
+                            actor.MultiSlotsInventory.AddGameObjectCopyOfItem(currentEquipedItem, currentPhysicalEquipment);
+                        }
+                        if (currentPhysicalEquipment != null)
+                            currentPhysicalEquipment.SendMessage("OnUnequiped", SendMessageOptions.DontRequireReceiver);
+                        int itemIndex = actor.MultiSlotsInventory.FindItem(b.equipment.itemID);
+                        currentEquipedItem = actor.MultiSlotsInventory.GetItem(itemIndex);
+                        currentPhysicalEquipment = actor.MultiSlotsInventory.EquipItem(itemIndex);
+                        currentPhysicalEquipment.transform.position = equipSpawnPoint.position;
+                        currentPhysicalEquipment.transform.rotation = equipSpawnPoint.rotation;
+                        currentPhysicalEquipment.transform.parent = equipSpawnPoint;
+                        currentBind = b;
+
+                        actor.PlayerAnimationUpperBodyEnd.EquipFinishedHandler += PlayerAnimationEventGrabberFront_EquipFinishedHandler;
+                        //actor.PlayerLimitationHandler.SetLimitation(PlayerLimitation.BlockEquipmentUse);
+                        actor.CC2DMotor.frontAnimator.SetTrigger("EquipItem");
+                    }
+                }*/
             }
-            else if (Input.GetButtonUp("Jump"))
-            {
-                bufferedInput.timeOfLastJumpStateChange = Time.time;
-            }
-            else
-                bufferedInput.jump = Input.GetButton("Jump");
         }
 
         void FixedUpdate()
         {
-            if (!allowInput)
+            if (!allowMovementInput)
                 return;
 
             bufferedInput.horizontalRaw = Input.GetAxisRaw("Horizontal");
@@ -52,11 +86,22 @@ namespace CC2D
             bufferedInput.vertical = Input.GetAxis("Vertical");
         }
 
-        public void SetAllowInput(bool enabled)
+        public void SetAllowAllInput(bool enabled)
         {
-            allowInput = enabled;
-            if (!allowInput)
+            SetAllowEquipmentInput(enabled);
+            SetAllowMovementInput(enabled);
+        }
+
+        public void SetAllowMovementInput(bool enabled)
+        {
+            allowMovementInput = enabled;
+            if (!allowMovementInput)
                 ResetPlayerMovementInput();
+        }
+
+        public void SetAllowEquipmentInput(bool enabled)
+        {
+            allowEquipmentInput = enabled;
         }
 
         public void ResetPlayerMovementInput()
@@ -68,6 +113,13 @@ namespace CC2D
             bufferedInput.jump = false;
             bufferedInput.isJumpConsumed = false;
             bufferedInput.timeOfLastJumpStateChange = 0;
+        }
+
+        [Serializable]
+        public class EquipmentButtonBinding
+        {
+            public KeyCode key;
+            public ItemData equipment;
         }
     }
 }

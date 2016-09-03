@@ -9,7 +9,7 @@ namespace Combat
     public class DamageFeedback : MonoBehaviour
     {
         [AssignActorAutomaticly]
-        PlayerActor actor;
+        BasicEntityActor actor;
 
         [SerializeField]
         DamageFeedbackDefinition damgeFeedbackDef;
@@ -20,20 +20,20 @@ namespace Combat
 
         void Start()
         {
-            actor.BasicHealth.OnHealthChanged += Health_OnHealthChanged;
+            actor.IHealth.OnHealthChanged += Health_OnHealthChanged;
         }
 
         private void Health_OnHealthChanged(object sender, IDamageInfo e)
         {
-            if (actor.BasicHealth.IsDeath)
+            if (actor.IHealth.IsDeath)
             {
-                actor.BasicHealth.OnHealthChanged -= Health_OnHealthChanged;
+                actor.IHealth.OnHealthChanged -= Health_OnHealthChanged;
                 return;
             }
             //if (!waitTillClipFinished || !actor.AudioSource.isPlaying)
             //    actor.AudioSource.PlayOneShot(damgeFeedbackDef.FindAudioClip(e.DmgTyp));
-            if (!actor.CC2DMotor.frontAnimator.GetCurrentAnimatorStateInfo(0).IsName(hitAnimName) && !actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
-                actor.CC2DMotor.frontAnimator.SetTrigger("TakeDamage");
+            if (!actor.Animator.GetCurrentAnimatorStateInfo(0).IsName(hitAnimName))
+                actor.Animator.SetTrigger("TakeDamage");
         }
     }
 }

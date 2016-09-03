@@ -9,26 +9,27 @@ public class SwingCrowbar : MonoBehaviour, IEquipment
     [SerializeField]
     AreaHarzard2D hitBox;
 
-    PlayerActor actor;
+    AnimationActor actor;
+    AnimationHandler.AnimationEvent callBack;
 
     void Start()
     {
-        actor = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
         hitBox.hitHandler += HitBox_hitHandler;
+        callBack = new AnimationHandler.AnimationEvent(CrowbarSwingFinishedHandler);
     }
 
     private void HitBox_hitHandler(IDamageReciever reciever)
     {
-        if (!actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
-        {
-            actor.CC2DMotor.frontAnimator.SetTrigger("Aboard_SwingCrowbar");
-            PlayerAnimationEventGrabberFront_CrowbarSwingFinishedHandler();
-        }
+        Debug.Log("Hit = "+reciever.name);
+        actor.Animator.SetTrigger("Aboard_SwingCrowbar");
+        actor.AnimationHandler.StopListenToAnimationEnd(callBack);
+        CrowbarSwingFinishedHandler();
     }
 
     public void OnEquiped()
     {
         enabled = true;
+        actor = GetComponentInParent<AnimationActor>();
     }
 
     public void OnUnequiped()
@@ -39,18 +40,17 @@ public class SwingCrowbar : MonoBehaviour, IEquipment
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Fire1") && !hitBox.dealDamage && !actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
+        if (Input.GetButton("Fire1") && !hitBox.dealDamage && actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 0) && !actor.Animator.GetCurrentAnimatorStateInfo(1).IsName("SwingCrowbar_Anim"))
         {
-            actor.CC2DMotor.frontAnimator.SetTrigger("SwingCrowbar");
-            actor.PlayerAnimationUpperBodyEnd.CrowbarSwingFinishedHandler += PlayerAnimationEventGrabberFront_CrowbarSwingFinishedHandler;
+            actor.Animator.SetTrigger("SwingCrowbar");
+            actor.AnimationHandler.StartListenToAnimationEnd("SwingCrowbar_Anim", callBack);
             hitBox.dealDamage = true;
 
         }
     }
 
-    private void PlayerAnimationEventGrabberFront_CrowbarSwingFinishedHandler()
+    private void CrowbarSwingFinishedHandler()
     {
-        actor.PlayerAnimationUpperBodyEnd.CrowbarSwingFinishedHandler -= PlayerAnimationEventGrabberFront_CrowbarSwingFinishedHandler;
         hitBox.dealDamage = false;
     }
 }

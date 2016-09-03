@@ -15,6 +15,12 @@ namespace Manager
         void Start()
         {
             actor = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
+            actor.IHealth.OnDeath += IHealth_OnDeath;
+        }
+
+        private void IHealth_OnDeath(object sender, Combat.IDamageInfo e)
+        {
+            GameStateManager.GetInstance().StartNewState(this);
         }
 
         public void OnStateActive()
@@ -32,15 +38,15 @@ namespace Manager
         public void OnStateStart()
         {
             //some death fx
-            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitation.BlockMovement, PlayerLimitation.BlockNonMovement);
-            actor.PlayerAnimationBaseLayerEnd.DeathAnimFinishedHandler += ActivateGameOverScreen;
+            actor.AnimationHandler.StartListenToAnimationEnd("Death_Anim", new AnimationHandler.AnimationEvent(ActivateGameOverScreen));
+            actor.AnimationHandler.SetAnyStateTransitionPriority(0, 3);
         }
 
         public void OnStateEnd()
         {
             deathUIRoot.SetActive(false);
-            actor.PlayerLimitationHandler.SetLimitation(PlayerLimitation.NoLimitation);
-            actor.PlayerAnimationBaseLayerEnd.DeathAnimFinishedHandler -= ActivateGameOverScreen;
+            actor.SetBlockAllInput(false);
+            actor.AnimationHandler.ResetAnyStateTransitionPriority(0);
         }
 
         void ActivateGameOverScreen()

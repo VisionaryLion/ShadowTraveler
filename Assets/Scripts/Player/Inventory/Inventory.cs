@@ -15,6 +15,7 @@ namespace ItemHandler
 
         public bool IsInventoryFull { get { return inventorySize == filledSlotCount; } }
         public int InventorySize { get { return inventorySize; } }
+        public int InventoryFreeSpace { get { return inventorySize - filledSlotCount; } }
 
 
         IItem[] inventoryCache; // Each index represents a unique tile
@@ -23,7 +24,6 @@ namespace ItemHandler
 
         void Awake()
         {
-            //Assign Inventory display component to the reference
             inventoryCache = new IItem[inventorySize];
             pooledItems = new Dictionary<int, Stack<GameObject>>(inventorySize);
         }
@@ -181,7 +181,7 @@ namespace ItemHandler
             return newItem;
         }
 
-        public override GameObject EquipItem(int index)
+        public override GameObject DropFromInventorySilent(int index)
         {
             Debug.Assert(inventoryCache[index] != null);
             IItem item = inventoryCache[index];
@@ -308,6 +308,8 @@ namespace ItemHandler
         {
             for (int iSlot = 0; iSlot < inventorySize; iSlot++)
             {
+                if (inventoryCache[iSlot] == null)
+                    continue;
                 if (inventoryCache[iSlot].ItemId == id)
                     return true;
             }
