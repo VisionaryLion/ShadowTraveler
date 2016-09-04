@@ -49,7 +49,7 @@ namespace Combat
             {
                 if (instaKill)
                 {
-                    reciever.BaseHealth.Kill(damgeInfo.DmgTyp);
+                    reciever.Health.Kill(damgeInfo.DmgTyp);
                     if (hitHandler != null)
                         hitHandler.Invoke(reciever);
                     return;
@@ -96,7 +96,7 @@ namespace Combat
                     IDamageReciever reciever;
                     if (componentBuffer.TryGetValue(collider.GetInstanceID(), out reciever))
                     {
-                        reciever.BaseHealth.AddLongTimeDamager((ITimedDamageInfo)damgeInfo.Clone(), healthChangeTyp);
+                        reciever.Health.AddLongTimeDamager((ITimedDamageInfo)damgeInfo.Clone(), healthChangeTyp);
                         if (hitHandler != null)
                             hitHandler.Invoke(reciever);
                     }

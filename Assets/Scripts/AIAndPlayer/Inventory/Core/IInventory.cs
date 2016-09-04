@@ -14,7 +14,7 @@ namespace ItemHandler
         public abstract bool ContainsItem(int id);
         public abstract int FindItem(int id);
         public abstract GameObject DropFromInventory(int index);
-        public abstract GameObject EquipItem(int index);
+        public abstract GameObject DropFromInventorySilent(int index);
         public abstract void AddGameObjectCopyOfItem(IItem item, GameObject itemInstance);
 
         public delegate void OnInventoryChanged(IInventory inventory);

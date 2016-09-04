@@ -12,19 +12,17 @@ namespace CC2D
     [RequireComponent(typeof(CharacterController2D))]
     public class CC2DMotor : MonoBehaviour
     {
+        [SerializeField]
+        [HideInInspector]
+        [AssignActorAutomaticly]
+        HumanMovementActor actor;
+
         #region Inspector vars
         [Header("External Reference")]
         [RemindToConfigureField]
         [SerializeField]
         [Tooltip("Will only be used for flipping the sprite, based on its movement.")]
         Transform spriteRoot;
-        [SerializeField]
-        public Animator frontAnimator;
-        [SerializeField]
-        public Animator backAnimator;
-        [AssignActorAutomaticly]
-        public PlayerActor actor;
-
         [Header("Control easer:")]
         [SerializeField]
         [Tooltip("Will ground the player at start.")]
@@ -155,13 +153,26 @@ namespace CC2D
             _allExternalVelocitys.Add(velocity);
         }
 
-        [HideInInspector]
-        public bool IsFroozen; 
+        public void FreezeAndResetMovement(bool freeze)
+        {
+            this.IsFroozen = freeze;
+            ResetPlayerMovementInput();
+        }
+
+        public void FreezeMovement(bool freeze)
+        {
+            this.IsFroozen = freeze;
+        }
+
 
         /// <summary>
         /// If assigned to something different from zero, this motor will act as if it were a child of the assigned object.
         /// </summary>
         public Transform FakeTransformParent { get { return _fakeParent; } set { _fakeParent = value; } }
+
+        public Vector2 Velocity { get { return _cVelocity; } }
+        public MState MotorState { get { return _cMState; } }
+        public MState PrevMotorState { get { return _prevMState; } }
 
         public void ResetPlayerMovementInput()
         {
@@ -169,14 +180,15 @@ namespace CC2D
             _cVelocity.y = Mathf.Min(_cVelocity.y, 0);
         }
 
-            #endregion
+        #endregion
 
-            #region Private
+        #region Private
 
-            /// <summary>
-            /// Current movement state
-            /// </summary>
-            MState _cMState;
+        /// <summary>
+        /// Current movement state
+        /// </summary>
+        MState _cMState;
+        MState _prevMState;
         /// <summary>
         /// Will change with delay from grounded to not grounded, to help the player.
         /// </summary>
@@ -190,14 +202,13 @@ namespace CC2D
         /// </summary>
         float _stateStartTime;
 
-        float _animationCurveTime;
         float _wallDetachingInput; //WallSlide specific
         int _climbableTriggerCount; //Climbing specific. Counts the amount of triggers we are currently touching.
         int _cFacingDir;
         Vector3 _fakeParentOffset;
         List<Velocity2D> _allExternalVelocitys;
         Vector2 _totalExternalVelocity;
-
+        bool IsFroozen;
 
         //Coroutine
         Coroutine _delayedUnGrounding;
@@ -219,6 +230,12 @@ namespace CC2D
                 StartFalling();
         }
 
+        void Start()
+        {
+            if (CurrentMovementInput == null)
+                CurrentMovementInput = new MovementInput();
+        }
+
         void Update()
         {
             HandleFakeParenting();
@@ -228,15 +245,12 @@ namespace CC2D
         {
             if (IsFroozen)
                 return;
+            _prevMState = _cMState;
             //Check, if we are grounded
             if (actor.CharacterController2D.collisionState.wasGroundedLastFrame && !actor.CharacterController2D.isGrounded)
                 OnIsNotGrounded();
             else if (actor.CharacterController2D.collisionState.becameGroundedThisFrame)
                 OnBecameGrounded();
-
-            //If we are not moving, reset the animation curve timer.
-            if (CurrentMovementInput.horizontalRaw == 0 || (_cVelocity.x != 0 && (CurrentMovementInput.horizontalRaw > 0) != (_cVelocity.x > 0)))
-                _animationCurveTime = Time.time;
 
             switch (_cMState)
             {
@@ -280,7 +294,7 @@ namespace CC2D
                     if (ShouldWallSlide())
                     {
                         StartWallSliding();
-                        
+
                     }
                     break;
 
@@ -363,7 +377,6 @@ namespace CC2D
                     break;
             }
             //Solely determined by input
-            UpdateAnimatorVars();
             AdjustFacingDir();
 
             MoveCC2DByVelocity();
@@ -450,18 +463,7 @@ namespace CC2D
                 StartFalling();
             }
             FakeTransformParent = null;
-            frontAnimator.SetBool("IsGrounded", false);
-        }
-
-        void UpdateAnimatorVars()
-        {
-            frontAnimator.SetFloat("VelocityX", Mathf.Abs(_cVelocity.x));
-            frontAnimator.SetFloat("VelocityY", Mathf.Abs(_cVelocity.y));
-
-            frontAnimator.SetBool("IsFalling", _cMState == MState.Fall);
-            frontAnimator.SetBool("IsWallSliding", _cMState == MState.WallSlide);
-            frontAnimator.SetBool("IsOnLadder", _cMState == MState.Climb);
-            frontAnimator.SetBool("IsGrounded", actor.CC2DMotor._isGrounded);
+            //frontAnimator.SetBool("IsGrounded", false);
         }
 
         void FlipFacingDir()
@@ -639,11 +641,13 @@ namespace CC2D
 
         void StartFalling()
         {
+            _prevMState = _cMState;
             _cMState = MState.Fall;
         }
 
         void StartWalk()
         {
+            _prevMState = _cMState;
             _cMState = MState.Walk;
         }
 
@@ -653,7 +657,8 @@ namespace CC2D
             _stateStartTime = Time.time;
             CurrentMovementInput.isJumpConsumed = true;
             _cVelocity.y = jumpVAcc;
-            frontAnimator.SetTrigger("Jump");
+            //frontAnimator.SetTrigger("Jump");
+            _prevMState = _cMState;
             _cMState = MState.Jump;
         }
 
@@ -663,6 +668,7 @@ namespace CC2D
             _stateStartTime = Time.time;
             CurrentMovementInput.isJumpConsumed = true;
             _cVelocity.y = jumpVAcc;
+            _prevMState = _cMState;
             _cMState = MState.LockedJump;
         }
 
@@ -670,6 +676,7 @@ namespace CC2D
         {
             CurrentMovementInput.isJumpConsumed = true;
             _cVelocity.y = -glideVVelocity;
+            _prevMState = _cMState;
             _cMState = MState.Glide;
         }
 
@@ -678,6 +685,7 @@ namespace CC2D
             _cVelocity.x = 0; // No side movement in this state!
             _cVelocity.y = -wallSlidingVVelocity;
             _wallDetachingInput = 0;
+            _prevMState = _cMState;
             _cMState = MState.WallSlide;
         }
 
@@ -687,12 +695,14 @@ namespace CC2D
             _cVelocity.x = walljumpHVelocity * -_cFacingDir;
             _cVelocity.y = walljumpVVelocity;
             _stateStartTime = Time.time;
+            _prevMState = _cMState;
             _cMState = MState.WallJump;
         }
 
         void StartClimbing()
         {
             _cMState = MState.Climb;
+            _prevMState = _cMState;
         }
 
         #endregion
@@ -725,15 +735,18 @@ namespace CC2D
 
         void OnGUI()
         {
-            GUILayout.Label("cState = " + _cMState.ToString());
-            GUILayout.Label("MoveOutput = " + _cVelocity);
-            GUILayout.Label("Real velocity = " + actor.CharacterController2D.velocity);
-            GUILayout.Label("isGrounded = " + _isGrounded + "( raw = " + actor.CharacterController2D.isGrounded + ")");
-            GUILayout.Label("jump = " + CurrentMovementInput.jump + "( time since last jump state change = " + CurrentMovementInput.timeOfLastJumpStateChange + ")");
-            GUILayout.Label("currentLyTouchingClimbables = " + _climbableTriggerCount);
-            GUILayout.Label("isOnSlope = " + actor.CharacterController2D.collisionState.standOnToSteepSlope);
-            GUILayout.Label("currentExternalForceCount = " + _allExternalVelocitys.Count);
-            GUILayout.Label("isFakedParents = " + (_fakeParent != null));
+            if (gameObject.CompareTag("Player"))
+            {
+                GUILayout.Label("cState = " + _cMState.ToString());
+                GUILayout.Label("MoveOutput = " + _cVelocity);
+                GUILayout.Label("Real velocity = " + actor.CharacterController2D.velocity);
+                GUILayout.Label("isGrounded = " + _isGrounded + "( raw = " + actor.CharacterController2D.isGrounded + ")");
+                GUILayout.Label("jump = " + CurrentMovementInput.jump + "( time since last jump state change = " + CurrentMovementInput.timeOfLastJumpStateChange + ")");
+                GUILayout.Label("currentLyTouchingClimbables = " + _climbableTriggerCount);
+                GUILayout.Label("isOnSlope = " + actor.CharacterController2D.collisionState.standOnToSteepSlope);
+                GUILayout.Label("currentExternalForceCount = " + _allExternalVelocitys.Count);
+                GUILayout.Label("isFakedParents = " + (_fakeParent != null));
+            }
         }
         #endregion
 #endif

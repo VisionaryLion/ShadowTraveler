@@ -36521,8 +36521,8 @@ AnimationClip:
   m_GenerateMotionCurves: 0
   m_Events:
   - time: 1
-    functionName: OnPickUpAnimationReachedItem
-    data: 
+    functionName: AnimationEventOccured
+    data: PickUpReachedItem
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

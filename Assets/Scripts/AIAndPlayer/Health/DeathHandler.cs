@@ -5,26 +5,26 @@ using Manager;
 
 namespace Combat
 {
-    public class PlayerDeathHandler : MonoBehaviour
+    public class DeathHandler : MonoBehaviour
     {
         [SerializeField]
         [HideInInspector]
         [AssignActorAutomaticly]
-        PlayerActor actor;
+        BasicEntityActor actor;
 
         GameStateActor gameStateActor;
 
         void Start()
         {
-            actor.BasicHealth.OnDeath += HealthComponent_OnDeath;
+            actor.IHealth.OnDeath += HealthComponent_OnDeath;
             gameStateActor = ActorDatabase.GetInstance().FindFirst<GameStateActor>();
         }
 
         private void HealthComponent_OnDeath(object sender, IDamageInfo info)
         {
-            actor.PlayerLimitationHandler.LockAnimaionTrigger(true);
-            actor.CC2DMotor.frontAnimator.SetTrigger("Death");
-            GameStateManager.GetInstance().StartNewState(gameStateActor.DeathStateHandler);
+            actor.AnimationHandler.SetAnyStateTransitionPriority(0, 3);
+            actor.Animator.SetTrigger("Death");
+            actor.SetBlockAllInput(true);
         }
     }
 }
