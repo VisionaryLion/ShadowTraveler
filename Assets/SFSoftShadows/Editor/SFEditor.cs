@@ -237,7 +237,7 @@ public class SFPolygonEditor : SFAbstractEditor {
 			}
 		}
 		
-		if(poly.GetComponent<PolygonCollider2D> () != null){
+		if(poly.GetComponent<Collider2D> () != null){
 			Undo.RecordObjects(this.targets, "Copy from Collider");
 			if(GUILayout.Button("Copy from Collider")){
 				foreach(SFPolygon t in this.targets){
@@ -250,6 +250,8 @@ public class SFPolygonEditor : SFAbstractEditor {
 		GUILayout.EndHorizontal ();
 
 		PropertyField("_looped");
+        if (poly.GetComponent<CircleCollider2D>() != null)
+            PropertyField("circleVertCount");
 		PropertyField("_shadowLayers");
 		PropertyField("_lightPenetration", (p) => p.floatValue = Math.Max(0.0f, p.floatValue));
 		PropertyField("_opacity", (p) => p.floatValue = Mathf.Clamp01(p.floatValue));
