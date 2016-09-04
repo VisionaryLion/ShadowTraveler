@@ -363,6 +363,11 @@ namespace CC2D
                         StartFalling();
                     else if (ShouldWallSlide())
                         StartWallSliding();
+                    else if (actor.CharacterController2D.collisionState.above) // Probably hit the ceiling. Abort Jump to avoid "hovering at the ceiling"!
+                    {
+                        _cVelocity.y = 0;
+                        StartFalling();
+                    }
                     break;
 
                 case MState.Climb:
