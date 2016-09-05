@@ -74,10 +74,21 @@ public class SFLightEditor : SFAbstractEditor {
 public class SFPolygonEditor : SFAbstractEditor {
 	public static bool inEditMode = false;
 
+    bool preserveShadowSetting;
+
 	public void OnDisable(){
 		// OnDisable for editor scripts is essentially used when you change focus.
 		inEditMode = false;
-	}
+        if (Camera.main)
+        {
+            SFRenderer sfRen = Camera.main.GetComponent<SFRenderer>();
+            if (sfRen)
+            {
+                sfRen._shadows = preserveShadowSetting;
+            }
+        }
+
+    }
 
 	private static Vector2 ClosestHelper(Vector2 p, Vector2 a, Vector2 b){
 		var delta = a - b;
@@ -125,7 +136,7 @@ public class SFPolygonEditor : SFAbstractEditor {
 
 		if(invalidVerts){
 			// copy in collider verts if possible.
-			poly._CopyVertsFromCollider();
+			poly._TryCopyVerts();
 			dirty = true;
 		}
 
@@ -226,6 +237,23 @@ public class SFPolygonEditor : SFAbstractEditor {
 
 		if(GUILayout.Button(SFPolygonEditor.inEditMode ? "Stop Editing" : "Edit Shadow Geometry")){
 			SFPolygonEditor.inEditMode = !SFPolygonEditor.inEditMode;
+            if (Camera.main)
+            {
+                SFRenderer sfRen = Camera.main.GetComponent<SFRenderer>();
+                if (sfRen)
+                {
+                    
+                    if (inEditMode)
+                    {
+                        preserveShadowSetting = sfRen._shadows;
+                        sfRen._shadows = false;
+                    }
+                    else
+                    {
+                        sfRen._shadows = preserveShadowSetting;
+                    }
+                }
+            }
 			EditorUtility.SetDirty(target);
 		}
 		 
@@ -246,6 +274,18 @@ public class SFPolygonEditor : SFAbstractEditor {
 				}
 			}
 		}
+        if (poly.GetComponent<SpriteRenderer>() != null)
+        {
+            Undo.RecordObjects(this.targets, "Copy from Sprite");
+            if (GUILayout.Button("Copy from Sprite"))
+            {
+                foreach (SFPolygon t in this.targets)
+                {
+                    t._CopyVertsFromSprite();
+                    EditorUtility.SetDirty(t);
+                }
+            }
+        }
 		
 		GUILayout.EndHorizontal ();
 

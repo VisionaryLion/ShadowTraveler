@@ -85,7 +85,14 @@ public class SFPolygon : MonoBehaviour, _SFCullable
         _UpdateBounds();
     }
 
-    public void _CopyVertsFromCollider()
+    public void _TryCopyVerts()
+    {
+        if (!_CopyVertsFromCollider())
+            if (!_CopyVertsFromSprite())
+                _GenerateDefaultVerts();
+    }
+
+    public bool _CopyVertsFromCollider()
     {
         Collider2D col = GetComponent<Collider2D>();
         if (col)
@@ -106,18 +113,38 @@ public class SFPolygon : MonoBehaviour, _SFCullable
             verts = inOutVerts.ToArray();
             this.looped = true;
             inOutVerts.Clear();
+            return true;
         }
-        else
+        return false;
+    }
+
+    public bool _CopyVertsFromSprite()
+    {
+        SpriteRenderer sprRen = GetComponent<SpriteRenderer>();
+        if (sprRen)
         {
-            // No collider information. Create a box so it does something.
             this.looped = true;
-            this.verts = new Vector2[] {
+            verts = new Vector2[] {
+                transform.worldToLocalMatrix.MultiplyPoint( sprRen.bounds.min),
+                transform.worldToLocalMatrix.MultiplyPoint(new Vector2(sprRen.bounds.min.x, sprRen.bounds.max.y)),
+                transform.worldToLocalMatrix.MultiplyPoint(sprRen.bounds.max),
+                 transform.worldToLocalMatrix.MultiplyPoint(new Vector2(sprRen.bounds.max.x, sprRen.bounds.min.y)),
+
+                };
+            return true;
+        }
+        return false;
+    }
+
+    public void _GenerateDefaultVerts()
+    {
+        this.looped = true;
+        this.verts = new Vector2[] {
                 new Vector2(1,1),
                 new Vector2(1,-1),
                 new Vector2(-1,-1),
                 new Vector2(-1,1)
             };
-        }
     }
 
     private void LoadBoxColliderVerts(BoxCollider2D collider, List<Vector2> inOutVerts)
