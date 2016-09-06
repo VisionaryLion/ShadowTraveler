@@ -47,9 +47,6 @@ namespace Combat
         /// /// <summary>
         public abstract void TakeDamageIgnoreMultiplier(IDamageInfo dmgInf, IHealth.HealthChangeTyp changeTyp);
 
-        public abstract IHealth BaseHealth
-        {
-            get; set;
-        }
+        public abstract IHealth Health { get; }
     }
 }

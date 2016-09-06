@@ -9,6 +9,7 @@ TagManager:
   - WithFriction
   - MovingPlatform
   - onlyTrigger
+  - Enemy
   layers:
   - Default
   - TransparentFX
