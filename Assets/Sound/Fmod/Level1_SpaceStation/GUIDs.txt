@@ -1,7 +1,3 @@
-{63a3b64b-8c22-4d7b-83f6-37c3f58becdb} event:/Footsteps/Metal_Footsteps
-{f3aef229-193f-4d51-80ad-660adea6e9b9} event:/Items/Crowbar
-{d0595ef8-9e9a-4985-bcd1-908dda55bd84} event:/Items/Flair
-{6ffaa276-60bf-46d7-b9ef-5d441ddb0c64} event:/Items/Flashlight
 {c22ea6b8-2ceb-4bcb-b697-9eb97a71ba8b} event:/Locker/Locker
 {6f99dd53-348d-47bb-90b0-251d6ae09594} event:/Power_Station/Circuit_Board
 {75e0ead2-5c0e-4bcc-8a8e-1c151bf17bb2} event:/Power_Station/Circuit_Board_Power_On
