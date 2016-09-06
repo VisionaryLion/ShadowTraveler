@@ -50,7 +50,7 @@ public class SFPolygon : MonoBehaviour, _SFCullable
     private Vector2[] _verts = new Vector2[3];
 
     public bool _looped;
-    public LayerMask _shadowLayers = ~0;
+    public int _shadowLayers = 0;
     public float _lightPenetration = 0.0f;
     public float _opacity = 1.0f;
 
@@ -72,7 +72,7 @@ public class SFPolygon : MonoBehaviour, _SFCullable
     [Range(3, 100)]
     public int circleVertCount = 10;
 
-    public LayerMask shadowLayers { get { return _shadowLayers; } set { _shadowLayers = value; } }
+    public int shadowLayers { get { return _shadowLayers; } }
     public float lightPenetration { get { return _lightPenetration; } set { _lightPenetration = value; } }
     public float opacity { get { return _opacity; } set { _opacity = value; } }
 

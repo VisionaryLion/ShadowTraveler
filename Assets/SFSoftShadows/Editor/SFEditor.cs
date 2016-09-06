@@ -84,7 +84,7 @@ public class SFPolygonEditor : SFAbstractEditor {
             SFRenderer sfRen = Camera.main.GetComponent<SFRenderer>();
             if (sfRen)
             {
-                sfRen._shadows = preserveShadowSetting;
+                sfRen._shadows = preserveShadowSetting | sfRen._shadows;
             }
         }
 
@@ -233,7 +233,7 @@ public class SFPolygonEditor : SFAbstractEditor {
 		SFPolygon poly = this.target as SFPolygon;
 
 		EditorGUILayout.HelpBox("When editing the shadow geometry, shift+click to add new points. Command+click or control+click to remove point.", MessageType.Info);
-		GUILayout.BeginHorizontal("box");
+	    GUILayout.BeginHorizontal("box");
 
 		if(GUILayout.Button(SFPolygonEditor.inEditMode ? "Stop Editing" : "Edit Shadow Geometry")){
 			SFPolygonEditor.inEditMode = !SFPolygonEditor.inEditMode;
@@ -264,8 +264,10 @@ public class SFPolygonEditor : SFAbstractEditor {
 				EditorUtility.SetDirty(t);
 			}
 		}
-		
-		if(poly.GetComponent<Collider2D> () != null){
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal("box");
+
+        if (poly.GetComponent<Collider2D> () != null){
 			Undo.RecordObjects(this.targets, "Copy from Collider");
 			if(GUILayout.Button("Copy from Collider")){
 				foreach(SFPolygon t in this.targets){
@@ -292,8 +294,10 @@ public class SFPolygonEditor : SFAbstractEditor {
 		PropertyField("_looped");
         if (poly.GetComponent<CircleCollider2D>() != null)
             PropertyField("circleVertCount");
-		PropertyField("_shadowLayers");
-		PropertyField("_lightPenetration", (p) => p.floatValue = Math.Max(0.0f, p.floatValue));
+        //PropertyField("_shadowLayers");
+
+        serializedObject.FindProperty("_shadowLayers").intValue = EditorGUILayout.LayerField("shadowLayers", serializedObject.FindProperty("_shadowLayers").intValue);
+        PropertyField("_lightPenetration", (p) => p.floatValue = Math.Max(0.0f, p.floatValue));
 		PropertyField("_opacity", (p) => p.floatValue = Mathf.Clamp01(p.floatValue));
 
 		this.serializedObject.ApplyModifiedProperties();

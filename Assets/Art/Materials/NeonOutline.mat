@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: CyberTower
+  m_Name: NeonOutline
   m_Shader: {fileID: 4800000, guid: a8916a95a993b4c66a0777e7fe38612d, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
@@ -48,13 +48,13 @@ Material:
     - first:
         name: _EmissionMap
       second:
-        m_Texture: {fileID: 2800000, guid: e0da85e546bf47248adf5be9e5d3f2bf, type: 3}
+        m_Texture: {fileID: 2800000, guid: ca7ba7ac7b0a7ad449cdc8ffc15fe430, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MainTex
       second:
-        m_Texture: {fileID: 2800000, guid: 6e164dcb85fc8ad4b9ab2f1e883862d2, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -142,7 +142,4 @@ Material:
       second: {r: 1, g: 1, b: 1, a: 1}
     - first:
         name: _EmissionColor
-      second: {r: 1.6176472, g: 0.28546712, b: 0.69890213, a: 1}
-    - first:
-        name: _Glow
-      second: {r: 0.8308824, g: 0.342128, b: 0.342128, a: 0}
+      second: {r: 0, g: 0.44066945, b: 0.8088235, a: 1}

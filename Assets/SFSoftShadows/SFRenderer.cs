@@ -275,8 +275,8 @@ public class SFRenderer : MonoBehaviour {
 			GL.Viewport(viewport);
 			var clippedProjection = ClipMatrix(viewport, 2.0f/w, 2.0f/h)*projection;
 			GL.LoadProjectionMatrix(clippedProjection);
-			
-			// Draw shadow mask
+
+            // Draw shadow mask
 			if(shadows && light._shadowLayers != 0){
 				var radius = light.radius;
 				var areaBounds = _TransformRect(transf, new Rect(-radius, -radius, 2.0f*radius, 2.0f*radius));
@@ -289,7 +289,7 @@ public class SFRenderer : MonoBehaviour {
 					// Note: DrawMesh apparently not affected by the "GL" transform.
 					this.shadowMaskMaterial.SetPass(0);
 					Graphics.DrawMeshNow(_mesh, transf);
-					_mesh.Clear();
+                    _mesh.Clear();
 				}
 
 				lightPolys.Clear();

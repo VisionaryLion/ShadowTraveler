@@ -2,9 +2,19 @@
 
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
+		
+        [HDR]
+        _EmissionColor("Emission Color", Color) = (0,0,0)
+	    [NoScaleOffset]
+		_EmissionMap("Emission", 2D) = "white" {}
+		[NoScaleOffset]
+		_AffectionMap("Affection Map", 2D) = "white" {}
+		_LightAffectionIntensity("Light Afffection Intensity",  Range(0.0, 1.0)) = 1
+
 		_SoftHardMix ("Unshadowed/Shadowed Mix", Range(0.0, 1.0)) = 0.0
 		_AmbientOnlyMix ("Lit/Ambient Mix", Range(0.0, 1.0)) = 0.0
-		_Glow ("Self Illumination", Color) = (0.0, 0.0, 0.0, 0.0)
+		//_Glow ("Self Illumination", Color) = (0.0, 0.0, 0.0, 0.0)
+		
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
 	
@@ -41,6 +51,12 @@
 				
 				sampler2D _MainTex;
 				float4 _MainTex_ST;
+
+				sampler2D _EmissionMap;
+				float4 _EmissionColor;
+
+				sampler2D _AffectionMap;
+				float _LightAffectionIntensity;
 				
 				float4 _SFAmbientLight;
 				sampler2D _SFLightMap;
@@ -108,6 +124,9 @@
 
 				fixed4 FShader(VertexOutput v) : SV_Target {
 					fixed4 color = v.color*tex2D(_MainTex, v.texCoord);
+				float affI = (1 - tex2D(_AffectionMap, v.texCoord).a) + _LightAffectionIntensity;
+				if (affI > 1)
+					affI = 1;
 
 					#if DISABLE_PROJ_TEXTURE_READS
 						// Cheaper version:
@@ -123,8 +142,13 @@
 					fixed3 light = lerp(l0, l1, _SoftHardMix);
 
 					// "light" already has ambient applied, _SFAmbientLight is only the ambient color.
-					color.rgb *= (lerp(light, _SFAmbientLight, _AmbientOnlyMix) + _Glow) *_SFExposure*color.a;
-	
+					fixed3 lightMix = (lerp(light, _SFAmbientLight, _AmbientOnlyMix) + _Glow) *_SFExposure * color.a;
+					
+					color.rgb = lerp(color.rgb, color.rgb * lightMix, affI);
+					
+					//emission += lightMix * _LightAffectionIntensity;
+					fixed3 emission = tex2D(_EmissionMap, v.texCoord).rgb * _EmissionColor.rgb;
+					color.rgb += emission;
 					return color;
 				}
 			ENDCG

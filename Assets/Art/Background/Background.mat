@@ -16,6 +16,12 @@ Material:
     serializedVersion: 2
     m_TexEnvs:
     - first:
+        name: _AffectionMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
         name: _BumpMap
       second:
         m_Texture: {fileID: 0}
@@ -41,6 +47,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     - first:
         name: _EmissionMap
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _EmissiveTex
       second:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -96,6 +108,9 @@ Material:
       second: 0.388
     - first:
         name: _GlossyReflections
+      second: 1
+    - first:
+        name: _LightAffectionIntensity
       second: 1
     - first:
         name: _Metallic

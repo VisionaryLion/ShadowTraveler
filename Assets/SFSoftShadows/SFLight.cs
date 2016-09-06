@@ -3,6 +3,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Utility.ExtensionMethods;
+using System;
 
 [RequireComponent(typeof(RectTransform))]
 public class SFLight : MonoBehaviour, _SFCullable {
@@ -104,7 +106,9 @@ public class SFLight : MonoBehaviour, _SFCullable {
 		var segments = 0;
 		for(int i = 0; i < polys.Count; i++){
 			var poly = polys[i];
-			segments += poly.verts.Length - (poly.looped ? 0 : 1);
+            if (_shadowLayers != (_shadowLayers | 1 << poly.shadowLayers))
+                continue;
+            segments += poly.verts.Length - (poly.looped ? 0 : 1);
 		}
 
 		VertexArray arr = GetVertexArray(segments);
@@ -122,8 +126,10 @@ public class SFLight : MonoBehaviour, _SFCullable {
 		var j = 0;
 		for(int c = 0; c < polys.Count; c++){
 			var poly = polys[c];
-
-			var fromPoly = poly._GetMatrix();
+            //Debug.Log("layerTest: "+ Convert.ToString(_shadowLayers.value, 2)+ "\n           " + Convert.ToString(1 << poly.shadowLayers, 2));
+            if (_shadowLayers != (_shadowLayers | 1 << poly.shadowLayers))
+                continue;
+            var fromPoly = poly._GetMatrix();
 			var t = toLight*fromPoly;
 
 			// Reverse the vertex order if the transform is flipped to keep the correct winding.
