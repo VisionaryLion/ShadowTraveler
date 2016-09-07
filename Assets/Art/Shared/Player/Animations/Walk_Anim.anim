@@ -89578,14 +89578,22 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
   m_Events:
+<<<<<<< HEAD
   - time: 0.08888889
+=======
+  - time: 0.25555557
+>>>>>>> origin/master
     functionName: AnimationEventOccured
     data: FootHitGround
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+<<<<<<< HEAD
   - time: 0.73888886
+=======
+  - time: 0.8055556
+>>>>>>> origin/master
     functionName: AnimationEventOccured
     data: FootHitGround
     objectReferenceParameter: {fileID: 0}
