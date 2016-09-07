@@ -1,3 +1,7 @@
+{4bca448c-7e2f-4e58-ad15-e93612c93fe1} event:/Footsteps/Metal_Footsteps
+{994c1c00-71d2-4177-8845-9bde2e378c7f} event:/Items/Crowbar
+{b1f00e6b-5984-49cb-8a66-f7feb205a3b2} event:/Items/Flair
+{7ae624a5-c778-42e9-80b3-71d89c2a88e9} event:/Items/Flashlight
 {c22ea6b8-2ceb-4bcb-b697-9eb97a71ba8b} event:/Locker/Locker
 {6f99dd53-348d-47bb-90b0-251d6ae09594} event:/Power_Station/Circuit_Board
 {75e0ead2-5c0e-4bcc-8a8e-1c151bf17bb2} event:/Power_Station/Circuit_Board_Power_On
@@ -5,16 +9,11 @@
 {d9329dcc-b794-4788-b85e-3b3e2af7965f} event:/Power_Station/Elevator_Start_Loop
 {04a5b355-378d-49dd-904c-f849de12ef67} event:/Power_Station/Elevator_Stop
 {7a5514e5-7c04-43c1-87a7-12a93fd69649} event:/Power_Station/Lights
-{ceee7e5d-3424-4205-b737-f0ece3b383d6} event:/Footsteps/New Event
-{4bca448c-7e2f-4e58-ad15-e93612c93fe1} event:/Footsteps/Metal_Footsteps
-{994c1c00-71d2-4177-8845-9bde2e378c7f} event:/Items/Crowbar
-{b1f00e6b-5984-49cb-8a66-f7feb205a3b2} event:/Items/Flair
-{7ae624a5-c778-42e9-80b3-71d89c2a88e9} event:/Items/Flashlight
 {62954c33-33a6-41e5-ad6a-553d8878dce5} event:/Spider_Boss/Spider_Footsteps
 {b160a882-e21b-433e-a1d7-fe44501c3a8e} event:/Spider_Boss/Spider_Vocal
 {77198452-b56c-4a23-be2e-95dc5fe6ab0a} bus:/
 {a9a2f39b-37ac-4147-b208-e727ee69ebf2} bus:/Reverb
-{408dfd50-a66a-4d27-94b3-03dd88e13898} bank:/SpaceStation_Level1
-{e9c344a8-a689-426c-aacf-8abe193c119f} bank:/Player
 {469340f7-dca4-48a1-bfbd-10f8bc77bf6d} bank:/Items
+{e9c344a8-a689-426c-aacf-8abe193c119f} bank:/Player
 {7cbc5940-59a0-42c3-8bcd-197742d5729a} bank:/Spider
+{408dfd50-a66a-4d27-94b3-03dd88e13898} bank:/SpaceStation_Level1
