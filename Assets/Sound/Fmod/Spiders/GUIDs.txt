@@ -1,5 +1,0 @@
-{43916ade-174d-4d35-8042-dcb09f3bbb45} event:/Spider_Boss/Spider_Footsteps
-{be47dc15-d24f-48ef-b0e3-c9aeba4db86b} event:/Spider_Boss/Spider_Vocal
-{63adac6a-712c-40a2-ba61-ae19d2239ff7} bus:/
-{f68d3388-8fea-4761-b617-92f736aea8d7} bus:/Reverb
-{7b0ae4c6-7000-43d8-8e89-d07e8a2e76ab} bank:/Spiders

@@ -1,6 +1,0 @@
-{c565a03c-beea-482f-9861-c3267ceefa53} event:/Items/Crowbar
-{5580d189-913c-4a59-a9ea-df18edeb274d} event:/Items/Flair
-{89f494ca-e23f-49c8-985c-554cbd5cf906} event:/Items/Flashlight
-{49bae421-926a-4b44-9e42-07818fc62ede} bus:/
-{e15a3edb-124e-42bf-a9af-f5faadb94c99} bus:/Reverb
-{3f754caf-427d-4676-a236-6011c5c1a7ba} bank:/Items
