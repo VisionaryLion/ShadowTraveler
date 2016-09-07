@@ -38,7 +38,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
+  m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   Path: event:/Items/Crowbar
   guid: 001c4c99d271774188459bde2e378c7f
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: 
+  m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   Path: Assets\Sound\Fmod\SpaceStation_Level1.strings.bank
   lastModified: 636088660597080441
@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: 
+  m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   Path: E:\GameProgramming\GitHub Projects\LightAndDark\Assets\Sound\Fmod\Spider.bank
   lastModified: 636088660597130396
@@ -134,11 +134,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-<<<<<<< HEAD
-  m_Name: FMODStudioCache
-=======
   m_Name: 
->>>>>>> origin/master
   m_EditorClassIdentifier: 
   Path: E:\GameProgramming\GitHub Projects\LightAndDark\Assets\Sound\Fmod\Player.bank
   lastModified: 636088660596990376
@@ -274,11 +270,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-<<<<<<< HEAD
-  m_Name: FMODStudioCache
-=======
   m_Name: 
->>>>>>> origin/master
   m_EditorClassIdentifier: 
   Path: event:/Spider_Boss/Spider_Vocal
   guid: 82a860b11be23e43a1d7fe44501c3a8e
