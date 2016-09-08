@@ -9,7 +9,7 @@ namespace Equipment
     public class Flashlight : MonoBehaviour, IEquipment
     {
         [SerializeField]
-        Light lightSrc;
+        SFLight lightSrc;
 
         public void OnEquiped()
         {

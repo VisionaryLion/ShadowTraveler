@@ -61,7 +61,7 @@ Material:
         name: _MainTex
       second:
         m_Texture: {fileID: 2800000, guid: 2c02a0ebd860c5e439f3f6a3c9b7c709, type: 3}
-        m_Scale: {x: 30, y: 30}
+        m_Scale: {x: 30, y: 24.9}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MetallicGlossMap
