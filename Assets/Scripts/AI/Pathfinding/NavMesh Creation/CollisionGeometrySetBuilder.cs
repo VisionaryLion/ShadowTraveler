@@ -26,33 +26,34 @@ namespace NavMesh2D.Core
             WalkableColliderMask = walkableColliderMask;
         }
 
-        public CollisionGeometrySet Build (Collider2D[] collider)
+        public CollisionGeometrySet Build (IEnumerable<Collider2D> collider)
         {
             CollisionGeometrySet result = new CollisionGeometrySet();
             List<Vector2> inOutVerts = new List<Vector2>(10); //Just a guess
 
-            for (int iCol = 0; iCol < collider.Length; iCol++)
+           foreach(Collider2D col in collider)
             {
-                if (!PreScreenCollider(collider[iCol]))
+                if (!PreScreenCollider(col))
                     continue;
 
-                Type cTyp = collider[iCol].GetType();
+                Type cTyp = col.GetType();
 
                 //Sort out any edge collider, as they will be processed differently.
                 if (cTyp == typeof(EdgeCollider2D))
                 {
-                    LoadEdgeColliderVerts((EdgeCollider2D)collider[iCol], inOutVerts);
-                    result.AddEdge(inOutVerts);
+                    //LoadEdgeColliderVerts((EdgeCollider2D)collider[iCol], inOutVerts);
+                    //result.AddEdge(inOutVerts);
+                    //Ignore it for the time being!!
                 } else
                 {
                     if (cTyp == typeof(BoxCollider2D))
-                        LoadBoxColliderVerts((BoxCollider2D)collider[iCol], inOutVerts);
+                        LoadBoxColliderVerts((BoxCollider2D)col, inOutVerts);
                     else if (cTyp == typeof(CircleCollider2D))
-                        LoadCircleColliderVerts((CircleCollider2D)collider[iCol], inOutVerts);
+                        LoadCircleColliderVerts((CircleCollider2D)col, inOutVerts);
                     else
-                        LoadPolygonColliderVerts((PolygonCollider2D)collider[iCol], inOutVerts);
+                        LoadPolygonColliderVerts((PolygonCollider2D)col, inOutVerts);
 
-                    result.AddCollider(inOutVerts, collider[iCol].name);
+                    result.AddCollider(inOutVerts);
                 }
                 inOutVerts.Clear();
             }
@@ -61,7 +62,7 @@ namespace NavMesh2D.Core
 
         private bool PreScreenCollider(Collider2D col)
         {
-            if (WalkableColliderMask == -1 || col.gameObject.layer == (col.gameObject.layer | (1 << WalkableColliderMask)))
+            if (WalkableColliderMask == -1 || WalkableColliderMask == (WalkableColliderMask | (1 << col.gameObject.layer)))
                 return true;
             return false;
         }

@@ -371,7 +371,7 @@ MonoBehaviour:
   - {x: -4.9999995, y: -5}
   - {x: -4.9999995, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -2454,6 +2454,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 114000011365100444, guid: c432464b0008d724298fd4adff4bfe65,
+        type: 2}
+      propertyPath: _shadowLayers
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c432464b0008d724298fd4adff4bfe65, type: 2}
   m_IsPrefabParent: 0
@@ -3733,7 +3738,7 @@ MonoBehaviour:
   - {x: -5, y: -5.0000005}
   - {x: -5, y: 5.0000005}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -8897,7 +8902,7 @@ MonoBehaviour:
   - {x: -5, y: -5}
   - {x: -5, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -11332,7 +11337,7 @@ MonoBehaviour:
   - {x: -5, y: -5}
   - {x: -5, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -12258,7 +12263,7 @@ MonoBehaviour:
   - {x: -5.0000005, y: -5}
   - {x: -5.0000005, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -12641,6 +12646,11 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114000011365100444, guid: c432464b0008d724298fd4adff4bfe65,
+        type: 2}
+      propertyPath: _shadowLayers
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c432464b0008d724298fd4adff4bfe65, type: 2}
   m_IsPrefabParent: 0
@@ -12690,6 +12700,11 @@ Prefab:
     - target: {fileID: 4000010833617338, guid: c432464b0008d724298fd4adff4bfe65, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011365100444, guid: c432464b0008d724298fd4adff4bfe65,
+        type: 2}
+      propertyPath: _shadowLayers
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c432464b0008d724298fd4adff4bfe65, type: 2}
@@ -13863,7 +13878,7 @@ MonoBehaviour:
   - {x: -5, y: -5}
   - {x: -5, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -14701,7 +14716,7 @@ MonoBehaviour:
   - {x: -4.9999995, y: -5}
   - {x: -4.9999995, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -15331,7 +15346,7 @@ MonoBehaviour:
   - {x: -5, y: -5}
   - {x: -5, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -18234,7 +18249,7 @@ MonoBehaviour:
   - {x: -4.9999995, y: -5}
   - {x: -4.9999995, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -20429,7 +20444,7 @@ MonoBehaviour:
   - {x: -20.867687, y: 2.14779}
   - {x: -20.854095, y: 8.066711}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -20818,7 +20833,7 @@ MonoBehaviour:
   - {x: -5, y: -5}
   - {x: -5, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -23015,7 +23030,7 @@ MonoBehaviour:
   - {x: -4.9999995, y: -5}
   - {x: -4.9999995, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -23504,7 +23519,7 @@ MonoBehaviour:
   - {x: -5, y: -5}
   - {x: -5, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10
@@ -25755,7 +25770,7 @@ MonoBehaviour:
   - {x: -5, y: -5}
   - {x: -5, y: 5}
   _looped: 1
-  _shadowLayers: 0
+  _shadowLayers: 2
   _lightPenetration: 0
   _opacity: 1
   circleVertCount: 10

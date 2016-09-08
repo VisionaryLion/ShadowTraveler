@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Utility.ExtensionMethods;
 
-namespace Polygon2D
+namespace Utility.Polygon2D
 {
-    public class Connector
+    internal class Connector
     {
         List<PointChain> openChains;
         List<PointChain> closedChains;
@@ -45,9 +46,14 @@ namespace Polygon2D
             openChains.Add(new PointChain(ref p0, ref p1));
         }
 
-        public PointChain[] ToArray()
+        public Contour[] ToArray()
         {
-            return closedChains.ToArray();
+            Contour[] result = new Contour[closedChains.Count];
+            for (int iChain = 0; iChain < result.Length; iChain++)
+            {
+                result[iChain] = new Contour(closedChains[iChain].chain.ToArray());
+            }
+            return result;
         }
     }
 }
