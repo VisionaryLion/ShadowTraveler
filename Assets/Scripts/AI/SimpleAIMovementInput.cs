@@ -18,6 +18,10 @@ namespace CC2D
         [SerializeField]
         float timeRunRight;
         [SerializeField]
+        float deviation;
+        [SerializeField]
+        int randomJumpChance;
+        [SerializeField]
         bool runRight;
 
         MovementInput bufferedInput;
@@ -47,24 +51,36 @@ namespace CC2D
             if (runRight)
             {
                 timeLeft -= Time.deltaTime;
-                if (timeLeft < 0)
+                if (timeLeft < 0 || actor.CharacterController2D.collisionState.right)
                 {
-                    timeLeft = timeRunLeft;
+                    timeLeft = timeRunLeft + Random.Range(-deviation, deviation);
                     runRight = false;
                 }
                 bufferedInput.horizontalRaw = 1;
                 bufferedInput.horizontal = 1;
+                if (actor.CharacterController2D.collisionState.right || Random.Range(0, randomJumpChance) == 0)
+                {
+                    bufferedInput.timeOfLastJumpStateChange = Time.time;
+                    bufferedInput.isJumpConsumed = false;
+                    bufferedInput.jump = true;
+                }
             }
             else
             {
                 timeLeft -= Time.deltaTime;
-                if (timeLeft < 0)
+                if (timeLeft < 0 || actor.CharacterController2D.collisionState.left)
                 {
-                    timeLeft = timeRunRight;
+                    timeLeft = timeRunRight + Random.Range(-deviation, deviation);
                     runRight = true;
                 }
                 bufferedInput.horizontalRaw = -1;
                 bufferedInput.horizontal = -1;
+                if (actor.CharacterController2D.collisionState.left || Random.Range(0, randomJumpChance) == 0)
+                {
+                    bufferedInput.timeOfLastJumpStateChange = Time.time;
+                    bufferedInput.isJumpConsumed = false;
+                    bufferedInput.jump = true;
+                }
             }
         }
     }
