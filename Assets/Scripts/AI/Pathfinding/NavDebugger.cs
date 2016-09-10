@@ -33,11 +33,10 @@ public class NavDebugger : MonoBehaviour
 
         System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
 
-        CollisionGeometrySetBuilder cgBuilder = new CollisionGeometrySetBuilder(circleVertCount, collisionMask);
         Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
         long totalEllapsedTime = 0;
 
-        cgs = cgBuilder.Build(allCollider);
+        cgs = CollisionGeometrySetBuilder.Build(allCollider, circleVertCount);
         Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
@@ -110,7 +109,7 @@ public class NavDebugger : MonoBehaviour
                     if (counter > 0 && timer < 1)
                     {
                         Contour cC = new Contour(cgs.colliderVerts[counter - 1]);
-                        cC.DrawDebugInfo(true);
+                        cC.DrawDebugInfo(Utility.DifferentColors.GetColor(ContourNode.debug_Color) , true);
                         timer += Time.deltaTime;
                     }
                 }

@@ -16,7 +16,7 @@ namespace NavMesh2D.Core
                 HandleMarkableContour(n, navNodes, testIndex, 1);
             NavNode[] allNN = navNodes.ToArray();
             navNodes = null;
-            GenerateFloorWalkerJumpLinks(allNN, 40, 9, 10, 5, 2, 40);
+            GenerateFloorWalkerJumpLinks(allNN, 20, 20, 5, 5, 2, 40);
             return new NavigationData2D { nodes = allNN };
         }
 

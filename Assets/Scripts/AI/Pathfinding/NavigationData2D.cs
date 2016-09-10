@@ -109,15 +109,15 @@ namespace NavMesh2D
                     DebugExtension.DebugPoint(verts[iVert].PointB, Color.magenta);
                 }
                 //float angleGrad = (1 / Mathf.PI) * verts[iVert].slopeAngleBC;
-                //DebugExtension.DrawArrow(verts[iVert].PointB, verts[iVert + 1].PointB - verts[iVert].PointB, new Color(angleGrad, angleGrad, angleGrad));
-                Debug.DrawLine(verts[iVert].PointB, verts[iVert + 1].PointB, DifferentColors.GetColor(colorId));
+                //DebugExtension.DrawArrow(verts[iVert].PointB, verts[iVert + 1].PointB - verts[iVert].PointB, DifferentColors.GetColor(colorId));
+                //Debug.DrawLine(verts[iVert].PointB, verts[iVert + 1].PointB, DifferentColors.GetColor(colorId));
                 DebugExtension.DrawCircle(verts[iVert].PointB, Vector3.forward, DifferentColors.GetColor(colorId), 0.2f);
             }
             if (isClosed)
             {
-                Debug.DrawLine(verts[verts.Length -1].PointB, verts[0].PointB, DifferentColors.GetColor(colorId));
+                //Debug.DrawLine(verts[verts.Length -1].PointB, verts[0].PointB, DifferentColors.GetColor(colorId));
                 //float angleGrad = (1 / Mathf.PI) * verts[verts.Length - 1].slopeAngleBC;
-                //DebugExtension.DrawArrow(verts[verts.Length - 1].PointB, verts[0].PointB - verts[verts.Length - 1].PointB, new Color(angleGrad, angleGrad, angleGrad));
+                //DebugExtension.DrawArrow(verts[verts.Length - 1].PointB, verts[0].PointB - verts[verts.Length - 1].PointB, DifferentColors.GetColor(colorId));
             }
             DebugExtension.DrawCircle(verts[verts.Length - 1].PointB, Vector3.forward, DifferentColors.GetColor(colorId), 0.2f);
         }

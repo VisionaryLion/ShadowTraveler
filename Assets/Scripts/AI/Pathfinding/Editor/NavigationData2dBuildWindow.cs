@@ -20,23 +20,18 @@ namespace NavMesh2D.Core
         }
 
         //controll vars
+        [SerializeField]
         int selectedTab;
-        CollisionGeometryGatheringUI colUI;
-        NavAgentUI navAgentUI;
+        [SerializeField]
+        string[] tabNames;
+        [SerializeField]
+        IBuildStepHandler[] buildSteps;
+        IBuildStepHandler currentBuildStep { get { return buildSteps[selectedTab]; } }
 
         void OnGUI()
         {
-            selectedTab = GUILayout.Toolbar(selectedTab, new string[] { "Object", "Nav Agent" });
-
-            switch (selectedTab)
-            {
-                case 0:
-                    colUI.OnGUI();
-                    break;
-                case 1:
-                    navAgentUI.OnGUI();
-                    break;
-            }
+            selectedTab = GUILayout.Toolbar(selectedTab, tabNames);
+            currentBuildStep.OnGUI();
         }
 
         void OnEnable()
@@ -47,8 +42,15 @@ namespace NavMesh2D.Core
             // Add (or re-add) the delegate.
             SceneView.onSceneGUIDelegate += this.OnSceneGUI;
 
-            colUI = new CollisionGeometryGatheringUI();
-            navAgentUI = new NavAgentUI();
+            if (buildSteps == null)
+            {
+                buildSteps = new IBuildStepHandler[] { new CollisionGeometryGatheringBuildStep(), new NavAgentUI() };
+                tabNames = new string[buildSteps.Length];
+                for (int iStep = 0; iStep < tabNames.Length; iStep++)
+                {
+                    tabNames[iStep] = buildSteps[iStep].TabName;
+                }
+            }
         }
 
         void OnDestroy()
@@ -56,167 +58,216 @@ namespace NavMesh2D.Core
             // When the window is destroyed, remove the delegate
             // so that it will no longer do any drawing.
             SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
-            colUI.OnDestroy();
+            SceneView.RepaintAll();
         }
 
         void OnSelectionChange()
         {
-            colUI.OnSelectionChange(this);
+            currentBuildStep.OnSelectionChanges();
         }
 
         void OnSceneGUI(SceneView sceneView)
         {
-            switch (selectedTab)
-            {
-                case 0:
-                    colUI.OnSceneGUI(sceneView);
-                    break;
-            }
+            currentBuildStep.OnSceneGUI(sceneView);
         }
     }
 
-    class CollisionGeometryGatheringUI
+    class CollisionGeometryGatheringBuildStep : IBuildStepHandler
     {
-        enum GeometrySelectionType
+        enum ShowType
         {
-            BySelection = 0,
-            ByLayer = 1,
-            AllStatic = 2
-
+            Nothing,
+            Merged,
+            Raw,
+            RawAndFilled
         }
 
-        GeometrySelectionType geometrySelectionType;
-        CollisionGeometrySet collisionGeometrySet;
-        CollisionGeometrySetBuilder builder;
-        int fakeLayerMask;
+        [SerializeField]
+        Collider2D[] inputGeometry;
+        [SerializeField]
+        LayerMask selectionMask;
+        [SerializeField]
+        int circleVertCount;
+        [SerializeField]
+        bool selectAllStatic;
+        [SerializeField]
+        bool useSelection;
 
-        public CollisionGeometryGatheringUI()
+        [SerializeField]
+        public CollisionGeometrySet collisionGeometrySet;
+        [SerializeField]
+        public ContourTree contourTree;
+
+        //Debug stuff
+        [SerializeField]
+        ShowType showType;
+
+        public CollisionGeometryGatheringBuildStep()
         {
-            geometrySelectionType = (GeometrySelectionType)EditorPrefs.GetInt("CollisionGeometryGatheringUI_GeometrySelectionType", 0);
-            fakeLayerMask = EditorPrefs.GetInt("CollisionGeometryGatheringUI_fakeLayerMask", 0);
-            builder = new CollisionGeometrySetBuilder(EditorPrefs.GetInt("CollisionGeometryGatheringUI_CircleColliderVerts", 4), (int)Mathf.Pow(2, fakeLayerMask));
+            inputGeometry = new Collider2D[] { };
+            selectAllStatic = true;
+            selectionMask = 0;
+            circleVertCount = 10;
+            showType = ShowType.Merged;
+            Build();
+        }
+
+        public string TabName
+        {
+            get
+            {
+                return "Collision Geometry Gathering";
+            }
+        }
+
+        public void Build()
+        {
+            GatherCollisionData();
+            if (inputGeometry.Length > 0)
+            {
+                collisionGeometrySet = CollisionGeometrySetBuilder.Build(inputGeometry, circleVertCount);
+                contourTree = ContourTree.Build(collisionGeometrySet);
+                SceneView.RepaintAll();
+            }
         }
 
         public void OnGUI()
         {
-            EditorGUIUtility.labelWidth = 200;
-            geometrySelectionType = (GeometrySelectionType)EditorGUILayout.EnumPopup("Geometry selection methode", geometrySelectionType);
+            EditorGUI.BeginChangeCheck();
+            selectAllStatic = EditorGUILayout.Toggle("Select all static", selectAllStatic);
+            selectionMask = CustomEditorFields.LayerMaskField("Selection Mask", selectionMask);
+            useSelection = EditorGUILayout.Toggle("Use Selection", useSelection);
 
-            switch (geometrySelectionType)
-            {
-                case GeometrySelectionType.BySelection:
-                    EditorGUILayout.HelpBox("Current selection: " + Selection.transforms.Length, MessageType.Info);
-                    GUI.enabled = Selection.transforms.Length != 0;
-                    break;
-                case GeometrySelectionType.ByLayer:
-                    fakeLayerMask = EditorGUILayout.LayerField("LayerMask", fakeLayerMask);
-                    break;
-                case GeometrySelectionType.AllStatic:
-                    Collider2D[] sel = ExecuteGatherMethode();
-                    EditorGUILayout.HelpBox("Current static: " + sel.Length, MessageType.Info);
-                    GUI.enabled = sel.Length != 0;
-                    break;
-            }
+            EditorGUILayout.HelpBox("Size of current selection = " + inputGeometry.Length, MessageType.Info);
+            circleVertCount = EditorGUILayout.IntSlider("Circle Vert Count", circleVertCount, 4, 64);
 
-            builder.CircleVertCount = EditorGUILayout.IntSlider("Circle Vert Count", builder.CircleVertCount, 4, 64);
+            if (EditorGUI.EndChangeCheck() || GUILayout.Button("Update"))
+                Build();
 
-            if (GUILayout.Button("Start gather"))
-            {
-                Collider2D[] allCollider = ExecuteGatherMethode();
-
-                System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-
-
-                collisionGeometrySet = builder.Build(allCollider);
+            EditorGUI.BeginChangeCheck();
+            showType = (ShowType)EditorGUILayout.EnumPopup("Show Type", showType);
+            if (EditorGUI.EndChangeCheck())
                 SceneView.RepaintAll();
-                Debug.Log("Collision-geometry-set builder finished in " + watch.ElapsedMilliseconds / 1000 + "sec. "
-                    + allCollider.Length + " -> " + (collisionGeometrySet.colliderVerts.Count + collisionGeometrySet.edgeVerts.Count)
-                    + "(Collider = " + collisionGeometrySet.colliderVerts.Count + ", "
-                    + "Edges = " + collisionGeometrySet.edgeVerts.Count + ")");
-            }
-            GUI.enabled = collisionGeometrySet != null;
-            if (GUILayout.Button("Clear"))
+
+            GUI.enabled = contourTree != null;
+            if (GUILayout.Button("Save"))
             {
-                collisionGeometrySet = null;
-                SceneView.RepaintAll();
+                SaveContourTree();
             }
-            GUI.enabled = true;
+        }
+
+        void SaveContourTree()
+        {
+            string path = EditorUtility.SaveFilePanel("Save ContourTree", "Assets", "ContourTree", "asset");
+            if (path == null || path.Length == 0)
+                return;
+            path = path.Substring(path.IndexOf("Assets"));
+            Debug.Log(path);
+            AssetDatabase.CreateAsset(contourTree, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = contourTree;
+        }
+
+        public void GatherCollisionData()
+        {
+            List<Collider2D> bufferedCollider;
+            Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
+
+            bufferedCollider = new List<Collider2D>(allCollider.Length);
+
+            if (useSelection)
+            {
+                foreach (Transform selectedTransforms in Selection.transforms)
+                {
+                    Collider2D[] childCollider = selectedTransforms.GetComponentsInChildren<Collider2D>();
+                    if (childCollider != null)
+                        bufferedCollider.AddRange(childCollider);
+                }
+            }
+
+            foreach (Collider2D col in allCollider)
+            {
+                if (selectionMask.IsLayerWithinMask(col.gameObject.layer))
+                {
+                    if (!useSelection || !bufferedCollider.Contains(col))
+                        bufferedCollider.Add(col);
+                }
+                else if (selectAllStatic && col.gameObject.isStatic)
+                {
+                    if (!useSelection || !bufferedCollider.Contains(col))
+                        bufferedCollider.Add(col);
+                }
+
+            }
+            inputGeometry = bufferedCollider.ToArray();
         }
 
         public void OnSceneGUI(SceneView sceneView)
         {
-            if (collisionGeometrySet != null)
+            if (showType == ShowType.Raw)
             {
-                Handles.color = Color.blue;
-                Vector3[] dummyArray;
-                foreach (Vector2[] vertSet in collisionGeometrySet.colliderVerts)
+                if (collisionGeometrySet != null)
                 {
-                    dummyArray = new Vector3[vertSet.Length];
-                    for (int iVert = 0; iVert < vertSet.Length; iVert++)
-                        dummyArray[iVert] = vertSet[iVert];
-                    Handles.DrawAAPolyLine(5f, dummyArray);
-                    Handles.DrawAAPolyLine(5f, dummyArray[0], dummyArray[dummyArray.Length - 1]);
+                    Handles.color = Color.blue;
+                    Vector3[] dummyArray;
+                    foreach (Vector2[] vertSet in collisionGeometrySet.colliderVerts)
+                    {
+                        dummyArray = new Vector3[vertSet.Length];
+                        for (int iVert = 0; iVert < vertSet.Length; iVert++)
+                            dummyArray[iVert] = vertSet[iVert];
+                        Handles.DrawAAPolyLine(5f, dummyArray);
+                        Handles.DrawAAPolyLine(5f, dummyArray[0], dummyArray[dummyArray.Length - 1]);
+                    }
                 }
-
             }
-        }
-
-        public void OnDestroy()
-        {
-            EditorPrefs.SetInt("CollisionGeometryGatheringUI_GeometrySelectionType", (int)geometrySelectionType);
-            EditorPrefs.SetInt("CollisionGeometryGatheringUI_fakeLayerMask", fakeLayerMask);
-            EditorPrefs.SetInt("CollisionGeometryGatheringUI_CircleColliderVerts", builder.CircleVertCount);
-        }
-
-        public void OnSelectionChange(EditorWindow window)
-        {
-            window.Repaint();
-        }
-
-        Collider2D[] ExecuteGatherMethode()
-        {
-            switch (geometrySelectionType)
+            else if (showType == ShowType.Merged)
             {
-                case GeometrySelectionType.BySelection:
-                    List<Collider2D> bufferedCollider = new List<Collider2D>(Selection.transforms.Length);
-                    foreach (Transform trans in Selection.transforms)
-                    {
-                        Collider2D[] transResult = trans.GetComponents<Collider2D>();
-                        if (transResult != null)
-                        {
-                            foreach (Collider2D col2 in transResult)
-                                bufferedCollider.Add(col2);
-                        }
-                    }
-                    builder.WalkableColliderMask = int.MaxValue;
-                    return bufferedCollider.ToArray();
-                case GeometrySelectionType.ByLayer:
-                    builder.WalkableColliderMask = (int)Mathf.Pow(2, fakeLayerMask);
-                    return GameObject.FindObjectsOfType<Collider2D>();
-                case GeometrySelectionType.AllStatic:
-                    builder.WalkableColliderMask = int.MaxValue;
-                    Collider2D[] col = GameObject.FindObjectsOfType<Collider2D>();
-                    List<Collider2D> bufferedCollider2 = new List<Collider2D>(col.Length);
-                    foreach (Collider2D c in col)
-                    {
-                        if (c.gameObject.isStatic)
-                            bufferedCollider2.Add(c);
-                    }
-                    return bufferedCollider2.ToArray();
+                if (contourTree != null)
+                {
+                    int colorIndex = 0;
+                    foreach (ContourNode child in contourTree.FirstNode.children)
+                        DrawContourNode(child, colorIndex++);
+                }
             }
-            return null;
+            else if (showType == ShowType.RawAndFilled)
+            {
+                if (collisionGeometrySet != null)
+                {
+                    Handles.color = Color.blue;
+                    Vector3[] dummyArray;
+                    foreach (Vector2[] vertSet in collisionGeometrySet.colliderVerts)
+                    {
+                        dummyArray = new Vector3[vertSet.Length + 1];
+                        for (int iVert = 0; iVert < vertSet.Length; iVert++)
+                            dummyArray[iVert] = vertSet[iVert];
+                        dummyArray[dummyArray.Length - 1] = dummyArray[0];
+                        Handles.DrawAAConvexPolygon(dummyArray);
+                    }
+                }
+            }
         }
 
-        class OutlineTreeBuilderUI
+        void DrawContourNode(ContourNode node, int colorIndex)
         {
-            public OutlineTreeBuilderUI()
-            {
+            Handles.color = Utility.DifferentColors.GetColor(colorIndex);
+            Vector3[] dummyArray = new Vector3[node.contour.verticies.Count];
+            for (int iVert = 0; iVert < dummyArray.Length; iVert++)
+                dummyArray[iVert] = node.contour.verticies[iVert];
+            Handles.DrawPolyLine(dummyArray);
+            Handles.DrawPolyLine(dummyArray[0], dummyArray[dummyArray.Length - 1]);
 
-            }
+            foreach (ContourNode child in node.children)
+                DrawContourNode(child, colorIndex);
+        }
+
+        public void OnSelectionChanges()
+        {
         }
     }
 
-    class NavAgentUI
+    class NavAgentUI : IBuildStepHandler
     {
         float height;
         float width;
@@ -225,6 +276,14 @@ namespace NavMesh2D.Core
         float maxXVel;
         float cullNodesSmallerThen;
         float slopeLimit;
+
+        public string TabName
+        {
+            get
+            {
+                return "NavAgent";
+            }
+        }
 
         public void OnGUI()
         {
@@ -236,6 +295,25 @@ namespace NavMesh2D.Core
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("NavAgent Settings:", EditorStyles.boldLabel);
+
         }
+
+        public void OnSceneGUI(SceneView sceneView)
+        {
+
+        }
+
+        public void OnSelectionChanges()
+        {
+
+        }
+    }
+
+    interface IBuildStepHandler
+    {
+        string TabName { get; }
+        void OnGUI();
+        void OnSceneGUI(SceneView sceneView);
+        void OnSelectionChanges();
     }
 }

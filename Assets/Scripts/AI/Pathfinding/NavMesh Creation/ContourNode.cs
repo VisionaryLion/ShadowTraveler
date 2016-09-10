@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Utility.Polygon2D;
+using System;
 
 namespace NavMesh2D.Core
 {
+    [Serializable]
     public class ContourNode
     {
         public static int debug_Color = 0;
@@ -14,6 +16,7 @@ namespace NavMesh2D.Core
         public Bounds Bounds { get { return contour.Bounds; } }
         public bool IsSolid { get { return isSolid; } }
 
+        [SerializeField]
         private bool isSolid;
 
         public ContourNode(Contour contour, bool isSolid)
@@ -177,8 +180,7 @@ namespace NavMesh2D.Core
             debug_Color++;
             if (debug_Color != debug_target)
             {
-                Gizmos.color = Utility.DifferentColors.GetColor(debug_Color);
-                contour.DrawDebugInfo();
+                contour.DrawDebugInfo(Utility.DifferentColors.GetColor(debug_Color));
             }
             for (int iChildren = 0; iChildren < children.Count; iChildren++)
             {

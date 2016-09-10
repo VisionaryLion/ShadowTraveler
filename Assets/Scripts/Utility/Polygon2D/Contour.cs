@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utility.DebugUtil;
 
 namespace Utility.Polygon2D
 {
+    [Serializable]
     public class Contour : IEnumerable<Vector2>
     {
         public int VertexCount { get { return verticies.Count; } }
@@ -12,7 +14,9 @@ namespace Utility.Polygon2D
         public bool IsEmpty { get { return verticies.Count == 0; } }
         public List<Vector2> verticies;
 
+        [SerializeField]
         private Bounds bounds;
+        [SerializeField]
         private bool areBoundsValid;
 
         public Contour(params Vector2[] verticies)
@@ -81,16 +85,16 @@ namespace Utility.Polygon2D
             return area / 2;
         }
 
-        public void DrawDebugInfo(bool withSpheres = false)
+        public void DrawDebugInfo(Color color, bool withBigSpheres = false)
         {
-            Vector2 prev = verticies[verticies.Count-1];
+            Vector2 prev = verticies[verticies.Count - 1];
             foreach (Vector2 vert in verticies)
             {
-                DrawArrow.ForGizmo(prev, vert - prev);
-                if(withSpheres)
-                Gizmos.DrawWireSphere(prev, 0.5f);
+                Debug.DrawLine(prev, vert, color);
+                /*if (withBigSpheres)
+                    DebugExtension.DebugWireSphere(prev, color, 0.5f);
                 else
-                    Gizmos.DrawWireSphere(prev, 0.2f);
+                    DebugExtension.DebugWireSphere(prev, color, 0.2f);*/
                 prev = vert;
             }
         }

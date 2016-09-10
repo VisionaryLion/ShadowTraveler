@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using Utility.Polygon2D;
 using Utility.ExtensionMethods;
+using UnityEditor;
 
 namespace NavMesh2D.Core
 {
-    public class ContourTree
+    public class ContourTree : ScriptableObject
     {
+        [SerializeField]
         ContourNode headNode; // root
 
         public ContourNode FirstNode { get { return headNode; } }
 
-        public ContourTree()
+        void OnEnabled()
         {
             //create biggest contour possible
             headNode = new ContourNode(null, false);
@@ -19,7 +21,8 @@ namespace NavMesh2D.Core
 
         public static ContourTree Build(CollisionGeometrySet cgSet)
         {
-            ContourTree result = new ContourTree();
+            ContourTree result = ScriptableObject.CreateInstance<ContourTree>();
+            result.OnEnabled();
             for (int iCol = 0; iCol < cgSet.colliderVerts.Count; iCol++)
             {
                 Contour contour = new Contour(cgSet.colliderVerts[iCol]);
