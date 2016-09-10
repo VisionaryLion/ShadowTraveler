@@ -62,8 +62,10 @@ namespace CC2D
 
         #region events, properties and fields
 
+        [SerializeField]
+        [HideInInspector]
         [AssignActorAutomaticly]
-        public PlayerActor actor;
+        public SimpleMovementActor actor;
 
 
         public event Action<RaycastHit2D> onControllerCollidedEvent;
@@ -263,7 +265,7 @@ namespace CC2D
                 moveVertically(ref deltaMovement);
 
             // move then update our state
-            actor.Transform.Translate(deltaMovement, Space.World);
+            transform.Translate(deltaMovement, Space.World);
 
             // only calculate velocity if we have a non-zero deltaTime
             if (Time.deltaTime > 0f)
@@ -340,11 +342,11 @@ namespace CC2D
         {
             // figure out the distance between our rays in both directions
             // horizontal
-            float colliderUseableHeight = actor.BoxCollider2D.size.y * Mathf.Abs(actor.Transform.localScale.y) - (2f * _skinWidth);
+            float colliderUseableHeight = actor.BoxCollider2D.size.y * Mathf.Abs(transform.localScale.y) - (2f * _skinWidth);
             _verticalDistanceBetweenRays = colliderUseableHeight / (totalHorizontalRays - 1);
 
             // vertical
-            float colliderUseableWidth = actor.BoxCollider2D.size.x * Mathf.Abs(actor.Transform.localScale.x) - (2f * _skinWidth);
+            float colliderUseableWidth = actor.BoxCollider2D.size.x * Mathf.Abs(transform.localScale.x) - (2f * _skinWidth);
             _horizontalDistanceBetweenRays = colliderUseableWidth / (totalVerticalRays - 1);
         }
 
