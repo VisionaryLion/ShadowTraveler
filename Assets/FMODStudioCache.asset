@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
+  m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   Path: event:/Spider_Boss/Spider_Footsteps
   guid: 334c9562a633e541ad6a553d8878dce5
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: 
+  m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   Path: event:/Power_Station/Doors_Open_Close
   guid: f20d2b64f06a3042b809d2c4c1888418
