@@ -13,7 +13,7 @@ namespace NavMesh2D.Core
 
         public ContourNode FirstNode { get { return headNode; } }
 
-        void OnEnabled()
+        public void OnEnabled()
         {
             //create biggest contour possible
             headNode = new ContourNode(null, false);

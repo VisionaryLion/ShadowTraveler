@@ -27,7 +27,7 @@ namespace NavMesh2D.Core
                 if (cp.contour == sp)
                     continue;
                 if (cp.contour.bounds.Intersects(sp.bounds))
-                MarkIntersections(firstExSeg, cp.contour, markerFlag, minWalkableHeight);
+                 MarkIntersections(firstExSeg, cp.contour, markerFlag, minWalkableHeight);
             }
         }
 
@@ -48,7 +48,7 @@ namespace NavMesh2D.Core
 
             //Calc lastC at the start. This operation will be done later too though, but its done now for code ease.
             tangent = (mC.firstPoint.pointC - mC.firstPoint.pointB).normalized;
-            normal = new Vector2(-tangent.y, tangent.x) * minWalkableHeight;
+            normal = new Vector2(tangent.y, -tangent.x) * minWalkableHeight;
             prevSeg = new Segment();
             prevSeg.b = mC.firstPoint.pointC + normal;
             firstExSeg = prevSeg;
@@ -57,7 +57,7 @@ namespace NavMesh2D.Core
             foreach (PointNode pn in mC)
             {
                 tangent = (pn.pointC - pn.pointB).normalized;
-                normal = new Vector2(-tangent.y, tangent.x) * minWalkableHeight;
+                normal = new Vector2(tangent.y, -tangent.x) * minWalkableHeight;
                 cExSeg = new Segment();
                 cExSeg.src = pn;
 
@@ -145,36 +145,36 @@ namespace NavMesh2D.Core
                     rectA -= rectC;
 
                     circleBounds = new Bounds(rectC, new Vector3(minWalkableHeight * 2, minWalkableHeight * 2));
-                    //DebugExtension.DebugBounds(circleBounds, Color.yellow);
-                    //DebugExtension.DebugArrow(rectC, rectB, Color.green);
-                    //DebugExtension.DebugArrow(rectC, rectA, Color.blue);
+                   /* DebugExtension.DebugBounds(circleBounds, Color.yellow);
+                    DebugExtension.DebugArrow(rectC, rectB, Color.green);
+                    DebugExtension.DebugArrow(rectC, rectA, Color.blue);*/
                     pn = firstExSeg.next.src.Next;
                     while (true)
                     {
-
+                        if (pn.pointC == rectC) // end reached
+                        {
+                            break;
+                        }
                         if (circleBounds.Contains(pn.pointB))
                         {
                             if (IsPointInsideCircleSector(rectB, rectA, radSquared, pn.pointB - rectC))
                             {
                                 //Intersection found!
-                                //DebugExtension.DebugArrow(rectC, rectA, Color.gray);
-                                //DebugExtension.DebugArrow(rectC, rectB, Color.gray);
-                                //DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                /*DebugExtension.DebugArrow(rectC, rectA, Color.gray);
+                                DebugExtension.DebugArrow(rectC, rectB, Color.gray);
+                                DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);*/
+                                //firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
-                        if (pn.pointC == rectC) // end reached
-                        {
-                            break;
-                        }
+                        
                         if (DoesLineIntersectBounds(pn.pointB, pn.pointC, circleBounds))
                         {
                             if (DoesLineIntersectCircleSector(pn.pointB, pn.pointC, radSquared, rectC, rectB, rectA))
                             {
-                                //DebugExtension.DebugWireSphere(pn.pointB, Color.green);
-                                //DebugExtension.DebugWireSphere(pn.pointC, Color.green);
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                DebugExtension.DebugArrow(rectC, pn.pointB - rectC, Color.gray);
+                                DebugExtension.DebugArrow(rectC, pn.pointC - rectC, Color.gray);
+                               // firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
@@ -190,9 +190,9 @@ namespace NavMesh2D.Core
                     doubledAreaOfRect = Mathf.Abs(ExMathf.SignedAreaDoubledRect(rectA, rectB, rectC, rectD)) + fudgeFactor;
                     //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight))
                     //{
-                    //Debug.DrawLine(rectA, rectB, Color.cyan);
-                    // Debug.DrawLine(rectB, rectC, Color.cyan);
-                    //Debug.DrawLine(rectA, rectD, Color.cyan);
+                    Debug.DrawLine(rectA, rectB, Color.cyan);
+                     Debug.DrawLine(rectB, rectC, Color.cyan);
+                    Debug.DrawLine(rectA, rectD, Color.cyan);
                     // }
 
                     prevWasInside = true;
@@ -209,7 +209,7 @@ namespace NavMesh2D.Core
                                 if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection) || HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection) || HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                                 {
                                     //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
-                                    //DebugExtension.DebugPoint(intersection);
+                                    DebugExtension.DebugPoint(intersection);
                                     dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                     end = dot;
                                 }
@@ -227,7 +227,7 @@ namespace NavMesh2D.Core
                                 if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection) || HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection) || HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                                 {
                                     //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
-                                    //DebugExtension.DebugPoint(intersection, Color.yellow);
+                                    DebugExtension.DebugPoint(intersection, Color.yellow);
                                     dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                     start = dot;
                                     end = dot;
@@ -235,7 +235,7 @@ namespace NavMesh2D.Core
 
                             }
                             //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
-                            //DebugExtension.DebugPoint(pn.pointB, Color.black);
+                            DebugExtension.DebugPoint(pn.pointB, Color.black);
                             dot = Vector2.Dot(firstExSeg.src.tangentBC, pn.pointB - rectA);
                             start = Mathf.Min(dot, start);
                             end = Mathf.Max(dot, end);
@@ -247,7 +247,7 @@ namespace NavMesh2D.Core
                             if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection))
                             {
                                 //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
-                                //DebugExtension.DebugPoint(intersection, Color.red);
+                                DebugExtension.DebugPoint(intersection, Color.red);
                                 dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                 if (isInOut == 0)
                                 {
@@ -264,7 +264,7 @@ namespace NavMesh2D.Core
                             if (HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection))
                             {
                                 //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
-                                //DebugExtension.DebugPoint(intersection, Color.red);
+                               DebugExtension.DebugPoint(intersection, Color.red);
                                 dot = firstExSeg.src.distanceBC;
                                 if (isInOut == 0)
                                 {
@@ -281,7 +281,7 @@ namespace NavMesh2D.Core
                             if (HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                             {
                                 //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
-                                //DebugExtension.DebugPoint(intersection, Color.red);
+                                DebugExtension.DebugPoint(intersection, Color.red);
                                 dot = 0;
                                 if (isInOut == 0)
                                 {
@@ -369,7 +369,7 @@ namespace NavMesh2D.Core
                                 //DebugExtension.DebugArrow(rectC, rectA, Color.gray);
                                 //DebugExtension.DebugArrow(rectC, rectB, Color.gray);
                                 //DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                //firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
@@ -377,7 +377,7 @@ namespace NavMesh2D.Core
                         {
                             if (DoesLineIntersectCircleSector(pn.pointB, pn.pointC, radSquared, rectC, rectB, rectA))
                             {
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                //firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
@@ -567,7 +567,7 @@ namespace NavMesh2D.Core
                 //DebugExtension.DebugArrow(sectorStart, sectorEnd - sectorStart, Color.red);
                 float dt = Mathf.Sqrt(radSquared - distToCenter);
                 float tMinDt = t - dt;
-                if (tMinDt > 0 || tMinDt < distL)
+                if (tMinDt > 0 + fudgeFactor || tMinDt < distL -fudgeFactor)
                 {
                     Vector2 i1 = tMinDt * dir + lA - circleCenter;
                     //DebugExtension.DebugPoint(i1, Color.clear, 3);
@@ -575,9 +575,9 @@ namespace NavMesh2D.Core
                         return true;
                 }
                 tMinDt = t + dt;
-                if (tMinDt > 0 || tMinDt < distL)
+                if (tMinDt > 0 + fudgeFactor || tMinDt < distL - fudgeFactor)
                 {
-                    if (t <= 0 || t >= distL)
+                    if (t <= 0 + fudgeFactor || t >= distL - fudgeFactor)
                         return false;
                     Vector2 i2 = tMinDt * dir + lA - circleCenter;
                     //DebugExtension.DebugPoint(i2, Color.clear, 3);

@@ -77,7 +77,8 @@ public class NavDebugger : MonoBehaviour
                     timer = 0;
                     if (counter == -1)
                     {
-                        outlineTree = new ContourTree();
+                        outlineTree = ScriptableObject.CreateInstance<ContourTree>();
+                        outlineTree.OnEnabled();
                         counter = 0;
                     }
                     if (counter < cgs.colliderVerts.Count)

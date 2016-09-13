@@ -43,9 +43,10 @@ namespace NavMesh2D.Core
         {
             Vector2 halfSize = collider.size / 2;
             inOutVerts.Add(collider.transform.TransformPoint(halfSize + collider.offset));
-            inOutVerts.Add(collider.transform.TransformPoint(new Vector2(halfSize.x, -halfSize.y) + collider.offset));
-            inOutVerts.Add(collider.transform.TransformPoint(-halfSize + collider.offset));
             inOutVerts.Add(collider.transform.TransformPoint(new Vector2(-halfSize.x, halfSize.y) + collider.offset));
+            
+            inOutVerts.Add(collider.transform.TransformPoint(-halfSize + collider.offset));
+            inOutVerts.Add(collider.transform.TransformPoint(new Vector2(halfSize.x, -halfSize.y) + collider.offset));
         }
 
         private static void LoadCircleColliderVerts(CircleCollider2D collider, List<Vector2> inOutVerts, int circleVertCount)
@@ -53,7 +54,7 @@ namespace NavMesh2D.Core
             float anglePerCircleVert = (Mathf.PI * 2) / circleVertCount;
             for (int i = 0; i < circleVertCount; i++)
             {
-                inOutVerts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Sin(anglePerCircleVert * i), collider.radius * Mathf.Cos(anglePerCircleVert * i))));
+                inOutVerts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Cos(anglePerCircleVert * i), collider.radius * Mathf.Sin(anglePerCircleVert * i))));
             }
         }
 

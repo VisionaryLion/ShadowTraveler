@@ -232,7 +232,7 @@ namespace NavMesh2D.Core
             Vector2 nA = pointA - pointB;
             Vector2 nB = pointC - pointB;
             angle = Vector2.Angle(nA, nB) * Mathf.Deg2Rad;
-            if (Vector3.Cross(nA, nB).z > 0)
+            if (Vector3.Cross(nA, nB).z < 0)
                 angle = Mathf.PI * 2 - angle;
         }
 
