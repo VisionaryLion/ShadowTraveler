@@ -37,5 +37,16 @@ namespace Utility.ExtensionMethods
         {
             return source == (source | (1 << other));
         }
+
+        public static bool Contains(this Rect r, Rect other)
+        {
+            if (r.max.x < other.max.x || r.min.x > other.min.x)
+                return false;
+
+            if (r.max.y < other.max.y || r.min.y > other.min.y)
+                return false;
+
+            return true;
+        }
     }
 }
