@@ -30,6 +30,8 @@ using System.Collections;
 public class BoneEditor : Editor {
     private Bone bone;
 
+    static float freeMoveHandleSize = .5f;
+
     void OnEnable() {
         bone = (Bone)target;
     }
@@ -37,7 +39,12 @@ public class BoneEditor : Editor {
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
 
-		EditorGUILayout.Separator();
+        EditorGUI.BeginChangeCheck();
+        freeMoveHandleSize = EditorGUILayout.FloatField("FreeMoveHandleSize",freeMoveHandleSize);
+        if (EditorGUI.EndChangeCheck())
+            SceneView.RepaintAll();
+
+        EditorGUILayout.Separator();
 		if (GUILayout.Button("FlipY") && !bone.editMode) {
 			bone.flipY = !bone.flipY;
         }
@@ -76,7 +83,7 @@ public class BoneEditor : Editor {
 
             if (bone.enabled && !current.control) {
                 EditorGUI.BeginChangeCheck();
-                Vector3 v = Handles.FreeMoveHandle(bone.Head, Quaternion.identity, 0.1f, Vector3.zero, Handles.RectangleCap);
+                Vector3 v = Handles.FreeMoveHandle(bone.Head, Quaternion.identity, freeMoveHandleSize, Vector3.zero, Handles.RectangleCap);
                 Undo.RecordObject(bone.transform, "Change bone transform");
                 Undo.RecordObject(bone, "Change bone");
                 bone.length = Vector2.Distance(v, bone.transform.position);
