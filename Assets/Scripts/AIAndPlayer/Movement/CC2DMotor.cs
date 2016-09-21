@@ -1,5 +1,5 @@
 ﻿//#define Glide
-//#define DEBUG
+#undef DEBUG
 
 using UnityEngine;
 using Utility.ExtensionMethods;

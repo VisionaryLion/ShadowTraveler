@@ -11,7 +11,7 @@ namespace Manager
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                GameStateManager.GetInstance().EndCurrentState();
+                GameStateManager.GetInstance().EndCurrentState();                
             }
         }
 
