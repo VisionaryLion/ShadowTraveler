@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
-using Utility.Editor;
 
 [CustomEditor(typeof(NavAgentGroundWalkerSettings))]
 public class NavAgentGroundWalkerSettingAsset : Editor

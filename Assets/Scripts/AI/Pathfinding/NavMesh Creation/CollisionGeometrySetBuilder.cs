@@ -54,7 +54,7 @@ namespace NavMesh2D.Core
             float anglePerCircleVert = (Mathf.PI * 2) / circleVertCount;
             for (int i = 0; i < circleVertCount; i++)
             {
-                inOutVerts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Cos(anglePerCircleVert * i), collider.radius * Mathf.Sin(anglePerCircleVert * i))));
+                inOutVerts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Cos(anglePerCircleVert * i) + collider.offset.x, collider.radius * Mathf.Sin(anglePerCircleVert * i) + collider.offset.y)));
             }
         }
 
@@ -63,7 +63,7 @@ namespace NavMesh2D.Core
             Matrix4x4 localToWorld = collider.transform.localToWorldMatrix;
             for (int iVert = 0; iVert < collider.points.Length; iVert++)
             {
-                inOutVerts.Add(localToWorld.MultiplyPoint(collider.points[iVert]));
+                inOutVerts.Add(localToWorld.MultiplyPoint(collider.points[iVert] + collider.offset));
             }
         }
 
@@ -72,7 +72,7 @@ namespace NavMesh2D.Core
             Matrix4x4 localToWorld = collider.transform.localToWorldMatrix;
             for (int iVert = 0; iVert < collider.points.Length; iVert++)
             {
-                inOutVerts.Add(localToWorld.MultiplyPoint(collider.points[iVert]));
+                inOutVerts.Add(localToWorld.MultiplyPoint(collider.points[iVert] + collider.offset));
             }
         }
     }

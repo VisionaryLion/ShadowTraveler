@@ -123,12 +123,9 @@ namespace NavMesh2D.Core
         public void Build()
         {
             GatherCollisionData();
-            if (inputGeometry.Length > 0)
-            {
-                collisionGeometrySet = CollisionGeometrySetBuilder.Build(inputGeometry, circleVertCount);
-                contourTree = ContourTree.Build(collisionGeometrySet);
-                SceneView.RepaintAll();
-            }
+            collisionGeometrySet = CollisionGeometrySetBuilder.Build(inputGeometry, circleVertCount);
+            contourTree = ContourTree.Build(collisionGeometrySet);
+            SceneView.RepaintAll();
         }
 
         public void OnGUI()
