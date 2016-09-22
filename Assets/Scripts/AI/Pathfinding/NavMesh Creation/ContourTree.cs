@@ -25,36 +25,27 @@ namespace NavMesh2D.Core
             result.OnEnabled();
             for (int iCol = 0; iCol < cgSet.colliderVerts.Count; iCol++)
             {
-                Contour contour = new Contour(cgSet.colliderVerts[iCol]);
-                result.AddOutline(contour);
+                result.AddContour(cgSet.colliderVerts[iCol]);
             }
             return result;
         }
 
-        public void AddOutline(Contour outline)
+        public void AddContour(Contour outline)
         {
-            bool consumed = false;
-            headNode.AddSolidContour(outline, ref consumed);
-            /*PrintDebugForChild(headNode, "");
-            Debug.Log("****************************");*/
+            headNode.AddSolidContour(outline);
         }
 
-        private void PrintDebugForChild(ContourNode node, string prefix)
+        public void AddContour(Vector2[] verts)
         {
-            for (int iChild = 0; iChild < node.children.Count; iChild++)
-            {
-                if (node.children[iChild].children.Count == 0)
-                    Debug.Log(prefix + "/" + node.children[iChild].contour.VertexCount + "," + node.children[iChild].IsSolid);
-                else
-                    PrintDebugForChild(node.children[iChild], prefix + "/" + node.children[iChild].contour.VertexCount + "," + node.children[iChild].IsSolid);
-            }
+            headNode.AddSolidContour(new Contour(verts));
         }
 
-        public void DrawDebugInfo()
+        public void VisualDebug()
         {
+            int debugColorID = 0;
             for (int iOutline = 0; iOutline < headNode.children.Count; iOutline++)
             {
-                headNode.children[iOutline].DrawForDebug();
+                headNode.children[iOutline].VisualDebug(++debugColorID);
             }
         }
     }

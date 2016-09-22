@@ -13,11 +13,7 @@ public class NavDebugger : MonoBehaviour
     public enum DebugWhichSet { CollisionGeometrySet, OutlineTree, ExpandedTree, NavigationData2D }
 
     public int circleVertCount;
-    public LayerMask collisionMask;
     public DebugWhichSet debugConfig;
-    public bool debugText = true;
-    [Range(0, 10)]
-    public int debug_target = 0;
 
     [Range(0.0f, 10.0f)]
     public float minHeightTest = 0;
@@ -62,7 +58,7 @@ public class NavDebugger : MonoBehaviour
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
         watch.Stop();
-        Debug.Log("Total build time is "+(totalEllapsedTime / 1000f)+" sec.");
+        Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");
     }
 
     int counter = -1;
@@ -83,34 +79,29 @@ public class NavDebugger : MonoBehaviour
                     }
                     if (counter < cgs.colliderVerts.Count)
                     {
-                        outlineTree.AddOutline(new Contour(cgs.colliderVerts[counter]));
+                        outlineTree.AddContour(cgs.colliderVerts[counter]);
                         counter++;
                     }
                 }
                 break;
         }
-    }
-    float timer = 0;
-    void OnDrawGizmos()
-    {
+
         switch (debugConfig)
         {
             case DebugWhichSet.CollisionGeometrySet:
                 if (cgs != null)
                 {
-                    cgs.DrawDebugInfo();
+                    cgs.VisualDebug();
                 }
                 break;
             case DebugWhichSet.OutlineTree:
                 if (outlineTree != null)
                 {
-                    ContourNode.debug_Color = 0;
-                    ContourNode.debug_target = debug_target;
-                    outlineTree.DrawDebugInfo();
+                    outlineTree.VisualDebug();
                     if (counter > 0 && timer < 1)
                     {
                         Contour cC = new Contour(cgs.colliderVerts[counter - 1]);
-                        cC.DrawDebugInfo(Utility.DifferentColors.GetColor(ContourNode.debug_Color) , true);
+                        cC.VisualDebug(Utility.DifferentColors.GetColor(0));
                         timer += Time.deltaTime;
                     }
                 }
@@ -118,18 +109,17 @@ public class NavDebugger : MonoBehaviour
             case DebugWhichSet.ExpandedTree:
                 if (exTrees != null)
                 {
-
                     foreach (ExpandedTree eT in exTrees)
                     {
-                        eT.headNode.DrawForDebug(debug_target);
+                        eT.headNode.VisualDebug(0);
                     }
                 }
                 break;
             case DebugWhichSet.NavigationData2D:
-                if(navData2D != null)
-                navData2D.DrawForDebug();
+                if (navData2D != null)
+                    navData2D.DrawForDebug();
                 break;
         }
-
     }
+    float timer = 0;
 }

@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Utility.DebugUtil;
 
-namespace Utility.Polygon2D
+namespace NavMesh2D.Core
 {
     [Serializable]
     public class Contour : IEnumerable<Vector2>
@@ -42,7 +41,7 @@ namespace Utility.Polygon2D
         public void RemoveVertexAt(int pos)
         {
             if (pos < 0 || pos >= verticies.Count || verticies.Count == 1)// The remove of the last vertex is not allowed!
-                return;
+                throw new Exception("Tried to remove vertex failed. Remove index = "+pos+", VertexCount = "+verticies.Count);
             verticies.RemoveAt(pos);
             areBoundsValid = false;
         }
@@ -82,19 +81,15 @@ namespace Utility.Polygon2D
                 area = area + (verticies[j].x + verticies[i].x) * (verticies[j].y - verticies[i].y);
                 j = i;
             }
-            return area / 2;
+            return area / 2 * -1;
         }
 
-        public void DrawDebugInfo(Color color, bool withBigSpheres = false)
+        public void VisualDebug(Color color)
         {
             Vector2 prev = verticies[verticies.Count - 1];
             foreach (Vector2 vert in verticies)
             {
                 Debug.DrawLine(prev, vert, color);
-                /*if (withBigSpheres)
-                    DebugExtension.DebugWireSphere(prev, color, 0.5f);
-                else
-                    DebugExtension.DebugWireSphere(prev, color, 0.2f);*/
                 prev = vert;
             }
         }
@@ -114,7 +109,7 @@ namespace Utility.Polygon2D
             areBoundsValid = true;
             bounds.min = verticies[0];
             bounds.max = verticies[0];
-            for (int iVert = 0; iVert < verticies.Count; iVert++)
+            for (int iVert = 1; iVert < verticies.Count; iVert++)
             {
                 bounds.max = Vector2.Max(bounds.max, verticies[iVert]);
                 bounds.min = Vector2.Min(bounds.min, verticies[iVert]);

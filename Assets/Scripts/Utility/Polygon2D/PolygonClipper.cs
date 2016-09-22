@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using Utility.ExtensionMethods;
 using System.Collections.Generic;
+using NavMesh2D.Core;
 
 namespace Utility.Polygon2D
 {
     public static class PolygonClipper
     {
+        const float fudgeFactor = 0.00001f;
+
         public enum BoolOpType { INTERSECTION, UNION, DIFFERENCE, XOR };
         public enum ResultType { NoOverlap, SuccesfullyClipped, FullyContained, FullyContains };
 
@@ -418,7 +421,7 @@ namespace Utility.Polygon2D
 
         private static ResultType EvaluateResult(BoolOpType op, bool edgesIntersect, Contour[] result, Contour sp, Contour cp)
         {
-            const float fudgeFactor = 0.00001f;
+            
             switch (op)
             {
                 case BoolOpType.DIFFERENCE:

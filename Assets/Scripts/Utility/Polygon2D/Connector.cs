@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Utility.ExtensionMethods;
+using NavMesh2D.Core;
 
 namespace Utility.Polygon2D
 {

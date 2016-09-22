@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Utility;
 
 namespace NavMesh2D.Core
 {
@@ -25,27 +24,26 @@ namespace NavMesh2D.Core
             colliderVerts.Add(verts.ToArray());
         }
 
-        public void DrawDebugInfo()
+        public void VisualDebug()
         {
-            Gizmos.color = Color.blue;
             for (int iVertList = 0; iVertList < colliderVerts.Count; iVertList++)
             {
                 for (int iVert = 0; iVert < colliderVerts[iVertList].Length - 1; iVert++)
                 {
-                    OribowsUtilitys.DrawLine(colliderVerts[iVertList][iVert], colliderVerts[iVertList][iVert + 1], 2);
-                    Gizmos.DrawWireSphere(colliderVerts[iVertList][iVert], 0.1f);
+                    DebugExtension.DebugArrow(colliderVerts[iVertList][iVert], colliderVerts[iVertList][iVert + 1] - colliderVerts[iVertList][iVert]);
+                    DebugExtension.DebugCircle(colliderVerts[iVertList][iVert], Vector3.forward, 0.1f);
                 }
-                OribowsUtilitys.DrawLine(colliderVerts[iVertList][0], colliderVerts[iVertList][colliderVerts[iVertList].Length - 1], 2);
-                Gizmos.DrawWireSphere(colliderVerts[iVertList][colliderVerts[iVertList].Length - 1], 0.1f);
+
+                DebugExtension.DebugArrow(colliderVerts[iVertList][colliderVerts[iVertList].Length - 1], colliderVerts[iVertList][0] - colliderVerts[iVertList][colliderVerts[iVertList].Length - 1]);
+                DebugExtension.DebugCircle(colliderVerts[iVertList][colliderVerts[iVertList].Length - 1], Vector3.forward, 0.1f);
             }
 
-            Gizmos.color = Color.green;
             for (int iVertList = 0; iVertList < edgeVerts.Count; iVertList++)
             {
                 for (int iVert = 0; iVert < edgeVerts[iVertList].Length - 1; iVert++)
                 {
-                    OribowsUtilitys.DrawLine(edgeVerts[iVertList][iVert], edgeVerts[iVertList][iVert + 1], 2);
-                    Gizmos.DrawWireSphere(edgeVerts[iVertList][iVert], 0.1f);
+                    Debug.DrawLine(edgeVerts[iVertList][iVert], edgeVerts[iVertList][iVert + 1]);
+                    DebugExtension.DebugCircle(edgeVerts[iVertList][iVert], Vector3.forward, 0.1f);
                 }
             }
         }

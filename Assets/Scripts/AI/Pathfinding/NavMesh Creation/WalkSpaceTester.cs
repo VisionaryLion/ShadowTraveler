@@ -1,5 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿//#define DEBUG_SELF_EDGE
+//#define DEBUG_SELF_CIRCLE
+//#define DEBUG_OTHER_EDGE
+//#define DEBUG_OTHER_CIRCLE
+//#define DEBUG_CIRCLE_SECTOR_INTERSECTION_TEST
+
+
+using UnityEngine;
 using Utility;
 using System.Collections.Generic;
 using Utility.ExtensionMethods;
@@ -8,8 +14,6 @@ namespace NavMesh2D.Core
 {
     public class WalkSpaceTester
     {
-        /*enum EdgeType { NORMAL, NON_CONTRIBUTING, SAME_TRANSITION, DIFFERENT_TRANSITION };
-        enum PolygonType { SUBJECT, CLIPPING };*/
         private const float fudgeFactor = 0.0001f;
         private const float maxVertDeviation = 0.01f;
 
@@ -27,7 +31,7 @@ namespace NavMesh2D.Core
                 if (cp.contour == sp)
                     continue;
                 if (cp.contour.bounds.Intersects(sp.bounds))
-                 MarkIntersections(firstExSeg, cp.contour, markerFlag, minWalkableHeight);
+                    MarkIntersections(firstExSeg, cp.contour, markerFlag, minWalkableHeight);
             }
         }
 
@@ -145,9 +149,11 @@ namespace NavMesh2D.Core
                     rectA -= rectC;
 
                     circleBounds = new Bounds(rectC, new Vector3(minWalkableHeight * 2, minWalkableHeight * 2));
-                   /* DebugExtension.DebugBounds(circleBounds, Color.yellow);
+#if DEBUG_SELF_CIRCLE
+                    DebugExtension.DebugBounds(circleBounds, Color.yellow);
                     DebugExtension.DebugArrow(rectC, rectB, Color.green);
-                    DebugExtension.DebugArrow(rectC, rectA, Color.blue);*/
+                    DebugExtension.DebugArrow(rectC, rectA, Color.blue);
+#endif
                     pn = firstExSeg.next.src.Next;
                     while (true)
                     {
@@ -160,21 +166,25 @@ namespace NavMesh2D.Core
                             if (IsPointInsideCircleSector(rectB, rectA, radSquared, pn.pointB - rectC))
                             {
                                 //Intersection found!
-                                /*DebugExtension.DebugArrow(rectC, rectA, Color.gray);
+#if DEBUG_SELF_CIRCLE
+                                DebugExtension.DebugArrow(rectC, rectA, Color.gray);
                                 DebugExtension.DebugArrow(rectC, rectB, Color.gray);
-                                DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);*/
-                                //firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);
+#endif
+                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
-                        
+
                         if (DoesLineIntersectBounds(pn.pointB, pn.pointC, circleBounds))
                         {
                             if (DoesLineIntersectCircleSector(pn.pointB, pn.pointC, radSquared, rectC, rectB, rectA))
                             {
+#if DEBUG_SELF_CIRCLE
                                 DebugExtension.DebugArrow(rectC, pn.pointB - rectC, Color.gray);
                                 DebugExtension.DebugArrow(rectC, pn.pointC - rectC, Color.gray);
-                               // firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+#endif
+                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
@@ -188,12 +198,11 @@ namespace NavMesh2D.Core
                     rectC = firstExSeg.src.pointC;
                     rectD = firstExSeg.src.pointB;
                     doubledAreaOfRect = Mathf.Abs(ExMathf.SignedAreaDoubledRect(rectA, rectB, rectC, rectD)) + fudgeFactor;
-                    //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight))
-                    //{
+#if DEBUG_SELF_EDGE
                     Debug.DrawLine(rectA, rectB, Color.cyan);
-                     Debug.DrawLine(rectB, rectC, Color.cyan);
+                    Debug.DrawLine(rectB, rectC, Color.cyan);
                     Debug.DrawLine(rectA, rectD, Color.cyan);
-                    // }
+#endif
 
                     prevWasInside = true;
                     end = firstExSeg.src.distanceBC;
@@ -208,8 +217,9 @@ namespace NavMesh2D.Core
                             {
                                 if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection) || HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection) || HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                                 {
-                                    //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
+#if DEBUG_SELF_EDGE
                                     DebugExtension.DebugPoint(intersection);
+#endif
                                     dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                     end = dot;
                                 }
@@ -226,16 +236,18 @@ namespace NavMesh2D.Core
                             {
                                 if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection) || HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection) || HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                                 {
-                                    //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
+#if DEBUG_SELF_EDGE
                                     DebugExtension.DebugPoint(intersection, Color.yellow);
+#endif
                                     dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                     start = dot;
                                     end = dot;
                                 }
 
                             }
-                            //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
+#if DEBUG_SELF_EDGE
                             DebugExtension.DebugPoint(pn.pointB, Color.black);
+#endif
                             dot = Vector2.Dot(firstExSeg.src.tangentBC, pn.pointB - rectA);
                             start = Mathf.Min(dot, start);
                             end = Mathf.Max(dot, end);
@@ -246,8 +258,9 @@ namespace NavMesh2D.Core
                             isInOut = prevWasInside ? 1 : 0;
                             if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection))
                             {
-                                //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
+#if DEBUG_SELF_EDGE
                                 DebugExtension.DebugPoint(intersection, Color.red);
+#endif
                                 dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                 if (isInOut == 0)
                                 {
@@ -263,8 +276,9 @@ namespace NavMesh2D.Core
                             }
                             if (HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection))
                             {
-                                //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
-                               DebugExtension.DebugPoint(intersection, Color.red);
+#if DEBUG_SELF_EDGE
+                                DebugExtension.DebugPoint(intersection, Color.red);
+#endif
                                 dot = firstExSeg.src.distanceBC;
                                 if (isInOut == 0)
                                 {
@@ -280,8 +294,9 @@ namespace NavMesh2D.Core
                             }
                             if (HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                             {
-                                //if (ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight, pn))
+#if DEBUG_SELF_EDGE
                                 DebugExtension.DebugPoint(intersection, Color.red);
+#endif
                                 dot = 0;
                                 if (isInOut == 0)
                                 {
@@ -336,8 +351,9 @@ namespace NavMesh2D.Core
             //Circle vars
             Bounds circleBounds;
             float radSquared = minWalkableHeight * minWalkableHeight;
-
+#if DEBUG_OTHER_EDGE
             DebugExtension.DebugCircle(cp.firstPoint.pointB, Vector3.forward * 2, Color.magenta);
+#endif
             do
             {
                 if (firstExSeg.isCorner)//circle
@@ -357,7 +373,9 @@ namespace NavMesh2D.Core
                     rectA -= rectC;
 
                     circleBounds = new Bounds(rectC, new Vector3(minWalkableHeight * 2, minWalkableHeight * 2));
+#if DEBUG_OTHER_CIRCLE
                     DebugExtension.DebugBounds(circleBounds, Color.red);
+#endif
                     foreach (PointNode pn in cp)
                     {
                         if (circleBounds.Contains(pn.pointB))
@@ -365,11 +383,13 @@ namespace NavMesh2D.Core
                             if (IsPointInsideCircleSector(rectB, rectA, radSquared, pn.pointB - rectC))
                             {
                                 //Intersection found!
-                                //DebugExtension.DebugBounds(circleBounds, Color.yellow);
-                                //DebugExtension.DebugArrow(rectC, rectA, Color.gray);
-                                //DebugExtension.DebugArrow(rectC, rectB, Color.gray);
-                                //DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);
-                                //firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+#if DEBUG_OTHER_CIRCLE
+                                DebugExtension.DebugBounds(circleBounds, Color.yellow);
+                                DebugExtension.DebugArrow(rectC, rectA, Color.gray);
+                                DebugExtension.DebugArrow(rectC, rectB, Color.gray);
+                                DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);
+#endif
+                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
@@ -377,7 +397,7 @@ namespace NavMesh2D.Core
                         {
                             if (DoesLineIntersectCircleSector(pn.pointB, pn.pointC, radSquared, rectC, rectB, rectA))
                             {
-                                //firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
                                 break;
                             }
                         }
@@ -390,9 +410,11 @@ namespace NavMesh2D.Core
                     rectC = firstExSeg.src.pointC;
                     rectD = firstExSeg.src.pointB;
                     doubledAreaOfRect = Mathf.Abs(ExMathf.SignedAreaDoubledRect(rectA, rectB, rectC, rectD)) + fudgeFactor;
+#if DEBUG_OTHER_EDGE
                     Debug.DrawLine(rectA, rectB, Color.cyan);
                     Debug.DrawLine(rectB, rectC, Color.cyan);
                     Debug.DrawLine(rectA, rectD, Color.cyan);
+#endif
                     start = 5;
                     end = 50;
                     prevWasInside = false;//IsPointInsideRect(doubledAreaOfRect, rectA, rectB, rectC, rectD, cp.firstPoint.Previous.pointB);
@@ -406,18 +428,22 @@ namespace NavMesh2D.Core
                             {
                                 if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection) || HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection) || HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                                 {
-                                    //DebugExtension.DebugPoint(intersection, Color.yellow);
+#if DEBUG_OTHER_EDGE
+                                    DebugExtension.DebugPoint(intersection, Color.yellow);
+                                    DebugExtension.DebugPoint(pn.pointB, Color.black);
+#endif
                                     dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                     start = dot;
                                     end = dot;
-                                    //DebugExtension.DebugPoint(pn.pointB, Color.black);
                                     dot = Vector2.Dot(firstExSeg.src.tangentBC, pn.pointB - rectA);
                                     start = Mathf.Min(dot, start);
                                     end = Mathf.Max(dot, end);
                                 }
                                 else
                                 {
-                                    //DebugExtension.DebugPoint(pn.pointB, Color.black);
+#if DEBUG_OTHER_EDGE
+                                    DebugExtension.DebugPoint(pn.pointB, Color.black);
+#endif
                                     dot = Vector2.Dot(firstExSeg.src.tangentBC, pn.pointB - rectA);
                                     start = dot;
                                     end = dot;
@@ -425,7 +451,9 @@ namespace NavMesh2D.Core
                             }
                             else
                             {
-                                //DebugExtension.DebugPoint(pn.pointB, Color.black);
+#if DEBUG_OTHER_EDGE
+                                DebugExtension.DebugPoint(pn.pointB, Color.black);
+#endif
                                 dot = Vector2.Dot(firstExSeg.src.tangentBC, pn.pointB - rectA);
                                 start = Mathf.Min(dot, start);
                                 end = Mathf.Max(dot, end);
@@ -437,7 +465,9 @@ namespace NavMesh2D.Core
                             isInOut = prevWasInside ? 1 : 0;
                             if (HandlePossibleIntersection(rectA, rectB, pn.Previous, out intersection))
                             {
-                                //DebugExtension.DebugPoint(intersection, Color.red);
+#if DEBUG_OTHER_EDGE
+                                DebugExtension.DebugPoint(intersection, Color.red);
+#endif
                                 dot = Vector2.Dot(firstExSeg.src.tangentBC, intersection - rectA);
                                 if (isInOut == 0)
                                 {
@@ -453,7 +483,9 @@ namespace NavMesh2D.Core
                             }
                             if (HandlePossibleIntersection(rectB, rectC, pn.Previous, out intersection))
                             {
-                                //DebugExtension.DebugPoint(intersection, Color.red);
+#if DEBUG_OTHER_EDGE
+                                DebugExtension.DebugPoint(intersection, Color.red);
+#endif
                                 dot = firstExSeg.src.distanceBC;
                                 if (isInOut == 0)
                                 {
@@ -469,7 +501,9 @@ namespace NavMesh2D.Core
                             }
                             if (HandlePossibleIntersection(rectA, rectD, pn.Previous, out intersection))
                             {
-                                //DebugExtension.DebugPoint(intersection, Color.red);
+#if DEBUG_OTHER_EDGE
+                                DebugExtension.DebugPoint(intersection, Color.red);
+#endif
                                 dot = 0;
                                 if (isInOut == 0)
                                 {
@@ -549,7 +583,9 @@ namespace NavMesh2D.Core
 
         private static bool DoesLineIntersectCircleSector(Vector2 lA, Vector2 lB, float radSquared, Vector2 circleCenter, Vector2 sectorStart, Vector2 sectorEnd)
         {
-            //DebugExtension.DebugArrow(lA, lB - lA, Color.yellow);
+#if DEBUG_CIRCLE_SECTOR_INTERSECTION_TEST
+            DebugExtension.DebugArrow(lA, lB - lA, Color.yellow);
+#endif
             Vector2 dir = (lB - lA);
             float distL = dir.magnitude;
             dir /= distL;
@@ -563,14 +599,18 @@ namespace NavMesh2D.Core
 
             if (distToCenter < radSquared)
             {
-                //DebugExtension.DebugCircle(circleCenter, Vector3.forward * 2, Color.red);
-                //DebugExtension.DebugArrow(sectorStart, sectorEnd - sectorStart, Color.red);
+#if DEBUG_CIRCLE_SECTOR_INTERSECTION_TEST
+                DebugExtension.DebugCircle(circleCenter, Vector3.forward * 2, Color.red);
+                DebugExtension.DebugArrow(sectorStart, sectorEnd - sectorStart, Color.red);
+#endif
                 float dt = Mathf.Sqrt(radSquared - distToCenter);
                 float tMinDt = t - dt;
-                if (tMinDt > 0 + fudgeFactor || tMinDt < distL -fudgeFactor)
+                if (tMinDt > 0 + fudgeFactor || tMinDt < distL - fudgeFactor)
                 {
                     Vector2 i1 = tMinDt * dir + lA - circleCenter;
-                    //DebugExtension.DebugPoint(i1, Color.clear, 3);
+#if DEBUG_CIRCLE_SECTOR_INTERSECTION_TEST
+                    DebugExtension.DebugPoint(i1, Color.clear, 3);
+#endif
                     if (-sectorStart.x * i1.y + sectorStart.y * i1.x > 0 && -sectorEnd.x * i1.y + sectorEnd.y * i1.x < 0)
                         return true;
                 }
@@ -580,7 +620,9 @@ namespace NavMesh2D.Core
                     if (t <= 0 + fudgeFactor || t >= distL - fudgeFactor)
                         return false;
                     Vector2 i2 = tMinDt * dir + lA - circleCenter;
-                    //DebugExtension.DebugPoint(i2, Color.clear, 3);
+#if DEBUG_CIRCLE_SECTOR_INTERSECTION_TEST
+                    DebugExtension.DebugPoint(i2, Color.clear, 3);
+#endif
                     if ((-sectorStart.x * i2.y + sectorStart.y * i2.x > 0 && -sectorEnd.x * i2.y + sectorEnd.y * i2.x < 0))
                         return true;
                 }
@@ -589,8 +631,10 @@ namespace NavMesh2D.Core
             else if (distToCenter == radSquared)
             {
                 tangent -= circleCenter;
-                //DebugExtension.DebugCircle(circleCenter, Vector3.forward * 2, Color.red);
-                //DebugExtension.DebugPoint(tangent, Color.clear, 3);
+#if DEBUG_CIRCLE_SECTOR_INTERSECTION_TEST
+                DebugExtension.DebugCircle(circleCenter, Vector3.forward * 2, Color.red);
+                DebugExtension.DebugPoint(tangent, Color.clear, 3);
+#endif
                 return (-sectorStart.x * tangent.y + sectorStart.y * tangent.x > 0 && -sectorEnd.x * tangent.y + sectorEnd.y * tangent.x < 0);
             }
             else
@@ -603,10 +647,10 @@ namespace NavMesh2D.Core
         {
             //Assign the resulting points some dummy values
             pA = Vector2.zero;
-            Vector2 se1_Begin = a;//(se1.left) ? se1.p : se1.other.p;
-            Vector2 se1_End = b;//(se1.left) ? se1.other.p : se1.p;
-            Vector2 se2_Begin = pn.pointB;//(se2.left) ? se2.p : se2.other.p;
-            Vector2 se2_End = pn.pointC;// (se2.left) ? se2.other.p : se2.p;
+            Vector2 se1_Begin = a;
+            Vector2 se1_End = b;
+            Vector2 se2_Begin = pn.pointB;
+            Vector2 se2_End = pn.pointC;
 
             Vector2 d0 = se1_End - se1_Begin;
             Vector2 d1 = se2_End - se2_Begin;
@@ -658,551 +702,6 @@ namespace NavMesh2D.Core
             float sign = Mathf.Sign(bounds.max.x * x + bounds.max.y * y + z);
             return (sign == Mathf.Sign(bounds.min.x * x + bounds.max.y * y + z) && sign == Mathf.Sign(bounds.max.x * x + bounds.max.y * y + z) && sign == Mathf.Sign(bounds.max.x * x + bounds.max.y * y + z));
         }
-
-        private static bool ShouldDebugThis(Segment firstExSeg, MarkableContour sp, int markerIndex, float minWalkableHeight)
-        {
-            return !sp.isSolid && firstExSeg.DistanceAB > 25;
-        }
-
-        private static bool ShouldDebugThis(Segment firstExSeg, MarkableContour sp, int markerIndex, float minWalkableHeight, PointNode pn)
-        {
-            return ShouldDebugThis(firstExSeg, sp, markerIndex, minWalkableHeight);
-        }
-
-        /*
-        private static void MarkIntersections(Segment firstExSeg, Bounds spBounds, MarkableContour cp, int markerIndex, int spSegCount)
-        {
-            //Trivial case: The polygons cannot intersect each other.
-            if (!spBounds.Intersects(cp.Bounds))
-            {
-                return;
-            }
-
-            //Init the event queue with the polygon edges
-            //TODO: Better approximation then * 3
-            HeapPriorityQueue<SweepEvent> eventQueue = new HeapPriorityQueue<SweepEvent>((spSegCount + cp.VertCount) * 5);
-            InsertPolygon(eventQueue, firstExSeg, PolygonType.SUBJECT);
-            InsertPolygon(eventQueue, cp, PolygonType.CLIPPING);
-
-            SweepRay sweepRay = new SweepRay(20);
-            SweepEvent cEvent;
-            float minRightBounds = Mathf.Min(spBounds.max.x, cp.Bounds.max.x);
-
-            const float fudgeFactor = 0.00001f;
-            while (eventQueue.Count != 0)
-            {
-                cEvent = eventQueue.Dequeue();
-                //Early exit. Are there intersections to be found?
-                if (cEvent.p.x > minRightBounds + fudgeFactor)
-                {
-                    return;
-                }
-
-                if (cEvent.left)
-                {// the line segment must be inserted into S
-                    int pos = sweepRay.Add(cEvent);
-                    SweepEvent prev = sweepRay.Previous(pos);
-                    if (prev == null)
-                        cEvent.inside = cEvent.inOut = false;
-                    else if (prev.type != EdgeType.NORMAL)
-                    {
-                        if (pos - 1 == 0)
-                        {
-                            cEvent.inside = true;
-                            cEvent.inOut = false;
-                        }
-                        else
-                        {
-                            SweepEvent sliEvent = sweepRay.Previous(pos - 1);
-                            if (prev.pl == cEvent.pl)
-                            {
-                                cEvent.inOut = !prev.inOut;
-                                cEvent.inside = !sliEvent.inOut;
-                            }
-                            else
-                            {
-                                cEvent.inOut = !sliEvent.inOut;
-                                cEvent.inside = !prev.inOut;
-                            }
-                        }
-                    }
-                    else if (cEvent.pl == prev.pl)
-                    { // previous line segment in S belongs to the same polygon that "cEvent" belongs to
-                        cEvent.inside = prev.inside;
-                        cEvent.inOut = !prev.inOut;
-                    }
-                    else
-                    {                          // previous line segment in S belongs to a different polygon that "cEvent" belongs to
-                        cEvent.inside = !prev.inOut;
-                        cEvent.inOut = prev.inside;
-                    }
-
-                    SweepEvent nextEvent = sweepRay.Next(pos);
-                    if (nextEvent != null)
-                        HandlePossibleIntersection(eventQueue, cEvent, nextEvent, markerIndex);
-                    if (prev != null)
-                        HandlePossibleIntersection(eventQueue, cEvent, prev, markerIndex);
-                }
-                else
-                {// the line segment must be removed from S
-                    int pos = sweepRay.Find(cEvent.other);
-                    // delete line segment associated to e from S and check for intersection between the neighbors of "e" in S
-                    bool isIntersection = (!cp.IsSolid) ? !cEvent.other.inside : cEvent.other.inside;
-                    if (isIntersection && cEvent.pl == PolygonType.SUBJECT)
-                    {
-                        if (cEvent.isCorner)
-                        {
-                            cEvent.src.MarkPointNotWalkable(markerIndex);
-                        }
-                        else
-                        {
-                            float startDot = Vector2.Dot(cEvent.other.src.tangentBC, cEvent.other.p - cEvent.other.src.pointB);
-                            float endDot = Vector2.Dot(cEvent.other.src.tangentBC, cEvent.p - cEvent.other.src.pointB);
-                            //DebugExtension.DebugArrow(cEvent.p, cEvent.other.p - cEvent.p, Color.yellow);
-                            if(startDot > endDot)
-                            cEvent.other.src.AddObstruction(endDot, startDot);
-                            else
-                                cEvent.other.src.AddObstruction(startDot, endDot);
-                        }
-                    }
-                    SweepEvent next = sweepRay.Next(pos), prev = sweepRay.Previous(pos);
-                    sweepRay.RemoveAt(pos);
-                    if (next != null && prev != null)
-                        HandlePossibleIntersection(eventQueue, prev, next, markerIndex);
-                }
-            }
-        }*/
-
-        /*
-        private static void InsertPolygon(HeapPriorityQueue<SweepEvent> eventQueue, MarkableContour c, PolygonType pType)
-        {
-            SweepEvent se1;
-            SweepEvent se2;
-            foreach (PointNode s in c)
-            {
-                if (s.pointB.x < s.pointC.x || (s.pointB.x == s.pointC.x && s.pointB.y < s.pointC.y))
-                {
-                    se1 = new SweepEvent(s.pointB, true, null, pType);
-                    se2 = new SweepEvent(s.pointC, false, null, pType);
-                }
-                else
-                {
-                    se1 = new SweepEvent(s.pointB, false, null, pType);
-                    se2 = new SweepEvent(s.pointC, true, null, pType);
-                }
-                se1.other = se2;
-                se2.other = se1;
-                eventQueue.Enqueue(se1);
-                eventQueue.Enqueue(se2);
-            }
-        }
-
-        private static void InsertPolygon(HeapPriorityQueue<SweepEvent> eventQueue, Segment firstExSeg, PolygonType pType)
-        {
-            SweepEvent se1;
-            SweepEvent se2;
-            do
-            {
-                if (firstExSeg.a.x < firstExSeg.b.x || (firstExSeg.a.x == firstExSeg.b.x && firstExSeg.a.y < firstExSeg.b.y))
-                {
-                    se1 = new SweepEvent(firstExSeg.a, true, firstExSeg.isCorner, firstExSeg.src, pType);
-                    se2 = new SweepEvent(firstExSeg.b, false, firstExSeg.isCorner, firstExSeg.src, pType);
-                }
-                else
-                {
-                    se1 = new SweepEvent(firstExSeg.a, false, firstExSeg.isCorner, firstExSeg.src, pType);
-                    se2 = new SweepEvent(firstExSeg.b, true, firstExSeg.isCorner, firstExSeg.src, pType);
-                }
-                se1.other = se2;
-                se2.other = se1;
-                eventQueue.Enqueue(se1);
-                eventQueue.Enqueue(se2);
-            } while ((firstExSeg = firstExSeg.next) != null);
-        }
-
-        private static int FindIntersection(SweepEvent se1, SweepEvent se2, out Vector2 pA, out Vector2 pB)
-        {
-            //Assign the resulting points some dummy values
-            pA = Vector2.zero;
-            pB = Vector2.zero;
-            Vector2 se1_Begin = (se1.left) ? se1.p : se1.other.p;
-            Vector2 se1_End = (se1.left) ? se1.other.p : se1.p;
-            Vector2 se2_Begin = (se2.left) ? se2.p : se2.other.p;
-            Vector2 se2_End = (se2.left) ? se2.other.p : se2.p;
-
-            Vector2 d0 = se1_End - se1_Begin;
-            Vector2 d1 = se2_End - se2_Begin;
-            Vector2 e = se2_Begin - se1_Begin;
-
-            float sqrEpsilon = 0.0000001f; // 0.001 before
-
-            float kross = d0.x * d1.y - d0.y * d1.x;
-            float sqrKross = kross * kross;
-            float sqrLen0 = d0.sqrMagnitude;
-            float sqrLen1 = d1.sqrMagnitude;
-
-            if (sqrKross > sqrEpsilon * sqrLen0 * sqrLen1)
-            {
-                // lines of the segments are not parallel
-                float s = (e.x * d1.y - e.y * d1.x) / kross;
-                if ((s < 0) || (s > 1))
-                {
-                    return 0;
-                }
-                double t = (e.x * d0.y - e.y * d0.x) / kross;
-                if ((t < 0) || (t > 1))
-                {
-                    return 0;
-                }
-                // intersection of lines is a point an each segment
-                pA = se1_Begin + s * d0;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_Begin), 0)) pA = se1_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_End), 0)) pA = se1_End;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_Begin), 0)) pA = se2_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_End), 0)) pA = se2_End;
-                return 1;
-            }
-
-            // lines of the segments are parallel
-            float sqrLenE = e.sqrMagnitude;
-            kross = e.x * d0.y - e.y * d0.x;
-            sqrKross = kross * kross;
-            if (sqrKross > sqrEpsilon * sqrLen0 * sqrLenE)
-            {
-                // lines of the segment are different
-                return 0;
-            }
-
-            // Lines of the segments are the same. Need to test for overlap of segments.
-            float s0 = (d0.x * e.x + d0.y * e.y) / sqrLen0;  // so = Dot (D0, E) * sqrLen0
-            float s1 = s0 + (d0.x * d1.x + d0.y * d1.y) / sqrLen0;  // s1 = s0 + Dot (D0, D1) * sqrLen0
-            float smin = Mathf.Min(s0, s1);
-            float smax = Mathf.Max(s0, s1);
-            float[] w = new float[2];
-            int imax = FindIntersection(0.0f, 1.0f, smin, smax, w);
-
-            if (imax > 0)
-            {
-                pA = se1_Begin + w[0] * d0;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_Begin), 0)) pA = se1_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_End), 0)) pA = se1_End;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_Begin), 0)) pA = se2_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_End), 0)) pA = se2_End;
-                if (imax > 1)
-                {
-                    pB = se1_Begin + w[1] * d0;
-                }
-            }
-            return imax;
-        }
-
-        private static int FindIntersection(float u0, float u1, float v0, float v1, float[] w)
-        {
-            if ((u1 < v0) || (u0 > v1))
-                return 0;
-            if (u1 > v0)
-            {
-                if (u0 < v1)
-                {
-                    w[0] = (u0 < v0) ? v0 : u0;
-                    w[1] = (u1 > v1) ? v1 : u1;
-                    return 2;
-                }
-                else
-                {
-                    // u0 == v1
-                    w[0] = u0;
-                    return 1;
-                }
-            }
-            else
-            {
-                // u1 == v0
-                w[0] = u1;
-                return 1;
-            }
-        }
-
-        private static void HandlePossibleIntersection(HeapPriorityQueue<SweepEvent> eventQueue, SweepEvent e1, SweepEvent e2, int markerIndex)
-        {
-            if (e1.pl == e2.pl)
-                return;
-            Vector2 ip1, ip2;  // intersection points
-            int nintersections;
-
-            if ((nintersections = FindIntersection(e1, e2, out ip1, out ip2)) == 0)
-                return;
-
-            if ((nintersections == 1) && ((e1.p == e2.p) || (e1.other.p == e2.other.p)))
-                return; // the line segments intersect at an endpoint of both line segments
-
-            if (nintersections == 2 && e1.pl == e2.pl)
-                return; // the line segments overlap, but they belong to the same polygon
-
-            // The line segments associated to e1 and e2 intersect
-            if (nintersections == 1)
-            {
-                if (e1.p != ip1 && e1.other.p != ip1)  // if ip1 is not an endpoint of the line segment associated to e1 then divide "e1"
-                    DivideEdge(eventQueue, e1, ip1, markerIndex);
-                if (e2.p != ip1 && e2.other.p != ip1)  // if ip1 is not an endpoint of the line segment associated to e2 then divide "e2"
-                    DivideEdge(eventQueue, e2, ip1, markerIndex);
-                return;
-            }
-
-            // The line segments overlap
-            List<SweepEvent> sortedEvents = new List<SweepEvent>(2);
-            if (e1.p == e2.p)
-            {
-                sortedEvents.Add(null);
-            }
-            else if (e1.CompareTo(e2) > 0)
-            {
-                sortedEvents.Add(e2);
-                sortedEvents.Add(e1);
-            }
-            else
-            {
-                sortedEvents.Add(e1);
-                sortedEvents.Add(e2);
-            }
-
-            if (e1.other.p == e2.other.p)
-            {
-                sortedEvents.Add(null);
-            }
-            else if (e1.other.CompareTo(e2.other) > 0)
-            {
-                sortedEvents.Add(e2.other);
-                sortedEvents.Add(e1.other);
-            }
-            else
-            {
-                sortedEvents.Add(e1.other);
-                sortedEvents.Add(e2.other);
-            }
-
-            if (sortedEvents.Count == 2)
-            { // are both line segments equal?
-                e1.type = e1.other.type = EdgeType.NON_CONTRIBUTING;
-                e2.type = e2.other.type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
-                return;
-            }
-            if (sortedEvents.Count == 3)
-            { // the line segments share an endpoint
-                sortedEvents[1].type = sortedEvents[1].other.type = EdgeType.NON_CONTRIBUTING;
-                if (sortedEvents[0] != null)         // is the right endpoint the shared point?
-                    sortedEvents[0].other.type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
-                else                                // the shared point is the left endpoint
-                    sortedEvents[2].other.type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
-                DivideEdge(eventQueue, sortedEvents[0] != null ? sortedEvents[0] : sortedEvents[2].other, sortedEvents[1].p, markerIndex);
-                return;
-            }
-            if (sortedEvents[0] != sortedEvents[3].other)
-            { // no line segment includes totally the other one
-                sortedEvents[1].type = EdgeType.NON_CONTRIBUTING;
-                sortedEvents[2].type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
-                DivideEdge(eventQueue, sortedEvents[0], sortedEvents[1].p, markerIndex);
-                DivideEdge(eventQueue, sortedEvents[1], sortedEvents[2].p, markerIndex);
-                return;
-            }
-            // one line segment includes the other one
-            sortedEvents[1].type = sortedEvents[1].other.type = EdgeType.NON_CONTRIBUTING;
-            DivideEdge(eventQueue, sortedEvents[0], sortedEvents[1].p, markerIndex);
-            sortedEvents[3].other.type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
-            DivideEdge(eventQueue, sortedEvents[3].other, sortedEvents[2].p, markerIndex);
-        }
-
-        private static void DivideEdge(HeapPriorityQueue<SweepEvent> eventQueue, SweepEvent e, Vector2 p, int markerIndex)
-        {
-            // "Right event" of the "left line segment" resulting from dividing e (the line segment associated to e)
-            SweepEvent r = new SweepEvent(p, false, e.isCorner, e.src, e.pl, e.type);
-            r.other = e;
-
-            // "Left event" of the "right line segment" resulting from dividing e (the line segment associated to e)
-            SweepEvent l = new SweepEvent(p, true, e.isCorner, e.src, e.pl, e.other.type);
-            l.other = e.other;
-
-            if (l.CompareTo(e.other) > 0)
-            { // avoid a rounding error. The left event would be processed after the right event
-                Debug.LogWarning("Oops");
-                e.other.left = true;
-                l.left = false;
-            }
-            if (e.CompareTo(r) > 0)
-            { // avoid a rounding error. The left event would be processed after the right event
-                Debug.LogWarning("Oops2");
-            }
-            e.other.other = l;
-            e.other = r;
-            eventQueue.Enqueue(r);
-            eventQueue.Enqueue(l);
-        }*/
-
-        /*
-        class SweepEvent : PriorityQueueNode
-        {
-
-            public bool left;         // is the point the left endpoint of the segment (p, other.p)?
-            public PolygonType pl;    // Polygon to which the associated segment belongs to
-            public SweepEvent other; // Event associated to the other endpoint of the segment
-                                     *  Does the segment (p, other.p) represent an inside-outside transition in the polygon for a vertical ray from (p.x, -infinite) that crosses the segment? 
-            public bool inOut;
-            public EdgeType type;
-            public bool inside; // Only used in "left" events. Is the segment (p, other.p) inside the other polygon?
-
-            public Vector2 p;// point associated with the event
-            public readonly PointNode src;
-            public readonly bool isCorner;
-
-            /** Class constructor 
-            public SweepEvent(Vector2 point, bool left, PointNode src, PolygonType pTyp, EdgeType t = EdgeType.NORMAL)
-            {
-                this.p = point;
-                this.left = left;
-                this.src = src;
-                pl = pTyp;
-                type = t;
-                isCorner = false;
-            }
-
-            public SweepEvent(Vector2 point, bool left, bool isCorner, PointNode src, PolygonType pTyp, EdgeType t = EdgeType.NORMAL)
-            {
-                this.p = point;
-                this.left = left;
-                this.src = src;
-                this.isCorner = isCorner;
-                pl = pTyp;
-                type = t;
-            }
-
-            /** Is the line segment (p, other.p) below point x 
-            public bool IsBelow(Vector2 o) { return (left) ? ExMathf.SignedAreaDoubledTris(p, other.p, o) > 0 : ExMathf.SignedAreaDoubledTris(other.p, p, o) > 0; }
-            /** Is the line segment (p, other.p) above point x 
-            public bool IsAbove(Vector2 o) { return !IsBelow(o); }
-
-            // Return true(1) means that e1 is placed at the event queue after e2, i.e,, e1 is processed by the algorithm after e2
-            public override int CompareTo(PriorityQueueNode other)
-            {
-                if (other.GetType() == typeof(SweepEvent))
-                {
-                    SweepEvent so = (SweepEvent)other;
-                    if (p.x > so.p.x)
-                        return 1;
-                    if (p.x < so.p.x)
-                        return -1;
-                    if (p.y > so.p.y)
-                        return 1;
-                    if (p.y < so.p.y)
-                        return -1;
-                    if (left != so.left)
-                    {
-                        if (left)
-                            return 1;
-                        return -1;
-                    }
-                    if (IsAbove(so.other.p))
-                        return 1;
-                    return -1;
-                }
-                return base.CompareTo(other);
-
-            }
-
-            public static bool operator ==(SweepEvent se1, SweepEvent se2)
-            {
-                if (object.ReferenceEquals(se1, null))
-                    return object.ReferenceEquals(se2, null);
-                if (object.ReferenceEquals(se2, null))
-                    return object.ReferenceEquals(se1, null);
-                return (se1.p == se2.p && se1.left == se2.left && se1.other.p == se2.other.p);
-            }
-
-            public static bool operator !=(SweepEvent se1, SweepEvent se2)
-            {
-                return !(se1 == se2);
-            }
-
-            public override string ToString()
-            {
-                return "SE (p = " + p + ", l = " + left + ", pl = " + pl + ", inOut = " + ((left) ? inOut : other.inOut) + ", inside = " + ((left) ? inside : other.inside) + ", other.p = " + other.p + ")";
-            }
-        }
-
-        class SweepRay
-        {
-            List<SweepEvent> s;
-
-            public SweepRay(int capacity)
-            {
-                s = new List<SweepEvent>(capacity);
-            }
-
-            public int Add(SweepEvent e)
-            {
-                for (int i = 0; i < s.Count; i++)
-                {
-                    SweepEvent se = s[i];
-                    if (IsEventOneMoreImportant(se, e))
-                        continue;
-                    s.Insert(i, e);
-                    return i;
-                }
-                s.Add(e);
-                return s.Count - 1;
-            }
-
-            public int Find(SweepEvent e)
-            {
-                return s.IndexOf(e);
-            }
-
-            public void RemoveAt(int index)
-            {
-                s.RemoveAt(index);
-            }
-
-            public SweepEvent Next(int index)
-            {
-                index++;
-                if (index < s.Count)
-                    return s[index];
-                return null;
-            }
-
-            public SweepEvent Previous(int index)
-            {
-                index--;
-                if (index >= 0)
-                    return s[index];
-                return null;
-            }
-
-            public override string ToString()
-            {
-                string result = "[" + s.Count + "] ";
-                foreach (SweepEvent se in s)
-                    result += ((se.left) ? "l" : "r") + se.ToString() + ", ";
-                return result;
-            }
-
-            private bool IsEventOneMoreImportant(SweepEvent se1, SweepEvent se2)
-            {
-                if (se1 == se2)
-                    return false;
-                if (ExMathf.SignedAreaDoubledTris(se1.p, se1.other.p, se2.p) != 0 || ExMathf.SignedAreaDoubledTris(se1.p, se1.other.p, se2.other.p) != 0)
-                {
-                    if (se1.p == se2.p)
-                        return se1.IsBelow(se2.other.p);
-
-                    if (se1.CompareTo(se2) > 0)
-                        return se2.IsAbove(se1.p);
-                    return se1.IsBelow(se2.p);
-                }
-                if (se1.p == se2.p)
-                    return false; //Not sure here. Seems like lines exactly overlap each other. Didnt found the < operator though.
-                return se1.CompareTo(se2) > 0;
-            }
-        }*/
 
         class Segment
         {

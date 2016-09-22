@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System;
 
@@ -11,6 +10,7 @@ namespace NavMesh2D.Core
         {
             CollisionGeometrySet result = new CollisionGeometrySet();
             List<Vector2> inOutVerts = new List<Vector2>(10); //Just a guess
+            float anglePerCircleVert = (Mathf.PI * 2) / circleVertCount;
 
             foreach (Collider2D col in collider)
             {
@@ -28,7 +28,7 @@ namespace NavMesh2D.Core
                     if (cTyp == typeof(BoxCollider2D))
                         LoadBoxColliderVerts((BoxCollider2D)col, inOutVerts);
                     else if (cTyp == typeof(CircleCollider2D))
-                        LoadCircleColliderVerts((CircleCollider2D)col, inOutVerts, circleVertCount);
+                        LoadCircleColliderVerts((CircleCollider2D)col, inOutVerts, circleVertCount, anglePerCircleVert);
                     else
                         LoadPolygonColliderVerts((PolygonCollider2D)col, inOutVerts);
 
@@ -44,14 +44,12 @@ namespace NavMesh2D.Core
             Vector2 halfSize = collider.size / 2;
             inOutVerts.Add(collider.transform.TransformPoint(halfSize + collider.offset));
             inOutVerts.Add(collider.transform.TransformPoint(new Vector2(-halfSize.x, halfSize.y) + collider.offset));
-            
             inOutVerts.Add(collider.transform.TransformPoint(-halfSize + collider.offset));
             inOutVerts.Add(collider.transform.TransformPoint(new Vector2(halfSize.x, -halfSize.y) + collider.offset));
         }
 
-        private static void LoadCircleColliderVerts(CircleCollider2D collider, List<Vector2> inOutVerts, int circleVertCount)
+        private static void LoadCircleColliderVerts(CircleCollider2D collider, List<Vector2> inOutVerts, int circleVertCount, float anglePerCircleVert)
         {
-            float anglePerCircleVert = (Mathf.PI * 2) / circleVertCount;
             for (int i = 0; i < circleVertCount; i++)
             {
                 inOutVerts.Add(collider.transform.TransformPoint(new Vector2(collider.radius * Mathf.Cos(anglePerCircleVert * i) + collider.offset.x, collider.radius * Mathf.Sin(anglePerCircleVert * i) + collider.offset.y)));

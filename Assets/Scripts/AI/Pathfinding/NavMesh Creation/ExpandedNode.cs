@@ -6,7 +6,6 @@ namespace NavMesh2D.Core
 {
     public class ExpandedNode
     {
-
         public MarkableContour contour;
         public List<ExpandedNode> children;
 
@@ -52,13 +51,13 @@ namespace NavMesh2D.Core
                 eN.Mark(minWalkableHeight, testIndex);
         }
 
-        public void DrawForDebug(int cHeightTest)
+        public void VisualDebug(int targetHeightTest)
         {
             if(contour != null)
-            contour.DrawForDebug(cHeightTest);
+            contour.VisualDebug(targetHeightTest);
 
             foreach (ExpandedNode eN in children)
-                eN.DrawForDebug(cHeightTest);
+                eN.VisualDebug(targetHeightTest);
         }
     }
 }

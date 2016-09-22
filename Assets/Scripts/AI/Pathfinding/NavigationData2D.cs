@@ -64,7 +64,7 @@ namespace NavMesh2D
             int counter = 1;
             foreach (NavNode n in nodes)
             {
-                n.DrawForDebug(counter++);
+                n.VisualDebug(counter++);
             }
         }
     }
@@ -94,7 +94,7 @@ namespace NavMesh2D
             this.hierachyIndex = hierachyIndex;
         }
 
-        public void DrawForDebug(int colorId)
+        public void VisualDebug(int colorId)
         {
             if (verts.Length == 0)
                 Debug.Log("Node [" + colorId + "] is empty.");
@@ -111,7 +111,7 @@ namespace NavMesh2D
                 //float angleGrad = (1 / Mathf.PI) * verts[iVert].slopeAngleBC;
                 //DebugExtension.DrawArrow(verts[iVert].PointB, verts[iVert + 1].PointB - verts[iVert].PointB, DifferentColors.GetColor(colorId));
                 Debug.DrawLine(verts[iVert].PointB, verts[iVert + 1].PointB, DifferentColors.GetColor(colorId));
-                DebugExtension.DrawCircle(verts[iVert].PointB, Vector3.forward, DifferentColors.GetColor(colorId), 0.2f);
+                DebugExtension.DebugCircle(verts[iVert].PointB, Vector3.forward, DifferentColors.GetColor(colorId), 0.2f);
             }
             if (isClosed)
             {
@@ -119,7 +119,7 @@ namespace NavMesh2D
                 //float angleGrad = (1 / Mathf.PI) * verts[verts.Length - 1].slopeAngleBC;
                 //DebugExtension.DrawArrow(verts[verts.Length - 1].PointB, verts[0].PointB - verts[verts.Length - 1].PointB, DifferentColors.GetColor(colorId));
             }
-            DebugExtension.DrawCircle(verts[verts.Length - 1].PointB, Vector3.forward, DifferentColors.GetColor(colorId), 0.2f);
+            DebugExtension.DebugCircle(verts[verts.Length - 1].PointB, Vector3.forward, DifferentColors.GetColor(colorId), 0.2f);
         }
     }
 

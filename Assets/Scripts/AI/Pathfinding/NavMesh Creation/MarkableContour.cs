@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Utility.Polygon2D;
-using Utility;
-using System;
 
 namespace NavMesh2D.Core
 {
@@ -52,11 +49,11 @@ namespace NavMesh2D.Core
             WalkSpaceTester.MarkSelfIntersections(this, minWalkableHeight, testIndex);
         }
 
-        public void DrawForDebug(int cHeightTest)
+        public void VisualDebug(int cHeightTest)
         {
             foreach (PointNode s in this)
             {
-                s.DrawForDebug(cHeightTest);
+                s.VisualDebug(cHeightTest);
             }
         }
 
@@ -209,19 +206,17 @@ namespace NavMesh2D.Core
             return isPointWalkable[index];
         }
 
-        public void DrawForDebug(int walkTestIndex)
+        public void VisualDebug(int walkTestIndex)
         {
             if (!isPointWalkable[walkTestIndex])
             {
-                Gizmos.color = isPointWalkable[walkTestIndex] ? Color.green : Color.red;
-                Gizmos.DrawWireSphere(pointB, 0.2f);
+                DebugExtension.DebugCircle(pointB, Vector3.forward, Color.red, 0.2f);
             }
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(pointB, pointC);
+            Debug.DrawLine(pointB, pointC, Color.green);
             ObstructedSegment pObSeg = obstructedSegment;
             while (pObSeg != null)
             {
-                pObSeg.DrawForDebug(this);
+                pObSeg.VisualDebug(this);
                 pObSeg = pObSeg.next;
             }
         }
@@ -248,7 +243,8 @@ namespace NavMesh2D.Core
             public float end;
             public ObstructedSegment next;
 
-            public ObstructedSegment() {
+            public ObstructedSegment()
+            {
                 start = 0;
                 end = 0;
             }
@@ -259,10 +255,9 @@ namespace NavMesh2D.Core
                 this.end = end;
             }
 
-            public void DrawForDebug (PointNode father)
+            public void VisualDebug(PointNode holder)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(father.pointB + father.tangentBC * start, father.pointB + father.tangentBC * end);
+                Debug.DrawLine(holder.pointB + holder.tangentBC * start, holder.pointB + holder.tangentBC * end, Color.red);
             }
         }
     }

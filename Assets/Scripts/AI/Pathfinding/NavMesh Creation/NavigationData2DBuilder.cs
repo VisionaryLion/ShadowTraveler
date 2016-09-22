@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿#define DEBUG_JUMP_LINKS
+
+using UnityEngine;
 using System.Collections.Generic;
-using Utility;
-using NavMesh2D;
 
 namespace NavMesh2D.Core
 {
@@ -285,14 +285,15 @@ namespace NavMesh2D.Core
                                 if (Mathf.Abs(targetJ) > maxJumpVel)
                                     goto TargetNVLoopEnd; //the required jumpforce exceeds limit
 
+#if DEBUG_JUMP_LINKS
                                 //debug this arc:
                                 float lowerBound = (targetNV.PointB.x < srcNV.PointB.x) ? targetNV.PointB.x : srcNV.PointB.x;
                                 float uppperBound = (targetNV.PointB.x < srcNV.PointB.x) ? srcNV.PointB.x : targetNV.PointB.x;
-                                //DebugExtension.DebugArrow(nv.PointB, targetNV.PointB - nv.PointB, debugColor);
-                                new JumpArc(targetJ, gravity, xVel, srcNV.PointB, lowerBound, uppperBound).DrawForDebug(Color.green);
-                            //end debug
 
-                            TargetNVLoopEnd:
+                                new JumpArc(targetJ, gravity, xVel, srcNV.PointB, lowerBound, uppperBound).VisualDebug(Color.green);
+#endif
+
+                                TargetNVLoopEnd:
                                 prevTargetNV = targetNV;
                             }
 
@@ -365,7 +366,7 @@ namespace NavMesh2D.Core
                 return false;
             }
 
-            public void DrawForDebug(Color color)
+            public void VisualDebug(Color color)
             {
                 Vector2 swapPos;
                 Vector2 prevPos = new Vector2(minX, Calc(minX));
@@ -414,7 +415,7 @@ namespace NavMesh2D.Core
                 return m * x + n;
             }
 
-            public void DrawForDebug()
+            public void VisualDebug()
             {
                 Debug.DrawLine(start, end);
             }

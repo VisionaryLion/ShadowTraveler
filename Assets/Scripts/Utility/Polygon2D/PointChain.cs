@@ -113,18 +113,20 @@ namespace Utility.Polygon2D
                 chain.RemoveFirst();
                 chain.PrependRange(other.chain);
             }
-            /*else if (other.FirstPoint == FirstPoint)
+            else if (other.FirstPoint == FirstPoint)
             {
+                Debug.Log("Shouldn't happen (firstPoint == Firstpoint)");
                 chain.RemoveFirst();
                 other.chain.Reverse();
                 chain.PrependRange(other.chain);
             }
             else if (other.LastPoint == LastPoint)
             {
+                Debug.Log("Shouldn't happen (LastPoint == LastPoint)");
                 chain.RemoveLast();
                 other.chain.Reverse();
                 chain.AppendRange(other.chain);
-            }*/
+            }
             else
                 return false; //Other PointChain couldnt be attached
 
@@ -134,19 +136,19 @@ namespace Utility.Polygon2D
             return true;
         }
 
-        public void DrawForDebug()
+        public void VisualDebug()
         {
             LinkedListNode<Vector2> chainNode = chain.First;
             while ((chainNode = chainNode.Next) != null)
             {
-                OribowsUtilitys.DrawLine(chainNode.Previous.Value, chainNode.Value, 2);
-                Gizmos.DrawWireSphere(chainNode.Previous.Value, 0.1f);
+                Debug.DrawLine(chainNode.Previous.Value, chainNode.Value);
+                DebugExtension.DebugCircle(chainNode.Previous.Value, Vector3.forward, 0.1f);
 
             }
             if (IsClosed)
             {
-                OribowsUtilitys.DrawLine(chain.Last.Value, chain.First.Value, 2);
-                Gizmos.DrawWireSphere(chain.Last.Value, 0.1f);
+                Debug.DrawLine(chain.Last.Value, chain.First.Value);
+                DebugExtension.DebugCircle(chain.Last.Value, Vector3.forward, 0.1f);
             }
         }
 

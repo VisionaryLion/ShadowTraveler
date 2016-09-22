@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using Utility.Polygon2D;
 using System;
+using Utility.Polygon2D;
 
 namespace NavMesh2D.Core
 {
     [Serializable]
     public class ContourNode
     {
-        public static int debug_Color = 0;
-        public static int debug_target;
-
         public Contour contour;
         public List<ContourNode> children;
         public Bounds Bounds { get { return contour.Bounds; } }
@@ -137,6 +134,12 @@ namespace NavMesh2D.Core
             }
         }
 
+        public void AddSolidContour(Contour other)
+        {
+            bool consumed = false;
+            AddSolidContour(other, ref consumed);
+        }
+
         private void HandleSplitting(Contour[] holes, ContourNode src, Contour other)
         {
             for (int iResult = 0; iResult < holes.Length; iResult++)
@@ -175,16 +178,13 @@ namespace NavMesh2D.Core
             }
         }
 
-        public void DrawForDebug()
+        public void VisualDebug(int differentColorId = 0)
         {
-            debug_Color++;
-            if (debug_Color != debug_target)
-            {
-                contour.DrawDebugInfo(Utility.DifferentColors.GetColor(debug_Color));
-            }
+            contour.VisualDebug(Utility.DifferentColors.GetColor(differentColorId));
+
             for (int iChildren = 0; iChildren < children.Count; iChildren++)
             {
-                children[iChildren].DrawForDebug();
+                children[iChildren].VisualDebug(++differentColorId);
             }
         }
     }
