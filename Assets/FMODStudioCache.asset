@@ -27,7 +27,7 @@ MonoBehaviour:
   - {fileID: 114000011934906780}
   MasterBankRef: {fileID: 114000010961151322}
   StringsBankRef: {fileID: 114000010142747302}
-  stringsBankWriteTime: 636092174140449975
+  stringsBankWriteTime: 636097341484783728
   cacheVersion: 2
 --- !u!114 &114000010132389058
 MonoBehaviour:
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   Path: Assets\Sound\Fmod\SpaceStation_Level1.strings.bank
-  lastModified: 636092174140449975
+  lastModified: 636097341484783728
   LoadResult: 0
   FileSizes:
   - Name: 
@@ -107,42 +107,6 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
---- !u!114 &114000010939299408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: FMODStudioCache
-  m_EditorClassIdentifier: 
-  Path: G:\My Documents\GitHub\LightAndDark\Assets\Sound\Fmod\Spider.bank
-  lastModified: 636092174140469983
-  LoadResult: 0
-  FileSizes:
-  - Name: 
-    Value: 160736
-  Exists: 1
---- !u!114 &114000010961151322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: FMODStudioCache
-  m_EditorClassIdentifier: 
-  Path: G:\My Documents\GitHub\LightAndDark\Assets\Sound\Fmod\SpaceStation_Level1.bank
-  lastModified: 636092174140439976
-  LoadResult: 0
-  FileSizes:
-  - Name: 
-    Value: 148832
-  Exists: 1
 --- !u!114 &114000011216245886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,7 +219,7 @@ MonoBehaviour:
   Is3D: 1
   IsOneShot: 1
   Parameters:
-  - {fileID: 114000011706373940}
+  - {fileID: 114000012285228118}
   MinDistance: 1
   MaxDistance: 20
 --- !u!114 &114000012223578526
