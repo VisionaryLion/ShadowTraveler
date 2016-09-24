@@ -10,9 +10,16 @@ namespace Manager
         [Range(0, 4)]
         public int DownRes;
 
+        GameStateManager stateMan;
+
+        void Awake()
+        {
+            stateMan = GameStateManager.GetInstance();
+        }
+
         void OnRenderImage(RenderTexture src, RenderTexture dst)
         {
-            if (GameStateManager.GetInstance().CurrentState.ToString().Equals("PauseState") || GameStateManager.GetInstance().CurrentState.ToString().Equals("DeathState"))
+            if (stateMan.CurrentState.StateType == GameStateType.Pause || stateMan.CurrentState.StateType == GameStateType.Death)
             {
 
                 int width = src.width >> DownRes;

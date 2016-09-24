@@ -6,10 +6,17 @@ using Actors;
 namespace Manager
 {
     public class GamePlayStateHandler : MonoBehaviour, IGameState
-    {    
+    {
         [AssignActorAutomaticly]
         GameStateActor actor;
 
+        public GameStateType StateType
+        {
+            get
+            {
+                return GameStateType.Play;
+            }
+        }
 
         void Start()
         {
