@@ -2,61 +2,124 @@
 using System.Collections;
 using Pathfinding2D;
 using Utility;
-using Polygon2D;
 using System;
 using System.Collections.Generic;
 using NavMesh2D.Core;
+using NavMesh2D;
+using Utility.Polygon2D;
 
 public class NavDebugger : MonoBehaviour
 {
-    public enum DebugWhichSet { CollisionGeometrySet, OutlineTree }
+    public enum DebugWhichSet { CollisionGeometrySet, OutlineTree, ExpandedTree, NavigationData2D }
 
     public int circleVertCount;
-    public LayerMask collisionMask;
     public DebugWhichSet debugConfig;
-    public bool debugText = true;
+
+    [Range(0.0f, 10.0f)]
+    public float minHeightTest = 0;
 
     CollisionGeometrySet cgs;
-    OutlineTree outlineTree;
+    ContourTree outlineTree;
+    ExpandedTree[] exTrees;
+    NavigationData2D navData2D;
+
     // Use this for initialization
     void Start()
     {
+
         System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
 
-        CollisionGeometrySetBuilder cgBuilder = new CollisionGeometrySetBuilder(circleVertCount, collisionMask);
         Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
-        cgs = cgBuilder.Build(allCollider);
+        long totalEllapsedTime = 0;
+
+        cgs = CollisionGeometrySetBuilder.Build(allCollider, circleVertCount);
         Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
+        totalEllapsedTime += watch.ElapsedMilliseconds;
         watch.Reset();
         watch.Start();
 
-        OutlineTreeBuilder otBuilder = new OutlineTreeBuilder();
-        outlineTree = otBuilder.Build(cgs);
+        outlineTree = ContourTree.Build(cgs);
         Debug.Log("OutlineTreeBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+
+        totalEllapsedTime += watch.ElapsedMilliseconds;
+        watch.Reset();
+        watch.Start();
+
+        exTrees = ExpandedTreeSetBuilder.Build(outlineTree, new float[] { minHeightTest });
+        Debug.Log("ExpandedTreeSetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+
+        totalEllapsedTime += watch.ElapsedMilliseconds;
+        watch.Reset();
+        watch.Start();
+
+        navData2D = NavigationData2DBuilder.Build(exTrees[0], 0);
+        Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+
+        totalEllapsedTime += watch.ElapsedMilliseconds;
+        watch.Stop();
+        Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");
     }
 
+    int counter = -1;
     // Update is called once per frame
     void Update()
     {
+        switch (debugConfig)
+        {
+            case DebugWhichSet.OutlineTree:
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    timer = 0;
+                    if (counter == -1)
+                    {
+                        outlineTree = ScriptableObject.CreateInstance<ContourTree>();
+                        outlineTree.OnEnabled();
+                        counter = 0;
+                    }
+                    if (counter < cgs.colliderVerts.Count)
+                    {
+                        outlineTree.AddContour(cgs.colliderVerts[counter]);
+                        counter++;
+                    }
+                }
+                break;
+        }
 
-    }
-
-    void OnDrawGizmos()
-    {
         switch (debugConfig)
         {
             case DebugWhichSet.CollisionGeometrySet:
                 if (cgs != null)
                 {
-                    cgs.DrawDebugInfo();
+                    cgs.VisualDebug();
                 }
                 break;
             case DebugWhichSet.OutlineTree:
                 if (outlineTree != null)
-                    outlineTree.DrawDebugInfo();
+                {
+                    outlineTree.VisualDebug();
+                    if (counter > 0 && timer < 1)
+                    {
+                        Contour cC = new Contour(cgs.colliderVerts[counter - 1]);
+                        cC.VisualDebug(Utility.DifferentColors.GetColor(0));
+                        timer += Time.deltaTime;
+                    }
+                }
+                break;
+            case DebugWhichSet.ExpandedTree:
+                if (exTrees != null)
+                {
+                    foreach (ExpandedTree eT in exTrees)
+                    {
+                        eT.headNode.VisualDebug(0);
+                    }
+                }
+                break;
+            case DebugWhichSet.NavigationData2D:
+                if (navData2D != null)
+                    navData2D.DrawForDebug();
                 break;
         }
-
     }
+    float timer = 0;
 }
