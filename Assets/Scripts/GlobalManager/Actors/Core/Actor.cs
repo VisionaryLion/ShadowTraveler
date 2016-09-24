@@ -11,10 +11,12 @@ namespace Actors
         {
             ActorDatabase.GetInstance().AddActor(this);
 #if UNITY_EDITOR
-            Refresh();
+            PrintAllReminders();
+            FillRefAutomaticly();
 #endif
         }
 
+#if UNITY_EDITOR
         /// <summary>
         /// Base call strongly suggested!
         /// </summary>
@@ -121,7 +123,9 @@ namespace Actors
             for (int i = 0; i < componentLength; i++)
                 UnityEditorInternal.ComponentUtility.MoveComponentUp(this); //Move this script up to the top in the hierarchy!
         }
+#endif
     }
+
 
     /// <summary>
     /// Will fill a var tagged with this attribute with a reference to the local actor.
