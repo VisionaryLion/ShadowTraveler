@@ -559,6 +559,12 @@ namespace CC2D
         {
             if (_fakeParent != null)
             {
+                /*
+                Vector2 newOffset = transform.position - _fakeParent.position;
+                if (!Mathf.Approximately(newOffset.x, _fakeParentOffset.x))
+                    _fakeParentOffset.x = newOffset.x;
+                if (!Mathf.Approximately(newOffset.y, _fakeParentOffset.y))
+                    _fakeParentOffset.y = newOffset.y;*/
                 _fakeParentOffset = transform.position - _fakeParent.position;
             }
         }

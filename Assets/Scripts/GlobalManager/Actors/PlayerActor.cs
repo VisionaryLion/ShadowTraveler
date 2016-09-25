@@ -10,11 +10,18 @@ namespace Actors
         [SerializeField]
         HumanInput humanInput;
 
+        PlayerInteractiveInputHandler playerInteractiveInputHandler;
 
         #region public
         public HumanInput HumanInput { get { return humanInput; } }
+        public PlayerInteractiveInputHandler PlayerInteractiveInputHandler { get { return playerInteractiveInputHandler; } }
         #endregion
 
+        protected override void InitInteractiveInputHandler()
+        {
+            playerInteractiveInputHandler = new PlayerInteractiveInputHandler(this);
+            interactiveInputHandler = playerInteractiveInputHandler;
+        }
 
 #if UNITY_EDITOR
         public override void Refresh()
