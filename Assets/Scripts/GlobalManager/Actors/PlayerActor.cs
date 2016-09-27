@@ -43,11 +43,13 @@ namespace Actors
         {
             Debug.Log("Block all player Input was set to "+blockInput);
             humanInput.SetAllowAllInput(!blockInput);
+            playerInteractiveInputHandler.blockAllInput = blockInput;
         }
 
         public override void SetBlockAllNonMovement(bool blockInput) {
             Debug.Log("Block all non movement player Input was set to " + blockInput);
             humanInput.SetAllowEquipmentInput(!blockInput);
+            playerInteractiveInputHandler.blockAllInput = blockInput;
         }
     }
 }

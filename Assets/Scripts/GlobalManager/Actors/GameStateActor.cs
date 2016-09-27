@@ -25,9 +25,9 @@ namespace Actors
         {
             base.Refresh();
 
-            deathStateHandler = GetComponentInChildren<DeathStateHandler>();
-            pauseMenuStateHandler = GetComponentInChildren<PauseMenuStateHandler>();
-            gamePlayStateHandler = GetComponentInChildren<GamePlayStateHandler>();
+            deathStateHandler = LoadComponent<DeathStateHandler>(deathStateHandler);
+            pauseMenuStateHandler = LoadComponent<PauseMenuStateHandler>(pauseMenuStateHandler);
+            gamePlayStateHandler = LoadComponent<GamePlayStateHandler>(gamePlayStateHandler);
         }
 #endif
     }

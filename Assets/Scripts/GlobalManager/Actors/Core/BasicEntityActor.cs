@@ -51,10 +51,10 @@ namespace Actors
             base.Refresh();
 
             //Load components
-            audioSource = GetComponentInChildren<AudioSource>();
-            movementActor = GetComponentInChildren<HumanMovementActor>();
-            healthActor = GetComponentInChildren<HealthActor>();
-            animationActor = GetComponentInChildren<AnimationActor>();
+            audioSource = LoadComponent<AudioSource>(audioSource);
+            movementActor = LoadComponent<HumanMovementActor>(movementActor);
+            healthActor = LoadComponent<HealthActor>(healthActor);
+            animationActor = LoadComponent<AnimationActor>(animationActor);
 
             //Print some custom reminder.
             Debug.LogWarning(GenerateSetUpReminderShort("Layer"));

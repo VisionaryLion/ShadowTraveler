@@ -22,9 +22,9 @@ namespace Actors
         {
             base.Refresh();
 
-            characterController2D = GetComponentInChildren<CharacterController2D>();
-            rigidbody2d = GetComponentInChildren<Rigidbody2D>();
-            boxCollider2D = GetComponentInChildren<BoxCollider2D>();
+            characterController2D = LoadComponent<CharacterController2D>(characterController2D);
+            rigidbody2d = LoadComponent<Rigidbody2D>(rigidbody2d);
+            boxCollider2D = LoadComponent<BoxCollider2D>(boxCollider2D);
 
             rigidbody2d.isKinematic = true;
         }

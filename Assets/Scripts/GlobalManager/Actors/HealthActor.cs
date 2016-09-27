@@ -18,7 +18,7 @@ namespace Actors
             base.Refresh();
 
             //Load components
-            iHealth = GetComponentInChildren<IHealth>();
+            iHealth = LoadComponent<IHealth>(iHealth);
         }
 #endif
     }

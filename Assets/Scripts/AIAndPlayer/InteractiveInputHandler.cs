@@ -15,12 +15,12 @@ public class InteractiveInputHandler {
         inputListener = new List<InteractiveInputDefintion>();
     }
 
-    public void AddInputListener(InteractiveInputDefintion def)
+    public virtual void AddInputListener(InteractiveInputDefintion def)
     {
         inputListener.Add(def);
     }
 
-    public void RemoveInputListener(InteractiveInputDefintion def)
+    public virtual void RemoveInputListener(InteractiveInputDefintion def)
     {
         inputListener.Remove(def);
     }

@@ -38,4 +38,13 @@ public class PlayerInteractiveInputHandler : InteractiveInputHandler
         }
     }
 
+    public override void AddInputListener(InteractiveInputDefintion def)
+    {
+        base.AddInputListener(def);
+    }
+
+    public override void RemoveInputListener(InteractiveInputDefintion def)
+    {
+        base.RemoveInputListener(def);
+    }
 }

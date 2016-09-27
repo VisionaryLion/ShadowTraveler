@@ -8,13 +8,13 @@ namespace Actors
         [SerializeField]
         new Rigidbody2D rigidbody2D;
         [SerializeField]
-        new Collider2D collider2D;
+        Collider2D trigger;
         [SerializeField]
         ElevatorPlatform elevatorPlatform;
 
         #region public
         public Rigidbody2D Rigidbody2D { get { return rigidbody2D; } }
-        public Collider2D Collider2D { get { return collider2D; } }
+        public Collider2D Trigger { get { return trigger; } }
         public ElevatorPlatform ElevatorPlatform { get { return elevatorPlatform; } }
         #endregion
 
@@ -24,9 +24,9 @@ namespace Actors
             base.Refresh();
 
             //Load components
-            rigidbody2D = GetComponentInChildren<Rigidbody2D>();
-            collider2D = GetComponentInChildren<Collider2D>();
-            elevatorPlatform = GetComponentInChildren<ElevatorPlatform>();
+            rigidbody2D = LoadComponent<Rigidbody2D>(rigidbody2D);
+            trigger = LoadComponent<Collider2D>("Trigger", trigger);
+            elevatorPlatform = LoadComponent<ElevatorPlatform>("ElevatorPlatform", elevatorPlatform);
 
             //Setup some script vars automatically.
             this.tag = "MovingPlatform"; //Built-in-Tag can't go wrong.

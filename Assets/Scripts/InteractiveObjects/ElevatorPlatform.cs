@@ -2,8 +2,6 @@
 using System.Collections;
 using Actors;
 
-[RequireComponent(typeof(Collider2D))]
-[RequireComponent(typeof(Rigidbody2D))]
 public class ElevatorPlatform : MonoBehaviour
 {
     [SerializeField, AssignActorAutomaticly, HideInInspector]
@@ -38,8 +36,10 @@ public class ElevatorPlatform : MonoBehaviour
         if (currentLevel < levels.Length - 1)
         {
             moveStartTime = Time.time;
-            actor.Collider2D.enabled = false;
+            actor.Trigger.enabled = false;
             direction = 1;
+            entityActor.InteractiveInputHandler.RemoveInputListener(elevatorUp);
+            entityActor.InteractiveInputHandler.RemoveInputListener(elevatorDown);
         }
         else
         {
@@ -53,8 +53,10 @@ public class ElevatorPlatform : MonoBehaviour
         if (currentLevel > 0)
         {
             moveStartTime = Time.time;
-            actor.Collider2D.enabled = false;
+            actor.Trigger.enabled = false;
             direction = -1;
+            entityActor.InteractiveInputHandler.RemoveInputListener(elevatorUp);
+            entityActor.InteractiveInputHandler.RemoveInputListener(elevatorDown);
         }
         else
         {
@@ -76,7 +78,7 @@ public class ElevatorPlatform : MonoBehaviour
                 currentLevel += direction;
                 transform.position = new Vector2(transform.position.x, levels[currentLevel].position.y);
                 direction = 0;
-                actor.Collider2D.enabled = true;
+                actor.Trigger.enabled = true;
             }
         }
     }
@@ -84,6 +86,8 @@ public class ElevatorPlatform : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         BasicEntityActor actor = col.GetComponent<BasicEntityActor>();
+        if (actor == null)
+            return;
         if (currentLevel < levels.Length -1)
             actor.InteractiveInputHandler.AddInputListener(elevatorUp);
         if (currentLevel > 0)
@@ -93,6 +97,8 @@ public class ElevatorPlatform : MonoBehaviour
     void OnTriggerExit2D(Collider2D col)
     {
         BasicEntityActor actor = col.GetComponent<BasicEntityActor>();
+        if (actor == null)
+            return;
         actor.InteractiveInputHandler.RemoveInputListener(elevatorUp);
         actor.InteractiveInputHandler.RemoveInputListener(elevatorDown);
     }
