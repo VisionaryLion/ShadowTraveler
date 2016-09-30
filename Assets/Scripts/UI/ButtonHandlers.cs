@@ -12,19 +12,24 @@ namespace Manager
             GameStateManager.GetInstance().EndCurrentState();
         }
 
-        public void Menu()
+        public void LoadScene(string sceneIndex)
         {
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene(sceneIndex);
         }
 
         public void Quit()
         {
-            Application.Quit();
+          #if UNITY_EDITOR
+          UnityEditor.EditorApplication.isPlaying = false;
+          #else
+          Application.Quit();
+          #endif
         }
 
         public void Restart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
         }
     }
 }

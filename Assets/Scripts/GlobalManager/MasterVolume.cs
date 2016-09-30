@@ -10,7 +10,7 @@ public class MasterVolume : MonoBehaviour {
     void Start()
     {
         masterBus = FMODUnity.RuntimeManager.GetBus("bus:/");
-        
+
     }
 
     void Update()
