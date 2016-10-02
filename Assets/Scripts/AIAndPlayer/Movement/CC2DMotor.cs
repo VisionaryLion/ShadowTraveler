@@ -407,6 +407,10 @@ namespace CC2D
                         StartFalling();
                 }
             }
+            else if (obj.CompareTag("Crouch"))
+            {
+                spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / .75f, spriteRoot.localScale.y / .75f, spriteRoot.localScale.z);
+            }
         }
 
         void OnTriggerEnter2D(Collider2D obj)
@@ -418,6 +422,10 @@ namespace CC2D
                     StartClimbing();
                 }
                 _climbableTriggerCount++;
+            }
+            else if (obj.CompareTag("Crouch"))
+            {
+                spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * .75f, spriteRoot.localScale.y * .75f, spriteRoot.localScale.z);
             }
         }
 
