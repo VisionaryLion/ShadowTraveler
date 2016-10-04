@@ -18,7 +18,7 @@ namespace Actors
         {
             base.Refresh();
 
-            itemHolder = GetComponentInChildren<ItemHolder>();
+            itemHolder = LoadComponent<ItemHolder>(itemHolder);
         }
 #endif
     }

@@ -256,6 +256,7 @@ namespace CC2D
             {
                 case MState.Walk:
                     //Handle sliding of a top step slope
+
                     if (actor.CharacterController2D.collisionState.standOnToSteepSlope || actor.CharacterController2D.manuallyCheckForSteepSlopes(-actor.CharacterController2D.collisionState.belowHit.normal.x))
                     {
                         HandleSlope();
@@ -267,15 +268,24 @@ namespace CC2D
                     }
 
                     AccelerateHorizontal(ref walkHAcc, ref walkHFric, ref walkHMaxSpeed);
-                    _cVelocity.y = -0.01f; //Small downwards velocity, to keep the CC2D grounded.
+                    _cVelocity.y = -0.02f; //Small downwards velocity, to keep the CC2D grounded.
+
                     if (CurrentMovementInput.ShouldJump(maxJumpExecutionDelay))
                         StartJump();
                     else if (actor.CharacterController2D.collisionState.belowHit.collider.CompareTag(movingPlatformTag))
                     {
-                        FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform;
+                        if (actor.CharacterController2D.collisionState.belowHit.collider.transform.rotation != Quaternion.identity || actor.CharacterController2D.collisionState.belowHit.collider.transform.localScale != new Vector3(1, 1, 1))
+                            FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
+                        else
+                            FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform;
+                        transform.parent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
+                        ReCalculateFakeParentOffset();
                     }
                     else
+                    {
+                        transform.parent = null;
                         FakeTransformParent = null;
+                    }
                     break;
 
                 case MState.Fall:
@@ -383,9 +393,7 @@ namespace CC2D
             }
             //Solely determined by input
             AdjustFacingDir();
-
             MoveCC2DByVelocity();
-            ReCalculateFakeParentOffset();
         }
 
         void OnTriggerExit2D(Collider2D obj)
@@ -486,7 +494,12 @@ namespace CC2D
         void MoveCC2DByVelocity()
         {
             _totalExternalVelocity = CalculateTotalExternalAccerleration();
-            actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
+            if (_fakeParent != null)
+            {
+                _fakeParentOffset += actor.CharacterController2D.calcMoveVector((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
+            }
+            else
+                actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
 
             //We turned out to be slower then our external velocity demanded us. We presumably hit something, so reset forces.
             if (_totalExternalVelocity.x == 0)
@@ -551,7 +564,7 @@ namespace CC2D
         {
             if (_fakeParent != null)
             {
-                transform.position = _fakeParentOffset + _fakeParent.position;
+                transform.position = _fakeParent.position + _fakeParentOffset;
             }
         }
 
@@ -560,6 +573,7 @@ namespace CC2D
             if (_fakeParent != null)
             {
                 _fakeParentOffset = transform.position - _fakeParent.position;
+
             }
         }
 
