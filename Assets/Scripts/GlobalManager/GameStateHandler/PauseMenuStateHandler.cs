@@ -28,7 +28,6 @@ namespace Manager
         {
             pauseMenuUIRoot.SetActive(true);
             Time.timeScale = 0;
-
         }
 
         public void OnStateEnd()
