@@ -11710,7 +11710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 113a48b3ff88dc449bcee2410a5b7ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathUIRoot: {fileID: 0}
+  deathUIRoot: {fileID: 175872038}
 --- !u!114 &901922741
 MonoBehaviour:
   m_ObjectHideFlags: 0
