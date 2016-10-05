@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace NavMesh2D.Core
 {
@@ -311,77 +312,7 @@ namespace NavMesh2D.Core
             return true;
         }
 
-        class JumpArc
-        {
-            float j, g, v, doubleG;
-            Vector2 origin;
-            float minX, maxX;
-            float minY, maxY;
-
-            public JumpArc(float j, float g, float v, Vector2 origin, float lowerXBound, float upperXBound)
-            {
-                this.j = j;
-                this.g = g;
-                this.v = v;
-                this.origin = origin;
-                minX = lowerXBound;
-                maxX = upperXBound;
-                minY = Calc(minX);
-                doubleG = g * 2;
-                maxY = (j * j) / (4 * doubleG) + origin.y;
-            }
-
-            public float Calc(float x)
-            {
-                x -= origin.x;
-                x /= v;
-                return (j - g * x) * x + origin.y;
-            }
-
-            public bool IntersectsWithSegment(Segment seg)
-            {
-                if (seg.MinX > maxX || seg.MaxX < minX || seg.MinY > maxY || seg.MaxY < minY)
-                    return false;
-
-                float b = j - (seg.m / v);
-                float det = (b * b) - (2 * doubleG * seg.n);
-                if (det < 0)
-                    return false;
-
-                b = -b / doubleG;
-                det = Mathf.Sqrt(det) / doubleG;
-                float x1 = b + det;
-                float x2 = b - det;
-
-                if (seg.IsPointOnSegment(x1))
-                {
-                    if (x1 >= minX && x1 <= maxX)
-                        return true;
-                }
-                else if (seg.IsPointOnSegment(x2))
-                {
-                    if (x2 >= minX && x2 <= maxX)
-                        return true;
-                }
-                return false;
-            }
-
-            public void VisualDebug(Color color)
-            {
-                Vector2 swapPos;
-                Vector2 prevPos = new Vector2(minX, Calc(minX));
-                for (float x = minX; x + 0.1f < maxX; x += 0.1f)
-                {
-                    swapPos = new Vector2(x, Calc(x));
-                    Debug.DrawLine(prevPos, swapPos, color);
-                    prevPos = swapPos;
-                }
-                Debug.DrawLine(prevPos, new Vector2(maxX, Calc(maxX)), color);
-
-            }
-        }
-
-        class Segment
+        public class Segment
         {
             Vector2 start;
             Vector2 end;
@@ -419,6 +350,81 @@ namespace NavMesh2D.Core
             {
                 Debug.DrawLine(start, end);
             }
+        }     
+    }
+
+    [Serializable]
+    public class JumpArc
+    {
+        [SerializeField]
+        public float j, g, v, doubleG;
+        [SerializeField]
+        public Vector2 origin;
+        [SerializeField]
+        public float minX, maxX;
+        [SerializeField]
+        public float minY, maxY;
+
+        public JumpArc(float j, float g, float v, Vector2 origin, float lowerXBound, float upperXBound)
+        {
+            this.j = j;
+            this.g = g;
+            this.v = v;
+            this.origin = origin;
+            minX = lowerXBound;
+            maxX = upperXBound;
+            minY = Calc(minX);
+            doubleG = g * 2;
+            maxY = (j * j) / (4 * doubleG) + origin.y;
+        }
+
+        public float Calc(float x)
+        {
+            x -= origin.x;
+            x /= v;
+            return (j - g * x) * x + origin.y;
+        }
+
+        public bool IntersectsWithSegment(NavigationData2DBuilder.Segment seg)
+        {
+            if (seg.MinX > maxX || seg.MaxX < minX || seg.MinY > maxY || seg.MaxY < minY)
+                return false;
+
+            float b = j - (seg.m / v);
+            float det = (b * b) - (2 * doubleG * seg.n);
+            if (det < 0)
+                return false;
+
+            b = -b / doubleG;
+            det = Mathf.Sqrt(det) / doubleG;
+            float x1 = b + det;
+            float x2 = b - det;
+
+            if (seg.IsPointOnSegment(x1))
+            {
+                if (x1 >= minX && x1 <= maxX)
+                    return true;
+            }
+            else if (seg.IsPointOnSegment(x2))
+            {
+                if (x2 >= minX && x2 <= maxX)
+                    return true;
+            }
+            return false;
+        }
+
+        public void VisualDebug(Color color)
+        {
+            Vector2 swapPos;
+            Vector2 prevPos = new Vector2(minX, Calc(minX));
+            for (float x = minX; x + 0.1f < maxX; x += 0.1f)
+            {
+                swapPos = new Vector2(x, Calc(x));
+                Debug.DrawLine(prevPos, swapPos, color);
+                prevPos = swapPos;
+            }
+            Debug.DrawLine(prevPos, new Vector2(maxX, Calc(maxX)), color);
+
         }
     }
 }

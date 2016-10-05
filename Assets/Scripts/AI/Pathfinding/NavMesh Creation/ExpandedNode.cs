@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Utility.Polygon2D;
+using System;
 
 namespace NavMesh2D.Core
 {
-    public class ExpandedNode
+    [Serializable]
+    public class ExpandedNode : ISerializationCallbackReceiver
     {
+        [NonSerialized]
         public MarkableContour contour;
+        [SerializeField]
+        SerializableMarkableContour serializableMarkableContour;
         public List<ExpandedNode> children;
 
         public ExpandedNode(ContourNode contourNode, int traverseTestCount)
@@ -58,6 +63,17 @@ namespace NavMesh2D.Core
 
             foreach (ExpandedNode eN in children)
                 eN.VisualDebug(targetHeightTest);
+        }
+
+        public void OnBeforeSerialize()
+        {
+            serializableMarkableContour = new SerializableMarkableContour(contour);
+        }
+
+        public void OnAfterDeserialize()
+        {
+            contour = new MarkableContour(serializableMarkableContour);
+            serializableMarkableContour = null;
         }
     }
 }

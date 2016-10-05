@@ -6,14 +6,13 @@ using UnityEditor;
 
 namespace NavMesh2D.Core
 {
-    public class ContourTree : ScriptableObject
+    public class ContourTree
     {
-        [SerializeField]
         ContourNode headNode; // root
 
         public ContourNode FirstNode { get { return headNode; } }
 
-        public void OnEnabled()
+        public ContourTree()
         {
             //create biggest contour possible
             headNode = new ContourNode(null, false);
@@ -21,8 +20,7 @@ namespace NavMesh2D.Core
 
         public static ContourTree Build(CollisionGeometrySet cgSet)
         {
-            ContourTree result = ScriptableObject.CreateInstance<ContourTree>();
-            result.OnEnabled();
+            ContourTree result = new ContourTree();
             for (int iCol = 0; iCol < cgSet.colliderVerts.Count; iCol++)
             {
                 result.AddContour(cgSet.colliderVerts[iCol]);

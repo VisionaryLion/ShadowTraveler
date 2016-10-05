@@ -18,6 +18,8 @@ public class NavDebugger : MonoBehaviour
     [Range(0.0f, 10.0f)]
     public float minHeightTest = 0;
 
+    public Transform closestTestPoint;
+
     CollisionGeometrySet cgs;
     ContourTree outlineTree;
     ExpandedTree[] exTrees;
@@ -73,8 +75,7 @@ public class NavDebugger : MonoBehaviour
                     timer = 0;
                     if (counter == -1)
                     {
-                        outlineTree = ScriptableObject.CreateInstance<ContourTree>();
-                        outlineTree.OnEnabled();
+                        outlineTree = new ContourTree();
                         counter = 0;
                     }
                     if (counter < cgs.colliderVerts.Count)
@@ -112,7 +113,14 @@ public class NavDebugger : MonoBehaviour
                     foreach (ExpandedTree eT in exTrees)
                     {
                         eT.headNode.VisualDebug(0);
+                        Vector2 mappedPoint;
+                        if (eT.TryMapPointToContour(closestTestPoint.position, out mappedPoint))
+                        {
+                            Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
+                            DebugExtension.DebugPoint(mappedPoint);
+                        }
                     }
+                    
                 }
                 break;
             case DebugWhichSet.NavigationData2D:

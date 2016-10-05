@@ -5,7 +5,6 @@ using Utility.Polygon2D;
 
 namespace NavMesh2D.Core
 {
-    [Serializable]
     public class ContourNode
     {
         public Contour contour;
