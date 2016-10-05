@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Actors;
+using FMODUnity;
 
 public class ElevatorPlatform : MonoBehaviour
 {
@@ -21,6 +22,12 @@ public class ElevatorPlatform : MonoBehaviour
     InteractiveInputDefintion elevatorUp;
     [SerializeField]
     InteractiveInputDefintion elevatorDown;
+    [EventRef]
+    public string elevatorStartEventF = "";
+    [EventRef]
+    public string elevatorEndEventF = "";
+
+    FMOD.Studio.EventInstance elevatorStartInstanceF;
 
     float moveStartTime;
     int direction;
@@ -35,7 +42,8 @@ public class ElevatorPlatform : MonoBehaviour
     {
         if (currentLevel < levels.Length - 1)
         {
-            moveStartTime = Time.time;
+            StartElevatorMovingSound();
+             moveStartTime = Time.time;
             actor.Trigger.enabled = false;
             direction = 1;
             entityActor.InteractiveInputHandler.RemoveInputListener(elevatorUp);
@@ -52,6 +60,7 @@ public class ElevatorPlatform : MonoBehaviour
     {
         if (currentLevel > 0)
         {
+            StartElevatorMovingSound();
             moveStartTime = Time.time;
             actor.Trigger.enabled = false;
             direction = -1;
@@ -65,15 +74,31 @@ public class ElevatorPlatform : MonoBehaviour
         }
     }
 
+    void StartElevatorMovingSound()
+    {
+        if (elevatorStartInstanceF == null)
+        {
+            elevatorStartInstanceF = RuntimeManager.CreateInstance(elevatorStartEventF);
+        }
+        elevatorStartInstanceF.start();
+    }
+
+    void EndElevatorMovingSound()
+    {
+        elevatorStartInstanceF.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        FMODUnity.RuntimeManager.PlayOneShot(elevatorEndEventF, transform.position);
+    }
+
     void Update()
     {
         if (direction != 0)
         {
             actor.Rigidbody2D.velocity = Vector2.up * direction * speed.Evaluate(Time.time - moveStartTime) * speedMultiplier * Time.deltaTime;
+            elevatorStartInstanceF.set3DAttributes(transform.To3DAttributes());
             //Debug.Log(speed.Evaluate(Time.time - moveStartTime));
             if ((levels[currentLevel + direction].position.y - transform.position.y) * direction < goalRad)
             {
-                
+                EndElevatorMovingSound();
                 actor.Rigidbody2D.velocity = Vector2.zero;
                 currentLevel += direction;
                 transform.position = new Vector2(transform.position.x, levels[currentLevel].position.y);
