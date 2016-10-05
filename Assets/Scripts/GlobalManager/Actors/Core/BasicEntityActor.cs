@@ -8,6 +8,7 @@ namespace Actors
     {
         [SerializeField]
         AudioSource audioSource;
+        protected InteractiveInputHandler interactiveInputHandler;
 
         //other actors
         [SerializeField]
@@ -19,6 +20,7 @@ namespace Actors
 
         #region public
         public AudioSource AudioSource { get { return audioSource; } }
+        public InteractiveInputHandler InteractiveInputHandler { get { return interactiveInputHandler; } }
 
         //---MovementActor
         public CharacterController2D CharacterController2D { get { return movementActor.CharacterController2D; } }
@@ -32,6 +34,16 @@ namespace Actors
         public AnimationHandler AnimationHandler { get { return animationActor.AnimationHandler; } }
         #endregion
 
+        protected override void Awake()
+        {
+            base.Awake();
+            InitInteractiveInputHandler();
+        }
+
+        protected virtual void InitInteractiveInputHandler()
+        {
+            interactiveInputHandler = new InteractiveInputHandler(this);
+        }
 
 #if UNITY_EDITOR
         public override void Refresh()
@@ -39,10 +51,10 @@ namespace Actors
             base.Refresh();
 
             //Load components
-            audioSource = GetComponentInChildren<AudioSource>();
-            movementActor = GetComponentInChildren<HumanMovementActor>();
-            healthActor = GetComponentInChildren<HealthActor>();
-            animationActor = GetComponentInChildren<AnimationActor>();
+            audioSource = LoadComponent<AudioSource>(audioSource);
+            movementActor = LoadComponent<HumanMovementActor>(movementActor);
+            healthActor = LoadComponent<HealthActor>(healthActor);
+            animationActor = LoadComponent<AnimationActor>(animationActor);
 
             //Print some custom reminder.
             Debug.LogWarning(GenerateSetUpReminderShort("Layer"));
@@ -65,12 +77,5 @@ namespace Actors
             if (CC2DMotor.MotorState == CC2DMotor.MState.Jump && CC2DMotor.PrevMotorState != CC2DMotor.MState.Jump)
                 animationActor.Animator.SetTrigger("Jump");
         }
-
-        void Update()
-        {
-
-        }
-
-
     }
 }

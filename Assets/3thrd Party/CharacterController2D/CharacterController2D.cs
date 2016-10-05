@@ -289,6 +289,56 @@ namespace CC2D
             ignoreOneWayPlatformsThisFrame = false;
         }
 
+        public Vector3 calcMoveVector(Vector3 deltaMovement, bool isJumping)
+        {
+            // save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
+            collisionState.wasGroundedLastFrame = collisionState.below;
+
+            // clear our state
+            collisionState.reset();
+            _raycastHitsThisFrame.Clear();
+            _isGoingUpSlope = false;
+            if (deltaMovement.x != 0)
+                collisionState.standOnToSteepSlope = false;
+            primeRaycastOrigins();
+
+
+            // first, we check for a slope below us before moving
+            // only check slopes if we are going down and grounded
+            if (deltaMovement.y < 0f && collisionState.wasGroundedLastFrame)
+                handleVerticalSlope(ref deltaMovement);
+
+            // now we check movement in the horizontal dir
+            if (deltaMovement.x != 0f)
+                moveHorizontally(ref deltaMovement, isJumping);
+
+            // next, check movement in the vertical dir
+            if (deltaMovement.y != 0f)
+                moveVertically(ref deltaMovement);
+
+            // only calculate velocity if we have a non-zero deltaTime
+            if (Time.deltaTime > 0f)
+                velocity = deltaMovement / Time.deltaTime;
+
+            // set our becameGrounded state based on the previous and current collision state
+            if (!collisionState.wasGroundedLastFrame && collisionState.below)
+                collisionState.becameGroundedThisFrame = true;
+
+            // if we are going up a slope we artificially set a y velocity so we need to zero it out here
+            if (_isGoingUpSlope)
+                velocity.y = 0;
+
+            // send off the collision events if we have a listener
+            if (onControllerCollidedEvent != null)
+            {
+                for (var i = 0; i < _raycastHitsThisFrame.Count; i++)
+                    onControllerCollidedEvent(_raycastHitsThisFrame[i]);
+            }
+
+            ignoreOneWayPlatformsThisFrame = false;
+            return deltaMovement;
+        }
+
         public bool manuallyCheckForSteepSlopes(float dir)
         {
             var isGoingRight = dir > 0;
@@ -397,6 +447,60 @@ namespace CC2D
             else
             {
                 return collisionState.left;
+            }
+        }
+
+        public bool manuallyCheckForCollisionsV(float dir)
+        {
+            var isGoingUp = dir > 0;
+            var rayDistance = Mathf.Abs(dir) + _skinWidth;
+            var rayDirection = isGoingUp ? Vector2.up : -Vector2.up;
+            var initialRayOrigin = isGoingUp ? _raycastOrigins.topLeft : _raycastOrigins.bottomLeft;
+
+            // if we are moving up, we should ignore the layers in oneWayPlatformMask
+            var mask = platformMask;
+            if ((isGoingUp && !collisionState.wasGroundedLastFrame) || ignoreOneWayPlatformsThisFrame)
+                mask &= ~oneWayPlatformMask;
+
+            for (var i = 0; i < totalVerticalRays; i++)
+            {
+                var ray = new Vector2(initialRayOrigin.x + i * _horizontalDistanceBetweenRays, initialRayOrigin.y);
+
+                DrawRay(ray, rayDirection * rayDistance, Color.red);
+                _raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, mask);
+                if (_raycastHit)
+                {
+                    // set our new deltaMovement and recalculate the rayDistance taking it into account
+                    dir = _raycastHit.point.y - ray.y;
+                    rayDistance = Mathf.Abs(dir);
+
+                    // remember to remove the skinWidth from our deltaMovement
+                    if (isGoingUp)
+                    {
+                        collisionState.above = true;
+                        collisionState.aboveHit = _raycastHit;
+                    }
+                    else
+                    {
+                        collisionState.below = true;
+                        collisionState.belowHit = _raycastHit;
+                    }
+
+                    _raycastHitsThisFrame.Add(_raycastHit);
+
+                    // we add a small fudge factor for the float operations here. if our rayDistance is smaller
+                    // than the width + fudge bail out because we have a direct impact
+                    if (rayDistance < _skinWidth + kSkinWidthFloatFudgeFactor)
+                        return true;
+                }
+            }
+            if (isGoingUp)
+            {
+                return collisionState.above;
+            }
+            else
+            {
+                return collisionState.below;
             }
         }
 
