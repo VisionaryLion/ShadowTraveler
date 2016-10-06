@@ -12,54 +12,21 @@ MonoBehaviour:
   m_Name: JumpLinks
   m_EditorClassIdentifier: 
   jumpLinks:
-  - worldPointA: {x: -0.9883057, y: 2.320764}
-    worldPointB: {x: 2.1877022, y: 2.1540463}
-    navPointA: {x: -0.9883057, y: 1.8799999}
-    navPointB: {x: 2.1877022, y: 1.6500001}
+  - worldPointA: {x: 4.9041576, y: 0.48794413}
+    worldPointB: {x: 2.4243684, y: 1.919792}
+    xSpeedScale: 1
+    navPointA: {x: 4.9041576, y: 0.28}
+    navPointB: {x: 2.4243684, y: 1.6500001}
+    normalA: {x: 0, y: 1}
     nodeIdA: 0
     nodeIdB: 0
     jumpArc:
-      j: 12.341942
+      j: -12.681489
       g: 20
       v: 5
       doubleG: 40
-      origin: {x: -0.9883057, y: 1.8799999}
-      minX: -0.9883057
-      maxX: 2.1877022
-      minY: 1.8799999
-      maxY: 2.832022
-    isJumpLinkValid: 1
-  - worldPointA: {x: 3.1807265, y: -1.2559603}
-    worldPointB: {x: 5.614135, y: 0.537797}
-    navPointA: {x: 3.3977976, y: -1.4730314}
-    navPointB: {x: 5.614135, y: 0.28}
-    nodeIdA: 0
-    nodeIdB: 0
-    jumpArc:
-      j: 12.820143
-      g: 20
-      v: 5
-      doubleG: 40
-      origin: {x: 3.3977976, y: -1.4730314}
-      minX: 3.3977976
-      maxX: 5.614135
-      minY: -1.4730314
-      maxY: -0.44580603
-    isJumpLinkValid: 1
-  - worldPointA: {x: 1.0018299, y: -1.0493921}
-    worldPointB: {x: -0.7918186, y: -0.18561548}
-    navPointA: {x: 1.0018299, y: -1.2792345}
-    navPointB: {x: -1.0349646, y: -0.4287613}
-    nodeIdA: 0
-    nodeIdB: 0
-    jumpArc:
-      j: -10.234952
-      g: 20
-      v: 5
-      doubleG: 40
-      origin: {x: 1.0018299, y: -1.2792345}
-      minX: -1.0349646
-      maxX: 1.0018299
-      minY: -0.42876112
-      maxY: -0.62452054
+      minX: -2.4797893
+      maxX: 0
+      minY: -0
+      maxY: 1.005126
     isJumpLinkValid: 1

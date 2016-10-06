@@ -114,7 +114,8 @@ public class NavDebugger : MonoBehaviour
                     {
                         eT.headNode.VisualDebug(0);
                         Vector2 mappedPoint;
-                        if (eT.TryMapPointToContour(closestTestPoint.position, out mappedPoint))
+                        Vector2 normal;
+                        if (eT.TryMapPointToContour(closestTestPoint.position, out mappedPoint, out normal))
                         {
                             Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
                             DebugExtension.DebugPoint(mappedPoint);

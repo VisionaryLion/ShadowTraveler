@@ -24,7 +24,7 @@ namespace NavMesh2D.Core
             }
         }
 
-        public bool TryMapPointToContour(Vector2 point, out Vector2 mapedPos)
+        public bool TryMapPointToContour(Vector2 point, out Vector2 mappedPos, out Vector2 normal)
         {
             Stack<ExpandedNode> nodesToProcess = new Stack<ExpandedNode>(10);
             Stack<ExpandedNode> nodesToCheckDistance = new Stack<ExpandedNode>(10);
@@ -64,22 +64,26 @@ namespace NavMesh2D.Core
 
             bool foundOne = false;
             //Assign some dummy values
-            mapedPos = Vector2.zero;
+            mappedPos = Vector2.zero;
             float minDistance = float.MaxValue;
             float dist;
             Vector2 cPoint;
+            Vector2 tangent;
+            Vector2 minTangent = Vector2.zero;
 
             while (nodesToCheckDistance.Count != 0)
             {
                 ExpandedNode cNode = nodesToCheckDistance.Pop();
-                cPoint = cNode.contour.ClosestPointOnContour(point, out dist);
+                cPoint = cNode.contour.ClosestPointOnContour(point, out dist, out tangent);
                 if (dist < minDistance)
                 {
-                    mapedPos = cPoint;
+                    mappedPos = cPoint;
                     minDistance = dist;
+                    minTangent = tangent;
                     foundOne = true;
                 }
             }
+            normal = new Vector2(minTangent.y, -minTangent.x).normalized;
             return foundOne;
         }
 

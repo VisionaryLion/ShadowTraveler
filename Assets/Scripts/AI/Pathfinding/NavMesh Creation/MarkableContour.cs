@@ -96,39 +96,43 @@ namespace NavMesh2D.Core
             return inside;
         }
 
-        public Vector2 ClosestPointOnContour(Vector2 point, out float distance)
+        public Vector2 ClosestPointOnContour(Vector2 point, out float distance, out Vector2 tangent)
         {
             distance = float.MaxValue;
             Vector2 closestPoint = Vector2.zero; //dummy value
+            tangent = Vector2.zero;
             int edgeCount = (isClosed) ? pointNodeCount : pointNodeCount - 1;
             PointNode pn = firstPoint;
 
             for (int i = 0; i < edgeCount; i++, pn = pn.Next)
             {
-
                 //Check if point lies on the outside of the line
                 float lineSide = Mathf.Sign((pn.pointC.x - pn.pointB.x) * (point.y - pn.pointB.y) - (pn.pointC.y - pn.pointB.y) * (point.x - pn.pointB.x));
                 if (lineSide == 0)
+                {
+                    tangent = pn.tangentBC;
+                    distance = 0;
                     return point;
+                }
                 if (lineSide == 1)
                     continue;
 
                 //Point is on right side. Now calculate distance.
                 Vector2 AP = point - pn.pointB;       //Vector from A to P   
-                Vector2 AB = pn.pointC - pn.pointB;       //Vector from A to B  
-
-                float magnitudeAB = AB.sqrMagnitude;     //Magnitude of AB vector (it's length squared)     
+                Vector2 AB = pn.pointC - pn.pointB;
                 float ABAPproduct = Vector2.Dot(AP, AB);    //The DOT product of a_to_p and a_to_b     
-                float dis = Mathf.Clamp(ABAPproduct / magnitudeAB, 0, 1); //The normalized "distance" from a to your closest point  
+                float dis = Mathf.Clamp(ABAPproduct / AB.sqrMagnitude, 0, 1); //The normalized "distance" from a to your closest point  
 
                 AP = AB * dis + pn.pointB;
-                dis = Vector2.Distance(AP, point);
+                dis = (AP - point).sqrMagnitude;
                 if (distance > dis)
                 {
                     distance = dis;
                     closestPoint = AP;
+                    tangent = pn.tangentBC;
                 }
             }
+            distance = Mathf.Sqrt(distance);
             return closestPoint;
         }
 
@@ -212,8 +216,8 @@ namespace NavMesh2D.Core
         public Vector2 pointB;
         public Vector2 pointC { get { return next.pointB; } }
         public Vector2 pointA { get { return prev.pointB; } }
-        public PointNode Previous { get { return prev; } set { prev = value; if (next != null) CalcAngle(); } }
-        public PointNode Next { get { return next; } set { next = value; PrecomputeVars(); if (prev != null) CalcAngle(); } }
+        public PointNode Previous { get { return prev; } set { prev = value; if (next != null && prev != null) { CalcAngle(); PrecomputeVars(); } } }
+        public PointNode Next { get { return next; } set { next = value; if (next != null && prev != null) { CalcAngle(); PrecomputeVars(); } } }
         public ObstructedSegment FirstObstructedSegment { get { return obstructedSegment; } }
 
         //Precomputed information
@@ -346,7 +350,7 @@ namespace NavMesh2D.Core
         private void PrecomputeVars()
         {
             distanceBC = Vector2.Distance(pointB, pointC);
-            tangentBC = (pointC - pointB).normalized;
+            tangentBC = (pointC - pointB) / distanceBC;
         }
 
         public class ObstructedSegment

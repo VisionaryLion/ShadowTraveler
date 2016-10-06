@@ -291,7 +291,7 @@ namespace NavMesh2D.Core
                                 float lowerBound = (targetNV.PointB.x < srcNV.PointB.x) ? targetNV.PointB.x : srcNV.PointB.x;
                                 float uppperBound = (targetNV.PointB.x < srcNV.PointB.x) ? srcNV.PointB.x : targetNV.PointB.x;
 
-                                new JumpArc(targetJ, gravity, xVel, srcNV.PointB, lowerBound, uppperBound).VisualDebug(Color.green);
+                                new JumpArcSegment(targetJ, gravity, xVel, lowerBound - srcNV.PointB.x, uppperBound - srcNV.PointB.x).VisualDebug(srcNV.PointB, Color.green);
 #endif
 
                                 TargetNVLoopEnd:
@@ -354,39 +354,36 @@ namespace NavMesh2D.Core
     }
 
     [Serializable]
-    public class JumpArc
+    public class JumpArcSegment
     {
         [SerializeField]
         public float j, g, v, doubleG;
-        [SerializeField]
-        public Vector2 origin;
         [SerializeField]
         public float minX, maxX;
         [SerializeField]
         public float minY, maxY;
 
-        public JumpArc(float j, float g, float v, Vector2 origin, float lowerXBound, float upperXBound)
+        public JumpArcSegment(float j, float g, float v, float lowerXBound, float upperXBound)
         {
             this.j = j;
             this.g = g;
             this.v = v;
-            this.origin = origin;
             minX = lowerXBound;
             maxX = upperXBound;
-            minY = Calc(minX);
+            minY = Mathf.Min(Calc(minX), Calc(maxX));
             doubleG = g * 2;
-            maxY = (j * j) / (4 * doubleG) + origin.y;
+            maxY = (j * j) / (4 * doubleG);
         }
 
         public float Calc(float x)
         {
-            x -= origin.x;
             x /= v;
-            return (j - g * x) * x + origin.y;
+            return (j - g * x) * x;
         }
 
-        public bool IntersectsWithSegment(NavigationData2DBuilder.Segment seg)
+        public bool IntersectsWithSegment(NavigationData2DBuilder.Segment seg, Vector2 arcOrigin)
         {
+            /*
             if (seg.MinX > maxX || seg.MaxX < minX || seg.MinY > maxY || seg.MaxY < minY)
                 return false;
 
@@ -409,21 +406,21 @@ namespace NavMesh2D.Core
             {
                 if (x2 >= minX && x2 <= maxX)
                     return true;
-            }
+            }*/
             return false;
         }
 
-        public void VisualDebug(Color color)
+        public void VisualDebug(Vector2 origin, Color color)
         {
             Vector2 swapPos;
-            Vector2 prevPos = new Vector2(minX, Calc(minX));
+            Vector2 prevPos = new Vector2(minX, Calc(minX)) + origin;
             for (float x = minX; x + 0.1f < maxX; x += 0.1f)
             {
-                swapPos = new Vector2(x, Calc(x));
+                swapPos = new Vector2(x, Calc(x)) + origin;
                 Debug.DrawLine(prevPos, swapPos, color);
                 prevPos = swapPos;
             }
-            Debug.DrawLine(prevPos, new Vector2(maxX, Calc(maxX)), color);
+            Debug.DrawLine(prevPos, new Vector2(maxX, Calc(maxX)) + origin, color);
 
         }
     }

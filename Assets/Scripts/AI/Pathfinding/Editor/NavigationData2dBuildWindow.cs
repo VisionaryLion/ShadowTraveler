@@ -473,8 +473,22 @@ namespace NavMesh2D.Core
         [SerializeField]
         NavigationData2dBuildWindow buildWindow;
         [SerializeField]
-        List<bool> foldoutJumplink;
+        List<JumpLinkSettings> jumpLinkSettings;
         Vector2 scrollPos;
+        [SerializeField]
+        bool showDetailsGlobal;
+        [SerializeField]
+        bool showInSceneGlobal;
+        [SerializeField]
+        bool showInSceneDetailedGlobal;
+
+        [Serializable]
+        class JumpLinkSettings
+        {
+            public bool showDetails = false;
+            public bool showInScene = true;
+            public bool showInSceneDetailed = true;
+        }
 
         public JumpLinkPlacerUI(NavigationData2dBuildWindow buildWindow)
         {
@@ -502,19 +516,19 @@ namespace NavMesh2D.Core
                 buildWindow.jumpLinkPlacer = ScriptableObject.CreateInstance<JumpLinkPlacer>();
                 buildWindow.jumpLinkPlacer.Init();
             }
-            if (foldoutJumplink == null)
+            if (jumpLinkSettings == null)
             {
-                foldoutJumplink = new List<bool>();
+                jumpLinkSettings = new List<JumpLinkSettings>();
             }
 
-            while (foldoutJumplink.Count > buildWindow.jumpLinkPlacer.jumpLinks.Count)
+            while (jumpLinkSettings.Count > buildWindow.jumpLinkPlacer.jumpLinks.Count)
             {
-                foldoutJumplink.RemoveAt(foldoutJumplink.Count - 1);
+                jumpLinkSettings.RemoveAt(jumpLinkSettings.Count - 1);
             }
 
-            while (foldoutJumplink.Count < buildWindow.jumpLinkPlacer.jumpLinks.Count)
+            while (jumpLinkSettings.Count < buildWindow.jumpLinkPlacer.jumpLinks.Count)
             {
-                foldoutJumplink.Add(false);
+                jumpLinkSettings.Add(new JumpLinkSettings());
             }
             SceneView.RepaintAll();
         }
@@ -528,28 +542,57 @@ namespace NavMesh2D.Core
             else
             {
                 scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUI.BeginChangeCheck();
+                showDetailsGlobal = EditorGUILayout.ToggleLeft("All Details", showDetailsGlobal, GUILayout.Width(75));
+                if (EditorGUI.EndChangeCheck())
+                {
+                    ToogleShowDetailAll(showDetailsGlobal);
+                }
+
+                EditorGUI.BeginChangeCheck();
+                showInSceneGlobal = EditorGUILayout.ToggleLeft("All Visibility", showInSceneGlobal, GUILayout.Width(80));
+                if (EditorGUI.EndChangeCheck())
+                {
+                    ToogleShowInScene(showInSceneGlobal);
+                }
+
+                EditorGUI.BeginChangeCheck();
+                showInSceneDetailedGlobal = EditorGUILayout.ToggleLeft("All Scene Details", showInSceneDetailedGlobal, GUILayout.Width(120));
+                if (EditorGUI.EndChangeCheck())
+                {
+                    ToogleShowInSceneDetailed(showInSceneDetailedGlobal);
+                }
+
+                EditorGUILayout.EndHorizontal();
+
                 JumpLinkPlacer.JumpLink link;
-                for (int iLink = 0; iLink < foldoutJumplink.Count; iLink++)
+                for (int iLink = 0; iLink < jumpLinkSettings.Count; iLink++)
                 {
                     EditorGUI.BeginChangeCheck();
 
                     link = buildWindow.jumpLinkPlacer.jumpLinks[iLink];
                     EditorGUILayout.BeginHorizontal();
-                    foldoutJumplink[iLink] = EditorGUILayout.Foldout(foldoutJumplink[iLink], "Link");
-                    if (GUILayout.Button("X"))
+                    jumpLinkSettings[iLink].showDetails = EditorGUILayout.Foldout(jumpLinkSettings[iLink].showDetails, "Link");
+                    jumpLinkSettings[iLink].showInScene = EditorGUILayout.ToggleLeft(jumpLinkSettings[iLink].showInScene ? "<o>" : "<->", jumpLinkSettings[iLink].showInScene, GUILayout.Width(40));
+                    jumpLinkSettings[iLink].showInSceneDetailed = EditorGUILayout.ToggleLeft("Details", jumpLinkSettings[iLink].showInSceneDetailed, GUILayout.Width(55));
+                    if (GUILayout.Button("X", GUILayout.Width(20)))
                     {
                         buildWindow.jumpLinkPlacer.jumpLinks.RemoveAt(iLink);
-                        foldoutJumplink.RemoveAt(iLink);
+                        jumpLinkSettings.RemoveAt(iLink);
                         buildWindow.RepaintThisWindow();
                         SceneView.RepaintAll();
                         iLink--;
                         continue;
                     }
                     EditorGUILayout.EndHorizontal();
-                    if (foldoutJumplink[iLink])
+                    if (jumpLinkSettings[iLink].showDetails)
                     {
                         link.worldPointA = EditorGUILayout.Vector2Field("WorldPointA", link.worldPointA);
                         link.worldPointB = EditorGUILayout.Vector2Field("WorldPointB", link.worldPointB);
+
+                        link.xSpeedScale = EditorGUILayout.Slider("Speed Percentage", link.xSpeedScale, 0.001f, 1.0f);
 
                         GUI.enabled = false;
 
@@ -570,13 +613,22 @@ namespace NavMesh2D.Core
                 EditorGUILayout.EndScrollView();
                 if (GUILayout.Button("Add Link"))
                 {
-                    buildWindow.jumpLinkPlacer.jumpLinks.Add(new JumpLinkPlacer.JumpLink());
-                    UpdateMappedPoints(buildWindow.jumpLinkPlacer.jumpLinks[buildWindow.jumpLinkPlacer.jumpLinks.Count -1]);
-                    foldoutJumplink.Add(false);
+                    Camera[] sceneViewCams = SceneView.GetAllSceneCameras();
+                    if (sceneViewCams.Length > 0)
+                    {
+                        Vector2 screenCenter = sceneViewCams[0].ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+                        buildWindow.jumpLinkPlacer.jumpLinks.Add(new JumpLinkPlacer.JumpLink(screenCenter, screenCenter + Vector2.right * 3));
+                    }
+                    else
+                    {
+                        buildWindow.jumpLinkPlacer.jumpLinks.Add(new JumpLinkPlacer.JumpLink());
+                    }
+                    UpdateMappedPoints(buildWindow.jumpLinkPlacer.jumpLinks[buildWindow.jumpLinkPlacer.jumpLinks.Count - 1]);
+                    jumpLinkSettings.Add(new JumpLinkSettings());
                     buildWindow.RepaintThisWindow();
                     SceneView.RepaintAll();
                 }
-                GUI.enabled = foldoutJumplink.Count > 0;
+                GUI.enabled = jumpLinkSettings.Count > 0;
                 if (GUILayout.Button("Save"))
                 {
                     SaveJumpLinks();
@@ -587,31 +639,87 @@ namespace NavMesh2D.Core
         public void OnSceneGUI(SceneView sceneView)
         {
             JumpLinkPlacer.JumpLink link;
-            for (int iLink = 0; iLink < foldoutJumplink.Count; iLink++)
+            for (int iLink = 0; iLink < jumpLinkSettings.Count; iLink++)
             {
+                if (!jumpLinkSettings[iLink].showInScene)
+                    continue;
                 link = buildWindow.jumpLinkPlacer.jumpLinks[iLink];
                 EditorGUI.BeginChangeCheck();
 
                 link.worldPointA = Handles.PositionHandle(link.worldPointA, Quaternion.identity);
                 link.worldPointB = Handles.PositionHandle(link.worldPointB, Quaternion.identity);
 
-                Handles.DrawDottedLine(link.navPointA, link.navPointB, 10);
+               
+
                 Handles.DrawLine(link.navPointA, link.worldPointA);
                 Handles.DrawLine(link.navPointB, link.worldPointB);
-                Handles.DrawWireDisc(link.navPointA, Vector3.forward, 0.1f);
-                Handles.DrawWireDisc(link.navPointB, Vector3.forward, 0.1f);
 
-                Handles.color = link.isJumpLinkValid ? Color.green : Color.red;
+                Handles.DrawLine(link.navPointA, link.navPointB);
+                Vector2 tangent = (link.navPointB - link.navPointA);
+                float dist = tangent.magnitude;
+                tangent /= dist;
+                Vector2 arrowOrigin = (tangent * (dist / 2)) + link.navPointA;
 
-                Vector2 swapPos;
-                Vector2 prevPos = new Vector2(link.jumpArc.minX, link.jumpArc.Calc(link.jumpArc.minX));
-                for (float x = link.jumpArc.minX; x + 0.1f < link.jumpArc.maxX; x += 0.1f)
+                link.xSpeedScale = Mathf.Clamp(1 - Handles.ScaleSlider(1 -link.xSpeedScale, arrowOrigin, Vector3.up, Quaternion.identity, HandleUtility.GetHandleSize(arrowOrigin), 0.01f), 0f, 1f);
+
+                Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, 30) * -tangent * 0.2f) + (Vector3)arrowOrigin);
+                Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, -30) * -tangent * 0.2f) + (Vector3)arrowOrigin);
+                arrowOrigin += tangent * 0.2f;
+                Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, 30) * -tangent * 0.2f) + (Vector3)arrowOrigin);
+                Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, -30) * -tangent * 0.2f) + (Vector3)arrowOrigin);
+                arrowOrigin -= tangent * 0.4f;
+                Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, 30) * -tangent * 0.2f) + (Vector3)arrowOrigin);
+                Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, -30) * -tangent * 0.2f) + (Vector3)arrowOrigin);
+
+
+                if (!jumpLinkSettings[iLink].showInSceneDetailed)
                 {
-                    swapPos = new Vector2(x, link.jumpArc.Calc(x));
-                    Handles.DrawLine(prevPos, swapPos);
-                    prevPos = swapPos;
+                    Handles.DrawWireDisc(link.navPointA, Vector3.forward, 0.1f);
+                    Handles.DrawWireDisc(link.navPointB, Vector3.forward, 0.1f);
+                    Handles.color = link.isJumpLinkValid ? Color.green : Color.red;
+
+                    Vector2 offset = link.navPointA;
+                    DrawJumpArc(link, offset);
                 }
-                Handles.DrawLine(prevPos, new Vector2(link.jumpArc.maxX, link.jumpArc.Calc(link.jumpArc.maxX)));
+                else
+                {
+
+
+
+                    Vector2 upRight, downRight, upLeft, downLeft;
+                    float halfWidth = buildWindow.groundWalkerSettings.width / 2;
+                    upRight = new Vector2(link.navPointA.x - halfWidth, link.navPointA.y + buildWindow.groundWalkerSettings.height);
+                    upLeft = new Vector2(link.navPointA.x + halfWidth, link.navPointA.y + buildWindow.groundWalkerSettings.height);
+                    downLeft = new Vector2(link.navPointA.x + halfWidth, link.navPointA.y);
+                    downRight = new Vector2(link.navPointA.x - halfWidth, link.navPointA.y);
+                    Handles.DrawLine(upRight, upLeft);
+                    Handles.DrawLine(upLeft, downLeft);
+                    Handles.DrawLine(downLeft, downRight);
+                    Handles.DrawLine(downRight, upRight);
+
+                    Vector2 endPointOffset = link.navPointB - link.navPointA;
+                    Handles.DrawLine(upRight + endPointOffset, upLeft + endPointOffset);
+                    Handles.DrawLine(upLeft + endPointOffset, downLeft + endPointOffset);
+                    Handles.DrawLine(downLeft + endPointOffset, downRight + endPointOffset);
+                    Handles.DrawLine(downRight + endPointOffset, upRight + endPointOffset);
+
+                    Handles.DrawWireDisc(link.navPointA, Vector3.forward, 0.05f);
+                    Handles.DrawWireDisc(link.navPointB, Vector3.forward, 0.05f);
+
+                    Handles.DrawWireDisc(downRight, Vector3.forward, 0.1f);
+                    Handles.DrawWireDisc(downLeft, Vector3.forward, 0.1f);
+
+                    Handles.DrawWireDisc(downLeft + endPointOffset, Vector3.forward, 0.1f);
+                    Handles.DrawWireDisc(downRight + endPointOffset, Vector3.forward, 0.1f);
+
+                    Handles.color = link.isJumpLinkValid ? Color.green : Color.red;
+
+                    DrawJumpArc(link, upRight);
+                    DrawJumpArc(link, upLeft);
+                    DrawJumpArc(link, downLeft);
+                    DrawJumpArc(link, downRight);
+                }
+
                 Handles.color = Color.white;
 
 
@@ -623,6 +731,19 @@ namespace NavMesh2D.Core
             }
         }
 
+        void DrawJumpArc(JumpLinkPlacer.JumpLink link, Vector2 origin)
+        {
+            Vector2 swapPos;
+            Vector2 prevPos = new Vector2(link.jumpArc.minX, link.jumpArc.Calc(link.jumpArc.minX)) + origin;
+            for (float x = link.jumpArc.minX; x + 0.1f < link.jumpArc.maxX; x += 0.1f)
+            {
+                swapPos = new Vector2(x, link.jumpArc.Calc(x)) + origin;
+                Handles.DrawLine(prevPos, swapPos);
+                prevPos = swapPos;
+            }
+            Handles.DrawLine(prevPos, new Vector2(link.jumpArc.maxX, link.jumpArc.Calc(link.jumpArc.maxX)) + origin);
+        }
+
         public void OnSelectionChanges()
         {
 
@@ -631,16 +752,18 @@ namespace NavMesh2D.Core
         void UpdateMappedPoints(JumpLinkPlacer.JumpLink link)
         {
             Vector2 mappedPos;
-            if (buildWindow.expandedTree.TryMapPointToContour(link.worldPointA, out mappedPos))
+            Vector2 normal;
+            if (buildWindow.expandedTree.TryMapPointToContour(link.worldPointA, out mappedPos, out normal))
             {
                 link.navPointA = mappedPos;
+                link.normalA = normal;
             }
-            if (buildWindow.expandedTree.TryMapPointToContour(link.worldPointB, out mappedPos))
+            if (buildWindow.expandedTree.TryMapPointToContour(link.worldPointB, out mappedPos, out normal))
             {
                 link.navPointB = mappedPos;
             }
 
-            float targetT = (link.navPointB.x - link.navPointA.x) / buildWindow.groundWalkerSettings.maxXVel;
+            float targetT = (link.navPointB.x - link.navPointA.x) / (buildWindow.groundWalkerSettings.maxXVel * link.xSpeedScale);
             float arcTargetJ = ((link.navPointB.y - link.navPointA.y) / targetT) + buildWindow.groundWalkerSettings.gravity * targetT;
             if (Mathf.Abs(arcTargetJ) > buildWindow.groundWalkerSettings.jumpForce)
                 link.isJumpLinkValid = false;
@@ -651,7 +774,7 @@ namespace NavMesh2D.Core
             float arcLowerBound = (link.navPointB.x < link.navPointA.x) ? link.navPointB.x : link.navPointA.x;
             float arcUpperBound = (link.navPointB.x < link.navPointA.x) ? link.navPointA.x : link.navPointB.x;
 
-            link.jumpArc = new JumpArc(arcTargetJ, buildWindow.groundWalkerSettings.gravity, buildWindow.groundWalkerSettings.maxXVel, link.navPointA, arcLowerBound, arcUpperBound);
+            link.jumpArc = new JumpArcSegment(arcTargetJ, buildWindow.groundWalkerSettings.gravity, buildWindow.groundWalkerSettings.maxXVel * link.xSpeedScale, arcLowerBound - link.navPointA.x, arcUpperBound - link.navPointA.x);
         }
 
         void SaveJumpLinks()
@@ -666,6 +789,32 @@ namespace NavMesh2D.Core
             AssetDatabase.Refresh();
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = buildWindow.jumpLinkPlacer;
+        }
+
+        void ToogleShowDetailAll(bool showDetail)
+        {
+            foreach (JumpLinkSettings set in jumpLinkSettings)
+            {
+                set.showDetails = showDetail;
+            }
+        }
+
+        void ToogleShowInScene(bool showInScene)
+        {
+            foreach (JumpLinkSettings set in jumpLinkSettings)
+            {
+                set.showInScene = showInScene;
+            }
+            SceneView.RepaintAll();
+        }
+
+        void ToogleShowInSceneDetailed(bool showInSceneDetailed)
+        {
+            foreach (JumpLinkSettings set in jumpLinkSettings)
+            {
+                set.showInSceneDetailed = showInSceneDetailed;
+            }
+            SceneView.RepaintAll();
         }
     }
 
