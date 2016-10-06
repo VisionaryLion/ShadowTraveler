@@ -135,6 +135,7 @@ namespace CC2D
             Walk,
             Climb, //Move up, down, right, left
             LockedJump, //No horizontal movement input!
+            Crouched
         }
 
         /// <summary>
@@ -215,6 +216,9 @@ namespace CC2D
 
         //External reference
         Transform _fakeParent;
+
+        // Is player currently crouched
+        bool _isCrouched;
         #endregion
 
         void Awake()
@@ -286,6 +290,23 @@ namespace CC2D
                         transform.parent = null;
                         FakeTransformParent = null;
                     }
+
+                    if (CurrentMovementInput.IsCrouched())
+                        StartCrouch();
+                    else
+                        EndCrouch();
+
+                    break;
+
+                case MState.Crouched:
+                    AccelerateHorizontal(ref walkHAcc, ref walkHFric, ref walkHMaxSpeed);
+                    _cVelocity.y = -0.02f; //Small downwards velocity, to keep the CC2D grounded.
+                    ApplyGravity(ref gravityAcceleration, ref fallCap);
+
+                    if (CurrentMovementInput.IsCrouched())
+                        StartCrouch();
+                    else
+                        EndCrouch();
                     break;
 
                 case MState.Fall:
@@ -409,7 +430,9 @@ namespace CC2D
             }
             else if (obj.CompareTag("Crouch"))
             {
-                spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / .75f, spriteRoot.localScale.y / .75f, spriteRoot.localScale.z);
+                // if we exit a crouch trigger then we do not have to be crouched
+                CurrentMovementInput.mustCrouch = false;
+                obj.transform.localPosition = new Vector3(obj.transform.localPosition.x, obj.transform.localPosition.y - .01f, obj.transform.localPosition.z);
             }
         }
 
@@ -425,7 +448,9 @@ namespace CC2D
             }
             else if (obj.CompareTag("Crouch"))
             {
-                spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * .75f, spriteRoot.localScale.y * .75f, spriteRoot.localScale.z);
+                // if we enter a crouched trigger then we must crouch
+                CurrentMovementInput.mustCrouch = true;
+                obj.transform.localPosition = new Vector3(obj.transform.localPosition.x, obj.transform.localPosition.y + .01f, obj.transform.localPosition.z);
             }
         }
 
@@ -697,6 +722,30 @@ namespace CC2D
             _cVelocity.y = jumpVAcc;
             _prevMState = _cMState;
             _cMState = MState.LockedJump;
+        }
+
+        float crouchScaleFactor = 0.50f;  // hack to show player as crouched
+        void StartCrouch()
+        {
+            _prevMState = _cMState;
+            _cMState = MState.Crouched;
+            if (_isCrouched == false)
+            {
+                spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * crouchScaleFactor, spriteRoot.localScale.y * crouchScaleFactor, spriteRoot.localScale.z);
+            }
+            _isCrouched = true;
+
+        }
+
+        void EndCrouch()
+        {
+            _prevMState = _cMState;
+            _cMState = MState.Walk;
+            if (_isCrouched)
+            {
+                spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / crouchScaleFactor, spriteRoot.localScale.y / crouchScaleFactor, spriteRoot.localScale.z);
+            }
+            _isCrouched = false;
         }
 
         void StartGliding()

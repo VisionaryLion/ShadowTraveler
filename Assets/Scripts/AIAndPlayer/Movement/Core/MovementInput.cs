@@ -11,6 +11,9 @@ namespace CC2D {
         public float horizontal; //The input for the horizontal axis
         public float vertical; //The input for the vertical axis
 
+        public bool isCrouched;
+        public bool mustCrouch;
+
         public MovementInput()
         {
             timeOfLastJumpStateChange = float.MinValue;// Make sure it cant be bigger then any delay.
@@ -23,7 +26,12 @@ namespace CC2D {
         /// <returns></returns>
         public bool ShouldJump(float maxDelay)
         {
-            return !isJumpConsumed && (jump || Time.time - timeOfLastJumpStateChange <= maxDelay);
+            return !isJumpConsumed && !isCrouched && (jump || Time.time - timeOfLastJumpStateChange <= maxDelay);
+        }
+
+        public bool IsCrouched()
+        {
+            return isCrouched || mustCrouch;
         }
     }
 }

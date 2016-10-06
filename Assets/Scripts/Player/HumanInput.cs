@@ -39,6 +39,10 @@ namespace CC2D
                 {
                     bufferedInput.timeOfLastJumpStateChange = Time.time;
                 }
+                else if (Input.GetButtonDown("Crouch"))
+                {
+                    bufferedInput.isCrouched = !bufferedInput.isCrouched;
+                }
                 else
                     bufferedInput.jump = Input.GetButton("Jump");
             }
