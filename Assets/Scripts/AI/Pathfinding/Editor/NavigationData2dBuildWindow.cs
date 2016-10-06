@@ -130,6 +130,11 @@ namespace NavMesh2D.Core
         bool useSelection;
         [SerializeField]
         bool hideSelectedGeometry = false;
+        [SerializeField]
+        float nodeMergeDist;
+        [SerializeField]
+        float maxEdgeDeviation;
+
 
         CollisionGeometrySet collisionGeometrySet;
         [SerializeField]
@@ -162,7 +167,7 @@ namespace NavMesh2D.Core
         {
             GatherCollisionData();
             collisionGeometrySet = CollisionGeometrySetBuilder.Build(inputGeometry, circleVertCount);
-            ContourTree contourTree = ContourTree.Build(collisionGeometrySet);
+            ContourTree contourTree = ContourTree.Build(collisionGeometrySet, nodeMergeDist, maxEdgeDeviation);
             if (contourTree != null)
             {
                 buildWindow.expandedTree = ExpandedTreeSetBuilder.Build(contourTree, new float[] { buildWindow.groundWalkerSettings.height })[0];
@@ -184,15 +189,15 @@ namespace NavMesh2D.Core
         public void OnGUI()
         {
             EditorGUI.BeginChangeCheck();
-
-
-
             selectAllStatic = EditorGUILayout.Toggle("Select all static", selectAllStatic);
             selectionMask = CustomEditorFields.LayerMaskField("Selection Mask", selectionMask);
             useSelection = EditorGUILayout.Toggle("Use Selection", useSelection);
 
             EditorGUILayout.HelpBox("Size of current selection = " + inputGeometry.Length, MessageType.Info);
             circleVertCount = EditorGUILayout.IntSlider("Circle Vert Count", circleVertCount, 4, 64);
+
+            nodeMergeDist = EditorGUILayout.Slider("Merge Distance", nodeMergeDist, 0.001f, .5f);
+            maxEdgeDeviation = EditorGUILayout.Slider("Max Edge Deviation", maxEdgeDeviation, 0.0f, 5f);
 
             bool change = EditorGUI.EndChangeCheck();
             EditorGUILayout.Space();
@@ -327,10 +332,11 @@ namespace NavMesh2D.Core
         {
             Vector3[] dummyArray = new Vector3[node.contour.pointNodeCount];
             int counter = 0;
-
+            Handles.color = Color.black;
             foreach (PointNode pn in node.contour)
             {
                 dummyArray[counter] = pn.pointB;
+                Handles.DrawWireDisc(pn.pointB, Vector3.forward, 0.1f);
                 counter++;
             }
             Handles.color = Color.green;
@@ -649,7 +655,7 @@ namespace NavMesh2D.Core
                 link.worldPointA = Handles.PositionHandle(link.worldPointA, Quaternion.identity);
                 link.worldPointB = Handles.PositionHandle(link.worldPointB, Quaternion.identity);
 
-               
+
 
                 Handles.DrawLine(link.navPointA, link.worldPointA);
                 Handles.DrawLine(link.navPointB, link.worldPointB);
@@ -660,7 +666,7 @@ namespace NavMesh2D.Core
                 tangent /= dist;
                 Vector2 arrowOrigin = (tangent * (dist / 2)) + link.navPointA;
 
-                link.xSpeedScale = Mathf.Clamp(1 - Handles.ScaleSlider(1 -link.xSpeedScale, arrowOrigin, Vector3.up, Quaternion.identity, HandleUtility.GetHandleSize(arrowOrigin), 0.01f), 0f, 1f);
+                link.xSpeedScale = Mathf.Clamp(1 - Handles.ScaleSlider(1 - link.xSpeedScale, arrowOrigin, Vector3.up, Quaternion.identity, HandleUtility.GetHandleSize(arrowOrigin), 0.01f), 0f, 1f);
 
                 Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, 30) * -tangent * 0.2f) + (Vector3)arrowOrigin);
                 Handles.DrawLine(arrowOrigin, (Quaternion.Euler(0, 0, -30) * -tangent * 0.2f) + (Vector3)arrowOrigin);

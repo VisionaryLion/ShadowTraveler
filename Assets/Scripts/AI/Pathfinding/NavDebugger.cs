@@ -17,6 +17,10 @@ public class NavDebugger : MonoBehaviour
 
     [Range(0.0f, 10.0f)]
     public float minHeightTest = 0;
+    [Range(0.001f, .5f)]
+    public float nodeMergeDist;
+    [Range(0.0f, 5f)]
+    public float maxEdgeDeviation;
 
     public Transform closestTestPoint;
 
@@ -41,7 +45,7 @@ public class NavDebugger : MonoBehaviour
         watch.Reset();
         watch.Start();
 
-        outlineTree = ContourTree.Build(cgs);
+        outlineTree = ContourTree.Build(cgs, nodeMergeDist, maxEdgeDeviation);
         Debug.Log("OutlineTreeBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
@@ -126,7 +130,15 @@ public class NavDebugger : MonoBehaviour
                 break;
             case DebugWhichSet.NavigationData2D:
                 if (navData2D != null)
+                {
                     navData2D.DrawForDebug();
+                    Vector2 mappedPoint;
+                    if (navData2D.TryMapPoint(closestTestPoint.position, out mappedPoint))
+                    {
+                        Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
+                        DebugExtension.DebugPoint(mappedPoint);
+                    }
+                }
                 break;
         }
     }

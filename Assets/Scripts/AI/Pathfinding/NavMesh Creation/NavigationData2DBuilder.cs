@@ -66,7 +66,7 @@ namespace NavMesh2D.Core
 
             PointNode cPN = startPointNode;
 
-            Bounds bounds = new Bounds();
+            Bounds bounds = new Bounds(cPN.pointB, Vector3.zero);
             int safetyCounter = 0;
 
             while (safetyCounter < 10000)
@@ -79,7 +79,6 @@ namespace NavMesh2D.Core
                     }
                     if (cPN.FirstObstructedSegment == null)
                     {
-                        bounds = new Bounds(cPN.pointB, Vector3.zero);
                         float angle = Vector2.Angle(Vector2.up, cPN.tangentBC) * Mathf.Deg2Rad;
                         if (Vector3.Cross(Vector2.up, cPN.tangentBC).z < 0)
                             angle = Mathf.PI * 2 - angle;
@@ -161,10 +160,11 @@ namespace NavMesh2D.Core
                         if (lastNode)
                             break;
                         cPN = cPN.Next;
+                        bounds = new Bounds(cPN.Next.pointB, Vector3.zero);
                     }
                     else
                     {
-
+                        bounds = new Bounds(cPN.Next.pointB, Vector3.zero);
                         Vector2 endPoint = cPN.pointB + cObstrSe.end * cPN.tangentBC;
                         float angle = Vector2.Angle(Vector2.up, cPN.tangentBC) * Mathf.Deg2Rad;
                         if (Vector3.Cross(Vector2.up, cPN.tangentBC).z < 0)
@@ -175,6 +175,11 @@ namespace NavMesh2D.Core
                         {
                             cObstrSe = null;
                             cPN = cPN.Next;
+                            vertBuffer.Add(new NavVert(cPN.pointB));
+                            bounds.Encapsulate(endPoint);
+                            nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
+                            vertBuffer.Clear();
+                            bounds = new Bounds(cPN.pointB, Vector3.zero);
                         }
                         else
                         {
@@ -184,6 +189,7 @@ namespace NavMesh2D.Core
                             bounds.Encapsulate(endPoint);
                             nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
                             vertBuffer.Clear();
+                            bounds = new Bounds(cPN.pointB + cObstrSe.end * cPN.tangentBC, Vector3.zero);
                         }
                     }
                 }

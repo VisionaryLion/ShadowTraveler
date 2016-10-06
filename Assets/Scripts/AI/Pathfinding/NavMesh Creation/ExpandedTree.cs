@@ -87,6 +87,8 @@ namespace NavMesh2D.Core
             return foundOne;
         }
 
+       
+
         public void OnBeforeSerialize()
         {
             headNodeChildren = headNode.children.ToArray();
