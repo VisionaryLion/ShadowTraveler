@@ -1,5 +1,6 @@
 ﻿//#define Glide
 //#define DEBUG
+//#define OLD
 
 using UnityEngine;
 using Utility.ExtensionMethods;
@@ -251,16 +252,28 @@ namespace CC2D
             HandleFakeParenting();
         }
 
+        //void NewFixedUpdate()
+        //{
+        //    foreach (var inputEvent in CurrentMovementInput.GetEvents())
+        //    {
+        //        Debug.Log(inputEvent.GetType().Name);
+        //    }
+        //}
+
         void FixedUpdate()
         {
             if (IsFroozen)
                 return;
+
+            //NewFixedUpdate();
             _prevMState = _cMState;
             //Check, if we are grounded
             if (actor.CharacterController2D.collisionState.wasGroundedLastFrame && !actor.CharacterController2D.isGrounded)
                 OnIsNotGrounded();
             else if (actor.CharacterController2D.collisionState.becameGroundedThisFrame)
                 OnBecameGrounded();
+
+            var currentInputEvent = CurrentMovementInput.GetNextEvent();
 
             switch (_cMState)
             {
@@ -270,8 +283,13 @@ namespace CC2D
                     if (actor.CharacterController2D.collisionState.standOnToSteepSlope || actor.CharacterController2D.manuallyCheckForSteepSlopes(-actor.CharacterController2D.collisionState.belowHit.normal.x))
                     {
                         HandleSlope();
+#if OLD
                         if (CurrentMovementInput.ShouldJump(maxJumpExecutionDelay))
+#else
+                        if (currentInputEvent as JumpEvent != null)
+#endif
                         {
+                            CurrentMovementInput.ConsumeEvent(currentInputEvent);
                             StartLockedJump();
                             return;
                         }
@@ -280,8 +298,15 @@ namespace CC2D
                     AccelerateHorizontal(ref walkHAcc, ref walkHFric, ref walkHMaxSpeed);
                     _cVelocity.y = -0.02f; //Small downwards velocity, to keep the CC2D grounded.
 
+#if OLD
                     if (CurrentMovementInput.ShouldJump(maxJumpExecutionDelay))
+#else
+                    if (currentInputEvent as JumpEvent != null)
+#endif
+                    {
+                        CurrentMovementInput.ConsumeEvent(currentInputEvent);
                         StartJump();
+                    }
                     else if (actor.CharacterController2D.collisionState.belowHit.collider.CompareTag(movingPlatformTag))
                     {
                         if (actor.CharacterController2D.collisionState.belowHit.collider.transform.rotation != Quaternion.identity || actor.CharacterController2D.collisionState.belowHit.collider.transform.localScale != new Vector3(1, 1, 1))
@@ -297,9 +322,15 @@ namespace CC2D
                         FakeTransformParent = null;
                     }
 
+#if OLD
                     if (CurrentMovementInput.toggleCrouch)
+#else
+                    if (currentInputEvent as CrouchEvent != null)
+#endif
+                    {
+                        CurrentMovementInput.ConsumeEvent(currentInputEvent);
                         StartCrouch();
-
+                    }
                     break;
 
                 case MState.Crouched:
@@ -307,8 +338,15 @@ namespace CC2D
                     _cVelocity.y = -0.02f; //Small downwards velocity, to keep the CC2D grounded.
                     ApplyGravity(ref gravityAcceleration, ref fallCap);
 
+#if OLD
                     if (CurrentMovementInput.toggleCrouch)
+#else
+                    if (currentInputEvent as CrouchEvent != null)
+#endif
+                    {
+                        CurrentMovementInput.ConsumeEvent(currentInputEvent);
                         EndCrouch();
+                    }
 
                     break;
 
@@ -324,7 +362,7 @@ namespace CC2D
                     frontAnimator.SetBool("IsFalling", false);
                     }
                     else
-#endif 
+#endif
                     if (ShouldWallSlide())
                     {
                         StartWallSliding();
@@ -339,12 +377,14 @@ namespace CC2D
                     //Possible transitions
                     if (_cVelocity.y <= jumpCutVelocity) //Finished jumping, gravity catch us!
                         StartFalling();
+#if OLD
                     else if (Time.time - _stateStartTime >= minJumpTime && !CurrentMovementInput.jump)
-                    {
-                        if (_cVelocity.y > jumpCutVelocity)
-                            _cVelocity.y = jumpCutVelocity;
-                        StartFalling();
-                    }
+                     {
+                         if (_cVelocity.y > jumpCutVelocity)
+                             _cVelocity.y = jumpCutVelocity;
+                         StartFalling();
+                     }
+#endif
                     else if (actor.CharacterController2D.collisionState.above) // Probably hit the ceiling. Abort Jump to avoid "hovering at the ceiling"!
                     {
                         _cVelocity.y = 0;
@@ -370,8 +410,15 @@ namespace CC2D
 
                 case MState.Glide:
                     AccelerateHorizontal(ref glideHAcc, ref glideHFric, ref glideHMaxSpeed);
+#if OLD
                     if (!CurrentMovementInput.jump)
+#else
+                    if (currentInputEvent as JumpEvent == null)
+#endif
+                    {
+                        CurrentMovementInput.ConsumeEvent(currentInputEvent);
                         StartFalling();
+                    }
                     break;
                 case MState.WallSlide:
                     if (_cFacingDir * CurrentMovementInput.horizontalRaw < 0) //They don't share the same sign and horizontalRaw != 0
@@ -382,8 +429,16 @@ namespace CC2D
                     }
                     else
                         _wallDetachingInput = 0; // No opposite to wall input. Reset wall detaching counter
+
+#if OLD
                     if (CurrentMovementInput.ShouldJump(maxJumpExecutionDelay)) //Check for wall jumps
+#else
+                    if (currentInputEvent as JumpEvent != null)
+#endif
+                    {
+                        CurrentMovementInput.ConsumeEvent(currentInputEvent);
                         StartWallJump();
+                    }
                     if (!actor.CharacterController2D.manuallyCheckForCollisionsH(_cFacingDir * 0.01f)) //The wall suddenly ended in mid air!
                         StartFalling();
                     break;
@@ -411,8 +466,15 @@ namespace CC2D
                     //Possible transitions
                     //To allow jumping, even when not grounded, but only when some sort of x movement is applied.
                     //For a straight up jump, climbing shouldn't be used!
+#if OLD
                     if (CurrentMovementInput.ShouldJump(maxJumpExecutionDelay) && _cVelocity.x != 0)
+#else
+                    if (currentInputEvent as JumpEvent != null && _cVelocity.x != 0)
+#endif
+                    {
+                        CurrentMovementInput.ConsumeEvent(currentInputEvent);
                         StartJump();
+                    }
                     break;
             }
             //Solely determined by input
@@ -696,7 +758,7 @@ namespace CC2D
             return result;
         }
 
-        #region Methods to start each state with
+#region Methods to start each state with
 
         void StartFalling()
         {
@@ -787,9 +849,9 @@ namespace CC2D
             _prevMState = _cMState;
         }
 
-        #endregion
+#endregion
 
-        #region Coroutines
+#region Coroutines
 
         private delegate void DelayedAction(object data);
         /// <summary>
@@ -810,10 +872,10 @@ namespace CC2D
             action(data);
         }
 
-        #endregion
+#endregion
 
 #if DEBUG
-        #region Debug
+#region Debug
 
         void OnGUI()
         {
@@ -830,7 +892,7 @@ namespace CC2D
                 GUILayout.Label("isFakedParents = " + (_fakeParent != null));
             }
         }
-        #endregion
+#endregion
 #endif
     }
 

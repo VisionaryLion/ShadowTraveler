@@ -31,6 +31,7 @@ namespace CC2D
             {
                 if (Input.GetButtonDown("Jump"))
                 {
+                    bufferedInput.AddEvent(new JumpEvent());
                     bufferedInput.timeOfLastJumpStateChange = Time.time;
                     bufferedInput.jump = true;
                     bufferedInput.isJumpConsumed = false;
@@ -41,6 +42,8 @@ namespace CC2D
                 }
                 else if (Input.GetButtonDown("Crouch"))
                 {
+                    bufferedInput.AddEvent(new CrouchEvent());
+
                     bufferedInput.toggleCrouch = !bufferedInput.toggleCrouch;
                 }
                 else

@@ -63,6 +63,7 @@ namespace CC2D
                     bufferedInput.timeOfLastJumpStateChange = Time.time;
                     bufferedInput.isJumpConsumed = false;
                     bufferedInput.jump = true;
+                    bufferedInput.AddEvent(new JumpEvent());
                 }
             }
             else
@@ -80,6 +81,7 @@ namespace CC2D
                     bufferedInput.timeOfLastJumpStateChange = Time.time;
                     bufferedInput.isJumpConsumed = false;
                     bufferedInput.jump = true;
+                    bufferedInput.AddEvent(new JumpEvent());
                 }
             }
         }
