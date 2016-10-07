@@ -41,7 +41,7 @@ namespace CC2D
                 }
                 else if (Input.GetButtonDown("Crouch"))
                 {
-                    bufferedInput.isCrouched = !bufferedInput.isCrouched;
+                    bufferedInput.toggleCrouch = !bufferedInput.toggleCrouch;
                 }
                 else
                     bufferedInput.jump = Input.GetButton("Jump");

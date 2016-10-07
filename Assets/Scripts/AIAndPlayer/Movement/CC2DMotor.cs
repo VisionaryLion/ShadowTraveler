@@ -122,6 +122,14 @@ namespace CC2D
         [Tooltip("Used to slowly damp impulses from other rigidbodys.")]
         float standartDrag = 0.3f;
 
+        [Header("Crouch:")]
+        [SerializeField]
+        float crouchHAcc = 3; //horizontal speed
+        [SerializeField]
+        float crouchHFric = 3; //horizontal speed
+        [SerializeField]
+        float crouchHMaxSpeed = 5;
+
         #endregion
 
         #region Public
@@ -217,8 +225,6 @@ namespace CC2D
         //External reference
         Transform _fakeParent;
 
-        // Is player currently crouched
-        bool _isCrouched;
         #endregion
 
         void Awake()
@@ -291,22 +297,19 @@ namespace CC2D
                         FakeTransformParent = null;
                     }
 
-                    if (CurrentMovementInput.IsCrouched())
+                    if (CurrentMovementInput.toggleCrouch)
                         StartCrouch();
-                    else
-                        EndCrouch();
 
                     break;
 
                 case MState.Crouched:
-                    AccelerateHorizontal(ref walkHAcc, ref walkHFric, ref walkHMaxSpeed);
+                    AccelerateHorizontal(ref crouchHAcc, ref crouchHFric, ref crouchHMaxSpeed);
                     _cVelocity.y = -0.02f; //Small downwards velocity, to keep the CC2D grounded.
                     ApplyGravity(ref gravityAcceleration, ref fallCap);
 
-                    if (CurrentMovementInput.IsCrouched())
-                        StartCrouch();
-                    else
+                    if (CurrentMovementInput.toggleCrouch)
                         EndCrouch();
+
                     break;
 
                 case MState.Fall:
@@ -431,7 +434,6 @@ namespace CC2D
             else if (obj.CompareTag("Crouch"))
             {
                 // if we exit a crouch trigger then we do not have to be crouched
-                CurrentMovementInput.mustCrouch = false;
                 obj.transform.localPosition = new Vector3(obj.transform.localPosition.x, obj.transform.localPosition.y - .01f, obj.transform.localPosition.z);
             }
         }
@@ -449,7 +451,6 @@ namespace CC2D
             else if (obj.CompareTag("Crouch"))
             {
                 // if we enter a crouched trigger then we must crouch
-                CurrentMovementInput.mustCrouch = true;
                 obj.transform.localPosition = new Vector3(obj.transform.localPosition.x, obj.transform.localPosition.y + .01f, obj.transform.localPosition.z);
             }
         }
@@ -505,6 +506,12 @@ namespace CC2D
                 _isGrounded = false;
             if (_cMState == MState.Walk)
             {
+                _cVelocity.y = 0; //Set it in WALK to something, now reset it.
+                StartFalling();
+            }
+            else if (_cMState == MState.Crouched)
+            {
+                EndCrouch();
                 _cVelocity.y = 0; //Set it in WALK to something, now reset it.
                 StartFalling();
             }
@@ -728,24 +735,23 @@ namespace CC2D
         void StartCrouch()
         {
             _prevMState = _cMState;
-            _cMState = MState.Crouched;
-            if (_isCrouched == false)
+            if (_cMState != MState.Crouched)
             {
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * crouchScaleFactor, spriteRoot.localScale.y * crouchScaleFactor, spriteRoot.localScale.z);
             }
-            _isCrouched = true;
-
+            CurrentMovementInput.toggleCrouch = false;
+            _cMState = MState.Crouched;
         }
 
         void EndCrouch()
         {
             _prevMState = _cMState;
-            _cMState = MState.Walk;
-            if (_isCrouched)
+            if (_cMState == MState.Crouched)
             {
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / crouchScaleFactor, spriteRoot.localScale.y / crouchScaleFactor, spriteRoot.localScale.z);
             }
-            _isCrouched = false;
+            CurrentMovementInput.toggleCrouch = false;
+            _cMState = MState.Walk;
         }
 
         void StartGliding()

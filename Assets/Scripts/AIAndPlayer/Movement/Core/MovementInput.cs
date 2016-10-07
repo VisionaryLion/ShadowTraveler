@@ -11,8 +11,10 @@ namespace CC2D {
         public float horizontal; //The input for the horizontal axis
         public float vertical; //The input for the vertical axis
 
-        public bool isCrouched;
-        public bool mustCrouch;
+        /// <summary>
+        /// Toggle crouching
+        /// </summary>
+        public bool toggleCrouch;
 
         public MovementInput()
         {
@@ -26,12 +28,7 @@ namespace CC2D {
         /// <returns></returns>
         public bool ShouldJump(float maxDelay)
         {
-            return !isJumpConsumed && !isCrouched && (jump || Time.time - timeOfLastJumpStateChange <= maxDelay);
-        }
-
-        public bool IsCrouched()
-        {
-            return isCrouched || mustCrouch;
+            return !isJumpConsumed && !toggleCrouch && (jump || Time.time - timeOfLastJumpStateChange <= maxDelay);
         }
     }
 }
