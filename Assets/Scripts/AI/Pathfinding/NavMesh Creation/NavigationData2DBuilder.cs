@@ -1,4 +1,4 @@
-﻿#define DEBUG_JUMP_LINKS
+﻿//#define DEBUG_JUMP_LINKS
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -6,220 +6,187 @@ using System;
 
 namespace NavMesh2D.Core
 {
-    public static class NavigationData2DBuilder
+    public class NavigationData2DBuilder
     {
         const float fudgeFactor = 0.00001f;
+        NavAgentGroundWalkerSettings agentSettings;
 
-        public static NavigationData2D Build(ExpandedTree expandedTree, int testIndex)
+        public NavigationData2DBuilder(NavAgentGroundWalkerSettings agentSettings)
+        {
+            this.agentSettings = agentSettings;
+        }
+
+        public NavigationData2D Build(ExpandedTree expandedTree)
         {
             List<NavNode> navNodes = new List<NavNode>(10); //-> make it not arbitrary!!
             foreach (ExpandedNode n in expandedTree.headNode.children)
-                HandleMarkableContour(n, navNodes, testIndex, 1);
+                HandleMarkableContour(n, navNodes, 1);
             NavNode[] allNN = navNodes.ToArray();
             navNodes = null;
             GenerateFloorWalkerJumpLinks(allNN, 20, 20, 5, 5, 2, 40);
             return new NavigationData2D { nodes = allNN };
         }
 
-        private static void HandleMarkableContour(ExpandedNode exNode, List<NavNode> nodes, int testIndex, int hierachyIndex)
+        private void HandleMarkableContour(ExpandedNode exNode, List<NavNode> nodes, int hierachyIndex)
         {
-            nodes.AddRange(InsertMarkableContour(exNode.contour, testIndex, hierachyIndex));
+            ConvertMarkableContour(nodes, exNode.contour, hierachyIndex);
             foreach (ExpandedNode n in exNode.children)
-                HandleMarkableContour(n, nodes, testIndex, hierachyIndex + 1);
+                HandleMarkableContour(n, nodes, hierachyIndex + 1);
         }
 
-        private static NavNode[] InsertMarkableContour(MarkableContour mc, int testIndex, int hierachyIndex)
+        private void ConvertMarkableContour(List<NavNode> inOutNodes, MarkableContour mc, int hierachyIndex)
         {
             //Some debuging
             DebugExtension.DebugArrow(mc.firstPoint.pointB, mc.firstPoint.pointC - mc.firstPoint.pointB);
 
             //Find start point
-            PointNode startPointNode;
-            PointNode.ObstructedSegment cObstrSe = null;
-            bool lastNode;
+            PointNode startPointNode = mc.firstPoint;
+            bool isClosed = true;
 
             foreach (PointNode pn in mc)
             {
-                if (!pn.IsPointWalkable(testIndex))
+                if (/*!pn.IsPointWalkable() ||*/ pn.FirstObstructedSegment != null || !IsEdgeAcceptable(pn))
                 {
                     startPointNode = pn;
-                    lastNode = true;
-                    goto ObstructionFound;
-                }
-                else if (pn.FirstObstructedSegment != null)
-                {
-                    startPointNode = pn;
-                    cObstrSe = pn.FirstObstructedSegment;
-                    lastNode = false;
-                    goto ObstructionFound;
+                    isClosed = false;
+                    break;
                 }
             }
-
-            //No obstruction found
-            return HandleObstructionLessContour(mc, hierachyIndex);
-
-        ObstructionFound:
-
+            DebugExtension.DebugCircle(startPointNode.pointB, Vector3.forward, Color.magenta, 0.5f);
             //startPointNode points now at the first obstruction
             List<NavVert> vertBuffer = new List<NavVert>(mc.pointNodeCount);
-            List<NavNode> nodes = new List<NavNode>(2);
+            Bounds inoutBounds = new Bounds(startPointNode.pointB, Vector3.zero);
 
             PointNode cPN = startPointNode;
-
-            Bounds bounds = new Bounds(cPN.pointB, Vector3.zero);
-            int safetyCounter = 0;
-
-            while (safetyCounter < 10000)
+            do
             {
-                if (cObstrSe == null)
+                HandleEdge(cPN, inOutNodes, vertBuffer, ref inoutBounds, ref isClosed);
+            } while ((cPN = cPN.Next) != startPointNode);
+
+
+            HandleEdge(cPN, inOutNodes, vertBuffer, ref inoutBounds, ref isClosed);
+            if (vertBuffer.Count > 1)
+            {
+                inOutNodes.Add(new NavNode(vertBuffer.ToArray(), inoutBounds, isClosed, hierachyIndex));
+            }
+        }
+
+        private void HandleEdge(PointNode edge, List<NavNode> inoutNodes, List<NavVert> inoutVerts, ref Bounds inoutBounds, ref bool isClosed)
+        {
+            PointNode.ObstructedSegment obstrSeg = edge.FirstObstructedSegment;
+            Vector2 startPoint = edge.pointB;
+
+            if (!IsEdgeAcceptable(edge))
+            {
+                inoutVerts.Add(new NavVert(startPoint));
+                inoutBounds.Encapsulate(startPoint);
+                if (edge.Next != null)
+                    EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, edge.Next.pointB);
+                else
+                    EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, Vector3.zero);
+                isClosed = false;
+                return;
+            }
+
+            if (obstrSeg == null)
+            {
+                inoutVerts.Add(new NavVert(startPoint));
+                inoutBounds.Encapsulate(startPoint);
+                return;
+            }
+            else if (obstrSeg.start == 0)
+            {
+                inoutVerts.Add(new NavVert(startPoint));
+                inoutBounds.Encapsulate(startPoint);
+                EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, startPoint + edge.tangentBC * obstrSeg.end);
+                if (obstrSeg.next == null)
                 {
-                    if (cPN == startPointNode)
+                    if (edge.distanceBC - obstrSeg.end > fudgeFactor)
                     {
-                        lastNode = !lastNode;
+                        startPoint = edge.pointB + edge.tangentBC * obstrSeg.end;
+                        inoutVerts.Add(new NavVert(startPoint));
+                        inoutBounds.Encapsulate(startPoint);
                     }
-                    if (cPN.FirstObstructedSegment == null)
-                    {
-                        float angle = Vector2.Angle(Vector2.up, cPN.tangentBC) * Mathf.Deg2Rad;
-                        if (Vector3.Cross(Vector2.up, cPN.tangentBC).z < 0)
-                            angle = Mathf.PI * 2 - angle;
-                        vertBuffer.Add(new NavVert(cPN.pointB, cPN.angle, angle, cPN.distanceBC));
-                        bounds.Encapsulate(cPN.pointB);
-                        if (cPN.Next == null || lastNode)
-                        {
-                            if (vertBuffer.Count > 1)
-                            {
-                                nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
-                                vertBuffer.Clear();
-                            }
-                            break;
-                        }
-                        cPN = cPN.Next;
-                    }
-                    else
-                    {
-                        cObstrSe = cPN.FirstObstructedSegment;
-                        if (vertBuffer.Count != 0)
-                        {
-                            if (!cPN.IsPointWalkable(testIndex))
-                            {
-                                vertBuffer.Add(new NavVert(cPN.pointB));
-                                bounds.Encapsulate(cPN.pointB);
-                                nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
-                                vertBuffer.Clear();
-                                if (lastNode)
-                                    break;
-                            }
-                            else if (cObstrSe.start == 0)
-                            {
-                                vertBuffer.Add(new NavVert(cPN.pointB));
-                                bounds.Encapsulate(cPN.pointB);
-                                nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
-                                vertBuffer.Clear();
-                                if (lastNode)
-                                    break;
-                            }
-                            else
-                            {
-                                float angle = Vector2.Angle(Vector2.up, cPN.tangentBC) * Mathf.Deg2Rad;
-                                if (Vector3.Cross(Vector2.up, cPN.tangentBC).z < 0)
-                                    angle = Mathf.PI * 2 - angle;
-                                vertBuffer.Add(new NavVert(cPN.pointB, cPN.angle, angle, cPN.distanceBC));
-                                bounds.Encapsulate(cPN.pointB);
-                                Vector2 endPoint = cPN.pointB + cObstrSe.start * cPN.tangentBC;
-                                vertBuffer.Add(new NavVert(endPoint));
-                                bounds.Encapsulate(endPoint);
-                                nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
-                                vertBuffer.Clear();
-                                if (lastNode)
-                                    break;
-                            }
-                        }
-                        else if (cObstrSe.start > 0)
-                        {
-                            float angle = Vector2.Angle(Vector2.up, cPN.tangentBC) * Mathf.Deg2Rad;
-                            if (Vector3.Cross(Vector2.up, cPN.tangentBC).z < 0)
-                                angle = Mathf.PI * 2 - angle;
-                            vertBuffer.Add(new NavVert(cPN.pointB, cPN.angle, angle, cPN.distanceBC));
-                            bounds.Encapsulate(cPN.pointB);
-                            Vector2 endPoint = cPN.pointB + cObstrSe.start * cPN.tangentBC;
-                            vertBuffer.Add(new NavVert(endPoint));
-                            bounds.Encapsulate(endPoint);
-                            nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
-                            vertBuffer.Clear();
-                            if (lastNode)
-                                break;
-                        }
-                    }
+                    return;
+                }
+                obstrSeg = obstrSeg.next;
+            }
+
+            while (true)
+            {
+                inoutVerts.Add(new NavVert(startPoint));
+                inoutBounds.Encapsulate(startPoint);
+                inoutVerts.Add(new NavVert(edge.pointB + edge.tangentBC * obstrSeg.start));
+                inoutBounds.Encapsulate(edge.pointB + edge.tangentBC * obstrSeg.start);
+                startPoint = edge.pointB + edge.tangentBC * obstrSeg.end;
+                EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, startPoint);
+
+                if (obstrSeg.next == null)
+                    break;
+
+                obstrSeg = obstrSeg.next;
+            }
+
+            if (edge.distanceBC - obstrSeg.end > fudgeFactor)
+            {
+                inoutVerts.Add(new NavVert(startPoint));
+                inoutBounds.Encapsulate(startPoint);
+            }
+        }
+
+        private void EndNavNode(List<NavNode> inoutNodes, List<NavVert> inoutVerts, ref Bounds inoutBounds, Vector2 nextPoint)
+        {
+            if (inoutVerts.Count > 1)
+            {
+                inoutNodes.Add(new NavNode(inoutVerts.ToArray(), inoutBounds, false, 0));
+            }
+            inoutBounds = new Bounds(nextPoint, Vector3.zero);
+            inoutVerts.Clear();
+        }
+
+        private bool IsEdgeAcceptable(PointNode edge)
+        {
+            if (true)
+            {
+                float angle = Vector2.Angle(Vector2.left, edge.tangentBC);
+                /*if (Vector3.Cross(Vector2.left, edge.tangentBC).z < 0)
+                    angle = 360 - angle;
+                if (angle > 90)
+                    angle = 180 - angle;*/
+                if (angle > agentSettings.slopeLimit)
+                {
+                    return false;
                 }
                 else
                 {
-                    if (cObstrSe.end - cPN.distanceBC < fudgeFactor)
-                    {
-                        //End this chain!!
-                        cObstrSe = null;
-                        if (lastNode)
-                            break;
-                        cPN = cPN.Next;
-                        bounds = new Bounds(cPN.Next.pointB, Vector3.zero);
-                    }
-                    else
-                    {
-                        bounds = new Bounds(cPN.Next.pointB, Vector3.zero);
-                        Vector2 endPoint = cPN.pointB + cObstrSe.end * cPN.tangentBC;
-                        float angle = Vector2.Angle(Vector2.up, cPN.tangentBC) * Mathf.Deg2Rad;
-                        if (Vector3.Cross(Vector2.up, cPN.tangentBC).z < 0)
-                            angle = Mathf.PI * 2 - angle;
-                        vertBuffer.Add(new NavVert(endPoint, cPN.angle, angle, cPN.distanceBC));
-                        bounds.Encapsulate(endPoint);
-                        if (cObstrSe.next == null)
-                        {
-                            cObstrSe = null;
-                            cPN = cPN.Next;
-                            vertBuffer.Add(new NavVert(cPN.pointB));
-                            bounds.Encapsulate(endPoint);
-                            nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
-                            vertBuffer.Clear();
-                            bounds = new Bounds(cPN.pointB, Vector3.zero);
-                        }
-                        else
-                        {
-                            cObstrSe = cObstrSe.next;
-                            endPoint = cPN.pointB + cObstrSe.start * cPN.tangentBC;
-                            vertBuffer.Add(new NavVert(endPoint));
-                            bounds.Encapsulate(endPoint);
-                            nodes.Add(new NavNode(vertBuffer.ToArray(), bounds, false, hierachyIndex));
-                            vertBuffer.Clear();
-                            bounds = new Bounds(cPN.pointB + cObstrSe.end * cPN.tangentBC, Vector3.zero);
-                        }
-                    }
+                    return true;
                 }
-                safetyCounter++;
             }
-            if (safetyCounter >= 10000)
-                Debug.Log("Endless Loop!! Mode = " + mc.isClosed + " lastNode =" + lastNode + " vertCount =" + vertBuffer.Count + " nodes.Count = " + nodes.Count);
-            return nodes.ToArray();
-        }
-
-        private static NavNode[] HandleObstructionLessContour(MarkableContour mc, int hierachyIndex)
-        {
-            NavVert[] allNavNodes = new NavVert[mc.pointNodeCount];
-            int counter = 0;
-            Bounds bounds = new Bounds(mc.firstPoint.pointB, Vector3.zero);
-            DebugExtension.DebugCircle(mc.firstPoint.pointB, Vector3.forward, Color.red, 0.5f);
-            foreach (PointNode pn in mc)
+            else
             {
-                float angle = Vector2.Angle(Vector2.right, pn.tangentBC) * Mathf.Deg2Rad;
-                if (Vector3.Cross(Vector2.up, pn.tangentBC).z < 0)
-                    angle = Mathf.PI * 2 - angle;
-                allNavNodes[counter] = new NavVert(pn.pointB, pn.angle, angle, pn.distanceBC);
-                bounds.Encapsulate(pn.pointB);
-                counter++;
+                /*
+                if (pointNodeCount < 3 && !isClosed)
+                    return;
+
+                PointNode current = isClosed ? firstPoint : firstPoint.Next.Next;
+                PointNode prevNode = current.Previous;
+                PointNode prevPrevNode = prevNode.Previous;
+                int edgeCount = isClosed ? pointNodeCount : pointNodeCount - 2;
+                for (int iNode = 0; iNode < edgeCount; iNode++)
+                {
+                    if (prevNode.angle * Mathf.Rad2Deg > maxAngle)
+                    {
+                        //stage for remove
+                    }
+
+                    prevPrevNode = prevNode;
+                    prevNode = current;
+                    current = current.Next;
+                }*/
             }
-            NavNode resultingNode = new NavNode(allNavNodes, bounds, mc.isClosed, hierachyIndex);
-            return new NavNode[] { resultingNode };
         }
 
-        private static void GenerateFloorWalkerJumpLinks(NavNode[] nodes, float maxJumpVel, float gravity, float xVel, float minJumpableHeight, float agentWidth, float upperXBound)
+        private void GenerateFloorWalkerJumpLinks(NavNode[] nodes, float maxJumpVel, float gravity, float xVel, float minJumpableHeight, float agentWidth, float upperXBound)
         {
             float maxY = ((maxJumpVel * maxJumpVel) / (2 * gravity));
             float maxX = upperXBound * xVel * 2;
@@ -273,7 +240,7 @@ namespace NavMesh2D.Core
                                 }
                                 else if (targetNV == prevSrcNV)
                                 {
-                                    iTargetNode+=2;
+                                    iTargetNode += 2;
                                     if (iTargetNode + 1 >= targetNN.verts.Length)
                                         break;
                                     else
@@ -306,13 +273,13 @@ namespace NavMesh2D.Core
 
                         }
                     }
-                SrcNVLoopEnd:
+                    SrcNVLoopEnd:
                     prevSrcNV = srcNV;
                 }
             }
         }
 
-        private static bool IsJumpArcValid(float targetT, float targetJ, NavVert src, NavVert src2, int srcNodeIndex, NavVert dst, NavVert dst2, int dstNodeIndex, bool[] boundsIntersectionMap, NavNode[] nodes)
+        private bool IsJumpArcValid(float targetT, float targetJ, NavVert src, NavVert src2, int srcNodeIndex, NavVert dst, NavVert dst2, int dstNodeIndex, bool[] boundsIntersectionMap, NavNode[] nodes)
         {
             //first check the two aligning sides for both src and dst
             return true;
@@ -356,7 +323,7 @@ namespace NavMesh2D.Core
             {
                 Debug.DrawLine(start, end);
             }
-        }     
+        }
     }
 
     [Serializable]

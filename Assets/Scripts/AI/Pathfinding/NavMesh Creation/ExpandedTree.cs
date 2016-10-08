@@ -14,13 +14,27 @@ namespace NavMesh2D.Core
 
         public float mapPointMaxDeviation = 3;
 
-        public void Init (ContourTree cTree, int travereTestCount)
+        public static ExpandedTree Build(ContourTree contourTree, float height)
+        {
+            //Create initial tree
+            ExpandedTree initialTree = ScriptableObject.CreateInstance<ExpandedTree>();
+            initialTree.Init(contourTree);
+
+            //Mark all Segments, that don't pass the minimum height
+            initialTree.headNode.Mark(height);
+
+            //initialTree.headNode.Scale(-heighLevel[0]);
+
+            return initialTree;
+        }
+
+        public void Init (ContourTree cTree)
         {
             headNode = new ExpandedNode();
 
             foreach (ContourNode cN in cTree.FirstNode.children)
             {
-                headNode.children.Add(new ExpandedNode(cN, travereTestCount));
+                headNode.children.Add(new ExpandedNode(cN));
             }
         }
 
@@ -86,8 +100,6 @@ namespace NavMesh2D.Core
             normal = new Vector2(minTangent.y, -minTangent.x).normalized;
             return foundOne;
         }
-
-       
 
         public void OnBeforeSerialize()
         {

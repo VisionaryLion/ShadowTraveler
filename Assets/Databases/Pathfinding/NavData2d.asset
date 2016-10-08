@@ -1,0 +1,304 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5fb89239bf7864fbc34acf00705310, type: 3}
+  m_Name: NavData2d
+  m_EditorClassIdentifier: 
+  name: 
+  version: 0
+  nodes:
+  - min: {x: 1.5531303, y: 1.6500001}
+    max: {x: 2.5240002, y: 1.6509993}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 2.524, y: 1.6500001}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 1.5531301, y: 1.6509993}
+      links: []
+  - min: {x: -5.11, y: 4.4300003}
+    max: {x: -3.8539996, y: 4.4300003}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -3.8539999, y: 4.4300003}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -5.11, y: 4.4300003}
+      links: []
+  - min: {x: 3.6027293, y: -1.2680997}
+    max: {x: 5.1410003, y: -1.2497996}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 5.1410003, y: -1.2497996}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 3.6027293, y: -1.2680997}
+      links: []
+  - min: {x: -1.3499999, y: 1.8799999}
+    max: {x: -0.71000004, y: 1.8799999}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -0.71, y: 1.8799999}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -1.3499999, y: 1.8799999}
+      links: []
+  - min: {x: 4.8970003, y: 0.28}
+    max: {x: 6.13, y: 0.28}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.1299996, y: 0.28}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 4.8970003, y: 0.28}
+      links: []
+  - min: {x: 4.0129995, y: 4.9}
+    max: {x: 6.38, y: 4.9}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.38, y: 4.9}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 4.013, y: 4.9}
+      links: []
+  - min: {x: 6.7, y: 4.9}
+    max: {x: 9, y: 4.9}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 9, y: 4.9}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.7, y: 4.9}
+      links: []
+  - min: {x: 6.38, y: 6.15}
+    max: {x: 6.7, y: 6.15}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.7, y: 6.15}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.38, y: 6.15}
+      links: []
+  - min: {x: 1.1400001, y: 4.01}
+    max: {x: 1.78, y: 4.01}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 1.78, y: 4.01}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 1.1400001, y: 4.01}
+      links: []
+  - min: {x: -0.36431456, y: -1.2792345}
+    max: {x: 1.04, y: -1.2792345}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 1.04, y: -1.2792345}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -0.36431456, y: -1.2792345}
+      links: []
+  - min: {x: -1.9059384, y: 2.6478765}
+    max: {x: -1.5659382, y: 2.6478765}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -1.5659382, y: 2.6478765}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -1.9059383, y: 2.6478765}
+      links: []
+  - min: {x: -3.4499693, y: 2.0718997}
+    max: {x: -2.2059383, y: 2.0718997}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -2.2059383, y: 2.0718997}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -3.4499693, y: 2.0718997}
+      links: []
+  - min: {x: -3.7544916, y: -1.2792345}
+    max: {x: -1.7400944, y: -1.2792345}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -1.7400944, y: -1.2792345}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -3.7544916, y: -1.2792345}
+      links: []
+  - min: {x: -5.05718, y: 1.0372634}
+    max: {x: -4.8068204, y: 1.0372634}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -4.8068204, y: 1.0372634}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -5.05718, y: 1.0372634}
+      links: []
+  - min: {x: -5.588319, y: 1.0687718}
+    max: {x: -5.2391233, y: 1.0754457}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -5.2391233, y: 1.0754457}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -5.5883183, y: 1.0687718}
+      links: []
+  - min: {x: -6.787, y: 1.6800001}
+    max: {x: -5.6, y: 1.6800001}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -5.6, y: 1.6800001}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -6.787, y: 1.6800001}
+      links: []
+  - min: {x: 1.04, y: -1.6700001}
+    max: {x: 1.27, y: -1.6700001}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 1.27, y: -1.6700001}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 1.04, y: -1.6700001}
+      links: []
+  - min: {x: -0.36431456, y: -1.2792345}
+    max: {x: 1.04, y: -1.2792345}
+    isClosed: 0
+    hierachyIndex: 0
+    links: []
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 1.04, y: -1.2792345}
+      links: []
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -0.36431456, y: -1.2792345}
+      links: []

@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ec06694e8b283d439a376ceade6b302, type: 3}
-  m_Name: GroundWalkerSetting
+  m_Name: GroundWalkerSettings
   m_EditorClassIdentifier: 
-  height: 1
-  width: 0
+  height: 1.1030549
+  width: 0.34107733
   jumpForce: 20
-  gravity: 10
+  gravity: 20
   maxXVel: 5
-  slopeLimit: 0
+  slopeLimit: 30

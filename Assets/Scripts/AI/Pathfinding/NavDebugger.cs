@@ -21,12 +21,14 @@ public class NavDebugger : MonoBehaviour
     public float nodeMergeDist;
     [Range(0.0f, 5f)]
     public float maxEdgeDeviation;
+    [SerializeField]
+    public NavAgentGroundWalkerSettings agentSettings;
 
     public Transform closestTestPoint;
 
     CollisionGeometrySet cgs;
     ContourTree outlineTree;
-    ExpandedTree[] exTrees;
+    ExpandedTree exTrees;
     NavigationData2D navData2D;
 
     // Use this for initialization
@@ -52,14 +54,14 @@ public class NavDebugger : MonoBehaviour
         watch.Reset();
         watch.Start();
 
-        exTrees = ExpandedTreeSetBuilder.Build(outlineTree, new float[] { minHeightTest });
+        exTrees = ExpandedTree.Build(outlineTree, minHeightTest);
         Debug.Log("ExpandedTreeSetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
         watch.Reset();
         watch.Start();
 
-        navData2D = NavigationData2DBuilder.Build(exTrees[0], 0);
+        navData2D = new NavigationData2DBuilder(agentSettings).Build(exTrees);
         Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
@@ -114,18 +116,15 @@ public class NavDebugger : MonoBehaviour
             case DebugWhichSet.ExpandedTree:
                 if (exTrees != null)
                 {
-                    foreach (ExpandedTree eT in exTrees)
+                    exTrees.headNode.VisualDebug();
+                    Vector2 mappedPoint;
+                    Vector2 normal;
+                    if (exTrees.TryMapPointToContour(closestTestPoint.position, out mappedPoint, out normal))
                     {
-                        eT.headNode.VisualDebug(0);
-                        Vector2 mappedPoint;
-                        Vector2 normal;
-                        if (eT.TryMapPointToContour(closestTestPoint.position, out mappedPoint, out normal))
-                        {
-                            Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
-                            DebugExtension.DebugPoint(mappedPoint);
-                        }
+                        Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
+                        DebugExtension.DebugPoint(mappedPoint);
                     }
-                    
+
                 }
                 break;
             case DebugWhichSet.NavigationData2D:

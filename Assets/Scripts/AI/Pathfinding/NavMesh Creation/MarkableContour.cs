@@ -17,18 +17,18 @@ namespace NavMesh2D.Core
 
         public readonly PointNode firstPoint;
 
-        public MarkableContour(Contour contour, bool isSolid, bool isClosed, int traversTestCount)
+        public MarkableContour(Contour contour, bool isSolid, bool isClosed)
         {
             bounds = contour.Bounds;
             this.isSolid = isSolid;
             this.isClosed = isClosed;
 
             pointNodeCount = contour.VertexCount;
-            PointNode cSeg = new PointNode(contour.verticies[0], traversTestCount);
+            PointNode cSeg = new PointNode(contour.verticies[0]);
             firstPoint = cSeg;
             for (int iVert = 1; iVert < contour.verticies.Count; iVert++)
             {
-                cSeg.Next = new PointNode(contour.verticies[iVert], traversTestCount);
+                cSeg.Next = new PointNode(contour.verticies[iVert]);
                 cSeg.Next.Previous = cSeg;
                 cSeg = cSeg.Next;
             }
@@ -65,14 +65,14 @@ namespace NavMesh2D.Core
             }
         }
 
-        public void Mark(List<ExpandedNode> cp, float minWalkableHeight, int testIndex)
+        public void Mark(List<ExpandedNode> cp, float minWalkableHeight)
         {
-            WalkSpaceTester.MarkNotWalkableSegments(this, cp, minWalkableHeight, testIndex);
+            WalkSpaceTester.MarkNotWalkableSegments(this, cp, minWalkableHeight);
         }
 
-        public void MarkSelfOnly(float minWalkableHeight, int testIndex)
+        public void MarkSelfOnly(float minWalkableHeight)
         {
-            WalkSpaceTester.MarkSelfIntersections(this, minWalkableHeight, testIndex);
+            WalkSpaceTester.MarkSelfIntersections(this, minWalkableHeight);
         }
 
         public bool Contains(Vector2 point)
@@ -136,11 +136,11 @@ namespace NavMesh2D.Core
             return closestPoint;
         }
 
-        public void VisualDebug(int cHeightTest)
+        public void VisualDebug()
         {
             foreach (PointNode s in this)
             {
-                s.VisualDebug(cHeightTest);
+                s.VisualDebug();
             }
         }
 
@@ -224,21 +224,16 @@ namespace NavMesh2D.Core
         public float angle; // in rads
         public float distanceBC;
         public Vector2 tangentBC;
-        public bool[] isPointWalkable;
+        public bool isPointWalkable;
 
         PointNode prev;
         PointNode next;
         ObstructedSegment obstructedSegment;
 
-        public PointNode(Vector2 point, int walkTestCount)
+        public PointNode(Vector2 point)
         {
             this.pointB = point;
             angle = -1;
-            isPointWalkable = new bool[walkTestCount];
-            for (int i = 0; i < walkTestCount; i++)
-            {
-                isPointWalkable[i] = true;
-            }
         }
 
         public PointNode(SerializablePointNode src, PointNode prev)
@@ -303,14 +298,14 @@ namespace NavMesh2D.Core
                 obstructedSegment = cSeg;
         }
 
-        public void MarkPointNotWalkable(int index)
+        public void MarkPointNotWalkable()
         {
-            isPointWalkable[index] = false;
+            isPointWalkable = false;
         }
 
-        public bool IsPointWalkable(int index)
+        public bool IsPointWalkable()
         {
-            return isPointWalkable[index];
+            return isPointWalkable;
         }
 
         public void SetNextNodeNoRecalculation(PointNode next)
@@ -323,9 +318,9 @@ namespace NavMesh2D.Core
             this.prev = prev;
         }
 
-        public void VisualDebug(int walkTestIndex)
+        public void VisualDebug()
         {
-            if (!isPointWalkable[walkTestIndex])
+            if (!isPointWalkable)
             {
                 DebugExtension.DebugCircle(pointB, Vector3.forward, Color.red, 0.2f);
             }
@@ -415,7 +410,7 @@ namespace NavMesh2D.Core
         public float angle; // in rads
         public float distanceBC;
         public Vector2 tangentBC;
-        public bool[] isPointWalkable;
+        public bool isPointWalkable;
         public Vector2 pointB;
 
         public SerializablePointNode(PointNode src)

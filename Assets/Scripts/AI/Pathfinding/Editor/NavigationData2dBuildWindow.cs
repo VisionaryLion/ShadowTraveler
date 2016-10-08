@@ -33,9 +33,32 @@ namespace NavMesh2D.Core
         [SerializeField]
         public NavAgentGroundWalkerSettings groundWalkerSettings;
         [SerializeField]
-        public ExpandedTree expandedTree;
+        public NavigationData2D navData2d;
+
         [SerializeField]
         public JumpLinkPlacer jumpLinkPlacer;
+
+        public void DrawNavData2D()
+        {
+            if (navData2d == null || navData2d.nodes == null)
+                return;
+            for (int iNode = 0; iNode < navData2d.nodes.Length; iNode++)
+            {
+                NavNode nn = navData2d.nodes[iNode];
+                Handles.color = Utility.DifferentColors.GetColor(iNode);
+                for (int iVert = 0; iVert < nn.verts.Length - 1; iVert++)
+                {
+                    Handles.DrawLine(nn.verts[iVert].PointB, nn.verts[iVert + 1].PointB);
+                    Handles.DrawWireDisc(nn.verts[iVert].PointB, Vector3.forward, 0.1f);
+                }
+                Handles.DrawWireDisc(nn.verts[nn.verts.Length - 1].PointB, Vector3.forward, 0.1f);
+                if (nn.isClosed)
+                {
+                    Handles.DrawLine(nn.verts[nn.verts.Length - 1].PointB, nn.verts[0].PointB);
+                    
+                }
+            }
+        }
 
         void OnGUI()
         {
@@ -43,20 +66,13 @@ namespace NavMesh2D.Core
             EditorGUILayout.Space();
 
             groundWalkerSettings = (NavAgentGroundWalkerSettings)EditorGUILayout.ObjectField("GroundWalkerSetting", groundWalkerSettings, typeof(NavAgentGroundWalkerSettings), false);
-            expandedTree = (ExpandedTree)EditorGUILayout.ObjectField("ExpandedTree", expandedTree, typeof(ExpandedTree), false);
+            navData2d = (NavigationData2D)EditorGUILayout.ObjectField("NavData2d", navData2d, typeof(NavigationData2D), false);
             jumpLinkPlacer = (JumpLinkPlacer)EditorGUILayout.ObjectField("JumpLinkPlacer", jumpLinkPlacer, typeof(JumpLinkPlacer), false);
 
             EditorGUILayout.TextArea("", GUI.skin.horizontalSlider);
 
-            if (groundWalkerSettings == null)
-            {
-                EditorGUILayout.HelpBox("Please assign a Setting.", MessageType.Error);
-            }
-            else
-            {
-                selectedTab = GUILayout.Toolbar(selectedTab, tabNames);
-                currentBuildStep.OnGUI();
-            }
+            selectedTab = GUILayout.Toolbar(selectedTab, tabNames);
+            currentBuildStep.OnGUI();
         }
 
         void OnEnable()
@@ -113,6 +129,7 @@ namespace NavMesh2D.Core
     {
         enum ShowType
         {
+            NavData,
             MergedAndExpanded,
             Raw,
             RawAndFilled
@@ -137,6 +154,8 @@ namespace NavMesh2D.Core
 
 
         CollisionGeometrySet collisionGeometrySet;
+        ExpandedTree expandedTree;
+
         [SerializeField]
         NavigationData2dBuildWindow buildWindow;
 
@@ -170,7 +189,11 @@ namespace NavMesh2D.Core
             ContourTree contourTree = ContourTree.Build(collisionGeometrySet, nodeMergeDist, maxEdgeDeviation);
             if (contourTree != null)
             {
-                buildWindow.expandedTree = ExpandedTreeSetBuilder.Build(contourTree, new float[] { buildWindow.groundWalkerSettings.height })[0];
+                expandedTree = ExpandedTree.Build(contourTree, buildWindow.groundWalkerSettings.height);
+                if (expandedTree != null)
+                {
+                    buildWindow.navData2d = new NavigationData2DBuilder(buildWindow.groundWalkerSettings).Build(expandedTree);
+                }
             }
             SceneView.RepaintAll();
         }
@@ -188,6 +211,12 @@ namespace NavMesh2D.Core
 
         public void OnGUI()
         {
+            if (buildWindow.groundWalkerSettings == null)
+            {
+                EditorGUILayout.HelpBox("Please assign a Setting.", MessageType.Error);
+                return;
+            }
+
             EditorGUI.BeginChangeCheck();
             selectAllStatic = EditorGUILayout.Toggle("Select all static", selectAllStatic);
             selectionMask = CustomEditorFields.LayerMaskField("Selection Mask", selectionMask);
@@ -218,26 +247,26 @@ namespace NavMesh2D.Core
             if ((change || GUILayout.Button("Update Field")))
                 Build();
 
-            GUI.enabled = buildWindow.expandedTree != null;
+            GUI.enabled = buildWindow.navData2d != null;
             if (GUILayout.Button("Save"))
             {
-                SaveExpandedTree();
+                SaveNavData2d();
             }
             GUI.enabled = true;
         }
 
-        void SaveExpandedTree()
+        void SaveNavData2d()
         {
-            string path = EditorUtility.SaveFilePanel("Save ExpandedTree", "Assets", "ExpandedTree", "asset");
+            string path = EditorUtility.SaveFilePanel("Save NavData2d", "Assets", "NavData2d", "asset");
             if (path == null || path.Length == 0)
                 return;
             path = path.Substring(path.IndexOf("Assets"));
             Debug.Log(path);
-            AssetDatabase.CreateAsset(buildWindow.expandedTree, path);
+            AssetDatabase.CreateAsset(buildWindow.navData2d, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             EditorUtility.FocusProjectWindow();
-            Selection.activeObject = buildWindow.expandedTree;
+            Selection.activeObject = buildWindow.navData2d;
         }
 
         public void GatherCollisionData()
@@ -304,9 +333,9 @@ namespace NavMesh2D.Core
             }
             else if (showType == ShowType.MergedAndExpanded)
             {
-                if (buildWindow.expandedTree != null)
+                if (expandedTree != null)
                 {
-                    foreach (ExpandedNode child in buildWindow.expandedTree.headNode.children)
+                    foreach (ExpandedNode child in expandedTree.headNode.children)
                         DrawContourNode(child);
                 }
             }
@@ -324,6 +353,13 @@ namespace NavMesh2D.Core
                         dummyArray[dummyArray.Length - 1] = dummyArray[0];
                         Handles.DrawAAConvexPolygon(dummyArray);
                     }
+                }
+            }
+            else if (showType == ShowType.NavData)
+            {
+                if (buildWindow.navData2d != null)
+                {
+                    buildWindow.DrawNavData2D();
                 }
             }
         }
@@ -400,19 +436,32 @@ namespace NavMesh2D.Core
 
         public void OnGUI()
         {
-            EditorGUILayout.LabelField("NavAgent Settings:", EditorStyles.boldLabel);
-            buildWindow.groundWalkerSettings.height = Mathf.Max(EditorGUILayout.FloatField("Height", buildWindow.groundWalkerSettings.height), 0.01f);
-            buildWindow.groundWalkerSettings.width = Mathf.Max(EditorGUILayout.FloatField("Width", buildWindow.groundWalkerSettings.width), 0.01f);
-            buildWindow.groundWalkerSettings.maxXVel = Mathf.Max(EditorGUILayout.FloatField("Max X Vel", buildWindow.groundWalkerSettings.maxXVel), 0.01f);
-            buildWindow.groundWalkerSettings.slopeLimit = Mathf.Clamp(EditorGUILayout.FloatField("Slope Limit", buildWindow.groundWalkerSettings.slopeLimit), 0, 60);
-            EditorGUILayout.Space();
+            if (buildWindow.groundWalkerSettings != null)
+            {
+                EditorGUILayout.LabelField("NavAgent Settings:", EditorStyles.boldLabel);
+                buildWindow.groundWalkerSettings.height = Mathf.Max(EditorGUILayout.FloatField("Height", buildWindow.groundWalkerSettings.height), 0.01f);
+                buildWindow.groundWalkerSettings.width = Mathf.Max(EditorGUILayout.FloatField("Width", buildWindow.groundWalkerSettings.width), 0.01f);
+                buildWindow.groundWalkerSettings.maxXVel = Mathf.Max(EditorGUILayout.FloatField("Max X Vel", buildWindow.groundWalkerSettings.maxXVel), 0.01f);
+                buildWindow.groundWalkerSettings.slopeLimit = Mathf.Clamp(EditorGUILayout.FloatField("Slope Limit", buildWindow.groundWalkerSettings.slopeLimit), 0, 60);
+                EditorGUILayout.Space();
+            }
 
-            GUI.enabled = humanMovementActor != null;
+            GUI.enabled = humanMovementActor != null && buildWindow.groundWalkerSettings != null;
             if (GUILayout.Button("Copy from selected MovingActor"))
             {
                 CopyValuesFromCC2DMotor();
             }
             GUI.enabled = true;
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Save"))
+            {
+                Save();
+            }
+            if (GUILayout.Button("Create New"))
+            {
+                CreateNew();
+            }
+            GUILayout.EndHorizontal();
         }
 
         public void OnSceneGUI(SceneView sceneView)
@@ -470,6 +519,26 @@ namespace NavMesh2D.Core
             buildWindow.groundWalkerSettings.slopeLimit = spCC2D.FindProperty("slopeLimit").floatValue;
 
             buildWindow.RepaintThisWindow();
+        }
+
+        void Save()
+        {
+            string path = EditorUtility.SaveFilePanel("Save NavAgentSettings", "Assets", "GroundWalkerSettings", "asset");
+            if (path == null || path.Length == 0)
+                return;
+            path = path.Substring(path.IndexOf("Assets"));
+            Debug.Log(path);
+            AssetDatabase.CreateAsset(buildWindow.groundWalkerSettings, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = buildWindow.groundWalkerSettings;
+        }
+
+        void CreateNew()
+        {
+            buildWindow.groundWalkerSettings = ScriptableObject.CreateInstance<NavAgentGroundWalkerSettings>();
+
         }
     }
 
@@ -541,9 +610,9 @@ namespace NavMesh2D.Core
 
         public void OnGUI()
         {
-            if (buildWindow.expandedTree == null)
+            if (buildWindow.navData2d == null)
             {
-                EditorGUILayout.HelpBox("Please assign or create a ExpandTree", MessageType.Error);
+                EditorGUILayout.HelpBox("Please assign or create a NavData2d", MessageType.Error);
             }
             else
             {
@@ -644,21 +713,16 @@ namespace NavMesh2D.Core
 
         public void OnSceneGUI(SceneView sceneView)
         {
+            buildWindow.DrawNavData2D();
             JumpLinkPlacer.JumpLink link;
             for (int iLink = 0; iLink < jumpLinkSettings.Count; iLink++)
             {
                 if (!jumpLinkSettings[iLink].showInScene)
                     continue;
+                Handles.color = Color.white;
+
                 link = buildWindow.jumpLinkPlacer.jumpLinks[iLink];
                 EditorGUI.BeginChangeCheck();
-
-                link.worldPointA = Handles.PositionHandle(link.worldPointA, Quaternion.identity);
-                link.worldPointB = Handles.PositionHandle(link.worldPointB, Quaternion.identity);
-
-
-
-                Handles.DrawLine(link.navPointA, link.worldPointA);
-                Handles.DrawLine(link.navPointB, link.worldPointB);
 
                 Handles.DrawLine(link.navPointA, link.navPointB);
                 Vector2 tangent = (link.navPointB - link.navPointA);
@@ -683,14 +747,13 @@ namespace NavMesh2D.Core
                     Handles.DrawWireDisc(link.navPointA, Vector3.forward, 0.1f);
                     Handles.DrawWireDisc(link.navPointB, Vector3.forward, 0.1f);
                     Handles.color = link.isJumpLinkValid ? Color.green : Color.red;
-
-                    Vector2 offset = link.navPointA;
-                    DrawJumpArc(link, offset);
                 }
                 else
                 {
-
-
+                    Handles.DrawLine(link.navPointA, link.worldPointA);
+                    Handles.DrawLine(link.navPointB, link.worldPointB);
+                    link.worldPointA = Handles.PositionHandle(link.worldPointA, Quaternion.identity);
+                    link.worldPointB = Handles.PositionHandle(link.worldPointB, Quaternion.identity);
 
                     Vector2 upRight, downRight, upLeft, downLeft;
                     float halfWidth = buildWindow.groundWalkerSettings.width / 2;
@@ -758,13 +821,11 @@ namespace NavMesh2D.Core
         void UpdateMappedPoints(JumpLinkPlacer.JumpLink link)
         {
             Vector2 mappedPos;
-            Vector2 normal;
-            if (buildWindow.expandedTree.TryMapPointToContour(link.worldPointA, out mappedPos, out normal))
+            if (buildWindow.navData2d.TryMapPoint(link.worldPointA, out mappedPos))
             {
                 link.navPointA = mappedPos;
-                link.normalA = normal;
             }
-            if (buildWindow.expandedTree.TryMapPointToContour(link.worldPointB, out mappedPos, out normal))
+            if (buildWindow.navData2d.TryMapPoint(link.worldPointB, out mappedPos))
             {
                 link.navPointB = mappedPos;
             }

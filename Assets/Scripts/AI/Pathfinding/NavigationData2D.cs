@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Utility;
+using System;
 
 namespace NavMesh2D
 {
@@ -15,56 +16,19 @@ namespace NavMesh2D
 
         public NavNode[] nodes; // sorted by x Value. Min -> Max
 
-        /*public NavRayCastHit RayCast(Vector2 pos, Vector2 dir, float length)
-                {
-                    Vector2 endPos = dir * length + pos;
-                    float minX = Mathf.Min(pos.x, endPos.x);
-                    float maxX = Mathf.Max(pos.x, endPos.x);
-
-                    float minY = Mathf.Min(pos.y, endPos.y);
-                    float maxY = Mathf.Min(pos.y, endPos.y);
-
-                    float m = (dir.x == 0) ? 0 : dir.x / dir.y;
-
-                    foreach (NavNode nn in nodes)
-                    {
-                        if (nn.max.x < minX)
-                            continue;
-                        if (nn.min.x > maxX)
-                            break;
-                        if (nn.min.y > maxY || nn.max.y < minY)
-                            continue;
-
-                        if (dir.x != 0) // m != 0
-                        {
-                            float startY = m * nn.min.x + pos.y;
-                            float endY = m * nn.max.x + pos.y;
-
-                            if (startY > endY)
-                            {
-                                if (startY > maxY)
-                                    continue;
-                                if (endY < minY)
-                                    continue;
-                            }
-                            else
-                            {
-                                if (startY < maxY)
-                                    continue;
-                                if (endY > minY)
-                                    continue;
-                            }
-                        }
-
-                        //Bounds passed all tests. A intersection is possible
-
-                    }
-                }
-        }*/
-
         public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint)
         {
+            NavVert mappedVert;
+            NavNode mappedNode;
+            return TryMapPoint(point, out nearestPoint, out mappedVert, out mappedNode);
+        }
+
+        public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint, out int mappedVertIndex, out NavNode mappedNode)
+        {
             NavNode map_cNavNode;
+            int cVertIndex;
+            mappedVertIndex = 0;
+            mappedNode = null;
             float map_minDist = float.MaxValue;
             float dist;
             Vector2 cPoint;
@@ -80,7 +44,6 @@ namespace NavMesh2D
                 {
                     Bounds b = new Bounds();
                     b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
-                    DebugExtension.DebugBounds(b, Color.red);
                     //Failed test
                     continue;
                 }
@@ -90,16 +53,15 @@ namespace NavMesh2D
                     //maybe later check children, not implemented though
                     Bounds b = new Bounds();
                     b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
-                    DebugExtension.DebugBounds(b, Color.green);
                     return false;
                 }
 
-                if (map_cNavNode.TryFindClosestPointOnContour(point, out dist, out cPoint))
+                if (map_cNavNode.TryFindClosestPointOnContour(point, out dist, out cPoint, out cVertIndex))
                 {
-                    Debug.Log(dist);
                     if (dist < map_minDist)
                     {
-                        
+                        mappedVertIndex = cVertIndex;
+                        mappedNode = map_cNavNode;
                         nearestPoint = cPoint;
                         if (dist <= mapPointInstantAcceptDeviation)
                         {
@@ -123,18 +85,20 @@ namespace NavMesh2D
         }
     }
 
+    [Serializable]
     public class NavNode
     {
         const float maxDeviationInside = 0.1f;
         const float maxDeviationOutside = 0.001f;
 
-        public readonly Vector2 min;
-        public readonly Vector2 max;
-        public readonly bool isClosed;
-        public readonly int hierachyIndex; // 0 = hole, 1 = solid, 2 = hole, 3 = solid, ...
+        public Vector2 min;
+        public Vector2 max;
+        public bool isClosed;
+        public int hierachyIndex; // 0 = hole, 1 = solid, 2 = hole, 3 = solid, ...
 
         public bool IsSolid { get { return hierachyIndex % 2 == 0; } }
 
+        [SerializeField]
         NavNodeLink[] links;
         public NavVert[] verts;
 
@@ -174,24 +138,29 @@ namespace NavMesh2D
 
         public bool TryFindClosestPointOnContour(Vector2 point, out float distance, out Vector2 nearestPoint)
         {
+            NavVert vert;
+            return TryFindClosestPointOnContour(point, out distance, out nearestPoint, out vert);
+        }
+
+        public bool TryFindClosestPointOnContour(Vector2 point, out float distance, out Vector2 nearestPoint, out int nearestEdgeIndex)
+        {
             distance = float.MaxValue;
+            nearestEdgeIndex = 0;
             nearestPoint = Vector2.zero;
             NavVert cVert = (isClosed) ? verts[verts.Length - 1] : verts[0];
             for (int iEdge = isClosed ? 0 : 1; iEdge < verts.Length; iEdge++)
             {
-                DebugExtension.DebugPoint(verts[iEdge].PointB, Color.red);
                 float lineSide = Mathf.Sign((verts[iEdge].PointB.x - cVert.PointB.x) * (point.y - cVert.PointB.y) - (verts[iEdge].PointB.y - cVert.PointB.y) * (point.x - cVert.PointB.x));
                 if (lineSide == 0)
                 {
                     distance = 0;
+                    nearestEdgeIndex = iEdge;
                     nearestPoint = point;
-                    DebugExtension.DebugPoint(nearestPoint);
                     return true;
                 }
                 if (lineSide == 1)
                 {
                     cVert = verts[iEdge];
-                    DebugExtension.DebugPoint(nearestPoint, Color.red);
                     continue;
                 }
 
@@ -207,6 +176,7 @@ namespace NavMesh2D
                 {
                     distance = dis;
                     nearestPoint = AP;
+                    nearestEdgeIndex = iEdge;
                 }
                 cVert = verts[iEdge];
             }
@@ -215,9 +185,9 @@ namespace NavMesh2D
                 return false;
             }
             distance = Mathf.Sqrt(distance);
-            DebugExtension.DebugPoint(nearestPoint);
             return true;
         }
+
 
         public void VisualDebug(int colorId)
         {
@@ -248,27 +218,35 @@ namespace NavMesh2D
         }
     }
 
+    [Serializable]
     public class NavNodeLink
     {
         public enum LinkType { NotAccessible, Jump, Ladder, };
+
+        [SerializeField]
         NavNode target;
-        PathRequirements[] isReachableFrom;
+        [SerializeField]
         Vector2 startPoint;
+        [SerializeField]
         Vector2 endPoint;
+        [SerializeField]
         LinkType linkType;
     }
 
+    [Serializable]
     public class NavVert
     {
         public Vector2 PointB { get { return pointB; } }
 
         public DynamicObstruction firstObstruction;
 
-        public readonly float angleABC;
-        public readonly float slopeAngleBC;
-        public readonly float distanceBC;
+        public float angleABC;
+        public float slopeAngleBC;
+        public float distanceBC;
 
+        [SerializeField]
         Vector2 pointB; // a -> b -> c
+        [SerializeField]
         NavNodeLink[] links;
 
         public NavVert(Vector2 point, float angleABC, float slopeAngleBC, float distanceBC)
@@ -285,27 +263,8 @@ namespace NavMesh2D
         }
     }
 
+    [Serializable]
     public class DynamicObstruction
-    {
-
-    }
-
-    public class PathRequirements
-    {
-        float minSlope;
-        bool useRelativeSlopeAngle;
-        bool isPathUnblocked;
-
-    }
-
-    class NavAgent
-    {
-        float maxWalkableSlope;
-        bool useRelativeSlopeAngle;
-        float height;
-    }
-
-    class NavRayCastHit
     {
 
     }
