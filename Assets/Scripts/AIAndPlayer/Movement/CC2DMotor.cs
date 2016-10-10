@@ -318,6 +318,12 @@ namespace CC2D
                         CurrentMovementInput.ConsumeEvent(currentInputEvent);
                         EndCrouch();
                     }
+                    else if (currentInputEvent as JumpEvent != null)
+                    {
+                        CurrentMovementInput.ConsumeEvent(currentInputEvent);
+                        EndCrouch();
+                        StartJump();
+                    }
 
                     break;
 
@@ -750,7 +756,6 @@ namespace CC2D
             {
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * crouchScaleFactor, spriteRoot.localScale.y * crouchScaleFactor, spriteRoot.localScale.z);
             }
-            CurrentMovementInput.toggleCrouch = false;
             _cMState = MState.Crouched;
         }
 
@@ -761,7 +766,6 @@ namespace CC2D
             {
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / crouchScaleFactor, spriteRoot.localScale.y / crouchScaleFactor, spriteRoot.localScale.z);
             }
-            CurrentMovementInput.toggleCrouch = false;
             _cMState = MState.Walk;
         }
 

@@ -11,11 +11,6 @@ namespace CC2D
         public float horizontal; //The input for the horizontal axis
         public float vertical; //The input for the vertical axis
 
-        /// <summary>
-        /// Toggle crouching
-        /// </summary>
-        public bool toggleCrouch;
-
         List<InputEvent> InputEvents = new List<InputEvent>();
 
         internal void AddEvent(InputEvent newEvent)
