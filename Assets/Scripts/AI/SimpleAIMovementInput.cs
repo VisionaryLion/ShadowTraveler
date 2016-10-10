@@ -28,6 +28,7 @@ namespace CC2D
 
         bool resetOnce = false;
         float timeLeft;
+        float maxJumpExecutionDelay = .5f;
 
         void Awake()
         {
@@ -60,9 +61,7 @@ namespace CC2D
                 bufferedInput.horizontal = 1;
                 if (actor.CharacterController2D.collisionState.right || Random.Range(0, randomJumpChance) == 0)
                 {
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
-                    bufferedInput.isJumpConsumed = false;
-                    bufferedInput.jump = true;
+                    bufferedInput.AddEvent(new JumpEvent(maxJumpExecutionDelay));
                 }
             }
             else
@@ -77,9 +76,7 @@ namespace CC2D
                 bufferedInput.horizontal = -1;
                 if (actor.CharacterController2D.collisionState.left || Random.Range(0, randomJumpChance) == 0)
                 {
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
-                    bufferedInput.isJumpConsumed = false;
-                    bufferedInput.jump = true;
+                    bufferedInput.AddEvent(new JumpEvent(maxJumpExecutionDelay));
                 }
             }
         }
