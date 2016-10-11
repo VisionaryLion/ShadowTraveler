@@ -23,8 +23,12 @@ public class NavDebugger : MonoBehaviour
     public float maxEdgeDeviation;
     [SerializeField]
     public NavAgentGroundWalkerSettings agentSettings;
+    public bool showDebug;
 
+    public Transform goal;
+    public Transform start;
     public Transform closestTestPoint;
+
 
     CollisionGeometrySet cgs;
     ContourTree outlineTree;
@@ -73,6 +77,11 @@ public class NavDebugger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, null));
+
+        if (!showDebug)
+            return;
+
         switch (debugConfig)
         {
             case DebugWhichSet.OutlineTree:
@@ -130,6 +139,7 @@ public class NavDebugger : MonoBehaviour
             case DebugWhichSet.NavigationData2D:
                 if (navData2D != null)
                 {
+
                     navData2D.DrawForDebug();
                     Vector2 mappedPoint;
                     if (navData2D.TryMapPoint(closestTestPoint.position, out mappedPoint))
@@ -137,6 +147,14 @@ public class NavDebugger : MonoBehaviour
                         Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
                         DebugExtension.DebugPoint(mappedPoint);
                     }
+                    /* System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                     int pathsPerSecond = 0;
+                     while (watch.ElapsedMilliseconds < 1000)
+                     {*/
+
+                    /*  pathsPerSecond++;
+                  }
+                  Debug.Log("Can compute "+ (pathsPerSecond)+" paths per second");*/
                 }
                 break;
         }

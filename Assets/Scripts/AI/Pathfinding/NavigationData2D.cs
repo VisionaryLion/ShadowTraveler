@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Utility;
 using System;
+using Pathfinding2D;
 
 namespace NavMesh2D
 {
@@ -18,17 +19,28 @@ namespace NavMesh2D
 
         public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint)
         {
-            NavVert mappedVert;
+            int mappedVert;
             NavNode mappedNode;
             return TryMapPoint(point, out nearestPoint, out mappedVert, out mappedNode);
         }
 
         public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint, out int mappedVertIndex, out NavNode mappedNode)
         {
+            int mappedNodeIndex;
+            bool result = TryMapPoint(point, out nearestPoint, out mappedVertIndex, out mappedNodeIndex);
+            if (result)
+                mappedNode = nodes[mappedNodeIndex];
+            else
+                mappedNode = null;
+            return result;
+        }
+
+        public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint, out int mappedVertIndex, out int mappedNodeIndex)
+        {
             NavNode map_cNavNode;
             int cVertIndex;
             mappedVertIndex = 0;
-            mappedNode = null;
+            mappedNodeIndex = 0;
             float map_minDist = float.MaxValue;
             float dist;
             Vector2 cPoint;
@@ -61,7 +73,7 @@ namespace NavMesh2D
                     if (dist < map_minDist)
                     {
                         mappedVertIndex = cVertIndex;
-                        mappedNode = map_cNavNode;
+                        mappedNodeIndex = iNavNode;
                         nearestPoint = cPoint;
                         if (dist <= mapPointInstantAcceptDeviation)
                         {
@@ -98,10 +110,8 @@ namespace NavMesh2D
 
         public bool IsSolid { get { return hierachyIndex % 2 == 0; } }
 
-        [SerializeField]
-        NavNodeLink[] links;
+        public NavNodeLink[] links;
         public NavVert[] verts;
-
 
         public NavNode(NavVert[] verts, Bounds bounds, bool isClosed, int hierachyIndex)
         {
@@ -138,7 +148,7 @@ namespace NavMesh2D
 
         public bool TryFindClosestPointOnContour(Vector2 point, out float distance, out Vector2 nearestPoint)
         {
-            NavVert vert;
+            int vert;
             return TryFindClosestPointOnContour(point, out distance, out nearestPoint, out vert);
         }
 
@@ -224,13 +234,24 @@ namespace NavMesh2D
         public enum LinkType { NotAccessible, Jump, Ladder, };
 
         [SerializeField]
-        NavNode target;
+        public int targetNodeIndex;
         [SerializeField]
-        Vector2 startPoint;
+        public int targetVertIndex;
         [SerializeField]
-        Vector2 endPoint;
+        public Vector2 startPoint;
         [SerializeField]
-        LinkType linkType;
+        public Vector2 endPoint;
+        [SerializeField]
+        public LinkType linkType;
+
+        public NavNodeLink(JumpLinkPlacer.JumpLink jumpLink)
+        {
+            targetNodeIndex = jumpLink.nodeIndexB;
+            targetVertIndex = jumpLink.nodeVertIndexB;
+            startPoint = jumpLink.navPointA;
+            endPoint = jumpLink.navPointB;
+            linkType = LinkType.Jump;
+        }
     }
 
     [Serializable]
@@ -246,8 +267,8 @@ namespace NavMesh2D
 
         [SerializeField]
         Vector2 pointB; // a -> b -> c
-        [SerializeField]
-        NavNodeLink[] links;
+        
+        public int[] linkIndex;
 
         public NavVert(Vector2 point, float angleABC, float slopeAngleBC, float distanceBC)
         {

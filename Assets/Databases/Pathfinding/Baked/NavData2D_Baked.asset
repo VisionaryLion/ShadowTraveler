@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df5fb89239bf7864fbc34acf00705310, type: 3}
-  m_Name: NavData2d
+  m_Name: NavData2D_Baked
   m_EditorClassIdentifier: 
   name: 
   version: 0
@@ -18,7 +18,22 @@ MonoBehaviour:
     max: {x: 2.5240002, y: 1.6509993}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 4
+      targetVertIndex: 1
+      startPoint: {x: 2.3723052, y: 1.6501563}
+      endPoint: {x: 4.945864, y: 0.28}
+      linkType: 1
+    - targetNodeIndex: 5
+      targetVertIndex: 1
+      startPoint: {x: 2.1857111, y: 1.6503483}
+      endPoint: {x: 4.285968, y: 4.9}
+      linkType: 1
+    - targetNodeIndex: 9
+      targetVertIndex: 1
+      startPoint: {x: 1.5531301, y: 1.6509993}
+      endPoint: {x: 0.117153645, y: -1.2792345}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -29,7 +44,7 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: 1.5531301, y: 1.6509993}
-      linkIndex: 
+      linkIndex: 000000000100000002000000
   - min: {x: -5.11, y: 4.4300003}
     max: {x: -3.8539996, y: 4.4300003}
     isClosed: 0
@@ -50,7 +65,12 @@ MonoBehaviour:
     max: {x: 5.1410003, y: -1.2497996}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 4
+      targetVertIndex: 1
+      startPoint: {x: 3.7683423, y: -1.2661295}
+      endPoint: {x: 5.2102237, y: 0.28}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -61,12 +81,22 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: 3.6027293, y: -1.2680997}
-      linkIndex: 
+      linkIndex: 00000000
   - min: {x: -1.3499999, y: 1.8799999}
     max: {x: -0.71000004, y: 1.8799999}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 9
+      targetVertIndex: 1
+      startPoint: {x: -0.9743576, y: 1.8799999}
+      endPoint: {x: 0.32662153, y: -1.2792345}
+      linkType: 1
+    - targetNodeIndex: 0
+      targetVertIndex: 1
+      startPoint: {x: -0.71, y: 1.8799999}
+      endPoint: {x: 2.524, y: 1.6500001}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -77,12 +107,22 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: -1.3499999, y: 1.8799999}
-      linkIndex: 
+      linkIndex: 0000000001000000
   - min: {x: 4.8970003, y: 0.28}
     max: {x: 6.13, y: 0.28}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 2
+      targetVertIndex: 1
+      startPoint: {x: 5.1791925, y: 0.28}
+      endPoint: {x: 3.7122352, y: -1.266797}
+      linkType: 1
+    - targetNodeIndex: 0
+      targetVertIndex: 1
+      startPoint: {x: 4.9089866, y: 0.28}
+      endPoint: {x: 2.3899508, y: 1.650138}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -93,12 +133,32 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: 4.8970003, y: 0.28}
-      linkIndex: 
+      linkIndex: 0000000001000000
   - min: {x: 4.0129995, y: 4.9}
     max: {x: 6.38, y: 4.9}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 0
+      targetVertIndex: 1
+      startPoint: {x: 4.351551, y: 4.9}
+      endPoint: {x: 2.4261942, y: 1.6501007}
+      linkType: 1
+    - targetNodeIndex: 7
+      targetVertIndex: 1
+      startPoint: {x: 5.0584607, y: 4.9}
+      endPoint: {x: 6.526822, y: 6.15}
+      linkType: 1
+    - targetNodeIndex: 6
+      targetVertIndex: 1
+      startPoint: {x: 5.034897, y: 4.9}
+      endPoint: {x: 8.082024, y: 4.9}
+      linkType: 1
+    - targetNodeIndex: 8
+      targetVertIndex: 1
+      startPoint: {x: 4.355448, y: 4.9}
+      endPoint: {x: 1.4670613, y: 4.01}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -109,12 +169,22 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: 4.013, y: 4.9}
-      linkIndex: 
+      linkIndex: 00000000010000000200000003000000
   - min: {x: 6.7, y: 4.9}
     max: {x: 9, y: 4.9}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 7
+      targetVertIndex: 1
+      startPoint: {x: 7.909665, y: 4.9}
+      endPoint: {x: 6.526823, y: 6.15}
+      linkType: 1
+    - targetNodeIndex: 5
+      targetVertIndex: 1
+      startPoint: {x: 8.027491, y: 4.9}
+      endPoint: {x: 4.9716263, y: 4.9}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -125,12 +195,22 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: 6.7, y: 4.9}
-      linkIndex: 
+      linkIndex: 0000000001000000
   - min: {x: 6.38, y: 6.15}
     max: {x: 6.7, y: 6.15}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 5
+      targetVertIndex: 1
+      startPoint: {x: 6.4722824, y: 6.15}
+      endPoint: {x: 5.136566, y: 4.9}
+      linkType: 1
+    - targetNodeIndex: 6
+      targetVertIndex: 1
+      startPoint: {x: 6.566536, y: 6.15}
+      endPoint: {x: 7.8935156, y: 4.9}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -141,12 +221,17 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: 6.38, y: 6.15}
-      linkIndex: 
+      linkIndex: 0000000001000000
   - min: {x: 1.1400001, y: 4.01}
     max: {x: 1.78, y: 4.01}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 5
+      targetVertIndex: 1
+      startPoint: {x: 1.4461656, y: 4.01}
+      endPoint: {x: 4.4694405, y: 4.9}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -157,12 +242,22 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: 1.1400001, y: 4.01}
-      linkIndex: 
+      linkIndex: 00000000
   - min: {x: -0.36431456, y: -1.2792345}
     max: {x: 1.04, y: -1.2792345}
     isClosed: 0
     hierachyIndex: 0
-    links: []
+    links:
+    - targetNodeIndex: 0
+      targetVertIndex: 1
+      startPoint: {x: 0.1660816, y: -1.2792345}
+      endPoint: {x: 1.5531301, y: 1.6509993}
+      linkType: 1
+    - targetNodeIndex: 3
+      targetVertIndex: 1
+      startPoint: {x: 0.44537276, y: -1.2792345}
+      endPoint: {x: -0.790543, y: 1.8799999}
+      linkType: 1
     verts:
     - angleABC: 0
       slopeAngleBC: 0
@@ -173,7 +268,7 @@ MonoBehaviour:
       slopeAngleBC: 0
       distanceBC: 0
       pointB: {x: -0.36431456, y: -1.2792345}
-      linkIndex: 
+      linkIndex: 0000000001000000
   - min: {x: -1.9059384, y: 2.6478765}
     max: {x: -1.5659382, y: 2.6478765}
     isClosed: 0

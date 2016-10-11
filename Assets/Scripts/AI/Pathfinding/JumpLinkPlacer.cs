@@ -2,6 +2,7 @@
 using NavMesh2D.Core;
 using System.Collections.Generic;
 using System;
+using NavMesh2D;
 
 namespace Pathfinding2D
 {
@@ -32,14 +33,14 @@ namespace Pathfinding2D
             public Vector2 navPointB;
 
             [SerializeField, ReadOnly]
-            public Vector2 normalA;
-
-            
+            public int nodeIndexA;
+            [SerializeField, ReadOnly]
+            public int nodeIndexB;
 
             [SerializeField, ReadOnly]
-            public int nodeIdA;
+            public int nodeVertIndexA;
             [SerializeField, ReadOnly]
-            public int nodeIdB;
+            public int nodeVertIndexB;
 
             [SerializeField]
             public JumpArcSegment jumpArc;
@@ -56,6 +57,35 @@ namespace Pathfinding2D
             {
                 this.worldPointA = worldPointA;
                 this.worldPointB = worldPointB;
+            }
+
+            public bool TryRemapPoints(NavigationData2D navData)
+            {
+                Vector2 navPoint;
+                int mappedVertIndex;
+                int mappedNodeIndex;
+                if (navData.TryMapPoint(worldPointA, out navPoint, out mappedVertIndex, out mappedNodeIndex))
+                {
+                    this.navPointA = navPoint;
+                    this.nodeIndexA = mappedNodeIndex;
+                    this.nodeVertIndexA = mappedVertIndex;
+                }
+                else
+                {
+                    return false;
+                }
+
+                if (navData.TryMapPoint(worldPointB, out navPoint, out mappedVertIndex, out mappedNodeIndex))
+                {
+                    this.navPointB = navPoint;
+                    this.nodeIndexB = mappedNodeIndex;
+                    this.nodeVertIndexB = mappedVertIndex;
+                }
+                else
+                {
+                    return false;
+                }
+                return true;
             }
         }
     }

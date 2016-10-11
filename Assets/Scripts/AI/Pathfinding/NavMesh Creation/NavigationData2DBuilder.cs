@@ -24,7 +24,9 @@ namespace NavMesh2D.Core
             NavNode[] allNN = navNodes.ToArray();
             navNodes = null;
             GenerateFloorWalkerJumpLinks(allNN, 20, 20, 5, 5, 2, 40);
-            return new NavigationData2D { nodes = allNN };
+            NavigationData2D result =  ScriptableObject.CreateInstance<NavigationData2D>();
+            result.nodes = allNN;
+            return result;
         }
 
         private void HandleMarkableContour(ExpandedNode exNode, List<NavNode> nodes, int hierachyIndex)
