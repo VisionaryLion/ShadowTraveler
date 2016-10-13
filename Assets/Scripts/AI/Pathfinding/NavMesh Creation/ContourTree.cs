@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Utility.Polygon2D;
 using Utility.ExtensionMethods;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace NavMesh2D.Core
 {

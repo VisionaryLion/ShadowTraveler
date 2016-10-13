@@ -14,7 +14,7 @@ namespace Manager
 
         void Awake()
         {
-            stateMan = GameStateManager.GetInstance();
+            stateMan = GameStateManager.GetInstance();            
         }
 
         void OnRenderImage(RenderTexture src, RenderTexture dst)
