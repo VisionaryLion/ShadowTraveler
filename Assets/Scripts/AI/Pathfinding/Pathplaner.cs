@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using NavMesh2D;
 using Priority_Queue;
+using Pathfinding2D;
+using System;
 
 public class PathPlaner : MonoBehaviour
 {
@@ -40,11 +42,9 @@ public class PathPlaner : MonoBehaviour
         {
             //No path can be found!
             Debug.Log("Couldn't map points. -> no path");
-            //request.callback(null);
+            request.callback(null);
             return;
         }
-        DebugExtension.DebugCircle(start_point, Vector3.forward, Color.magenta, 0.1f);
-        Debug.DrawLine(start_point, request.start, Color.white);
 
         NavNode goal_node;
         int goal_vertIndex;
@@ -53,16 +53,14 @@ public class PathPlaner : MonoBehaviour
         {
             //No path can be found!
             Debug.Log("Couldn't map points. -> no path");
-            //request.callback(null);
+            request.callback(null);
             return;
         }
-        DebugExtension.DebugCircle(goal_point, Vector3.forward, Color.magenta, 0.1f);
-        Debug.DrawLine(goal_point, request.goal, Color.white);
 
         //Trivial case: Start and Goal are on the same line
         if (start_node == goal_node && goal_vertIndex == start_vertIndex)
         {
-            Debug.Log("Are on same Edge");
+            request.callback(new NavPath() { pathSegments = new IPathSegment[] { new PathSegment(start_point, goal_point, Vector2.Distance(start_point, goal_point)) } });
             return;
         }
         closedList.Clear();
@@ -73,25 +71,22 @@ public class PathPlaner : MonoBehaviour
         int newVertIndex;
         float costSoFar;
 
-
         while (openList.Count > 0)
         {
             cNode = openList.Dequeue();
             if (cNode.navNode == goal_node && cNode.navVertIndex == goal_vertIndex)
             {
-                //Found path!
                 goto FoundPath;
             }
 
             closedList.Add(cNode);
-            DebugExtension.DebugPoint(cNode.NVert.PointB, Color.red, 0.5f);
 
             if (cNode.navVertIndex - 1 >= 0)
             {
                 newVertIndex = cNode.navVertIndex - 1;
                 if (!IsNodeClosed(cNode.navNode, newVertIndex))
                 {
-                    costSoFar = cNode.costSoFar + Vector2.Distance(cNode.NVert.PointB, cNode.navNode.verts[newVertIndex].PointB);
+                    costSoFar = cNode.costSoFar + cNode.navNode.verts[newVertIndex].distanceBC;
                     PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
                     openList.Enqueue(newNode, newNode.costSoFar);
                 }
@@ -101,7 +96,7 @@ public class PathPlaner : MonoBehaviour
                 newVertIndex = cNode.navNode.verts.Length - 1;
                 if (!IsNodeClosed(cNode.navNode, newVertIndex))
                 {
-                    costSoFar = cNode.costSoFar + Vector2.Distance(cNode.NVert.PointB, cNode.navNode.verts[newVertIndex].PointB);
+                    costSoFar = cNode.costSoFar + cNode.navNode.verts[newVertIndex].distanceBC;
                     PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
                     openList.Enqueue(newNode, newNode.costSoFar);
                 }
@@ -112,7 +107,7 @@ public class PathPlaner : MonoBehaviour
                 newVertIndex = cNode.navVertIndex + 1;
                 if (!IsNodeClosed(cNode.navNode, newVertIndex))
                 {
-                    costSoFar = cNode.costSoFar + Vector2.Distance(cNode.NVert.PointB, cNode.navNode.verts[newVertIndex].PointB);
+                    costSoFar = cNode.costSoFar + cNode.NVert.distanceBC;
                     PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
                     openList.Enqueue(newNode, newNode.costSoFar);
                 }
@@ -122,7 +117,7 @@ public class PathPlaner : MonoBehaviour
                 newVertIndex = 0;
                 if (!IsNodeClosed(cNode.navNode, newVertIndex))
                 {
-                    costSoFar = cNode.costSoFar + Vector2.Distance(cNode.NVert.PointB, cNode.navNode.verts[newVertIndex].PointB);
+                    costSoFar = cNode.costSoFar + cNode.NVert.distanceBC;
                     PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
                     openList.Enqueue(newNode, newNode.costSoFar);
                 }
@@ -133,33 +128,52 @@ public class PathPlaner : MonoBehaviour
                 int[] linkIndecies = cNode.navNode.verts[cNode.navVertIndex].linkIndex;
                 for (int iLink = 0; iLink < linkIndecies.Length; iLink++)
                 {
-                    NavNodeLink cLink = cNode.navNode.links[linkIndecies[iLink]];
+                    IOffNodeLink cLink = cNode.navNode.links[linkIndecies[iLink]];
                     if (!IsNodeClosed(navData.nodes[cLink.targetNodeIndex], cLink.targetVertIndex))
                     {
-                        costSoFar = cNode.costSoFar + Vector2.Distance(cLink.startPoint, cLink.endPoint);
-                        PathNode newNode = new PathNode(cNode, navData.nodes[cLink.targetNodeIndex], cLink.targetVertIndex, costSoFar, Vector2.Distance(goal_point, cLink.endPoint));
+                        costSoFar = cNode.costSoFar + cLink.traversCosts;
+                        PathNode newNode = new PathNode(cNode, navData.nodes[cLink.targetNodeIndex], cLink.targetVertIndex, costSoFar, Vector2.Distance(goal_point, cLink.endPoint), linkIndecies[iLink]);
                         openList.Enqueue(newNode, newNode.costSoFar);
                     }
                 }
             }
         }
 
-        Debug.Log("No path found!");
+        request.callback(null);
         return;
 
         FoundPath:
-        Debug.Log("Path found!");
-        Debug.DrawLine(cNode.NVert.PointB, goal_point, Color.green);
+        List<IPathSegment> pathSegments = new List<IPathSegment>(50);
+        Vector2 prevPoint = goal_point;
+        float distance = 0;
         while (cNode.parent != null)
         {
-            if (cNode.parent.parent == null)
-                Debug.DrawLine(cNode.NVert.PointB, start_point, Color.green);
+            /*if (cNode.linkIndex == -1)
+            {
+                distance += (cNode.NVert.PointB - prevPoint).magnitude;
+            }
             else
-                Debug.DrawLine(cNode.NVert.PointB, cNode.parent.NVert.PointB, Color.green);
+            {*/
+            if (cNode.linkIndex >= cNode.navNode.links.Length)
+            {
+                Debug.Log("Overflow!");
+            }
 
-            DebugExtension.DebugCircle(cNode.NVert.PointB, Vector3.forward, Color.green, 0.12f);
+                pathSegments.Add(new PathSegment(cNode.Link.endPoint, prevPoint, distance + (cNode.Link.endPoint - prevPoint).magnitude));
+                distance = 0;
+                pathSegments.Add(new JumpSegment((JumpLink)cNode.Link));
+                prevPoint = cNode.Link.startPoint;
+           // }
             cNode = cNode.parent;
         }
+        pathSegments.Add(new PathSegment(start_point, prevPoint, distance + (start_point - prevPoint).magnitude));
+
+        IPathSegment[] inversedSeg = new IPathSegment[pathSegments.Count];
+        for (int iSeg = 0, iInv = pathSegments.Count - 1; iSeg < pathSegments.Count; iSeg++, iInv--)
+        {
+            inversedSeg[iSeg] = pathSegments[iInv];
+        }
+        request.callback(new NavPath() { pathSegments = inversedSeg});
     }
 
     bool IsNodeClosed(NavNode nn, int vertIndex)
@@ -178,9 +192,11 @@ public class PathPlaner : MonoBehaviour
         public NavNode navNode;
         public float costSoFar;
         public float totalCost;
+        public int linkIndex;
         public PathNode parent;
 
         public NavVert NVert { get { return navNode.verts[navVertIndex]; } }
+        public IOffNodeLink Link { get { return parent.navNode.links[linkIndex]; } }
 
 
         public PathNode(PathNode parent, NavNode navNode, int navVertIndex, float costSoFar, float estimatedCost)
@@ -190,6 +206,17 @@ public class PathPlaner : MonoBehaviour
             this.costSoFar = costSoFar;
             totalCost = estimatedCost = costSoFar;
             this.parent = parent;
+            linkIndex = -1;
+        }
+
+        public PathNode(PathNode parent, NavNode navNode, int navVertIndex, float costSoFar, float estimatedCost, int linkIndex)
+        {
+            this.navNode = navNode;
+            this.navVertIndex = navVertIndex;
+            this.costSoFar = costSoFar;
+            totalCost = estimatedCost = costSoFar;
+            this.parent = parent;
+            this.linkIndex = linkIndex;
         }
     }
 }
@@ -210,7 +237,17 @@ public class PathRequest
     }
 }
 
+[Serializable]
 public class NavPath
 {
+    public IPathSegment[] pathSegments;
 
+    public void Visualize()
+    {
+        foreach (IPathSegment seg in pathSegments)
+        {
+            seg.Visualize();
+        }
+    }
 }
+

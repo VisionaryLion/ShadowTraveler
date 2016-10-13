@@ -23,6 +23,8 @@ public class NavDebugger : MonoBehaviour
     public float maxEdgeDeviation;
     [SerializeField]
     public NavAgentGroundWalkerSettings agentSettings;
+    [SerializeField]
+    public NavPath path;
     public bool showDebug;
 
     public Transform goal;
@@ -73,11 +75,18 @@ public class NavDebugger : MonoBehaviour
         Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");
     }
 
+    void PathCalcFinished(NavPath path)
+    {
+        this.path = path;
+        if (path != null)
+            path.Visualize();
+    }
+
     int counter = -1;
     // Update is called once per frame
     void Update()
     {
-        PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, null));
+        PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, PathCalcFinished));
 
         if (!showDebug)
             return;

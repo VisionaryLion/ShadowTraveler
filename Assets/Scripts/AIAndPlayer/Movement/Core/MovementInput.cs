@@ -3,6 +3,9 @@
 namespace CC2D { 
     public class MovementInput
     {
+        private static MovementInput emptyInput = new MovementInput();
+        public static MovementInput EmptyInput { get { return emptyInput; } }
+
         public bool jump;
         public bool isJumpConsumed;
         public float timeOfLastJumpStateChange;

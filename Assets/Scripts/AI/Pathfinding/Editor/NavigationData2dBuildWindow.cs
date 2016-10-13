@@ -960,12 +960,12 @@ namespace NavMesh2D.Core
             JumpLinkPlacer.JumpLink cLink;
             foreach (KeyValuePair<NavNode, List<JumpLinkPlacer.JumpLink>> keyPair in linkTable)
             {
-                NavNodeLink[] allLinks = new NavNodeLink[keyPair.Value.Count];
+                IOffNodeLink[] allLinks = new IOffNodeLink[keyPair.Value.Count];
                 vertLinkTable = new Dictionary<int, List<int>>(keyPair.Value.Count);
                 for (int iLink = 0; iLink < keyPair.Value.Count; iLink++)
                 {
                     cLink = keyPair.Value[iLink];
-                    allLinks[iLink] = new NavNodeLink(cLink);
+                    allLinks[iLink] = new JumpLink(cLink);
                     if (vertLinkTable.TryGetValue(cLink.nodeVertIndexA, out cLinkList))
                     {
                         cLinkList.Add(iLink);

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using Utility;
 using System;
 using Pathfinding2D;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Runtime.Serialization;
+using AI;
 
 namespace NavMesh2D
 {
@@ -98,7 +102,7 @@ namespace NavMesh2D
     }
 
     [Serializable]
-    public class NavNode
+    public class NavNode : ISerializationCallbackReceiver
     {
         const float maxDeviationInside = 0.1f;
         const float maxDeviationOutside = 0.001f;
@@ -110,8 +114,11 @@ namespace NavMesh2D
 
         public bool IsSolid { get { return hierachyIndex % 2 == 0; } }
 
-        public NavNodeLink[] links;
+        public IOffNodeLink[] links;
         public NavVert[] verts;
+
+        [SerializeField, HideInInspector]
+        byte[] serializableLinks;
 
         public NavNode(NavVert[] verts, Bounds bounds, bool isClosed, int hierachyIndex)
         {
@@ -198,7 +205,6 @@ namespace NavMesh2D
             return true;
         }
 
-
         public void VisualDebug(int colorId)
         {
             if (verts.Length == 0)
@@ -226,31 +232,38 @@ namespace NavMesh2D
             }
             DebugExtension.DebugCircle(verts[verts.Length - 1].PointB, Vector3.forward, DifferentColors.GetColor(colorId), 0.2f);
         }
-    }
 
-    [Serializable]
-    public class NavNodeLink
-    {
-        public enum LinkType { NotAccessible, Jump, Ladder, };
-
-        [SerializeField]
-        public int targetNodeIndex;
-        [SerializeField]
-        public int targetVertIndex;
-        [SerializeField]
-        public Vector2 startPoint;
-        [SerializeField]
-        public Vector2 endPoint;
-        [SerializeField]
-        public LinkType linkType;
-
-        public NavNodeLink(JumpLinkPlacer.JumpLink jumpLink)
+        public void OnBeforeSerialize()
         {
-            targetNodeIndex = jumpLink.nodeIndexB;
-            targetVertIndex = jumpLink.nodeVertIndexB;
-            startPoint = jumpLink.navPointA;
-            endPoint = jumpLink.navPointB;
-            linkType = LinkType.Jump;
+            if (links == null)
+                serializableLinks = null;
+            else
+            {
+                SurrogateSelector selector = new SurrogateSelector();
+                selector.AddSurrogate(typeof(Vector2), new StreamingContext(StreamingContextStates.All), new Vector2SerializationSurrogate());
+                BinaryFormatter bf = new BinaryFormatter(selector, new StreamingContext(StreamingContextStates.All));
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    bf.Serialize(ms, links);
+                    serializableLinks = ms.ToArray();
+                }
+            }
+        }
+
+        public void OnAfterDeserialize()
+        {
+            if (serializableLinks == null || serializableLinks.Length == 0)
+                return;
+
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                SurrogateSelector selector = new SurrogateSelector();
+                selector.AddSurrogate(typeof(Vector2), new StreamingContext(StreamingContextStates.All), new Vector2SerializationSurrogate());
+                BinaryFormatter bf = new BinaryFormatter(selector, new StreamingContext(StreamingContextStates.All));
+                memStream.Write(serializableLinks, 0, serializableLinks.Length);
+                memStream.Seek(0, SeekOrigin.Begin);
+                links = (IOffNodeLink[])bf.Deserialize(memStream);
+            }
         }
     }
 
