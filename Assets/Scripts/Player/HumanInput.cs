@@ -13,6 +13,10 @@ namespace CC2D
         PlayerActor actor;
 
         [SerializeField]
+        [Tooltip("Max time a jump will be buffered.")]
+        float maxJumpExecutionDelay = 0.5f;
+
+        [SerializeField]
         EquipmentButtonBinding[] binds; //according to keyboard numbers
 
         MovementInput bufferedInput;
@@ -31,16 +35,12 @@ namespace CC2D
             {
                 if (Input.GetButtonDown("Jump"))
                 {
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
-                    bufferedInput.jump = true;
-                    bufferedInput.isJumpConsumed = false;
+                    bufferedInput.AddEvent(new JumpEvent(maxJumpExecutionDelay));
                 }
-                else if (Input.GetButtonUp("Jump"))
+                else if (Input.GetButtonDown("Crouch"))
                 {
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
+                    bufferedInput.AddEvent(new CrouchEvent());
                 }
-                else
-                    bufferedInput.jump = Input.GetButton("Jump");
             }
 
             if (allowEquipmentInput)
@@ -110,9 +110,6 @@ namespace CC2D
             bufferedInput.horizontalRaw = 0;
             bufferedInput.vertical = 0;
             bufferedInput.verticalRaw = 0;
-            bufferedInput.jump = false;
-            bufferedInput.isJumpConsumed = false;
-            bufferedInput.timeOfLastJumpStateChange = 0;
         }
 
         [Serializable]
