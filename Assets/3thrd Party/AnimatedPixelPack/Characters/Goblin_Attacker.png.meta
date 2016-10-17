@@ -28,7 +28,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -48,19 +48,23 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: .5, y: .5}
+  spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 16
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: Goblin_Attacker_0
+    - serializedVersion: 2
+      name: Goblin_Attacker_0
       rect:
         serializedVersion: 2
         x: 0
@@ -70,7 +74,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_1
       rect:
         serializedVersion: 2
         x: 16
@@ -80,7 +87,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_2
       rect:
         serializedVersion: 2
         x: 32
@@ -90,7 +100,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_3
       rect:
         serializedVersion: 2
         x: 48
@@ -100,7 +113,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_4
       rect:
         serializedVersion: 2
         x: 0
@@ -110,7 +126,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_5
       rect:
         serializedVersion: 2
         x: 16
@@ -120,7 +139,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_6
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_6
       rect:
         serializedVersion: 2
         x: 32
@@ -130,7 +152,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_7
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_7
       rect:
         serializedVersion: 2
         x: 48
@@ -140,7 +165,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_8
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_8
       rect:
         serializedVersion: 2
         x: 0
@@ -150,7 +178,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_9
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_9
       rect:
         serializedVersion: 2
         x: 16
@@ -160,7 +191,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Goblin_Attacker_10
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Goblin_Attacker_10
       rect:
         serializedVersion: 2
         x: 32
@@ -170,6 +204,9 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    outline: []
   spritePackingTag: AnimatedPixelPack
   userData: 
   assetBundleName: 

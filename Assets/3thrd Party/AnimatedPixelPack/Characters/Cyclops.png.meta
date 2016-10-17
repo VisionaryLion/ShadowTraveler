@@ -27,7 +27,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -47,19 +47,23 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: .5, y: .5}
+  spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 16
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: Cyclops_0
+    - serializedVersion: 2
+      name: Cyclops_0
       rect:
         serializedVersion: 2
         x: 0
@@ -69,7 +73,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_1
       rect:
         serializedVersion: 2
         x: 16
@@ -79,7 +86,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_2
       rect:
         serializedVersion: 2
         x: 32
@@ -89,7 +99,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_3
       rect:
         serializedVersion: 2
         x: 48
@@ -99,7 +112,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_4
       rect:
         serializedVersion: 2
         x: 0
@@ -109,7 +125,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_5
       rect:
         serializedVersion: 2
         x: 16
@@ -119,7 +138,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_6
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_6
       rect:
         serializedVersion: 2
         x: 32
@@ -129,7 +151,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_7
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_7
       rect:
         serializedVersion: 2
         x: 48
@@ -139,7 +164,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_8
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_8
       rect:
         serializedVersion: 2
         x: 16
@@ -149,7 +177,10 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Cyclops_9
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Cyclops_9
       rect:
         serializedVersion: 2
         x: 32
@@ -159,6 +190,9 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    outline: []
   spritePackingTag: AnimatedPixelPack
   userData: 
   assetBundleName: 

@@ -57,11 +57,14 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 16
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: Peasant_0
+    - serializedVersion: 2
+      name: Peasant_0
       rect:
         serializedVersion: 2
         x: 0
@@ -72,7 +75,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_1
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_1
       rect:
         serializedVersion: 2
         x: 16
@@ -83,7 +88,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_2
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_2
       rect:
         serializedVersion: 2
         x: 32
@@ -94,7 +101,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_3
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_3
       rect:
         serializedVersion: 2
         x: 48
@@ -105,7 +114,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_4
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_4
       rect:
         serializedVersion: 2
         x: 0
@@ -116,7 +127,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_5
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_5
       rect:
         serializedVersion: 2
         x: 16
@@ -127,7 +140,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_6
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_6
       rect:
         serializedVersion: 2
         x: 32
@@ -138,7 +153,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_7
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_7
       rect:
         serializedVersion: 2
         x: 48
@@ -149,7 +166,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_8
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_8
       rect:
         serializedVersion: 2
         x: 0
@@ -160,7 +179,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_9
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_9
       rect:
         serializedVersion: 2
         x: 16
@@ -171,7 +192,9 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-    - name: Peasant_10
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: Peasant_10
       rect:
         serializedVersion: 2
         x: 32
@@ -182,6 +205,7 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
+      tessellationDetail: -1
     outline: []
   spritePackingTag: AnimatedPixelPack
   userData: 
