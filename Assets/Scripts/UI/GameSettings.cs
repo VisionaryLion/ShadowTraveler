@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameSettings : MonoBehaviour {
+public class GameSettings {
 
     public float masterVolume;
     public float sfxVolume;

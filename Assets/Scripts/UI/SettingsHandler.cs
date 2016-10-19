@@ -1,16 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using FMODUnity;
+using FMOD.Studio;
+using System.IO;
 
-public class SettingsHandler : MonoBehaviour {
+public class SettingsHandler : MonoBehaviour
+{
 
     [SerializeField]
-    Slider masterVolume;
-    [SerializeField]
-    Slider sfxVolume;
-    [SerializeField]
-    Slider bgVolume;
+    Slider masterVolumeSlider;
 
     [SerializeField]
     Toggle fullscreenToggle;
@@ -20,8 +18,10 @@ public class SettingsHandler : MonoBehaviour {
     [SerializeField]
     Dropdown textureQualityDropdown;
 
+    public Button applyButton;
+
     Resolution[] resolutions;
-    GameSettings gameSettings;
+    public GameSettings gameSettings;
 
     void OnEnable()
     {
@@ -29,15 +29,16 @@ public class SettingsHandler : MonoBehaviour {
 
         fullscreenToggle.onValueChanged.AddListener(delegate { OnFullscreenToggle(); });
         resolutionDropdown.onValueChanged.AddListener(delegate { OnResolutionChange(); });
-        masterVolume.onValueChanged.AddListener(delegate { OnMasterVolumeChange(); });
-        sfxVolume.onValueChanged.AddListener(delegate { OnSFXVolumeChange(); });
-        bgVolume.onValueChanged.AddListener(delegate { OnBGVolumeChange(); });
+        masterVolumeSlider.onValueChanged.AddListener(delegate { OnMasterVolumeChange(); });
+        applyButton.onClick.AddListener(delegate { OnApplyButtonClick(); });
 
         resolutions = Screen.resolutions;
-        foreach(Resolution resolution in resolutions)
+        foreach (Resolution resolution in resolutions)
         {
             resolutionDropdown.options.Add(new Dropdown.OptionData(resolution.ToString()));
         }
+
+        LoadSettings();
     }
 
     public void OnFullscreenToggle()
@@ -52,16 +53,28 @@ public class SettingsHandler : MonoBehaviour {
 
     public void OnMasterVolumeChange()
     {
-
+        PlayerPrefs.SetFloat("Master Volume", gameSettings.masterVolume);
+        
+        gameSettings.masterVolume = masterVolumeSlider.value;
     }
 
-    public void OnSFXVolumeChange()
+    public void OnApplyButtonClick()
     {
-
+        SaveSettings();
     }
 
-    public void OnBGVolumeChange()
+    public void SaveSettings()
     {
+        string jsonData = JsonUtility.ToJson(gameSettings, true);
+        File.WriteAllText(Application.persistentDataPath + "/gamesettings.json", jsonData);
+    }
 
+    public void LoadSettings()
+    {
+        gameSettings = JsonUtility.FromJson<GameSettings>(File.ReadAllText(Application.persistentDataPath + "/gamesettings.json"));
+
+        masterVolumeSlider.value = gameSettings.masterVolume;
+        resolutionDropdown.value = gameSettings.resolutionIndex;
+        fullscreenToggle.isOn = gameSettings.fullscreen;
     }
 }

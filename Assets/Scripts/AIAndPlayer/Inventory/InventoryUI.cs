@@ -18,7 +18,7 @@ namespace ItemHandler
         {
             for (int iSlot = 0; iSlot < displayItem.Length; iSlot++)
             {
-                displayItem[iSlot].inventoryUI = this;
+                displayItem[iSlot].inventoryUI = this;                
             }
         }
 
