@@ -17,6 +17,7 @@ public class PathPlaner : MonoBehaviour
 
     void Awake()
     {
+        Debug.Assert(instance == null);
         instance = this;
         openList = new StablePriorityQueue<PathNode>(100);
         closedList = new List<PathNode>(100);
@@ -60,7 +61,7 @@ public class PathPlaner : MonoBehaviour
         //Trivial case: Start and Goal are on the same line
         if (start_node == goal_node && goal_vertIndex == start_vertIndex)
         {
-            request.callback(new NavPath() { pathSegments = new IPathSegment[] { new PathSegment(start_point, goal_point, Vector2.Distance(start_point, goal_point)) } });
+            request.callback(new NavPath() { pathSegments = new IPathSegment[] { new PathSegment(start_point, goal_point, Vector2.Distance(start_point, goal_point) / navData.navAgentSettings.maxXVel) } });
             return;
         }
         closedList.Clear();
@@ -154,16 +155,12 @@ public class PathPlaner : MonoBehaviour
             }
             else
             {*/
-            if (cNode.linkIndex >= cNode.navNode.links.Length)
-            {
-                Debug.Log("Overflow!");
-            }
 
-                pathSegments.Add(new PathSegment(cNode.Link.endPoint, prevPoint, distance + (cNode.Link.endPoint - prevPoint).magnitude));
-                distance = 0;
-                pathSegments.Add(new JumpSegment((JumpLink)cNode.Link));
-                prevPoint = cNode.Link.startPoint;
-           // }
+            pathSegments.Add(new PathSegment(cNode.Link.endPoint, prevPoint, (distance + (cNode.Link.endPoint - prevPoint).magnitude) / navData.navAgentSettings.maxXVel));
+            distance = 0;
+            pathSegments.Add(new JumpSegment((JumpLink)cNode.Link));
+            prevPoint = cNode.Link.startPoint;
+            // }
             cNode = cNode.parent;
         }
         pathSegments.Add(new PathSegment(start_point, prevPoint, distance + (start_point - prevPoint).magnitude));
@@ -173,7 +170,7 @@ public class PathPlaner : MonoBehaviour
         {
             inversedSeg[iSeg] = pathSegments[iInv];
         }
-        request.callback(new NavPath() { pathSegments = inversedSeg});
+        request.callback(new NavPath() { pathSegments = inversedSeg });
     }
 
     bool IsNodeClosed(NavNode nn, int vertIndex)

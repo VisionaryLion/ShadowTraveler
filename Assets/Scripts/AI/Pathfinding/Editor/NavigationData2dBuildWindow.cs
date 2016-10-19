@@ -26,10 +26,18 @@ namespace NavMesh2D.Core
         int selectedTab;
         [SerializeField]
         string[] tabNames;
-        [SerializeField]
         IBuildStepHandler[] buildSteps;
         IBuildStepHandler currentBuildStep { get { return buildSteps[selectedTab]; } }
         IBuildStepHandler oldBuildStep;
+
+        [SerializeField]
+        NavAgentUI navAgentUIStep;
+        [SerializeField]
+        CollisionGeometryGatheringBuildStep collisionGeometryGatheringStep;
+        [SerializeField]
+        JumpLinkPlacerUI jumpLinkPlacerUIStep;
+        [SerializeField]
+        BakeNavData bakeNavDataStep;
 
         [SerializeField]
         public NavAgentGroundWalkerSettings groundWalkerSettings;
@@ -71,7 +79,15 @@ namespace NavMesh2D.Core
 
             if (buildSteps == null)
             {
-                buildSteps = new IBuildStepHandler[] { new NavAgentUI(this), new CollisionGeometryGatheringBuildStep(this), new JumpLinkPlacerUI(this), new BakeNavData(this) };
+                if (navAgentUIStep == null)
+                    navAgentUIStep = new NavAgentUI(this);
+                if (collisionGeometryGatheringStep == null)
+                    collisionGeometryGatheringStep = new CollisionGeometryGatheringBuildStep(this);
+                if (jumpLinkPlacerUIStep == null)
+                    jumpLinkPlacerUIStep = new JumpLinkPlacerUI(this);
+                if (bakeNavDataStep == null)
+                    bakeNavDataStep = new BakeNavData(this);
+                buildSteps = new IBuildStepHandler[] { navAgentUIStep, collisionGeometryGatheringStep, jumpLinkPlacerUIStep, bakeNavDataStep };
                 tabNames = new string[buildSteps.Length];
                 for (int iStep = 0; iStep < tabNames.Length; iStep++)
                 {
@@ -87,6 +103,7 @@ namespace NavMesh2D.Core
             // so that it will no longer do any drawing.
             SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
             SceneView.RepaintAll();
+            currentBuildStep.OnDisable();
         }
 
         void OnDisable()
@@ -144,7 +161,12 @@ namespace NavMesh2D.Core
                 {
                     link.worldPointA = Handles.PositionHandle(link.worldPointA, Quaternion.identity);
                     link.worldPointB = Handles.PositionHandle(link.worldPointB, Quaternion.identity);
-                    link.xSpeedScale = Mathf.Clamp(1 - Handles.ScaleSlider(1 - link.xSpeedScale, arrowOrigin, Vector3.up, Quaternion.identity, HandleUtility.GetHandleSize(arrowOrigin), 0.01f), 0f, 1f);
+
+                    link.xSpeedScale = Handles.ScaleSlider( link.xSpeedScale, arrowOrigin, Vector3.up, Quaternion.identity, HandleUtility.GetHandleSize(arrowOrigin), 0.01f);
+                    if (link.xSpeedScale > 1)
+                        link.xSpeedScale = 1;
+                    else if (link.xSpeedScale < 0)
+                        link.xSpeedScale = 0;
                 }
 
                 Vector2 upRight, downRight, upLeft, downLeft;
@@ -175,10 +197,28 @@ namespace NavMesh2D.Core
 
                 Handles.color = link.isJumpLinkValid ? Color.green : Color.red;
 
-                DrawJumpArc(link, upRight);
-                DrawJumpArc(link, upLeft);
-                DrawJumpArc(link, downLeft);
-                DrawJumpArc(link, downRight);
+                if (link.navPointA.x > link.navPointB.x)
+                {
+                    upRight.x -= link.navPointA.x;
+                    upLeft.x -= link.navPointA.x;
+                    downLeft.x -= link.navPointA.x;
+                    downRight.x -= link.navPointA.x;
+                    DrawJumpArc(link, upRight);
+                    DrawJumpArc(link, upLeft);
+                    DrawJumpArc(link, downLeft);
+                    DrawJumpArc(link, downRight);
+                }
+                else
+                {
+                    upRight.x -= link.navPointA.x;
+                    upLeft.x -= link.navPointA.x;
+                    downLeft.x -= link.navPointA.x;
+                    downRight.x -= link.navPointA.x;
+                    DrawJumpArc(link, upRight);
+                    DrawJumpArc(link, upLeft);
+                    DrawJumpArc(link, downLeft);
+                    DrawJumpArc(link, downRight);
+                }
             }
 
             Handles.color = Color.white;
@@ -187,14 +227,17 @@ namespace NavMesh2D.Core
         void DrawJumpArc(JumpLinkPlacer.JumpLink link, Vector2 origin)
         {
             Vector2 swapPos;
-            Vector2 prevPos = new Vector2(link.jumpArc.minX, link.jumpArc.Calc(link.jumpArc.minX)) + origin;
-            for (float x = link.jumpArc.minX; x + 0.1f < link.jumpArc.maxX; x += 0.1f)
+            Vector2 prevPos = new Vector2(link.jumpArc.startX, link.jumpArc.Calc(0)) + origin;
+            int steps = Mathf.FloorToInt((link.jumpArc.maxX - link.jumpArc.minX) / 0.1f);
+            float dir = link.jumpArc.endX < link.jumpArc.startX ? -0.1f : 0.1f;
+            float absDir = Mathf.Abs(dir);
+            for (float n = 0; n < steps; n++)
             {
-                swapPos = new Vector2(x, link.jumpArc.Calc(x)) + origin;
+                swapPos = new Vector2(link.jumpArc.startX + n * dir, link.jumpArc.Calc(n * absDir)) + origin;
                 Handles.DrawLine(prevPos, swapPos);
                 prevPos = swapPos;
             }
-            Handles.DrawLine(prevPos, new Vector2(link.jumpArc.maxX, link.jumpArc.Calc(link.jumpArc.maxX)) + origin);
+            Handles.DrawLine(prevPos, new Vector2(link.jumpArc.endX, link.jumpArc.Calc(link.jumpArc.maxX - link.jumpArc.minX)) + origin);
         }
 
         public void SaveNavData(NavigationData2D navData)
@@ -336,7 +379,7 @@ namespace NavMesh2D.Core
                 Build();
 
             GUI.enabled = buildWindow.navData2d != null;
-            if (GUILayout.Button("Save"))
+            if (GUILayout.Button("Save as New"))
             {
                 buildWindow.SaveNavData(buildWindow.navData2d);
             }
@@ -477,6 +520,7 @@ namespace NavMesh2D.Core
         public void OnDisable()
         {
             ToogleHide(false);
+            AssetDatabase.SaveAssets();
         }
 
         public void OnEnable()
@@ -527,7 +571,7 @@ namespace NavMesh2D.Core
             }
             GUI.enabled = true;
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Save"))
+            if (GUILayout.Button("Save As New"))
             {
                 Save();
             }
@@ -554,7 +598,7 @@ namespace NavMesh2D.Core
 
         public void OnDisable()
         {
-
+            AssetDatabase.SaveAssets();
         }
 
         public void OnEnable()
@@ -655,7 +699,7 @@ namespace NavMesh2D.Core
 
         public void OnDisable()
         {
-
+            AssetDatabase.SaveAssets();
         }
 
         public void OnEnable()
@@ -740,15 +784,14 @@ namespace NavMesh2D.Core
                     {
                         link.worldPointA = EditorGUILayout.Vector2Field("WorldPointA", link.worldPointA);
                         link.worldPointB = EditorGUILayout.Vector2Field("WorldPointB", link.worldPointB);
-
-                        link.xSpeedScale = EditorGUILayout.Slider("Speed Percentage", link.xSpeedScale, 0.001f, 1.0f);
-
+                        link.xSpeedScale = EditorGUILayout.Slider("Speed Percentage", link.xSpeedScale, 0 , 1);
                         GUI.enabled = false;
-
-                        link.navPointA = EditorGUILayout.Vector2Field("NavPointA", link.navPointA);
-                        link.navPointB = EditorGUILayout.Vector2Field("NavPointB", link.navPointB);
-                        link.nodeIndexA = EditorGUILayout.IntField("NodeIndexA", link.nodeIndexA);
-                        link.nodeIndexB = EditorGUILayout.IntField("NodeIndexB", link.nodeIndexB);
+                        
+                        EditorGUILayout.Vector2Field("NavPointA", link.navPointA);
+                        EditorGUILayout.Vector2Field("NavPointB", link.navPointB);
+                        EditorGUILayout.IntField("NodeIndexA", link.nodeIndexA);
+                        EditorGUILayout.IntField("NodeIndexB", link.nodeIndexB);
+                        EditorGUILayout.FloatField("JumpForce", link.jumpArc.j);
 
                         GUI.enabled = true;
                     }
@@ -779,7 +822,7 @@ namespace NavMesh2D.Core
                     SceneView.RepaintAll();
                 }
                 GUI.enabled = jumpLinkSettings.Count > 0;
-                if (GUILayout.Button("Save"))
+                if (GUILayout.Button("Save as New"))
                 {
                     SaveJumpLinks();
                 }
@@ -809,8 +852,6 @@ namespace NavMesh2D.Core
             }
         }
 
-
-
         public void OnSelectionChanges()
         {
 
@@ -828,18 +869,17 @@ namespace NavMesh2D.Core
                 link.navPointB = mappedPos;
             }
 
-            float targetT = (link.navPointB.x - link.navPointA.x) / (buildWindow.groundWalkerSettings.maxXVel * link.xSpeedScale);
-            float arcTargetJ = ((link.navPointB.y - link.navPointA.y) / targetT) + buildWindow.groundWalkerSettings.gravity * targetT;
+            Vector2 leftPoint = (link.navPointB.x < link.navPointA.x) ? link.navPointB : link.navPointA;
+            Vector2 rightPoint = (link.navPointB.x < link.navPointA.x) ? link.navPointA : link.navPointB;
+
+            float t = (rightPoint.x - leftPoint.x) / (buildWindow.groundWalkerSettings.maxXVel * link.xSpeedScale);
+            float arcTargetJ = (buildWindow.groundWalkerSettings.gravity * t * 0.5f) - ((link.navPointA.y - link.navPointB.y) / t);
             if (Mathf.Abs(arcTargetJ) > buildWindow.groundWalkerSettings.jumpForce)
                 link.isJumpLinkValid = false;
             else
                 link.isJumpLinkValid = true;
 
-            //debug this arc:
-            float arcLowerBound = (link.navPointB.x < link.navPointA.x) ? link.navPointB.x : link.navPointA.x;
-            float arcUpperBound = (link.navPointB.x < link.navPointA.x) ? link.navPointA.x : link.navPointB.x;
-
-            link.jumpArc = new JumpArcSegment(arcTargetJ, buildWindow.groundWalkerSettings.gravity, buildWindow.groundWalkerSettings.maxXVel * link.xSpeedScale, arcLowerBound - link.navPointA.x, arcUpperBound - link.navPointA.x);
+            link.jumpArc = new JumpArcSegment(arcTargetJ, buildWindow.groundWalkerSettings.gravity, buildWindow.groundWalkerSettings.maxXVel * link.xSpeedScale, link.navPointA.x, link.navPointB.x);
         }
 
         void SaveJumpLinks()
@@ -984,7 +1024,7 @@ namespace NavMesh2D.Core
                     keyPair.Key.verts[vertLink.Key].linkIndex = vertLink.Value.ToArray();
                 }
             }
-
+            navData.navAgentSettings = buildWindow.groundWalkerSettings;
             buildWindow.SaveNavData(navData);
         }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using UnityEditor;
 
 namespace Actors
 {
@@ -25,7 +26,7 @@ namespace Actors
             MoveThisComponentToTop();
             PrintAllReminders();
             FillRefAutomaticly();
-       }
+        }
 
         protected void FillRefAutomaticly()
         {
@@ -57,6 +58,37 @@ namespace Actors
             }
         }
 
+        protected T LoadComponent<T>(string fieldName, T oldComp) where T : Component
+        {
+            T[] components = GetComponentsInChildren<T>();
+            if (components == null)
+                return null;
+            if (components.Length == 1)
+                return components[0];
+
+            if (oldComp != null)
+            {
+                if (EditorUtility.DisplayDialog("Multiple Components Found", "Found (" + components.Length + ") components of type " + typeof(T) + " for " + fieldName + ".\nKeep the old one (" + oldComp.gameObject.name + ")?", "Yes", "No"))
+                {
+                    return oldComp;
+                }
+            }
+
+            for (int iCom = 0; iCom < components.Length; iCom++)
+            {
+                if (EditorUtility.DisplayDialog("Multiple Components Found", "Found (" + components.Length + ") components of type " + typeof(T) + " for " + fieldName + ".\nFill it with " + components[iCom].gameObject.name + "?", "Yes", (iCom == components.Length - 1) ? "Assign Null" : "Next"))
+                {
+                    return components[iCom];
+                }
+            }
+            return null;
+        }
+
+        protected T LoadComponent<T>(T oldComp) where T : Component
+        {
+            return LoadComponent<T>(typeof(T).ToString(), oldComp);
+        }
+
         /// <summary>
         /// Searches through every component for field marked with a "RemindToConfigureField" attribute and prints a reminder to set this field up manually.
         /// </summary>
@@ -65,8 +97,8 @@ namespace Actors
             MonoBehaviour[] so = GetComponentsInChildren<MonoBehaviour>();
             foreach (MonoBehaviour s in so)
             {
-                if(s != null)
-                PrintReminder(s.GetType());
+                if (s != null)
+                    PrintReminder(s.GetType());
             }
         }
 
@@ -131,18 +163,19 @@ namespace Actors
     /// Will fill a var tagged with this attribute with a reference to the local actor.
     /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Field)]
-    public class AssignActorAutomaticly : System.Attribute{ }
+    public class AssignActorAutomaticly : System.Attribute { }
 }
 
 /// <summary>
 /// Define this attribute, if you want to remind the user of a field, that has to be set up manually, when its containing script is added automatically by an Actor script.
 /// </summary>
 [System.AttributeUsage(System.AttributeTargets.Field)]
-public class RemindToConfigureField : System.Attribute {
+public class RemindToConfigureField : System.Attribute
+{
     /// <summary>
     /// Will print this as a new sentence in every reminder.
     /// </summary>
-    public string addMsg ="";
+    public string addMsg = "";
 }
 
 

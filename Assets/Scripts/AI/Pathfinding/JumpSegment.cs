@@ -6,7 +6,6 @@ using System;
 
 public class JumpSegment : IPathSegment
 {
-
     public const float TimeOutFudgeSeconds = 3;
 
     float xVel;
@@ -15,71 +14,72 @@ public class JumpSegment : IPathSegment
     float xMax;
     float yMin;
     float yMax;
-    float distance;
+    float timeOut;
     Vector2 goal;
     Vector2 start; //only for debug
 
     public JumpSegment(JumpLink link)
     {
         goal = link.endPoint;
-        xVel = link.xVel;
+        start = link.startPoint;
+
         jumpForce = link.jumpForce;
-        xMin = link.xMin - 0.1f;
-        xMax = link.xMax + 0.1f;
         yMin = link.yMin - 0.1f;
         yMax = link.yMax + 0.1f;
-        distance = link.xMax - link.xMin;
-        start = link.startPoint;
+        if (start.x > goal.x)
+        {
+            xMin = goal.x - 0.1f;
+            xMax = start.x + 1;
+            xVel = -link.xVel;
+        }
+        else
+        {
+            xMin = start.x - 1;
+            xMax = goal.x + 0.1f;
+            xVel = link.xVel;
+        }
+        timeOut = ((link.xMax - link.xMin) / xVel) + TimeOutFudgeSeconds;
+       
     }
 
-    public override bool SetsInitialVelocity
+    public override float TimeOut
     {
         get
         {
-            return true;
+            return timeOut;
         }
     }
 
-    public override float TraverseDistance
+    public override void UpdateMovementInput(MovementInput input)
     {
-        get
-        {
-            return distance;
-        }
-    }
-
-    public override Vector2 GetInitialVelocity()
-    {
-        return new Vector2(xVel, jumpForce);
-    }
-
-    public override MovementInput GetMovementInput()
-    {
-        return MovementInput.EmptyInput;
     }
 
     public override bool IsOnTrack(Vector2 position)
     {
-        if (position.x < xMin || position.x > xMax || position.y < yMin || position.y > yMax)
+        if (position.x < xMin || position.x > xMax /*|| position.y < yMin || position.y > yMax*/)
             return false;
         return true;
     }
 
     public override bool ReachedTarget(Vector2 position)
     {
-        if ((position - goal).sqrMagnitude <= 0.01f)
+        if ((position - goal).sqrMagnitude <= 0.05f)
             return true;
         return false;
     }
 
-    public override void InitTravers()
+    public override void InitTravers(CC2DThightAIMotor motor)
     {
-
+        motor.EnsureCorrectPosition(start.x); //Little teleporting hack, to ensure correct jumping!
+        
+        motor.SetManualXSpeed(xVel);
+        motor.ManualJump(jumpForce);
+        motor.CurrentMovementInput.ResetToNeutral();
     }
 
-    public override void StopTravers()
+    public override void StopTravers(CC2DThightAIMotor motor)
     {
-
+        motor.StopUsingManualSpeed();
     }
 
     public override void Visualize()

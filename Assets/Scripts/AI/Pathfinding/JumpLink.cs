@@ -17,7 +17,7 @@ namespace Pathfinding2D
 
         public JumpLink(JumpLinkPlacer.JumpLink link)
         {
-            xVel = link.jumpArc.v;
+            xVel = link.jumpArc.v ;
             jumpForce = link.jumpArc.j;
             targetNodeIndex = link.nodeIndexB;
             targetVertIndex = link.nodeVertIndexB;

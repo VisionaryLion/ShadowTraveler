@@ -18,8 +18,8 @@ namespace Actors
         {
             base.Refresh();
 
-            animator = GetComponentInChildren<Animator>();
-            animationHandler = GetComponentInChildren<AnimationHandler>();
+            animator = LoadComponent<Animator>(animator);
+            animationHandler = LoadComponent<AnimationHandler>(animationHandler);
         }
 #endif
 

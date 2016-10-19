@@ -20,6 +20,7 @@ namespace NavMesh2D
         public int version;
 
         public NavNode[] nodes; // sorted by x Value. Min -> Max
+        public NavAgentGroundWalkerSettings navAgentSettings;
 
         public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint)
         {
@@ -127,6 +128,7 @@ namespace NavMesh2D
             max = bounds.max;
             this.isClosed = isClosed;
             this.hierachyIndex = hierachyIndex;
+            links = new IOffNodeLink[0];
         }
 
         public bool Contains(Vector2 point)

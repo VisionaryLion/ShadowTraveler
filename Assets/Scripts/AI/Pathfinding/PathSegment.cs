@@ -5,59 +5,46 @@ using System;
 
 public class PathSegment : IPathSegment
 {
+    public const float TimeOutFudgeSeconds = 3;
+
     Vector2 goal;
     Vector2 start; // only for debuging!
     float xMin;
     float xMax;
     int moveDir;
-    float distance;
-    MovementInput input;
+    float timeOut;
 
-    public PathSegment (Vector2 start, Vector2 goal, float distance)
+    public PathSegment (Vector2 start, Vector2 goal, float timeOut)
     {
         if (start.x > goal.x)
         {
-            xMin = goal.x;
-            xMax = start.x;
+            xMin = goal.x - 0.1f;
+            xMax = start.x + 1;
             moveDir = -1;
         }
         else
         {
-            xMin = start.x;
-            xMax = goal.x;
+            xMin = start.x - 1;
+            xMax = goal.x + 0.1f;
             moveDir = 1;
         }
-        xMin -= 0.1f;
-        xMax += 0.1f;
         this.goal = goal;
         this.start = start;
-        this.distance = distance;
+        this.timeOut = timeOut + TimeOutFudgeSeconds;
     }
 
-    public override bool SetsInitialVelocity
+    public override float TimeOut
     {
         get
         {
-            return false;
+            return timeOut;
         }
     }
 
-    public override float TraverseDistance
+    public override void UpdateMovementInput(MovementInput input)
     {
-        get
-        {
-            return distance;
-        }
-    }
-
-    public override Vector2 GetInitialVelocity()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override MovementInput GetMovementInput()
-    {
-        return input;
+        input.horizontal = moveDir;
+        input.horizontalRaw = moveDir;
     }
 
     public override bool IsOnTrack(Vector2 position)
@@ -69,19 +56,19 @@ public class PathSegment : IPathSegment
 
     public override bool ReachedTarget(Vector2 position)
     {
-        if ((position - goal).sqrMagnitude <= 0.01f)
+        if ((position - goal).sqrMagnitude <= 0.05f)
             return true;
         return false;
     }
 
-    public override void InitTravers()
+    public override void InitTravers(CC2DThightAIMotor motor)
     {
-        input = new MovementInput() { horizontal = moveDir, horizontalRaw = moveDir };
+        
     }
 
-    public override void StopTravers()
+    public override void StopTravers(CC2DThightAIMotor motor)
     {
-        input = null;
+        
     }
 
     public override void Visualize()

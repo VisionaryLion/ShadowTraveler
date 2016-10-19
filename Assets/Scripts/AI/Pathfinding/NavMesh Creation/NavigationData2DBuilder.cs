@@ -332,20 +332,32 @@ namespace NavMesh2D.Core
     public class JumpArcSegment
     {
         [SerializeField]
-        public float j, g, v, doubleG;
+        public float j, halfG, v, doubleG;
         [SerializeField]
         public float minX, maxX;
         [SerializeField]
+        public float startX, endX;
+        [SerializeField]
         public float minY, maxY;
 
-        public JumpArcSegment(float j, float g, float v, float lowerXBound, float upperXBound)
+        public JumpArcSegment(float j, float g, float v, float startX, float endX)
         {
             this.j = j;
-            this.g = g;
+            this.halfG = g / 2;
             this.v = v;
-            minX = lowerXBound;
-            maxX = upperXBound;
-            minY = Mathf.Min(Calc(minX), Calc(maxX));
+            this.startX = startX;
+            this.endX = endX;
+            if (startX < endX)
+            {
+                minX = startX;
+                maxX = endX;
+            }
+            else
+            {
+                minX = endX;
+                maxX = startX;
+            }
+            minY = Mathf.Min(Calc(0), Calc(maxX - minX));
             doubleG = g * 2;
             maxY = (j * j) / (4 * doubleG);
         }
@@ -353,7 +365,7 @@ namespace NavMesh2D.Core
         public float Calc(float x)
         {
             x /= v;
-            return (j - g * x) * x;
+            return (j - halfG * x) * x;
         }
 
         public bool IntersectsWithSegment(NavigationData2DBuilder.Segment seg, Vector2 arcOrigin)
