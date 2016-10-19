@@ -32,7 +32,6 @@ public class SettingsHandler : MonoBehaviour {
         masterVolume.onValueChanged.AddListener(delegate { OnMasterVolumeChange(); });
         sfxVolume.onValueChanged.AddListener(delegate { OnSFXVolumeChange(); });
         bgVolume.onValueChanged.AddListener(delegate { OnBGVolumeChange(); });
-        textureQualityDropdown.onValueChanged.AddListener(delegate { OnTextureQualityChange(); });
 
         resolutions = Screen.resolutions;
         foreach(Resolution resolution in resolutions)
@@ -64,10 +63,5 @@ public class SettingsHandler : MonoBehaviour {
     public void OnBGVolumeChange()
     {
 
-    }
-
-    public void OnTextureQualityChange()
-    {
-        QualitySettings.masterTextureLimit = gameSettings.textureQuality = textureQualityDropdown.value;
     }
 }
