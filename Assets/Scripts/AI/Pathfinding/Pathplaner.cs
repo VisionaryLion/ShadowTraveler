@@ -141,6 +141,7 @@ public class PathPlaner : MonoBehaviour
         }
 
         request.callback(null);
+        Debug.Log("No Path found");
         return;
 
         FoundPath:

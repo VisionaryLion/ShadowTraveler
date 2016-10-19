@@ -48,6 +48,9 @@ namespace Pathfinding2D
             [SerializeField]
             public bool isJumpLinkValid;
 
+            [SerializeField]
+            public bool isBiDirectional;
+
             public JumpLink()
             {
 
@@ -57,6 +60,19 @@ namespace Pathfinding2D
             {
                 this.worldPointA = worldPointA;
                 this.worldPointB = worldPointB;
+            }
+
+            public JumpLink InvertLink(NavAgentGroundWalkerSettings groundWalkerSettings)
+            {
+                JumpLink inverseLink = new JumpLink();
+                inverseLink.worldPointA = this.worldPointB;
+                inverseLink.worldPointB = this.worldPointA;
+                inverseLink.xSpeedScale = this.xSpeedScale;
+                inverseLink.isBiDirectional = this.isBiDirectional;
+                inverseLink.navPointA = this.navPointB;
+                inverseLink.navPointB = this.navPointA;
+                inverseLink.RecalculateJumpArc(groundWalkerSettings);
+                return inverseLink;
             }
 
             public bool TryRemapPoints(NavigationData2D navData)
@@ -86,6 +102,22 @@ namespace Pathfinding2D
                     return false;
                 }
                 return true;
+            }
+
+            public void RecalculateJumpArc(NavAgentGroundWalkerSettings groundWalkerSettings)
+            {
+                float t = Mathf.Abs(navPointB.x - navPointA.x) / (groundWalkerSettings.maxXVel * xSpeedScale);
+                float arcTargetJ = (groundWalkerSettings.gravity * t * 0.5f) - ((navPointA.y - navPointB.y) / t);
+
+                if (Mathf.Abs(arcTargetJ) > groundWalkerSettings.jumpForce || arcTargetJ < 0)
+                    isJumpLinkValid = false;
+                else
+                    isJumpLinkValid = true;
+
+                if (jumpArc == null)
+                    jumpArc = new JumpArcSegment(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPointA.x, navPointB.x);
+                else
+                    jumpArc.UpdateArc(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPointA.x, navPointB.x);
             }
         }
     }
