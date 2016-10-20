@@ -7,6 +7,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Runtime.Serialization;
 using AI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace NavMesh2D
 {
@@ -92,6 +95,22 @@ namespace NavMesh2D
             return map_minDist != float.MaxValue;
         }
 
+#if UNITY_EDITOR
+        public void SaveToAsset()
+        {
+            string path = EditorUtility.SaveFilePanel("Save NavData2D", "Assets", "NavData2D", "asset");
+            if (path == null || path.Length == 0)
+                return;
+            path = path.Substring(path.IndexOf("Assets"));
+            Debug.Log(path);
+            AssetDatabase.CreateAsset(this, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = this;
+        }
+#endif
+
         public void DrawForDebug()
         {
             int counter = 1;
@@ -126,6 +145,16 @@ namespace NavMesh2D
             this.verts = verts;
             min = bounds.min;
             max = bounds.max;
+            this.isClosed = isClosed;
+            this.hierachyIndex = hierachyIndex;
+            links = new IOffNodeLink[0];
+        }
+
+        public NavNode(NavVert[] verts, Vector2 min, Vector2 max, bool isClosed, int hierachyIndex)
+        {
+            this.verts = verts;
+            this.min = min;
+            this.max = max;
             this.isClosed = isClosed;
             this.hierachyIndex = hierachyIndex;
             links = new IOffNodeLink[0];

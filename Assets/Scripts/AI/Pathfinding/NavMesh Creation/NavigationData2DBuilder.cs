@@ -6,37 +6,34 @@ using System;
 
 namespace NavMesh2D.Core
 {
-    public class NavigationData2DBuilder
+    public class RawNavigationData2DBuilder
     {
         const float fudgeFactor = 0.00001f;
         NavAgentGroundWalkerSettings agentSettings;
 
-        public NavigationData2DBuilder(NavAgentGroundWalkerSettings agentSettings)
+        public RawNavigationData2DBuilder(NavAgentGroundWalkerSettings agentSettings)
         {
             this.agentSettings = agentSettings;
         }
 
-        public NavigationData2D Build(ExpandedTree expandedTree)
+        public void Build(ExpandedTree expandedTree, RawNavigationData2D dst)
         {
-            List<NavNode> navNodes = new List<NavNode>(10); //-> make it not arbitrary!!
+            List<RawNavNode> navNodes = new List<RawNavNode>(10); //-> make it not arbitrary!!
             foreach (ExpandedNode n in expandedTree.headNode.children)
                 HandleMarkableContour(n, navNodes, 1);
-            NavNode[] allNN = navNodes.ToArray();
+            RawNavNode[] allNN = navNodes.ToArray();
             navNodes = null;
-            GenerateFloorWalkerJumpLinks(allNN, 20, 20, 5, 5, 2, 40);
-            NavigationData2D result =  ScriptableObject.CreateInstance<NavigationData2D>();
-            result.nodes = allNN;
-            return result;
+            dst.nodes = allNN;
         }
 
-        private void HandleMarkableContour(ExpandedNode exNode, List<NavNode> nodes, int hierachyIndex)
+        private void HandleMarkableContour(ExpandedNode exNode, List<RawNavNode> nodes, int hierachyIndex)
         {
             ConvertMarkableContour(nodes, exNode.contour, hierachyIndex);
             foreach (ExpandedNode n in exNode.children)
                 HandleMarkableContour(n, nodes, hierachyIndex + 1);
         }
 
-        private void ConvertMarkableContour(List<NavNode> inOutNodes, MarkableContour mc, int hierachyIndex)
+        private void ConvertMarkableContour(List<RawNavNode> inOutNodes, MarkableContour mc, int hierachyIndex)
         {
             //Some debuging
             DebugExtension.DebugArrow(mc.firstPoint.pointB, mc.firstPoint.pointC - mc.firstPoint.pointB);
@@ -56,7 +53,7 @@ namespace NavMesh2D.Core
             }
             DebugExtension.DebugCircle(startPointNode.pointB, Vector3.forward, Color.magenta, 0.5f);
             //startPointNode points now at the first obstruction
-            List<NavVert> vertBuffer = new List<NavVert>(mc.pointNodeCount);
+            List<RawNavVert> vertBuffer = new List<RawNavVert>(mc.pointNodeCount);
             Bounds inoutBounds = new Bounds(startPointNode.pointB, Vector3.zero);
 
             PointNode cPN = startPointNode;
@@ -69,18 +66,18 @@ namespace NavMesh2D.Core
             HandleEdge(cPN, inOutNodes, vertBuffer, ref inoutBounds, ref isClosed);
             if (vertBuffer.Count > 1)
             {
-                inOutNodes.Add(new NavNode(vertBuffer.ToArray(), inoutBounds, isClosed, hierachyIndex));
+                inOutNodes.Add(new RawNavNode(vertBuffer.ToArray(), inoutBounds, isClosed, hierachyIndex));
             }
         }
 
-        private void HandleEdge(PointNode edge, List<NavNode> inoutNodes, List<NavVert> inoutVerts, ref Bounds inoutBounds, ref bool isClosed)
+        private void HandleEdge(PointNode edge, List<RawNavNode> inoutNodes, List<RawNavVert> inoutVerts, ref Bounds inoutBounds, ref bool isClosed)
         {
             PointNode.ObstructedSegment obstrSeg = edge.FirstObstructedSegment;
             Vector2 startPoint = edge.pointB;
 
             if (!IsEdgeAcceptable(edge))
             {
-                inoutVerts.Add(new NavVert(startPoint));
+                inoutVerts.Add(new RawNavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
                 if (edge.Next != null)
                     EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, edge.Next.pointB);
@@ -92,13 +89,13 @@ namespace NavMesh2D.Core
 
             if (obstrSeg == null)
             {
-                inoutVerts.Add(new NavVert(startPoint));
+                inoutVerts.Add(new RawNavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
                 return;
             }
             else if (obstrSeg.start == 0)
             {
-                inoutVerts.Add(new NavVert(startPoint));
+                inoutVerts.Add(new RawNavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
                 EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, startPoint + edge.tangentBC * obstrSeg.end);
                 if (obstrSeg.next == null)
@@ -106,7 +103,7 @@ namespace NavMesh2D.Core
                     if (edge.distanceBC - obstrSeg.end > fudgeFactor)
                     {
                         startPoint = edge.pointB + edge.tangentBC * obstrSeg.end;
-                        inoutVerts.Add(new NavVert(startPoint));
+                        inoutVerts.Add(new RawNavVert(startPoint));
                         inoutBounds.Encapsulate(startPoint);
                     }
                     return;
@@ -116,9 +113,9 @@ namespace NavMesh2D.Core
 
             while (true)
             {
-                inoutVerts.Add(new NavVert(startPoint));
+                inoutVerts.Add(new RawNavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
-                inoutVerts.Add(new NavVert(edge.pointB + edge.tangentBC * obstrSeg.start));
+                inoutVerts.Add(new RawNavVert(edge.pointB + edge.tangentBC * obstrSeg.start));
                 inoutBounds.Encapsulate(edge.pointB + edge.tangentBC * obstrSeg.start);
                 startPoint = edge.pointB + edge.tangentBC * obstrSeg.end;
                 EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, startPoint);
@@ -131,16 +128,16 @@ namespace NavMesh2D.Core
 
             if (edge.distanceBC - obstrSeg.end > fudgeFactor)
             {
-                inoutVerts.Add(new NavVert(startPoint));
+                inoutVerts.Add(new RawNavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
             }
         }
 
-        private void EndNavNode(List<NavNode> inoutNodes, List<NavVert> inoutVerts, ref Bounds inoutBounds, Vector2 nextPoint)
+        private void EndNavNode(List<RawNavNode> inoutNodes, List<RawNavVert> inoutVerts, ref Bounds inoutBounds, Vector2 nextPoint)
         {
             if (inoutVerts.Count > 1)
             {
-                inoutNodes.Add(new NavNode(inoutVerts.ToArray(), inoutBounds, false, 0));
+                inoutNodes.Add(new RawNavNode(inoutVerts.ToArray(), inoutBounds, false, 0));
             }
             inoutBounds = new Bounds(nextPoint, Vector3.zero);
             inoutVerts.Clear();
@@ -186,105 +183,6 @@ namespace NavMesh2D.Core
                     current = current.Next;
                 }*/
             }
-        }
-
-        private void GenerateFloorWalkerJumpLinks(NavNode[] nodes, float maxJumpVel, float gravity, float xVel, float minJumpableHeight, float agentWidth, float upperXBound)
-        {
-            float maxY = ((maxJumpVel * maxJumpVel) / (2 * gravity));
-            float maxX = upperXBound * xVel * 2;
-            float minY = (maxJumpVel - gravity * upperXBound) * upperXBound;
-
-            //Go through all nodes
-            foreach (NavNode srcNN in nodes)
-            {
-                NavVert prevSrcNV = (srcNN.isClosed) ? srcNN.verts[srcNN.verts.Length - 1] : srcNN.verts[0];
-                for (int iVert = 0; iVert < srcNN.verts.Length; iVert++)
-                {
-                    NavVert srcNV = srcNN.verts[iVert];
-
-                    //Test if segment is A: ground angle of less then pi 
-                    if (srcNV.slopeAngleBC <= Mathf.PI && prevSrcNV.slopeAngleBC <= Mathf.PI)
-                    {
-                        Debug.DrawLine(prevSrcNV.PointB, srcNV.PointB, Color.red);
-                        goto SrcNVLoopEnd;
-                    }
-
-                    //point found, now find all possible connection points!
-                    Bounds maxPossibleArcBound = new Bounds(srcNV.PointB, new Vector2(maxX, maxY));
-                    maxPossibleArcBound.min = new Vector2(maxPossibleArcBound.min.x, srcNV.PointB.y + minY);
-                    DebugExtension.DebugBounds(maxPossibleArcBound, Color.blue);
-
-                    for (int iTargetNode = 0; iTargetNode < nodes.Length; iTargetNode++)
-                    {
-                        NavNode targetNN = nodes[iTargetNode];
-
-                        //Do the Bounds overlap?
-                        if (targetNN.min.x < maxPossibleArcBound.max.x && targetNN.max.x > maxPossibleArcBound.min.x && targetNN.min.y < maxPossibleArcBound.max.y && targetNN.max.y > maxPossibleArcBound.min.y)
-                        {
-                            NavVert prevTargetNV = (targetNN.isClosed) ? targetNN.verts[targetNN.verts.Length - 1] : targetNN.verts[0];
-
-                            for (int iTargetNV = 0; iTargetNV < targetNN.verts.Length; iTargetNV++)
-                            {
-                                //Try to construct a jump arc
-                                NavVert targetNV = targetNN.verts[iTargetNV];
-                                if (targetNV == srcNV)
-                                {
-                                    iTargetNode++;
-                                    if (iTargetNode + 1 >= targetNN.verts.Length)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        prevTargetNV = targetNN.verts[iTargetNode];
-                                        continue;
-                                    }
-                                }
-                                else if (targetNV == prevSrcNV)
-                                {
-                                    iTargetNode += 2;
-                                    if (iTargetNode + 1 >= targetNN.verts.Length)
-                                        break;
-                                    else
-                                        prevTargetNV = targetNN.verts[iTargetNode];
-                                    continue;
-                                }
-
-                                if (targetNV.slopeAngleBC <= Mathf.PI && prevTargetNV.slopeAngleBC <= Mathf.PI)
-                                    goto TargetNVLoopEnd; //Not walkable surface
-
-                                if (!maxPossibleArcBound.Contains(targetNV.PointB))
-                                    goto TargetNVLoopEnd; //targetNV out of bounds
-
-                                float targetT = (targetNV.PointB.x - srcNV.PointB.x) / xVel;
-                                float targetJ = ((targetNV.PointB.y - srcNV.PointB.y) / targetT) + gravity * targetT;
-                                if (Mathf.Abs(targetJ) > maxJumpVel)
-                                    goto TargetNVLoopEnd; //the required jumpforce exceeds limit
-
-#if DEBUG_JUMP_LINKS
-                                //debug this arc:
-                                float lowerBound = (targetNV.PointB.x < srcNV.PointB.x) ? targetNV.PointB.x : srcNV.PointB.x;
-                                float uppperBound = (targetNV.PointB.x < srcNV.PointB.x) ? srcNV.PointB.x : targetNV.PointB.x;
-
-                                new JumpArcSegment(targetJ, gravity, xVel, lowerBound - srcNV.PointB.x, uppperBound - srcNV.PointB.x).VisualDebug(srcNV.PointB, Color.green);
-#endif
-
-                                TargetNVLoopEnd:
-                                prevTargetNV = targetNV;
-                            }
-
-                        }
-                    }
-                    SrcNVLoopEnd:
-                    prevSrcNV = srcNV;
-                }
-            }
-        }
-
-        private bool IsJumpArcValid(float targetT, float targetJ, NavVert src, NavVert src2, int srcNodeIndex, NavVert dst, NavVert dst2, int dstNodeIndex, bool[] boundsIntersectionMap, NavNode[] nodes)
-        {
-            //first check the two aligning sides for both src and dst
-            return true;
         }
 
         public class Segment
@@ -390,7 +288,7 @@ namespace NavMesh2D.Core
             return (j - halfG * x) * x;
         }
 
-        public bool IntersectsWithSegment(NavigationData2DBuilder.Segment seg, Vector2 arcOrigin)
+        public bool IntersectsWithSegment(RawNavigationData2DBuilder.Segment seg, Vector2 arcOrigin)
         {
             /*
             if (seg.MinX > maxX || seg.MaxX < minX || seg.MinY > maxY || seg.MaxY < minY)

@@ -42,7 +42,7 @@ namespace NavMesh2D.Core
         [SerializeField]
         public NavAgentGroundWalkerSettings groundWalkerSettings;
         [SerializeField]
-        public NavigationData2D navData2d;
+        public RawNavigationData2D rawNavData2d;
 
         [SerializeField]
         public JumpLinkPlacer jumpLinkPlacer;
@@ -54,7 +54,7 @@ namespace NavMesh2D.Core
 
             EditorGUI.BeginChangeCheck();
             groundWalkerSettings = (NavAgentGroundWalkerSettings)EditorGUILayout.ObjectField("GroundWalkerSetting", groundWalkerSettings, typeof(NavAgentGroundWalkerSettings), false);
-            navData2d = (NavigationData2D)EditorGUILayout.ObjectField("NavData2d", navData2d, typeof(NavigationData2D), false);
+            rawNavData2d = (RawNavigationData2D)EditorGUILayout.ObjectField("NavData2d", rawNavData2d, typeof(RawNavigationData2D), false);
             jumpLinkPlacer = (JumpLinkPlacer)EditorGUILayout.ObjectField("JumpLinkPlacer", jumpLinkPlacer, typeof(JumpLinkPlacer), false);
             if (EditorGUI.EndChangeCheck())
                 currentBuildStep.OnEnable();
@@ -176,6 +176,7 @@ namespace NavMesh2D.Core
             {
                 Handles.DrawWireDisc(link.navPointA, Vector3.forward, 0.1f);
                 Handles.DrawWireDisc(link.navPointB, Vector3.forward, 0.1f);
+
                 Handles.color = link.isJumpLinkValid ? Color.green : Color.red;
             }
             else
@@ -264,50 +265,13 @@ namespace NavMesh2D.Core
             }
             Handles.DrawLine(prevPos, new Vector2(link.jumpArc.endX, link.jumpArc.Calc(link.jumpArc.maxX - link.jumpArc.minX)) + origin);
         }
-
-        public void SaveNavData(NavigationData2D navData)
-        {
-            string path = EditorUtility.SaveFilePanel("Save NavData2D", "Assets", "NavData2D", "asset");
-            if (path == null || path.Length == 0)
-                return;
-            path = path.Substring(path.IndexOf("Assets"));
-            Debug.Log(path);
-            AssetDatabase.CreateAsset(navData, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = navData;
-        }
     }
 
     [Serializable]
     class CollisionGeometryGatheringBuildStep : IBuildStepHandler
     {
-        enum ShowType
-        {
-            NavData,
-            MergedAndExpanded,
-            Raw,
-            RawAndFilled
-        }
-
         [SerializeField]
         Collider2D[] inputGeometry;
-        [SerializeField]
-        LayerMask selectionMask;
-        [SerializeField]
-        int circleVertCount;
-        [SerializeField]
-        bool selectAllStatic;
-        [SerializeField]
-        bool useSelection;
-        [SerializeField]
-        bool hideSelectedGeometry = false;
-        [SerializeField]
-        float nodeMergeDist;
-        [SerializeField]
-        float maxEdgeDeviation;
-
 
         CollisionGeometrySet collisionGeometrySet;
         ExpandedTree expandedTree;
@@ -315,17 +279,9 @@ namespace NavMesh2D.Core
         [SerializeField]
         NavigationData2dBuildWindow buildWindow;
 
-        //Debug stuff
-        [SerializeField]
-        ShowType showType;
-
         public CollisionGeometryGatheringBuildStep(NavigationData2dBuildWindow buildWindow)
         {
             inputGeometry = new Collider2D[] { };
-            selectAllStatic = true;
-            selectionMask = 0;
-            circleVertCount = 10;
-            showType = ShowType.MergedAndExpanded;
             collisionGeometrySet = null;
             this.buildWindow = buildWindow;
         }
@@ -341,14 +297,14 @@ namespace NavMesh2D.Core
         public void Build()
         {
             GatherCollisionData();
-            collisionGeometrySet = CollisionGeometrySetBuilder.Build(inputGeometry, circleVertCount);
-            ContourTree contourTree = ContourTree.Build(collisionGeometrySet, nodeMergeDist, maxEdgeDeviation);
+            collisionGeometrySet = CollisionGeometrySetBuilder.Build(inputGeometry, buildWindow.rawNavData2d.circleVertCount);
+            ContourTree contourTree = ContourTree.Build(collisionGeometrySet, buildWindow.rawNavData2d.nodeMergeDist, buildWindow.rawNavData2d.maxEdgeDeviation);
             if (contourTree != null)
             {
                 expandedTree = ExpandedTree.Build(contourTree, buildWindow.groundWalkerSettings.height);
                 if (expandedTree != null)
                 {
-                    buildWindow.navData2d = new NavigationData2DBuilder(buildWindow.groundWalkerSettings).Build(expandedTree);
+                    new RawNavigationData2DBuilder(buildWindow.groundWalkerSettings).Build(expandedTree, buildWindow.rawNavData2d);
                 }
             }
             SceneView.RepaintAll();
@@ -373,47 +329,66 @@ namespace NavMesh2D.Core
                 return;
             }
 
+            if (buildWindow.rawNavData2d == null)
+            {
+                EditorGUILayout.HelpBox("Please assign a RawNavData or create one.", MessageType.Error);
+
+                if (GUILayout.Button("Create New"))
+                {
+                    buildWindow.rawNavData2d = ScriptableObject.CreateInstance<RawNavigationData2D>();
+                    buildWindow.rawNavData2d.SaveToAsset();
+                }
+                return;
+            }
+
             EditorGUI.BeginChangeCheck();
-            selectAllStatic = EditorGUILayout.Toggle("Select all static", selectAllStatic);
-            selectionMask = CustomEditorFields.LayerMaskField("Selection Mask", selectionMask);
-            useSelection = EditorGUILayout.Toggle("Use Selection", useSelection);
+            buildWindow.rawNavData2d.selectAllStatic = EditorGUILayout.Toggle("Select all static", buildWindow.rawNavData2d.selectAllStatic);
+            buildWindow.rawNavData2d.selectionMask = CustomEditorFields.LayerMaskField("Selection Mask", buildWindow.rawNavData2d.selectionMask);
+            buildWindow.rawNavData2d.useSelection = EditorGUILayout.Toggle("Use Selection", buildWindow.rawNavData2d.useSelection);
 
             EditorGUILayout.HelpBox("Size of current selection = " + inputGeometry.Length, MessageType.Info);
-            circleVertCount = EditorGUILayout.IntSlider("Circle Vert Count", circleVertCount, 4, 64);
+            buildWindow.rawNavData2d.circleVertCount = EditorGUILayout.IntSlider("Circle Vert Count", buildWindow.rawNavData2d.circleVertCount, 4, 64);
 
-            nodeMergeDist = EditorGUILayout.Slider("Merge Distance", nodeMergeDist, 0.001f, .5f);
-            maxEdgeDeviation = EditorGUILayout.Slider("Max Edge Deviation", maxEdgeDeviation, 0.0f, 5f);
+            buildWindow.rawNavData2d.nodeMergeDist = EditorGUILayout.Slider("Merge Distance", buildWindow.rawNavData2d.nodeMergeDist, 0.001f, .5f);
+            buildWindow.rawNavData2d.maxEdgeDeviation = EditorGUILayout.Slider("Max Edge Deviation", buildWindow.rawNavData2d.maxEdgeDeviation, 0.0f, 5f);
 
             bool change = EditorGUI.EndChangeCheck();
             EditorGUILayout.Space();
 
             EditorGUI.BeginChangeCheck();
-            hideSelectedGeometry = EditorGUILayout.Toggle("Hide Selected Geometry", hideSelectedGeometry);
+            buildWindow.rawNavData2d.hideSelectedGeometry = EditorGUILayout.Toggle("Hide Selected Geometry", buildWindow.rawNavData2d.hideSelectedGeometry);
             if (EditorGUI.EndChangeCheck())
             {
-                ToogleHide(hideSelectedGeometry);
+                ToogleHide(buildWindow.rawNavData2d.hideSelectedGeometry);
+                AssetDatabase.SaveAssets();
             }
 
             EditorGUI.BeginChangeCheck();
-            showType = (ShowType)EditorGUILayout.EnumPopup("Show Type", showType);
+            buildWindow.rawNavData2d.showType = (RawNavigationData2D.ShowType)EditorGUILayout.EnumPopup("Show Type", buildWindow.rawNavData2d.showType);
             if (EditorGUI.EndChangeCheck())
+            {
                 SceneView.RepaintAll();
+                AssetDatabase.SaveAssets();
+            }
 
 
             if ((change || GUILayout.Button("Update Field")))
+            {
                 Build();
+                AssetDatabase.SaveAssets();
+            }
 
-            GUI.enabled = buildWindow.navData2d != null;
+            GUI.enabled = buildWindow.rawNavData2d != null;
             if (GUILayout.Button("Save as New"))
             {
-                buildWindow.SaveNavData(buildWindow.navData2d);
+                buildWindow.rawNavData2d.SaveToAsset();
             }
             GUI.enabled = true;
         }
 
         public void GatherCollisionData()
         {
-            if (hideSelectedGeometry)
+            if (buildWindow.rawNavData2d.hideSelectedGeometry)
             {
                 ToogleHide(false);
             }
@@ -423,7 +398,7 @@ namespace NavMesh2D.Core
 
             bufferedCollider = new List<Collider2D>(allCollider.Length);
 
-            if (useSelection)
+            if (buildWindow.rawNavData2d.useSelection)
             {
                 foreach (Transform selectedTransforms in Selection.transforms)
                 {
@@ -435,21 +410,21 @@ namespace NavMesh2D.Core
 
             foreach (Collider2D col in allCollider)
             {
-                if (selectionMask.IsLayerWithinMask(col.gameObject.layer))
+                if (buildWindow.rawNavData2d.selectionMask.IsLayerWithinMask(col.gameObject.layer))
                 {
-                    if (!useSelection || !bufferedCollider.Contains(col))
+                    if (!buildWindow.rawNavData2d.useSelection || !bufferedCollider.Contains(col))
                         bufferedCollider.Add(col);
                 }
-                else if (selectAllStatic && col.gameObject.isStatic)
+                else if (buildWindow.rawNavData2d.selectAllStatic && col.gameObject.isStatic)
                 {
-                    if (!useSelection || !bufferedCollider.Contains(col))
+                    if (!buildWindow.rawNavData2d.useSelection || !bufferedCollider.Contains(col))
                         bufferedCollider.Add(col);
                 }
 
             }
             inputGeometry = bufferedCollider.ToArray();
 
-            if (hideSelectedGeometry)
+            if (buildWindow.rawNavData2d.hideSelectedGeometry)
             {
                 ToogleHide(true);
             }
@@ -457,7 +432,9 @@ namespace NavMesh2D.Core
 
         public void OnSceneGUI(SceneView sceneView)
         {
-            if (showType == ShowType.Raw)
+            if (buildWindow.rawNavData2d == null)
+                return;
+            if (buildWindow.rawNavData2d.showType == RawNavigationData2D.ShowType.Raw)
             {
                 if (collisionGeometrySet != null)
                 {
@@ -473,7 +450,7 @@ namespace NavMesh2D.Core
                     }
                 }
             }
-            else if (showType == ShowType.MergedAndExpanded)
+            else if (buildWindow.rawNavData2d.showType == RawNavigationData2D.ShowType.MergedAndExpanded)
             {
                 if (expandedTree != null)
                 {
@@ -481,7 +458,7 @@ namespace NavMesh2D.Core
                         DrawContourNode(child);
                 }
             }
-            else if (showType == ShowType.RawAndFilled)
+            else if (buildWindow.rawNavData2d.showType == RawNavigationData2D.ShowType.RawAndFilled)
             {
                 if (collisionGeometrySet != null)
                 {
@@ -497,11 +474,11 @@ namespace NavMesh2D.Core
                     }
                 }
             }
-            else if (showType == ShowType.NavData)
+            else if (buildWindow.rawNavData2d.showType == RawNavigationData2D.ShowType.NavData)
             {
-                if (buildWindow.navData2d != null)
+                if (buildWindow.rawNavData2d != null)
                 {
-                    NavData2DVisualizerWindow.SceneDrawNavData2D(buildWindow.navData2d);
+                    NavData2DVisualizerWindow.SceneDrawNavData2D(buildWindow.rawNavData2d);
                 }
             }
         }
@@ -544,13 +521,17 @@ namespace NavMesh2D.Core
 
         public void OnDisable()
         {
+            if (buildWindow.rawNavData2d == null)
+                return;
             ToogleHide(false);
             AssetDatabase.SaveAssets();
         }
 
         public void OnEnable()
         {
-            ToogleHide(hideSelectedGeometry);
+            if (buildWindow.rawNavData2d == null)
+                return;
+            ToogleHide(buildWindow.rawNavData2d.hideSelectedGeometry);
             if (buildWindow.groundWalkerSettings != null)
                 Build();
             SceneView.RepaintAll();
@@ -690,8 +671,6 @@ namespace NavMesh2D.Core
     {
         [SerializeField]
         NavigationData2dBuildWindow buildWindow;
-        [SerializeField]
-        List<JumpLinkSettings> jumpLinkSettings;
         Vector2 scrollPos;
         [SerializeField]
         bool showDetailsGlobal;
@@ -699,14 +678,6 @@ namespace NavMesh2D.Core
         bool showInSceneGlobal;
         [SerializeField]
         bool showInSceneDetailedGlobal;
-
-        [Serializable]
-        class JumpLinkSettings
-        {
-            public bool showDetails = false;
-            public bool showInScene = true;
-            public bool showInSceneDetailed = true;
-        }
 
         public JumpLinkPlacerUI(NavigationData2dBuildWindow buildWindow)
         {
@@ -730,32 +701,27 @@ namespace NavMesh2D.Core
         public void OnEnable()
         {
             if (buildWindow.jumpLinkPlacer == null)
-            {
-                buildWindow.jumpLinkPlacer = ScriptableObject.CreateInstance<JumpLinkPlacer>();
-                buildWindow.jumpLinkPlacer.Init();
-            }
-            if (jumpLinkSettings == null)
-            {
-                jumpLinkSettings = new List<JumpLinkSettings>();
-            }
+                return;
 
-            while (jumpLinkSettings.Count > buildWindow.jumpLinkPlacer.jumpLinks.Count)
-            {
-                jumpLinkSettings.RemoveAt(jumpLinkSettings.Count - 1);
-            }
-
-            while (jumpLinkSettings.Count < buildWindow.jumpLinkPlacer.jumpLinks.Count)
-            {
-                jumpLinkSettings.Add(new JumpLinkSettings());
-            }
             SceneView.RepaintAll();
         }
 
         public void OnGUI()
         {
-            if (buildWindow.navData2d == null)
+            if (buildWindow.rawNavData2d == null)
             {
                 EditorGUILayout.HelpBox("Please assign or create a NavData2d", MessageType.Error);
+            }else if (buildWindow.jumpLinkPlacer == null)
+            {
+                EditorGUILayout.HelpBox("Please assign a JumpLinkPlacer or create one.", MessageType.Error);
+
+                if (GUILayout.Button("Create New"))
+                {
+                    buildWindow.jumpLinkPlacer = ScriptableObject.CreateInstance<JumpLinkPlacer>();
+                    buildWindow.jumpLinkPlacer.Init();
+                    buildWindow.jumpLinkPlacer.SaveToAsset();
+                    OnEnable();
+                }
             }
             else
             {
@@ -786,27 +752,27 @@ namespace NavMesh2D.Core
                 EditorGUILayout.EndHorizontal();
 
                 JumpLinkPlacer.JumpLink link;
-                for (int iLink = 0; iLink < jumpLinkSettings.Count; iLink++)
+                for (int iLink = 0; iLink < buildWindow.jumpLinkPlacer.jumpLinks.Count; iLink++)
                 {
                     EditorGUI.BeginChangeCheck();
 
                     link = buildWindow.jumpLinkPlacer.jumpLinks[iLink];
                     EditorGUILayout.BeginHorizontal();
-                    jumpLinkSettings[iLink].showDetails = EditorGUILayout.Foldout(jumpLinkSettings[iLink].showDetails, "Link");
+                    link.jumpLinkSettings.showDetails = EditorGUILayout.Foldout(link.jumpLinkSettings.showDetails, "Link");
                     link.isBiDirectional = EditorGUILayout.ToggleLeft(link.isBiDirectional ? "<->" : "->", link.isBiDirectional, GUILayout.Width(40));
-                    jumpLinkSettings[iLink].showInScene = EditorGUILayout.ToggleLeft(jumpLinkSettings[iLink].showInScene ? "[o]" : "[-]", jumpLinkSettings[iLink].showInScene, GUILayout.Width(40));
-                    jumpLinkSettings[iLink].showInSceneDetailed = EditorGUILayout.ToggleLeft("Details", jumpLinkSettings[iLink].showInSceneDetailed, GUILayout.Width(55));
+                    link.jumpLinkSettings.showInScene = EditorGUILayout.ToggleLeft(link.jumpLinkSettings.showInScene ? "[o]" : "[-]", link.jumpLinkSettings.showInScene, GUILayout.Width(40));
+                    link.jumpLinkSettings.showInSceneDetailed = EditorGUILayout.ToggleLeft("Details", link.jumpLinkSettings.showInSceneDetailed, GUILayout.Width(55));
                     if (GUILayout.Button("X", GUILayout.Width(20)))
                     {
                         buildWindow.jumpLinkPlacer.jumpLinks.RemoveAt(iLink);
-                        jumpLinkSettings.RemoveAt(iLink);
                         buildWindow.RepaintThisWindow();
                         SceneView.RepaintAll();
                         iLink--;
+                        AssetDatabase.SaveAssets();
                         continue;
                     }
                     EditorGUILayout.EndHorizontal();
-                    if (jumpLinkSettings[iLink].showDetails)
+                    if (link.jumpLinkSettings.showDetails)
                     {
                         link.worldPointA = EditorGUILayout.Vector2Field("WorldPointA", link.worldPointA);
                         link.worldPointB = EditorGUILayout.Vector2Field("WorldPointB", link.worldPointB);
@@ -823,7 +789,7 @@ namespace NavMesh2D.Core
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        link.TryRemapPoints(buildWindow.navData2d);
+                        link.TryRemapPoints(buildWindow.rawNavData2d);
                         link.RecalculateJumpArc(buildWindow.groundWalkerSettings);
                         SceneView.RepaintAll();
                     }
@@ -842,38 +808,40 @@ namespace NavMesh2D.Core
                     {
                         buildWindow.jumpLinkPlacer.jumpLinks.Add(new JumpLinkPlacer.JumpLink());
                     }
-                    buildWindow.jumpLinkPlacer.jumpLinks[buildWindow.jumpLinkPlacer.jumpLinks.Count - 1].TryRemapPoints(buildWindow.navData2d);
+                    buildWindow.jumpLinkPlacer.jumpLinks[buildWindow.jumpLinkPlacer.jumpLinks.Count - 1].TryRemapPoints(buildWindow.rawNavData2d);
                     buildWindow.jumpLinkPlacer.jumpLinks[buildWindow.jumpLinkPlacer.jumpLinks.Count - 1].RecalculateJumpArc(buildWindow.groundWalkerSettings);
-                    jumpLinkSettings.Add(new JumpLinkSettings());
                     buildWindow.RepaintThisWindow();
                     SceneView.RepaintAll();
                 }
-                GUI.enabled = jumpLinkSettings.Count > 0;
+                GUI.enabled = buildWindow.jumpLinkPlacer.jumpLinks.Count > 0;
                 if (GUILayout.Button("Save as New"))
                 {
-                    SaveJumpLinks();
+                    buildWindow.jumpLinkPlacer.SaveToAsset();
                 }
             }
         }
 
         public void OnSceneGUI(SceneView sceneView)
         {
-            NavData2DVisualizerWindow.SceneDrawNavData2D(buildWindow.navData2d);
+            if (buildWindow.jumpLinkPlacer == null)
+                return;
+
+            NavData2DVisualizerWindow.SceneDrawNavData2D(buildWindow.rawNavData2d);
             JumpLinkPlacer.JumpLink link;
-            for (int iLink = 0; iLink < jumpLinkSettings.Count; iLink++)
+            for (int iLink = 0; iLink < buildWindow.jumpLinkPlacer.jumpLinks.Count; iLink++)
             {
-                if (!jumpLinkSettings[iLink].showInScene)
+                if (!buildWindow.jumpLinkPlacer.jumpLinks[iLink].jumpLinkSettings.showInScene)
                     continue;
 
 
                 link = buildWindow.jumpLinkPlacer.jumpLinks[iLink];
                 EditorGUI.BeginChangeCheck();
 
-                buildWindow.DrawJumpLink(link, jumpLinkSettings[iLink].showInSceneDetailed, link.isBiDirectional, true);
+                buildWindow.DrawJumpLink(link, link.jumpLinkSettings.showInSceneDetailed, link.isBiDirectional, true);
 
                 if (EditorGUI.EndChangeCheck())
                 {
-                    link.TryRemapPoints(buildWindow.navData2d);
+                    link.TryRemapPoints(buildWindow.rawNavData2d);
                     link.RecalculateJumpArc(buildWindow.groundWalkerSettings);
                     buildWindow.RepaintThisWindow();
                 }
@@ -885,42 +853,28 @@ namespace NavMesh2D.Core
 
         }
 
-        void SaveJumpLinks()
-        {
-            string path = EditorUtility.SaveFilePanel("Save JumpLinks", "Assets", "JumpLinks", "asset");
-            if (path == null || path.Length == 0)
-                return;
-            path = path.Substring(path.IndexOf("Assets"));
-            Debug.Log(path);
-            AssetDatabase.CreateAsset(buildWindow.jumpLinkPlacer, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-            EditorUtility.FocusProjectWindow();
-            Selection.activeObject = buildWindow.jumpLinkPlacer;
-        }
-
         void ToogleShowDetailAll(bool showDetail)
         {
-            foreach (JumpLinkSettings set in jumpLinkSettings)
+            foreach (JumpLinkPlacer.JumpLink jl in buildWindow.jumpLinkPlacer.jumpLinks)
             {
-                set.showDetails = showDetail;
+                jl.jumpLinkSettings.showDetails = showDetail;
             }
         }
 
         void ToogleShowInScene(bool showInScene)
         {
-            foreach (JumpLinkSettings set in jumpLinkSettings)
+            foreach (JumpLinkPlacer.JumpLink jl in buildWindow.jumpLinkPlacer.jumpLinks)
             {
-                set.showInScene = showInScene;
+                jl.jumpLinkSettings.showInScene = showInScene;
             }
             SceneView.RepaintAll();
         }
 
         void ToogleShowInSceneDetailed(bool showInSceneDetailed)
         {
-            foreach (JumpLinkSettings set in jumpLinkSettings)
+            foreach (JumpLinkPlacer.JumpLink jl in buildWindow.jumpLinkPlacer.jumpLinks)
             {
-                set.showInSceneDetailed = showInSceneDetailed;
+                jl.jumpLinkSettings.showInSceneDetailed = showInSceneDetailed;
             }
             SceneView.RepaintAll();
         }
@@ -966,7 +920,7 @@ namespace NavMesh2D.Core
                 EditorGUILayout.HelpBox("Please assign or create a NavSetting", MessageType.Error);
                 allDataAviable = false;
             }
-            if (buildWindow.navData2d == null)
+            if (buildWindow.rawNavData2d == null)
             {
                 EditorGUILayout.HelpBox("Please assign or create a NavData2d", MessageType.Error);
                 allDataAviable = false;
@@ -984,16 +938,16 @@ namespace NavMesh2D.Core
 
                 if (GUILayout.Button("Bake As New"))
                 {
-                    NavigationData2D navData = ScriptableObject.Instantiate<NavigationData2D>(buildWindow.navData2d);
-                    Bake(navData);
-                    buildWindow.SaveNavData(navData);
+                    NavigationData2D navData = buildWindow.rawNavData2d.ToNavigationData2D();
+                    Bake(navData, buildWindow.rawNavData2d);
+                    navData.SaveToAsset();
                 }
 
                 GUI.enabled = existingField != null;
                 if (GUILayout.Button("Update Existing File"))
                 {
-                    NavigationData2D navData = ScriptableObject.Instantiate<NavigationData2D>(buildWindow.navData2d);
-                    Bake(navData);
+                    NavigationData2D navData = buildWindow.rawNavData2d.ToNavigationData2D();
+                    Bake(navData, buildWindow.rawNavData2d);
                     existingField.nodes = navData.nodes;
                     existingField.name = navData.name;
                     existingField.navAgentSettings = navData.navAgentSettings;
@@ -1004,24 +958,25 @@ namespace NavMesh2D.Core
             }
         }
 
-        void Bake(NavigationData2D navData)
+        void Bake(NavigationData2D navData, RawNavigationData2D rawNavData)
         {
             Dictionary<NavNode, List<JumpLinkPlacer.JumpLink>> linkTable = new Dictionary<NavNode, List<JumpLinkPlacer.JumpLink>>(navData.nodes.Length);
             List<JumpLinkPlacer.JumpLink> cList;
             foreach (JumpLinkPlacer.JumpLink link in buildWindow.jumpLinkPlacer.jumpLinks)
             {
-                if (!link.isJumpLinkValid || !link.TryRemapPoints(navData))
+                if (!link.isJumpLinkValid || !link.TryRemapPoints(rawNavData))
                     continue;
 
+                Debug.Assert(link.jumpArc.j > 0);
                 if (link.isBiDirectional)
                 {
                     JumpLinkPlacer.JumpLink inverseLink = link.InvertLink(buildWindow.groundWalkerSettings);
-                    if (!inverseLink.TryRemapPoints(buildWindow.navData2d))
+                    if (!inverseLink.TryRemapPoints(rawNavData))
                     {
                         Debug.Assert(false); // Should nevewr happen!
                     }
-                   
-                    if (linkTable.TryGetValue(navData.nodes[inverseLink.nodeIndexB], out cList))
+                    Debug.Assert(inverseLink.jumpArc.j > 0);
+                    if (linkTable.TryGetValue(navData.nodes[inverseLink.nodeIndexA], out cList))
                     {
                         cList.Add(inverseLink);
                     }
@@ -1078,7 +1033,11 @@ namespace NavMesh2D.Core
 
         public void OnSceneGUI(SceneView sceneView)
         {
-            NavData2DVisualizerWindow.SceneDrawNavData2D(buildWindow.navData2d);
+            if (buildWindow.groundWalkerSettings == null || buildWindow.rawNavData2d == null || buildWindow.jumpLinkPlacer == null)
+            {
+                return;
+            }
+            NavData2DVisualizerWindow.SceneDrawNavData2D(buildWindow.rawNavData2d);
             for (int iLink = 0; iLink < buildWindow.jumpLinkPlacer.jumpLinks.Count; iLink++)
             {
                 buildWindow.DrawJumpLink(buildWindow.jumpLinkPlacer.jumpLinks[iLink], false, buildWindow.jumpLinkPlacer.jumpLinks[iLink].isBiDirectional, false);

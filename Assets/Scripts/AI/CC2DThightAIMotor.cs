@@ -222,6 +222,7 @@ public class CC2DThightAIMotor : CC2DMotor
         pos.x = x;
         transform.position = pos;
         actor.CharacterController2D.warpToGrounded();
+        _cMState = MState.Walk;
     }
 
 #if DEBUG

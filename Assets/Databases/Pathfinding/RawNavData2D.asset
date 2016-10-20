@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efe680144dc7ceb47b9a4ad7dcd483e1, type: 3}
+  m_Name: RawNavData2D
+  m_EditorClassIdentifier: 
+  name: 
+  version: 0
+  nodes: []
+  selectionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  circleVertCount: 0
+  selectAllStatic: 0
+  useSelection: 0
+  hideSelectedGeometry: 0
+  nodeMergeDist: 0
+  maxEdgeDeviation: 0
+  showType: 0

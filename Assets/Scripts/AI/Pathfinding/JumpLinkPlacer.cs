@@ -3,6 +3,9 @@ using NavMesh2D.Core;
 using System.Collections.Generic;
 using System;
 using NavMesh2D;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Pathfinding2D
 {
@@ -15,6 +18,22 @@ namespace Pathfinding2D
         {
             jumpLinks = new List<JumpLink>(5);
         }
+
+#if UNITY_EDITOR
+        public void SaveToAsset()
+        {
+            string path = EditorUtility.SaveFilePanel("Save JumpLinks", "Assets", "JumpLinks", "asset");
+            if (path == null || path.Length == 0)
+                return;
+            path = path.Substring(path.IndexOf("Assets"));
+            Debug.Log(path);
+            AssetDatabase.CreateAsset(this, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = this;
+        }
+#endif
 
         [Serializable]
         public class JumpLink
@@ -51,15 +70,19 @@ namespace Pathfinding2D
             [SerializeField]
             public bool isBiDirectional;
 
+            [SerializeField]
+            public JumpLinkSettings jumpLinkSettings;
+
             public JumpLink()
             {
-
+                jumpLinkSettings = new JumpLinkSettings();
             }
 
             public JumpLink(Vector2 worldPointA, Vector2 worldPointB)
             {
                 this.worldPointA = worldPointA;
                 this.worldPointB = worldPointB;
+                jumpLinkSettings = new JumpLinkSettings();
             }
 
             public JumpLink InvertLink(NavAgentGroundWalkerSettings groundWalkerSettings)
@@ -75,7 +98,7 @@ namespace Pathfinding2D
                 return inverseLink;
             }
 
-            public bool TryRemapPoints(NavigationData2D navData)
+            public bool TryRemapPoints(RawNavigationData2D navData)
             {
                 Vector2 navPoint;
                 int mappedVertIndex;
@@ -119,6 +142,14 @@ namespace Pathfinding2D
                 else
                     jumpArc.UpdateArc(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPointA.x, navPointB.x);
             }
+        }
+
+        [Serializable]
+        public class JumpLinkSettings
+        {
+            public bool showDetails = false;
+            public bool showInScene = true;
+            public bool showInSceneDetailed = true;
         }
     }
 }

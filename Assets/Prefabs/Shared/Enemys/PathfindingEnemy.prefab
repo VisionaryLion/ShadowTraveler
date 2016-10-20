@@ -879,7 +879,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011911560806}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.1, y: 6.08, z: -0.9140625}
+  m_LocalPosition: {x: 8.7, y: 6.08, z: -0.9140625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -1580,10 +1580,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0648a40e9dc698945b764dcfc558c6d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  actor: {fileID: 114000014054586058}
   pathStartPoint: {fileID: 4000012783450266}
   goal: {fileID: 0}
-  updatePath: 0
+  updatePath: 1
 --- !u!114 &114000013744476904
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1642,7 +1642,8 @@ MonoBehaviour:
   rigidbody2d: {fileID: 50000010690530142}
   boxCollider2D: {fileID: 61000010714948968}
   cC2DThightAIMotor: {fileID: 114000014127052240}
-  navAgent: {fileID: 0}
+  navAgent: {fileID: 114000013734588984}
+  animationActor: {fileID: 114000014145071798}
 --- !u!114 &114000014091071384
 MonoBehaviour:
   m_ObjectHideFlags: 1

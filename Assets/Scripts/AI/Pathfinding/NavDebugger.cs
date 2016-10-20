@@ -67,8 +67,9 @@ public class NavDebugger : MonoBehaviour
         watch.Reset();
         watch.Start();
 
-        navData2D = new NavigationData2DBuilder(agentSettings).Build(exTrees);
-        Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+       /* navData2D = new RawNavigationData2DBuilder(agentSettings).Build(exTrees, ScriptableObject.CreateInstance<RawNavigationData2D>())
+            .ToNavigationData2D();
+        Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");*/
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
         watch.Stop();
