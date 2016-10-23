@@ -285,6 +285,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 33294035}
   - 114: {fileID: 33294036}
+  - 95: {fileID: 33294037}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -328,6 +329,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &33294037
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 33294034}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!224 &41549061 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224000012307082558, guid: 140e7059a5757c1429b9f62952f16b36,
@@ -689,6 +707,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 103106052}
   - 114: {fileID: 103106053}
+  - 95: {fileID: 103106054}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -732,6 +751,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &103106054
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 103106051}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &121329393
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,6 +910,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 165081105}
   - 114: {fileID: 165081106}
+  - 95: {fileID: 165081107}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -917,6 +954,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &165081107
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 165081104}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &179557790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,6 +1297,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 237757812}
   - 114: {fileID: 237757813}
+  - 95: {fileID: 237757814}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -1286,6 +1341,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &237757814
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 237757811}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &262773890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1295,6 +1367,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 262773891}
   - 114: {fileID: 262773892}
+  - 95: {fileID: 262773893}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -1338,6 +1411,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &262773893
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 262773890}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &317037948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2228,6 +2318,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 470559183}
   - 114: {fileID: 470559184}
+  - 95: {fileID: 470559185}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -2271,6 +2362,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &470559185
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 470559182}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &484377565
 GameObject:
   m_ObjectHideFlags: 0
@@ -2867,6 +2975,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 641709777}
   - 114: {fileID: 641709778}
+  - 95: {fileID: 641709779}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -2910,6 +3019,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &641709779
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 641709776}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &670592576
 GameObject:
   m_ObjectHideFlags: 0
@@ -3116,7 +3242,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &735511746
 Transform:
   m_ObjectHideFlags: 0
@@ -3205,6 +3331,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 775517527}
   - 114: {fileID: 775517528}
+  - 95: {fileID: 775517529}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -3248,6 +3375,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &775517529
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 775517526}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &789055666
 GameObject:
   m_ObjectHideFlags: 0
@@ -3257,6 +3401,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 789055667}
   - 114: {fileID: 789055668}
+  - 95: {fileID: 789055669}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -3300,6 +3445,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &789055669
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 789055666}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &789780484
 GameObject:
   m_ObjectHideFlags: 0
@@ -3428,6 +3590,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 864677544}
   - 114: {fileID: 864677545}
+  - 95: {fileID: 864677546}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -3471,6 +3634,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &864677546
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 864677543}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &871871851
 GameObject:
   m_ObjectHideFlags: 0
@@ -3812,6 +3992,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 947810581}
   - 114: {fileID: 947810582}
+  - 95: {fileID: 947810583}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -3855,6 +4036,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &947810583
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 947810580}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &952987815
 GameObject:
   m_ObjectHideFlags: 0
@@ -3894,6 +4092,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 969883876}
   - 114: {fileID: 969883877}
+  - 95: {fileID: 969883878}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -3937,6 +4136,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &969883878
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969883875}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1037080114
 GameObject:
   m_ObjectHideFlags: 0
@@ -3946,6 +4162,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1037080115}
   - 114: {fileID: 1037080116}
+  - 95: {fileID: 1037080117}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -3989,6 +4206,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1037080117
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1037080114}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1043034572
 GameObject:
   m_ObjectHideFlags: 0
@@ -3998,6 +4232,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1043034573}
   - 114: {fileID: 1043034574}
+  - 95: {fileID: 1043034575}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -4041,6 +4276,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1043034575
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1043034572}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1066051409
 GameObject:
   m_ObjectHideFlags: 0
@@ -4259,6 +4511,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1097260222}
   - 114: {fileID: 1097260223}
+  - 95: {fileID: 1097260224}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -4302,6 +4555,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1097260224
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1097260221}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1145516193
 GameObject:
   m_ObjectHideFlags: 0
@@ -4818,6 +5088,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1301837942}
   - 114: {fileID: 1301837943}
+  - 95: {fileID: 1301837944}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -4861,6 +5132,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1301837944
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1301837941}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1313165003
 GameObject:
   m_ObjectHideFlags: 0
@@ -5022,6 +5310,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1452761101}
   - 114: {fileID: 1452761102}
+  - 95: {fileID: 1452761103}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -5065,6 +5354,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1452761103
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1452761100}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1459600965
 GameObject:
   m_ObjectHideFlags: 0
@@ -5074,6 +5380,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1459600966}
   - 114: {fileID: 1459600967}
+  - 95: {fileID: 1459600968}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -5117,6 +5424,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1459600968
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1459600965}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1482526967
 GameObject:
   m_ObjectHideFlags: 0
@@ -5237,6 +5561,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1484567605}
   - 114: {fileID: 1484567606}
+  - 95: {fileID: 1484567607}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -5280,6 +5605,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1484567607
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1484567604}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1490937739
 GameObject:
   m_ObjectHideFlags: 0
@@ -5341,6 +5683,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1522505831}
   - 114: {fileID: 1522505832}
+  - 95: {fileID: 1522505833}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -5384,6 +5727,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1522505833
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1522505830}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1526983885
 GameObject:
   m_ObjectHideFlags: 0
@@ -5477,6 +5837,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1538351990}
   - 114: {fileID: 1538351991}
+  - 95: {fileID: 1538351992}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -5520,6 +5881,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1538351992
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1538351989}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1540575554
 GameObject:
   m_ObjectHideFlags: 0
@@ -5733,6 +6111,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1580308649}
   - 114: {fileID: 1580308650}
+  - 95: {fileID: 1580308651}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -5776,6 +6155,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1580308651
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1580308648}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1581404002
 GameObject:
   m_ObjectHideFlags: 0
@@ -6044,6 +6440,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1654515773}
   - 114: {fileID: 1654515774}
+  - 95: {fileID: 1654515775}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -6087,6 +6484,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1654515775
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1654515772}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1693160940
 GameObject:
   m_ObjectHideFlags: 0
@@ -6109,7 +6523,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1693160940}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.347, y: -0.06000042, z: 0}
+  m_LocalPosition: {x: -1.432, y: -0.06000042, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -6178,6 +6592,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1725015696}
   - 114: {fileID: 1725015697}
+  - 95: {fileID: 1725015698}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -6221,6 +6636,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1725015698
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1725015695}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1737996384
 GameObject:
   m_ObjectHideFlags: 0
@@ -6835,6 +7267,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1818515317}
   - 114: {fileID: 1818515318}
+  - 95: {fileID: 1818515319}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -6878,6 +7311,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1818515319
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1818515316}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1859378383
 GameObject:
   m_ObjectHideFlags: 0
@@ -7237,6 +7687,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1930755874}
   - 114: {fileID: 1930755875}
+  - 95: {fileID: 1930755876}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -7280,6 +7731,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1930755876
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1930755873}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &1941843934
 GameObject:
   m_ObjectHideFlags: 0
@@ -7539,6 +8007,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1996624159}
   - 114: {fileID: 1996624160}
+  - 95: {fileID: 1996624161}
   m_Layer: 0
   m_Name: Spot
   m_TagString: Untagged
@@ -7582,6 +8051,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &1996624161
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1996624158}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &2015009122
 GameObject:
   m_ObjectHideFlags: 0
@@ -7643,6 +8129,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 2039589279}
   - 114: {fileID: 2039589280}
+  - 95: {fileID: 2039589281}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -7686,6 +8173,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &2039589281
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2039589278}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &2069645995
 GameObject:
   m_ObjectHideFlags: 0
@@ -7993,6 +8497,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 2099310292}
   - 114: {fileID: 2099310293}
+  - 95: {fileID: 2099310294}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -8036,6 +8541,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &2099310294
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2099310291}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &2114435743
 GameObject:
   m_ObjectHideFlags: 0
@@ -8196,6 +8718,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 2120112376}
   - 114: {fileID: 2120112377}
+  - 95: {fileID: 2120112378}
   m_Layer: 0
   m_Name: Radial
   m_TagString: Untagged
@@ -8239,6 +8762,23 @@ MonoBehaviour:
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!95 &2120112378
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2120112375}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 07e7d2e442f761c4dbc9fabb00cb117c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &2120976253
 GameObject:
   m_ObjectHideFlags: 0
