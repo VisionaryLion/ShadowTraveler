@@ -272,14 +272,13 @@ namespace CC2D
 
                     if (CurrentMovementInput.ShouldJump(maxJumpExecutionDelay))
                         StartJump();
-                    else if (actor.CharacterController2D.collisionState.belowHit.collider.CompareTag(movingPlatformTag))
+                    if (actor.CharacterController2D.collisionState.belowHit.collider.CompareTag(movingPlatformTag))
                     {
-                        if (actor.CharacterController2D.collisionState.belowHit.collider.transform.rotation != Quaternion.identity || actor.CharacterController2D.collisionState.belowHit.collider.transform.localScale != new Vector3(1, 1, 1))
-                            FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
-                        else
+                        if (FakeTransformParent != actor.CharacterController2D.collisionState.belowHit.collider.transform)
+                        {
                             FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform;
-                        transform.parent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
-                        ReCalculateFakeParentOffset();
+                            ReCalculateFakeParentOffset();
+                        }
                     }
                     else
                     {
@@ -494,48 +493,34 @@ namespace CC2D
         void MoveCC2DByVelocity()
         {
             _totalExternalVelocity = CalculateTotalExternalAccerleration();
-            if (_fakeParent != null)
-            {
-                _fakeParentOffset += actor.CharacterController2D.calcMoveVector((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
-            }
-            else
-                actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
+            actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
 
-            //We turned out to be slower then our external velocity demanded us. We presumably hit something, so reset forces.
-            if (_totalExternalVelocity.x == 0)
-                return;
             if (_totalExternalVelocity.x > 0)
             {
                 if (actor.CharacterController2D.collisionState.right)
                 {
                     _allExternalVelocitys.Clear();
-                    return;
                 }
             }
-            else
+            else if (_totalExternalVelocity.x < 0)
             {
                 if (actor.CharacterController2D.collisionState.left)
                 {
                     _allExternalVelocitys.Clear();
-                    return;
                 }
             }
-            if (_totalExternalVelocity.y == 0)
-                return;
             if (_totalExternalVelocity.y > 0)
             {
                 if (actor.CharacterController2D.collisionState.above)
                 {
                     _allExternalVelocitys.Clear();
-                    return;
                 }
             }
-            else
+            else if (_totalExternalVelocity.y < 0)
             {
                 if (actor.CharacterController2D.collisionState.below)
                 {
                     _allExternalVelocitys.Clear();
-                    return;
                 }
             }
         }

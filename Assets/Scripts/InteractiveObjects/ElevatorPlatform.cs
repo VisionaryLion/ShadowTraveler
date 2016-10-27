@@ -19,9 +19,9 @@ public class ElevatorPlatform : MonoBehaviour
     [SerializeField]
     float speedMultiplier;
     [SerializeField]
-    InteractiveInputDefintion elevatorUp;
+    InteractiveInputDefinition elevatorUp;
     [SerializeField]
-    InteractiveInputDefintion elevatorDown;
+    InteractiveInputDefinition elevatorDown;
     [EventRef]
     public string elevatorStartEventF = "";
     [EventRef]
