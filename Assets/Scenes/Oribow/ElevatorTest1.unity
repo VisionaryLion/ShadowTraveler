@@ -1389,16 +1389,21 @@ MonoBehaviour:
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 1
+    - time: 2
+      value: 0
+      inSlope: 0
+      outSlope: 0.08555836
+      tangentMode: 5
+    - time: 6
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0.59474707
+      outSlope: 0.59474707
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
   goalRad: 0.1
-  speedMultiplier: 1000
+  speedMultiplier: 400
   elevatorUp:
     button: Fire1
     description: 
@@ -1407,6 +1412,8 @@ MonoBehaviour:
     button: Fire2
     description: 
     icon: {fileID: 0}
+  elevatorStartEventF: event:/Power_Station/Elevator_Start_Loop
+  elevatorEndEventF: event:/Power_Station/Elevator_Stop
 --- !u!50 &111688065
 Rigidbody2D:
   serializedVersion: 2
@@ -4226,7 +4233,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 297329897}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 28.05, y: 19.5, z: 0}
+  m_LocalPosition: {x: 28.05, y: 33.74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []

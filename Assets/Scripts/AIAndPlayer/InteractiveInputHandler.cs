@@ -6,36 +6,22 @@ using System;
 
 public class InteractiveInputHandler {
 
-    protected List<InteractiveInputDefintion> inputListener;
+    protected List<InteractiveInputDefinition> inputListener;
     protected BasicEntityActor actor;
 
     public InteractiveInputHandler(BasicEntityActor actor)
     {
         this.actor = actor;
-        inputListener = new List<InteractiveInputDefintion>();
+        inputListener = new List<InteractiveInputDefinition>();
     }
 
-    public virtual void AddInputListener(InteractiveInputDefintion def)
+    public virtual void AddInputListener(InteractiveInputDefinition def)
     {
         inputListener.Add(def);
     }
 
-    public virtual void RemoveInputListener(InteractiveInputDefintion def)
+    public virtual void RemoveInputListener(InteractiveInputDefinition def)
     {
         inputListener.Remove(def);
     }
-}
-
-[Serializable]
-public class InteractiveInputDefintion
-{
-    public delegate void InputCallback(BasicEntityActor actor);
-
-    public string button;
-    public string description;
-    public Texture icon;
-
-    public InputCallback onButtonDown;
-    public InputCallback onButtonUp;
-    public InputCallback onButton;
 }
