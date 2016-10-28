@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ab77123527fc2e4cba37976870f7dc5, type: 3}
   m_Name: IGeneral_UP
   m_EditorClassIdentifier: 
-  button: up
-  description: UP
-  icon: {fileID: 0}
+  button: Fire1
+  description: Press "Fire1"
+  icon: {fileID: 21300000, guid: b7799dc14fdd6b5469e1ffbd209ee9c3, type: 3}

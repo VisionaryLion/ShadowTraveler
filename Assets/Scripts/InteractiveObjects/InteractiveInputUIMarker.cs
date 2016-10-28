@@ -20,9 +20,7 @@ public class InteractiveInputUIMarker : MonoBehaviour {
 
         public void UpdateContent(InteractiveInputDefinition def)
         {
-            if (def.icon != null)
                 icon.sprite = def.icon;
-            if (def.description != null && def.description.Length > 0)
                 description.text = def.description;
         }
     }
