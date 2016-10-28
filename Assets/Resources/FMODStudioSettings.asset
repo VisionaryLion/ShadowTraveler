@@ -52,5 +52,9 @@ MonoBehaviour:
   - Platform: 2
     Value: 32
   Plugins: []
-  MasterBank: 
-  Banks: []
+  MasterBank: SpaceStation_Level1
+  Banks:
+  - Items
+  - Spider
+  - Robot_Assistant
+  - Player
