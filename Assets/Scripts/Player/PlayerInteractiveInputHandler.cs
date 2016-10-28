@@ -56,6 +56,6 @@ public class PlayerInteractiveInputHandler : InteractiveInputHandler
 
         if (inputListener.Count >= itemQueue.Length)
             return;
-        itemQueue[inputListener.Count - 1].SetVisible(false);
+        itemQueue[inputListener.Count].SetVisible(false);
     }
 }
