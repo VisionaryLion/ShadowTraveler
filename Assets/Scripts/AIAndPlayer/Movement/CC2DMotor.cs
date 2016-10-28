@@ -349,33 +349,43 @@ namespace CC2D
             else
                 actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
 
+            
+
             //We turned out to be slower then our external velocity demanded us. We presumably hit something, so reset forces.
+            if (_totalExternalVelocity.x == 0)
+                return;
             if (_totalExternalVelocity.x > 0)
             {
                 if (actor.CharacterController2D.collisionState.right)
                 {
                     _allExternalVelocitys.Clear();
+                    return;
                 }
             }
-            else if (_totalExternalVelocity.x < 0)
+            else
             {
                 if (actor.CharacterController2D.collisionState.left)
                 {
                     _allExternalVelocitys.Clear();
+                    return;
                 }
             }
+            if (_totalExternalVelocity.y == 0)
+                return;
             if (_totalExternalVelocity.y > 0)
             {
                 if (actor.CharacterController2D.collisionState.above)
                 {
                     _allExternalVelocitys.Clear();
+                    return;
                 }
             }
-            else if (_totalExternalVelocity.y < 0)
+            else
             {
                 if (actor.CharacterController2D.collisionState.below)
                 {
                     _allExternalVelocitys.Clear();
+                    return;
                 }
             }
         }
