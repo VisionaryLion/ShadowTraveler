@@ -5,13 +5,15 @@ using Actors;
 public class PlayerInteractiveInputHandler : InteractiveInputHandler
 {
     public bool blockAllInput = false;
+    InteractiveInputUIMarker.UIInputItem[] itemQueue;
 
-    public PlayerInteractiveInputHandler(BasicEntityActor actor) : base(actor)
+    public PlayerInteractiveInputHandler(PlayerActor actor) : base(actor)
     {
         UnityEventHog.GetInstance().AddUpdateListener(Update);
+        itemQueue = actor.InteractiveInputUIMarker.uiItemQueue;
     }
 
-    InteractiveInputDefintion currentDef;
+    InteractiveInputDefinition currentDef;
     void Update()
     {
         if (blockAllInput)
@@ -38,13 +40,22 @@ public class PlayerInteractiveInputHandler : InteractiveInputHandler
         }
     }
 
-    public override void AddInputListener(InteractiveInputDefintion def)
+    public override void AddInputListener(InteractiveInputDefinition def)
     {
         base.AddInputListener(def);
+
+        if (inputListener.Count > itemQueue.Length)
+            return;
+        itemQueue[inputListener.Count - 1].UpdateContent(def);
+        itemQueue[inputListener.Count - 1].SetVisible(true);
     }
 
-    public override void RemoveInputListener(InteractiveInputDefintion def)
+    public override void RemoveInputListener(InteractiveInputDefinition def)
     {
         base.RemoveInputListener(def);
+
+        if (inputListener.Count >= itemQueue.Length)
+            return;
+        itemQueue[inputListener.Count - 1].SetVisible(false);
     }
 }
