@@ -65,7 +65,7 @@ namespace CC2D
         [SerializeField]
         [HideInInspector]
         [AssignActorAutomaticly]
-        public SimpleMovementActor actor;
+        SimpleMovementActor actor;
 
 
         public event Action<RaycastHit2D> onControllerCollidedEvent;

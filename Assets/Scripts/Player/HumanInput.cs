@@ -23,10 +23,9 @@ namespace CC2D
         bool allowMovementInput = true;
         bool allowEquipmentInput = true;
 
-        void Awake()
+        void Start ()
         {
-            bufferedInput = new MovementInput();
-            actor.CC2DMotor.CurrentMovementInput = bufferedInput;
+            bufferedInput = actor.CC2DMotor.CurrentMovementInput;
         }
 
         void Update()
@@ -40,8 +39,6 @@ namespace CC2D
                 else if (Input.GetButtonDown("Crouch"))
                 {
                     bufferedInput.AddEvent(new CrouchEvent());
-
-                    bufferedInput.toggleCrouch = !bufferedInput.toggleCrouch;
                 }
             }
 

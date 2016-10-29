@@ -9,12 +9,15 @@ namespace Actors
     {
         [SerializeField]
         HumanInput humanInput;
+        [SerializeField]
+        InteractiveInputUIMarker interactiveInputUIMarker;
 
         PlayerInteractiveInputHandler playerInteractiveInputHandler;
 
         #region public
         public HumanInput HumanInput { get { return humanInput; } }
         public PlayerInteractiveInputHandler PlayerInteractiveInputHandler { get { return playerInteractiveInputHandler; } }
+        public InteractiveInputUIMarker InteractiveInputUIMarker { get { return interactiveInputUIMarker; } }
         #endregion
 
         protected override void InitInteractiveInputHandler()
@@ -30,6 +33,7 @@ namespace Actors
             
             //Load components
             humanInput = GetComponentInChildren<HumanInput>();
+            interactiveInputUIMarker = GetComponentInChildren<InteractiveInputUIMarker>();
 
             //Setup some script vars automatically.
             this.tag = "Player"; //Built-in-Tag can't go wrong.

@@ -17,10 +17,24 @@ public class NavDebugger : MonoBehaviour
 
     [Range(0.0f, 10.0f)]
     public float minHeightTest = 0;
+    [Range(0.001f, .5f)]
+    public float nodeMergeDist;
+    [Range(0.0f, 5f)]
+    public float maxEdgeDeviation;
+    [SerializeField]
+    public NavAgentGroundWalkerSettings agentSettings;
+    [SerializeField]
+    public NavPath path;
+    public bool showDebug;
+
+    public Transform goal;
+    public Transform start;
+    public Transform closestTestPoint;
+
 
     CollisionGeometrySet cgs;
     ContourTree outlineTree;
-    ExpandedTree[] exTrees;
+    ExpandedTree exTrees;
     NavigationData2D navData2D;
 
     // Use this for initialization
@@ -39,32 +53,45 @@ public class NavDebugger : MonoBehaviour
         watch.Reset();
         watch.Start();
 
-        outlineTree = ContourTree.Build(cgs);
+        outlineTree = ContourTree.Build(cgs, nodeMergeDist, maxEdgeDeviation);
         Debug.Log("OutlineTreeBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
         watch.Reset();
         watch.Start();
 
-        exTrees = ExpandedTreeSetBuilder.Build(outlineTree, new float[] { minHeightTest });
+        exTrees = ExpandedTree.Build(outlineTree, minHeightTest);
         Debug.Log("ExpandedTreeSetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
         watch.Reset();
         watch.Start();
 
-        navData2D = NavigationData2DBuilder.Build(exTrees[0], 0);
-        Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+       /* navData2D = new RawNavigationData2DBuilder(agentSettings).Build(exTrees, ScriptableObject.CreateInstance<RawNavigationData2D>())
+            .ToNavigationData2D();
+        Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");*/
 
         totalEllapsedTime += watch.ElapsedMilliseconds;
         watch.Stop();
         Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");
     }
 
+    void PathCalcFinished(NavPath path)
+    {
+        this.path = path;
+        if (path != null)
+            path.Visualize();
+    }
+
     int counter = -1;
     // Update is called once per frame
     void Update()
     {
+        PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, PathCalcFinished));
+
+        if (!showDebug)
+            return;
+
         switch (debugConfig)
         {
             case DebugWhichSet.OutlineTree:
@@ -73,8 +100,7 @@ public class NavDebugger : MonoBehaviour
                     timer = 0;
                     if (counter == -1)
                     {
-                        outlineTree = ScriptableObject.CreateInstance<ContourTree>();
-                        outlineTree.OnEnabled();
+                        outlineTree = new ContourTree();
                         counter = 0;
                     }
                     if (counter < cgs.colliderVerts.Count)
@@ -109,15 +135,37 @@ public class NavDebugger : MonoBehaviour
             case DebugWhichSet.ExpandedTree:
                 if (exTrees != null)
                 {
-                    foreach (ExpandedTree eT in exTrees)
+                    exTrees.headNode.VisualDebug();
+                    Vector2 mappedPoint;
+                    Vector2 normal;
+                    if (exTrees.TryMapPointToContour(closestTestPoint.position, out mappedPoint, out normal))
                     {
-                        eT.headNode.VisualDebug(0);
+                        Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
+                        DebugExtension.DebugPoint(mappedPoint);
                     }
+
                 }
                 break;
             case DebugWhichSet.NavigationData2D:
                 if (navData2D != null)
+                {
+
                     navData2D.DrawForDebug();
+                    Vector2 mappedPoint;
+                    if (navData2D.TryMapPoint(closestTestPoint.position, out mappedPoint))
+                    {
+                        Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
+                        DebugExtension.DebugPoint(mappedPoint);
+                    }
+                    /* System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                     int pathsPerSecond = 0;
+                     while (watch.ElapsedMilliseconds < 1000)
+                     {*/
+
+                    /*  pathsPerSecond++;
+                  }
+                  Debug.Log("Can compute "+ (pathsPerSecond)+" paths per second");*/
+                }
                 break;
         }
     }
