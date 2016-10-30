@@ -9,17 +9,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa80ea884e2ca8c4d8f83cf41398b6d8, type: 3}
-  m_Name: Flashlight
+  m_Name: Circuit
   m_EditorClassIdentifier: 
-  itemID: 1
+  itemID: 3
   displaySprite: {fileID: 0}
-  itemPrefab: {fileID: 1000013772047324, guid: 140e7059a5757c1429b9f62952f16b36, type: 2}
-  isEquipment: 1
+  itemPrefab: {fileID: 1000012307589440, guid: 904d578c972277047b6d67205aa37323, type: 2}
+  isEquipment: 0
   isConsumable: 0
   isStackable: 0
   canHoldOnlyOne: 1
-  stackLimit: 20
-  poolLimit: 1
-  itemName: Flashlight
-  description: A basic light source
-  tooltips: A basic light source
+  stackLimit: 1
+  poolLimit: 0
+  itemName: Circuit
+  description: Vital for the cores power function.
+  tooltips: Vital for the cores power function.

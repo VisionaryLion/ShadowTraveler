@@ -8,13 +8,15 @@ using System;
 
 namespace ItemHandler
 {
-    public class Inventory : IInventory
+    public class Inventory : IInventory, IEnumerable<IItem>
     {
         [SerializeField]
         int inventorySize;//Number of distinct elements the inventory can support 
 
         public bool IsInventoryFull { get { return inventorySize == filledSlotCount; } }
+        public bool IsEmpty { get { return filledSlotCount == 0; } }
         public int InventorySize { get { return inventorySize; } }
+        public int FilledSlots { get { return filledSlotCount; } }
         public int InventoryFreeSpace { get { return inventorySize - filledSlotCount; } }
 
 
@@ -282,7 +284,8 @@ namespace ItemHandler
             Stack<GameObject> pooledObjs;
             if (pooledItems.TryGetValue(item.ItemId, out pooledObjs))
             {
-                return pooledObjs.Pop();
+                if (pooledObjs.Count > 0)
+                    return pooledObjs.Pop();
             }
             return Instantiate(item.ItemPrefab);
         }
@@ -296,7 +299,7 @@ namespace ItemHandler
         {
             for (int iSlot = 0; iSlot < inventorySize; iSlot++)
             {
-                if (inventoryCache[iSlot].ItemId == id)
+                if (inventoryCache[iSlot] != null && inventoryCache[iSlot].ItemId == id)
                 {
                     return iSlot;
                 }
@@ -314,6 +317,16 @@ namespace ItemHandler
                     return true;
             }
             return false;
+        }
+
+        public IEnumerator<IItem> GetEnumerator()
+        {
+            return (IEnumerator<IItem>)inventoryCache.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return inventoryCache.GetEnumerator();
         }
     }
 }

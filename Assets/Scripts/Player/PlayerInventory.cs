@@ -12,7 +12,7 @@ namespace ItemHandler
         [SerializeField]
         Inventory mainInventory;
 
-        public enum InventoryType { Right = 0, Left = 1, Main = 2}
+        public enum InventoryType { Right = 0, Left = 1, Main = 2 }
 
         public IItem GetItem(InventoryType inventoryType, int itemIndex)
         {
@@ -45,33 +45,22 @@ namespace ItemHandler
             return GetInv(inventoryType).AddItem(item, obj);
         }
 
-        public bool AddItem(IItem item, GameObject obj)
+        public bool AddEquipment(IItem item, GameObject obj)
         {
             int l = (leftInventory.CouldAddItem(item) ? 1 : 0) * ((leftInventory.ContainsItem(item.ItemId) ? 100000000 : 0) + leftInventory.InventoryFreeSpace);
             int r = (rightInventory.CouldAddItem(item) ? 1 : 0) * ((rightInventory.ContainsItem(item.ItemId) ? 100000000 : 0) + rightInventory.InventoryFreeSpace);
-            int m = (mainInventory.CouldAddItem(item) ? 1 : 0) * ((mainInventory.ContainsItem(item.ItemId) ? 100000000 : 0) + mainInventory.InventoryFreeSpace);
 
             if (l >= r)
             {
-                if (l >= m)
+                if (l == 0)
                 {
-                    return leftInventory.AddItem(item, obj);
+                    Debug.LogWarning("Not enough Inventoryspace to add a Equipment");
                 }
-                else
-                {
-                    return mainInventory.AddItem(item, obj);
-                }
+                return leftInventory.AddItem(item, obj);
             }
             else
             {
-                if (r >= m)
-                {
-                    return rightInventory.AddItem(item, obj);
-                }
-                else
-                {
-                    return mainInventory.AddItem(item, obj);
-                }
+                return rightInventory.AddItem(item, obj);
             }
         }
 

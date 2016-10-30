@@ -17,6 +17,9 @@ namespace ItemHandler
         [SerializeField]
         public Transform equipmentSpawnPointRight;
 
+        [SerializeField]
+        EquipmentOffset equipmentOffset;
+
         public IItem CurrentEquipedItemLeft { get { return currentEquipedItemLeft; } }
         public GameObject CurrentEquipedGameObjectLeft { get { return currentEquipedGameObjectLeft; } }
         public IItem CurrentEquipedItemRight { get { return currentEquipedItemRight; } }
@@ -44,14 +47,15 @@ namespace ItemHandler
             if (!actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 1))
                 return;
             if (currentEquipedItemLeft != null)
-                actor.MultiSlotsInventory.AddGameObjectCopyOfItem(0, currentEquipedItemLeft, currentEquipedGameObjectLeft);
-            if (currentEquipedItemLeft != null)
                 currentEquipedGameObjectLeft.SendMessage("OnUnequiped", SendMessageOptions.DontRequireReceiver);
+            if (currentEquipedItemLeft != null)
+                actor.MultiSlotsInventory.AddGameObjectCopyOfItem(PlayerInventory.InventoryType.Left, currentEquipedItemLeft, currentEquipedGameObjectLeft);
+            
 
             currentEquipedGameObjectLeft = gameObject;
             currentEquipedItemLeft = item;
-            currentEquipedGameObjectLeft.transform.position = equipmentSpawnPointLeft.position;
-            currentEquipedGameObjectLeft.transform.rotation = equipmentSpawnPointLeft.rotation;
+            currentEquipedGameObjectLeft.transform.position = equipmentSpawnPointLeft.position + (Vector3)equipmentOffset.GetOffsetPos(-1, item.ItemId);
+            currentEquipedGameObjectLeft.transform.rotation = Quaternion.Euler(0, 0, equipmentSpawnPointLeft.rotation.eulerAngles.z + equipmentOffset.GetOffsetRot(-1, item.ItemId));
             currentEquipedGameObjectLeft.transform.parent = equipmentSpawnPointLeft;
 
             actor.Animator.SetTrigger("EquipItem");
@@ -64,14 +68,15 @@ namespace ItemHandler
             if (!actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 1))
                 return;
             if (currentEquipedItemRight != null)
-                actor.MultiSlotsInventory.AddGameObjectCopyOfItem(0, currentEquipedItemRight, currentEquipedGameObjectRight);
-            if (currentEquipedItemRight != null)
                 currentEquipedGameObjectRight.SendMessage("OnUnequiped", SendMessageOptions.DontRequireReceiver);
+            if (currentEquipedItemRight != null)
+                actor.MultiSlotsInventory.AddGameObjectCopyOfItem(PlayerInventory.InventoryType.Right, currentEquipedItemRight, currentEquipedGameObjectRight);
+            
 
             currentEquipedGameObjectRight = gameObject;
             currentEquipedItemRight = item;
-            currentEquipedGameObjectRight.transform.position = equipmentSpawnPointRight.position;
-            currentEquipedGameObjectRight.transform.rotation = equipmentSpawnPointRight.rotation;
+            currentEquipedGameObjectRight.transform.position = equipmentSpawnPointRight.position + (Vector3)equipmentOffset.GetOffsetPos(1, item.ItemId);
+            currentEquipedGameObjectRight.transform.rotation = Quaternion.Euler(0, 0, equipmentSpawnPointLeft.rotation.eulerAngles.z + equipmentOffset.GetOffsetRot(1, item.ItemId));
             currentEquipedGameObjectRight.transform.parent = equipmentSpawnPointRight;
 
             actor.Animator.SetTrigger("EquipItem");
@@ -79,13 +84,75 @@ namespace ItemHandler
             actor.AnimationHandler.StartListenToAnimationEnd("Equip_Item_Anim", new AnimationHandler.AnimationEvent(EquipFinishedRightHandler));
         }
 
-        public Transform GetFreeHand()
+        public void EquipItem(int handIndex,  IItem item, GameObject gameObject)
         {
-            if (currentEquipedGameObjectLeft == null)
+            if (handIndex == 1)
+                EquipItemRight(item, gameObject);
+            else
+                EquipItemLeft(item, gameObject);
+        }
+
+        public void EquipNextItem(int handIndex)
+        {
+            Inventory inv = actor.MultiSlotsInventory.GetInv((handIndex == 1) ? PlayerInventory.InventoryType.Right : PlayerInventory.InventoryType.Left);
+            if (inv.IsEmpty)
+                return;
+
+            GameObject equippedObj = (handIndex == 1) ? currentEquipedGameObjectRight : currentEquipedGameObjectLeft;
+
+            if (inv.FilledSlots == 1 && equippedObj != null)
+                return;
+            IItem equippedItem = (handIndex == 1) ? currentEquipedItemRight : currentEquipedItemLeft;
+            bool earlyOut = false;
+            IItem newItem = null;
+            IItem cItem;
+            int newItemIndex = 0;
+
+            for (int iItem = 0; iItem < inv.InventorySize; iItem++)
+            {
+                cItem = inv.GetItem(iItem);
+                if (cItem == equippedItem)
+                {
+                    earlyOut = true;
+                    continue;
+                }
+                if (cItem == null)
+                    continue;
+
+                newItem = cItem;
+                newItemIndex = iItem;
+                if (earlyOut)
+                {
+                    break;
+                }
+            }
+            Debug.Assert(newItem != null);
+
+            EquipItem(handIndex, newItem, inv.DropFromInventorySilent(newItemIndex));
+        }
+
+        public Transform GetEquipmentPos (int handIndex)
+        {
+            if (handIndex == -1)
                 return equipmentSpawnPointLeft;
-            if (currentEquipedGameObjectRight == null)
+            if (handIndex == 1)
                 return equipmentSpawnPointRight;
             return equipmentSpawnPointLeft;
+        }
+
+        public void ApplyOffset(int handIndex, int itemId, Transform target)
+        {
+            target.position = target.position + (Vector3)equipmentOffset.GetOffsetPos(handIndex, itemId);
+            target.rotation = Quaternion.Euler(0, 0, target.rotation.eulerAngles.z + equipmentOffset.GetOffsetRot(handIndex, itemId));
+        }
+
+        public int GetFreeHand()
+        {
+            if (currentEquipedGameObjectLeft == null)
+                return -1;
+            if (currentEquipedGameObjectRight == null)
+                return 1;
+            return 0;
         }
     }
 }

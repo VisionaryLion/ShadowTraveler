@@ -8,12 +8,12 @@ namespace ItemHandler
     [RequireComponent(typeof(Collider2D))]
     public class EquipmentPickup : MonoBehaviour
     {
-
-        [AssignActorAutomaticly]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         ItemActor actor;
 
         [SerializeField]
         Collider2D triggerCollider;
+        int handIndex;
 
         BasicEntityWithEquipmentActor entityActor;
 
@@ -29,6 +29,9 @@ namespace ItemHandler
 
         void OnTriggerStay2D(Collider2D col)
         {
+            if (entityActor != null)
+                return;
+
             entityActor = col.GetComponentInChildren<BasicEntityWithEquipmentActor>();
 
             if (entityActor != null)
@@ -42,16 +45,19 @@ namespace ItemHandler
                     entityActor.AnimationHandler.StartListenToAnimationEvent("PickUpReachedItem", new AnimationHandler.AnimationEvent(PickUpReachedItemHandler));
                     entityActor.AnimationHandler.StartListenToAnimationEnd("Item_Pick_up_Anim", new AnimationHandler.AnimationEvent(PickUpFinishedHandler));
                     triggerCollider.enabled = false;
+                    this.enabled = false;
                 }
             }
         }
 
         private void PickUpReachedItemHandler()
         {
-            Transform spawnPoint = entityActor.EquipmentManager.GetFreeHand();
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-            transform.parent = spawnPoint;
+            handIndex = entityActor.EquipmentManager.GetFreeHand();
+            Transform spawnPoint = entityActor.EquipmentManager.GetEquipmentPos(handIndex);
+            actor.transform.position = spawnPoint.position;
+            actor.transform.rotation = spawnPoint.rotation;
+            entityActor.EquipmentManager.ApplyOffset(handIndex, actor.Item.ItemId, actor.transform);
+            actor.transform.parent = spawnPoint;
             entityActor.SetBlockAllInput(false);
             entityActor.CC2DMotor.FreezeAndResetMovement(false);
             entityActor.SetBlockAllNonMovement(true);
@@ -60,10 +66,18 @@ namespace ItemHandler
         private void PickUpFinishedHandler()
         {
             entityActor.AnimationHandler.ResetAnyStateTransitionPriority(0);
-            entityActor.MultiSlotsInventory.AddItem(actor.Item, gameObject);
             entityActor.SetBlockAllNonMovement(false);
-            gameObject.SetActive(true);
-            entityActor.EquipmentManager.EquipItemRight(actor.Item, gameObject);
+            if (actor.Item.IsEquipment)
+            {
+                entityActor.MultiSlotsInventory.AddEquipment(actor.Item, null);
+                actor.gameObject.SetActive(true);
+                entityActor.EquipmentManager.EquipItem(handIndex, actor.Item, actor.gameObject);
+            }
+            else
+            {
+                entityActor.MultiSlotsInventory.AddItem(PlayerInventory.InventoryType.Main, actor.Item, actor.gameObject);
+            }
+            entityActor = null;
         }
     }
 }

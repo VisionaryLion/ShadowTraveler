@@ -1489,7 +1489,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010318793156}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 27.8, y: 17.7, z: -0.9140625}
+  m_LocalPosition: {x: -2.187, y: 0.496, z: -0.9140625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -1535,7 +1535,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.0813913
+  orthographic size: 2.28
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -2014,6 +2014,8 @@ MonoBehaviour:
   actor: {fileID: 114000011846946954}
   equipmentSpawnPointLeft: {fileID: 4000010740474800}
   equipmentSpawnPointRight: {fileID: 4000013870830202}
+  equipmentOffset:
+    offsets: []
 --- !u!114 &114000011466290368
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2691,13 +2693,13 @@ MonoBehaviour:
   gravityAcceleration: 20
   walkHAcc: 5
   walkHFric: 5
-  walkHMaxSpeed: 10
+  walkHMaxSpeed: 1
   steepSlopeGravity: 5
   jumpOfSteepSlopeLock: 0.75
   movingPlatformTag: MovingPlatform
   inAirHAcc: 11
   inAirHFric: 5
-  inAirHMaxSpeed: 11
+  inAirHMaxSpeed: 2
   fallCap: 100
   jumpVAcc: 20
   glideVVelocity: 3
