@@ -54,9 +54,14 @@ namespace ItemHandler
 
             currentEquipedGameObjectLeft = gameObject;
             currentEquipedItemLeft = item;
-            currentEquipedGameObjectLeft.transform.position = equipmentSpawnPointLeft.position + (Vector3)equipmentOffset.GetOffsetPos(-1, item.ItemId);
-            currentEquipedGameObjectLeft.transform.rotation = Quaternion.Euler(0, 0, equipmentSpawnPointLeft.rotation.eulerAngles.z + equipmentOffset.GetOffsetRot(-1, item.ItemId));
+
+            
             currentEquipedGameObjectLeft.transform.parent = equipmentSpawnPointLeft;
+            currentEquipedGameObjectLeft.transform.localScale = Vector3.one;
+            currentEquipedGameObjectLeft.transform.localPosition = equipmentOffset.GetOffsetPos(-1, item.ItemId);
+            
+            currentEquipedGameObjectLeft.transform.localRotation = Quaternion.Euler(0, 0, equipmentSpawnPointLeft.rotation.eulerAngles.z + equipmentOffset.GetOffsetRot(-1, item.ItemId));
+            
 
             actor.Animator.SetTrigger("EquipItem");
             actor.AnimationHandler.SetAnyStateTransitionPriority(1, 1);
@@ -75,9 +80,13 @@ namespace ItemHandler
 
             currentEquipedGameObjectRight = gameObject;
             currentEquipedItemRight = item;
-            currentEquipedGameObjectRight.transform.position = equipmentSpawnPointRight.position + (Vector3)equipmentOffset.GetOffsetPos(1, item.ItemId);
-            currentEquipedGameObjectRight.transform.rotation = Quaternion.Euler(0, 0, equipmentSpawnPointLeft.rotation.eulerAngles.z + equipmentOffset.GetOffsetRot(1, item.ItemId));
+
+            
             currentEquipedGameObjectRight.transform.parent = equipmentSpawnPointRight;
+            currentEquipedGameObjectRight.transform.localScale = Vector3.one;
+            currentEquipedGameObjectRight.transform.localPosition = equipmentOffset.GetOffsetPos(1, item.ItemId);
+            currentEquipedGameObjectRight.transform.localRotation = Quaternion.Euler(0, 0, equipmentSpawnPointRight.rotation.eulerAngles.z + equipmentOffset.GetOffsetRot(1, item.ItemId));
+            
 
             actor.Animator.SetTrigger("EquipItem");
             actor.AnimationHandler.SetAnyStateTransitionPriority(1, 1);

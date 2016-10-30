@@ -1076,6 +1076,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4000014189272724, guid: c8b59e136468f5448a4d03d48c228c11, type: 2}
       propertyPath: m_LocalPosition.x
       value: -2.187
@@ -1108,14 +1113,59 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114000014125670896, guid: c8b59e136468f5448a4d03d48c228c11,
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
         type: 2}
-      propertyPath: walkHMaxSpeed
+      propertyPath: equipmentOffset.offsets.Array.data[0].itemId
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114000014125670896, guid: c8b59e136468f5448a4d03d48c228c11,
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
         type: 2}
-      propertyPath: inAirHMaxSpeed
+      propertyPath: equipmentOffset.offsets.Array.data[0].offsetPosLeft.x
+      value: 0.048
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[0].offsetPosLeft.y
+      value: 0.114
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[0].offsetRotLeft
+      value: 56.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[0].offsetPosRight.x
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[0].offsetPosRight.y
+      value: 0.116
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[0].offsetRotRight
+      value: 56.199
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[1].itemId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[1].offsetPosLeft.x
+      value: 0.115
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[1].offsetPosRight.x
+      value: 0.096
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
+        type: 2}
+      propertyPath: equipmentOffset.offsets.Array.data[2].itemId
       value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []

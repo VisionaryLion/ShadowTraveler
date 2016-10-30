@@ -1061,7 +1061,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010395056068}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.041, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -1431,10 +1431,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013886551576}
-  m_LocalRotation: {x: -0, y: -0, z: -0.971893, w: 0.23542303}
-  m_LocalPosition: {x: 0.14, y: -0.32, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.041, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -152.86}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000012155014908}
   m_RootOrder: 0
@@ -2693,13 +2693,13 @@ MonoBehaviour:
   gravityAcceleration: 20
   walkHAcc: 5
   walkHFric: 5
-  walkHMaxSpeed: 1
+  walkHMaxSpeed: 2
   steepSlopeGravity: 5
   jumpOfSteepSlopeLock: 0.75
   movingPlatformTag: MovingPlatform
   inAirHAcc: 11
   inAirHFric: 5
-  inAirHMaxSpeed: 2
+  inAirHMaxSpeed: 3
   fallCap: 100
   jumpVAcc: 20
   glideVVelocity: 3
