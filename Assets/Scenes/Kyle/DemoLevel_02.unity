@@ -1111,7 +1111,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000014189272724, guid: c8b59e136468f5448a4d03d48c228c11, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114000011454644942, guid: c8b59e136468f5448a4d03d48c228c11,
         type: 2}
@@ -2671,6 +2671,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 735511746}
+  - 114: {fileID: 735511747}
   m_Layer: 0
   m_Name: Normal_Lights
   m_TagString: Untagged
@@ -2697,6 +2698,25 @@ Transform:
   - {fileID: 571961366}
   m_Father: {fileID: 1420560800}
   m_RootOrder: 1
+--- !u!114 &735511747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 735511745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: event:/Power_Station/Lights_on
+  PlayEvent: 1
+  StopEvent: 0
+  CollisionTag: 
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
 --- !u!1 &755423501
 GameObject:
   m_ObjectHideFlags: 0
@@ -2985,7 +3005,7 @@ Transform:
   m_Children:
   - {fileID: 1482526969}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!4 &857534591 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4000011434297922, guid: 904d578c972277047b6d67205aa37323,
@@ -4587,7 +4607,7 @@ Transform:
   - {fileID: 529828410}
   - {fileID: 735511746}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
 --- !u!1 &1452761100
 GameObject:
   m_ObjectHideFlags: 0
@@ -5417,7 +5437,7 @@ Transform:
   - {fileID: 495265009}
   - {fileID: 1991942164}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &1608763881
 GameObject:
   m_ObjectHideFlags: 0
@@ -5571,7 +5591,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
 --- !u!1 &1650190645
 GameObject:
   m_ObjectHideFlags: 0
@@ -5948,7 +5968,7 @@ Transform:
   - {fileID: 1420342108}
   - {fileID: 1495575430}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!1 &1760033158
 GameObject:
   m_ObjectHideFlags: 0
@@ -6734,7 +6754,7 @@ Transform:
   - {fileID: 1788538831}
   - {fileID: 1230844241}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!1001 &1913717441
 Prefab:
   m_ObjectHideFlags: 0
@@ -6772,11 +6792,33 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011254406390, guid: d858f01a066318f4aa99f5464662a721, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d858f01a066318f4aa99f5464662a721, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1913717442 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000010865397782, guid: d858f01a066318f4aa99f5464662a721,
+    type: 2}
+  m_PrefabInternal: {fileID: 1913717441}
+--- !u!114 &1913717443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1913717442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9468c5f457ace64f8d4df6d642b107f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LoadEvent: 1
+  UnloadEvent: 0
+  Banks:
+  - SpaceStation_Level1
+  CollisionTag: 
+  PreloadSamples: 1
 --- !u!1 &1930094886
 GameObject:
   m_ObjectHideFlags: 0
@@ -7957,4 +7999,4 @@ Transform:
   - {fileID: 99512599}
   - {fileID: 1072342270}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
