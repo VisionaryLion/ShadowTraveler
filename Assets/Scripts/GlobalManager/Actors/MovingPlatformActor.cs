@@ -23,9 +23,9 @@ namespace Actors
             base.Refresh();
 
             //Load components
-            movingPlattform = GetComponentInChildren<MovingPlattform>();
-            positionHolder2D = GetComponentInChildren<PositionHolder2D>();
-            rigidbody2D = GetComponentInChildren<Rigidbody2D>();
+            movingPlattform = LoadComponent<MovingPlattform>(movingPlattform);
+            positionHolder2D = LoadComponent<PositionHolder2D>(positionHolder2D);
+            rigidbody2D = LoadComponent<Rigidbody2D>(rigidbody2D);
 
             //Setup some script vars automatically.
             rigidbody2D.isKinematic = true;

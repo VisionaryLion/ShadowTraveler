@@ -32,7 +32,7 @@ MonoBehaviour:
     Value: 0
   OverlaySettings:
   - Platform: 1
-    Value: 1
+    Value: 0
   - Platform: 2
     Value: 0
   LoggingSettings:
@@ -52,5 +52,9 @@ MonoBehaviour:
   - Platform: 2
     Value: 32
   Plugins: []
-  MasterBank: 
-  Banks: []
+  MasterBank: SpaceStation_Level1
+  Banks:
+  - Items
+  - Spider
+  - Robot_Assistant
+  - Player

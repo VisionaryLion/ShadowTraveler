@@ -1,3 +1,0 @@
-This file marks the root folder of Rotorz Limited assets.
-
-Please do not remove this file.

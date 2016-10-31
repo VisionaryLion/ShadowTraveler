@@ -10,6 +10,7 @@ TagManager:
   - MovingPlatform
   - onlyTrigger
   - Enemy
+  - Crouch
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - CC2D
   - Trigger
   - Rigidbody
-  - 
+  - Platform
   - 
   - 
   - 
