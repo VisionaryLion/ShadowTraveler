@@ -31,7 +31,7 @@ TextureImporter:
   bumpmap:
     convertToNormalMap: 0
     externalNormalMap: 0
-    heightScale: .25
+    heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
   grayScaleToAlpha: 0
@@ -43,7 +43,7 @@ TextureImporter:
   textureFormat: -3
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 0
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -51,19 +51,23 @@ TextureImporter:
   lightmap: 0
   rGBM: 0
   compressionQuality: 50
+  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
-  spritePivot: {x: .5, y: .5}
+  spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: AAITD_Character_Sprite_Cutup_03_0
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_0
       rect:
         serializedVersion: 2
         x: 8
@@ -71,9 +75,12 @@ TextureImporter:
         width: 11
         height: 25
       alignment: 9
-      pivot: {x: .587371826, y: .830614328}
+      pivot: {x: 0.5873718, y: 0.8306143}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_1
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_1
       rect:
         serializedVersion: 2
         x: 27
@@ -81,9 +88,12 @@ TextureImporter:
         width: 13
         height: 22
       alignment: 9
-      pivot: {x: .426070005, y: .159251124}
+      pivot: {x: 0.42607, y: 0.15925112}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_2
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_2
       rect:
         serializedVersion: 2
         x: 46
@@ -91,9 +101,12 @@ TextureImporter:
         width: 11
         height: 25
       alignment: 9
-      pivot: {x: .395154446, y: .84599185}
+      pivot: {x: 0.39515445, y: 0.84599185}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_3
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_3
       rect:
         serializedVersion: 2
         x: 8
@@ -101,9 +114,12 @@ TextureImporter:
         width: 6
         height: 19
       alignment: 2
-      pivot: {x: .5, y: 1}
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_4
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_4
       rect:
         serializedVersion: 2
         x: 23
@@ -111,9 +127,12 @@ TextureImporter:
         width: 19
         height: 35
       alignment: 9
-      pivot: {x: .536765456, y: .587816954}
+      pivot: {x: 0.53676546, y: 0.58781695}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_5
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_5
       rect:
         serializedVersion: 2
         x: 51
@@ -121,9 +140,12 @@ TextureImporter:
         width: 6
         height: 19
       alignment: 2
-      pivot: {x: .5, y: 1}
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_6
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_6
       rect:
         serializedVersion: 2
         x: 8
@@ -131,9 +153,12 @@ TextureImporter:
         width: 5
         height: 9
       alignment: 2
-      pivot: {x: .5, y: 1}
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_7
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_7
       rect:
         serializedVersion: 2
         x: 22
@@ -141,9 +166,12 @@ TextureImporter:
         width: 9
         height: 32
       alignment: 9
-      pivot: {x: .521357834, y: .848394394}
+      pivot: {x: 0.52135783, y: 0.8483944}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_8
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_8
       rect:
         serializedVersion: 2
         x: 36
@@ -151,9 +179,12 @@ TextureImporter:
         width: 9
         height: 32
       alignment: 9
-      pivot: {x: .542715311, y: .83638072}
+      pivot: {x: 0.5427153, y: 0.8363807}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_9
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_9
       rect:
         serializedVersion: 2
         x: 52
@@ -161,9 +192,12 @@ TextureImporter:
         width: 5
         height: 9
       alignment: 2
-      pivot: {x: .5, y: 1}
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_10
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_10
       rect:
         serializedVersion: 2
         x: 6
@@ -171,9 +205,12 @@ TextureImporter:
         width: 8
         height: 31
       alignment: 2
-      pivot: {x: .5, y: 1}
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_11
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_11
       rect:
         serializedVersion: 2
         x: 52
@@ -181,9 +218,12 @@ TextureImporter:
         width: 8
         height: 31
       alignment: 2
-      pivot: {x: .5, y: 1}
+      pivot: {x: 0.5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_12
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_12
       rect:
         serializedVersion: 2
         x: 7
@@ -191,9 +231,12 @@ TextureImporter:
         width: 12
         height: 6
       alignment: 9
-      pivot: {x: .328255087, y: .912017822}
+      pivot: {x: 0.3282551, y: 0.9120178}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: AAITD_Character_Sprite_Cutup_03_13
+      outline: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_Cutup_03_13
       rect:
         serializedVersion: 2
         x: 53
@@ -201,8 +244,11 @@ TextureImporter:
         width: 12
         height: 6
       alignment: 9
-      pivot: {x: .316666603, y: .900000095}
+      pivot: {x: 0.3166666, y: 0.9000001}
       border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: -1
+    outline: []
   spritePackingTag: 
   userData: 
   assetBundleName: 

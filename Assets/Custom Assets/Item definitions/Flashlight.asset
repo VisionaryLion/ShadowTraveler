@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Flashlight
   m_EditorClassIdentifier: 
   itemID: 1
-  displaySprite: {fileID: 0}
+  displaySprite: {fileID: 21300020, guid: 73c99f861f89236479a90fb7a2bd54af, type: 3}
   itemPrefab: {fileID: 1000013772047324, guid: 140e7059a5757c1429b9f62952f16b36, type: 2}
   isEquipment: 1
   isConsumable: 0

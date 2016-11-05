@@ -17,8 +17,7 @@ namespace ItemHandler
         public int InventorySize { get { return inventorySize; } }
         public int InventoryFreeSpace { get { return inventorySize - filledSlotCount; } }
 
-
-        IItem[] inventoryCache; // Each index represents a unique tile
+        public IItem[] inventoryCache; // Each index represents a unique tile
         Dictionary<int, Stack<GameObject>> pooledItems;
         int filledSlotCount = 0;
 
