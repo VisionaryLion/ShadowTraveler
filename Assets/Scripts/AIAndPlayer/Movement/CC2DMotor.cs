@@ -758,7 +758,7 @@ namespace CC2D
             return result;
         }
 
-#region Methods to start each state with
+        #region Methods to start each state with
 
         void StartFalling()
         {
@@ -799,7 +799,12 @@ namespace CC2D
             _prevMState = _cMState;
             if (_cMState != MState.Crouched)
             {
+                Debug.Log("start");
+
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * crouchScaleFactor, spriteRoot.localScale.y * crouchScaleFactor, spriteRoot.localScale.z);
+                actor.BoxCollider2D.size = new Vector2(actor.BoxCollider2D.size.x * crouchScaleFactor, actor.BoxCollider2D.size.y * crouchScaleFactor);
+
+                actor.CharacterController2D.warpToGrounded();
             }
             CurrentMovementInput.toggleCrouch = false;
             _cMState = MState.Crouched;
@@ -810,7 +815,12 @@ namespace CC2D
             _prevMState = _cMState;
             if (_cMState == MState.Crouched)
             {
+                Debug.Log("end");
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / crouchScaleFactor, spriteRoot.localScale.y / crouchScaleFactor, spriteRoot.localScale.z);
+                actor.BoxCollider2D.size = new Vector2(actor.BoxCollider2D.size.x / crouchScaleFactor, actor.BoxCollider2D.size.y / crouchScaleFactor);
+
+                actor.CharacterController2D.move(new Vector3(0, 0.5f), false);
+                actor.CharacterController2D.warpToGrounded();
             }
             CurrentMovementInput.toggleCrouch = false;
             _cMState = MState.Walk;
@@ -849,9 +859,9 @@ namespace CC2D
             _prevMState = _cMState;
         }
 
-#endregion
+        #endregion
 
-#region Coroutines
+        #region Coroutines
 
         private delegate void DelayedAction(object data);
         /// <summary>
@@ -872,10 +882,10 @@ namespace CC2D
             action(data);
         }
 
-#endregion
+        #endregion
 
 #if DEBUG
-#region Debug
+        #region Debug
 
         void OnGUI()
         {
@@ -892,7 +902,7 @@ namespace CC2D
                 GUILayout.Label("isFakedParents = " + (_fakeParent != null));
             }
         }
-#endregion
+        #endregion
 #endif
     }
 
