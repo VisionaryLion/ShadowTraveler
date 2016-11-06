@@ -1,39 +1,52 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Actors;
+using ItemHandler;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class CircuitPanel : MonoBehaviour {
-
+public class CircuitPanel : MonoBehaviour
+{
     PlayerActor player;
+
     [SerializeField]
-    GameObject enable;
+    ItemData circuitItem;
+    [SerializeField]
+    GameObject[] enable;
     [SerializeField]
     GameObject disable;
+
+    bool wasActivated = false;
 
     void Awake()
     {
         player = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
     }
 
-    void OnTriggerEnter2D(Collider2D coll)
+    void OnTriggerEnter2D(Collider2D col)
     {
-        if(coll.CompareTag("Player"))
+
+        if (wasActivated)
+            return;
+
+        BasicEntityWithEquipmentActor entityActor = col.GetComponentInChildren<BasicEntityWithEquipmentActor>();
+        if (entityActor == null)
+            return;
+
+        int circuitPos = entityActor.MultiSlotsInventory.GetInv(ItemHandler.PlayerInventory.InventoryType.Main).FindItem(circuitItem.itemID);
+        if (circuitPos != -1)
         {
-            if (player.EquipmentManager.equipmentSpawnPointLeft.FindChild("Circuit") != null)
+            entityActor.MultiSlotsInventory.GetInv(ItemHandler.PlayerInventory.InventoryType.Main).DropFromInventory(circuitPos);
+            wasActivated = true;
+
+            foreach(GameObject enableGO in enable)
             {
-                enable.SetActive(true);
-                disable.SetActive(false);
-                GameObject circuit = player.EquipmentManager.equipmentSpawnPointLeft.FindChild("Circuit").gameObject;
-
-                circuit.transform.SetParent(transform);
-                circuit.transform.rotation = Quaternion.identity;
-
-                Vector3 position = new Vector3(0.005f, 0.135f, 0);
-                circuit.transform.localPosition = position;
-
-
+                enableGO.SetActive(true);
             }
+            
+            disable.SetActive(false);
+            
+
+
         }
-    }	
+    }
 }

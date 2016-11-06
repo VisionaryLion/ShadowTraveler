@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013563536370}
   - 58: {fileID: 58000010967607114}
-  - 114: {fileID: 114000010716893064}
+  - 114: {fileID: 114000013615234022}
   m_Layer: 0
   m_Name: PickUpTrigger
   m_TagString: Untagged
@@ -70,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012307589440}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.5, y: -3.984273, z: -0.004062474}
+  m_LocalPosition: {x: -3.47, y: 3.89, z: -0.004062474}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -136,18 +136,6 @@ MonoBehaviour:
     canBePickedUp: 1
     canBeDropped: 0
     canBeTrashed: 0
---- !u!114 &114000010716893064
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011269189392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04078ef2b5c19d6488916d48feeb78cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerCollider: {fileID: 58000010967607114}
 --- !u!114 &114000012036658924
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -178,6 +166,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemHolder: {fileID: 114000010458043506}
+--- !u!114 &114000013615234022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011269189392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04078ef2b5c19d6488916d48feeb78cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actor: {fileID: 0}
+  triggerCollider: {fileID: 58000010967607114}
 --- !u!212 &212000010159157358
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -219,7 +220,7 @@ RectTransform:
   m_GameObject: {fileID: 1000011443994966}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 1.1111109, z: 1}
+  m_LocalScale: {x: 0.11875107, y: 0.10205146, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000011434297922}
