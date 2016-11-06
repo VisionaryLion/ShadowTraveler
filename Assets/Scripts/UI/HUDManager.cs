@@ -8,59 +8,91 @@ namespace ItemHandler
 {
     public class HUDManager : MonoBehaviour
     {
+        [Header("Left HUD")]
         [SerializeField]
-        float updateRate = 10f;
+        Text leftItemName;
+        [SerializeField]
+        Text leftItemDescription;
+        [SerializeField]
+        Image leftItemIcon;
 
+        [Header("Right HUD")]
         [SerializeField]
-        Text itemName;
+        Text rightItemName;
         [SerializeField]
-        Text itemDescription;
+        Text rightItemDescription;
         [SerializeField]
-        Image itemIcon;
+        Image rightItemIcon;
 
         PlayerActor player;
         Sprite emptySprite = null;
 
-
-
         void Awake()
         {
-            player = ActorDatabase.GetInstance().FindFirst<PlayerActor>();                        
+            player = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
         }
 
-        void Start()
-        {
-            updateInfo();
-            StartCoroutine(startUpdate());
-        }
-        
-        void updateInfo()
+        void Update()
         {
             if (player.GetComponentInChildren<ItemHolder>() != null)
             {
-                if (!itemIcon.enabled)
+                if (!leftItemIcon.enabled)
                 {
-                    itemIcon.enabled = true;
-                }
-                                
-                itemName.text = player.GetComponentInChildren<ItemHolder>().item.Title;
-                itemIcon.sprite = player.GetComponentInChildren<ItemHolder>().item.Icon;
-                itemDescription.text = player.GetComponentInChildren<ItemHolder>().item.Description;
+                    leftItemIcon.enabled = true;
+                }                
 
-            } else
-            {
-                itemName.text = "";
-                itemDescription.text = "";
-                itemIcon.enabled = false;
+                leftItemName.text = player.GetComponentInChildren<ItemHolder>().item.Title;
+                leftItemIcon.sprite = player.GetComponentInChildren<ItemHolder>().item.Icon;
+                leftItemDescription.text = player.GetComponentInChildren<ItemHolder>().item.Description;
+
             }
-            
+            else
+            {
+                leftItemName.text = "";
+                leftItemDescription.text = "";
+                leftItemIcon.enabled = false;
+            }                      
         }
-        IEnumerator startUpdate()
+
+        /* Once new system implemented
+
+        void EquipLeft(StaticItem item)  // or player.EquipmentManager.CurrentEquipedGameObjectLeft
         {
-            yield return new WaitForSeconds(1 / updateRate);
-            updateInfo();
-            StartCoroutine(startUpdate());
+            leftItemDescription.text = "";
+            leftItemName.text = "";
+            leftItemIcon.enabled = true;
+            leftItemIcon.sprite = null;
         }
+        
+        void EmptyLeft(StaticItem item)
+        {
+            leftItemDescription.text = "";
+            leftItemName.text = "";
+            leftItemIcon.enabled = false;
+        }
+
+        void EquipRight(StaticItem item)
+        {
+            rightItemDescription.text = item.Description;
+            rightItemName.text = item.Title;
+            leftItemIcon.enabled = true;
+            rightItemIcon.sprite = item.Icon;
+        }
+
+        void EmptyRight(StaticItem item)
+        {
+            rightItemDescription.text = "";
+            rightItemName.text = "";
+            rightItemIcon.enabled = false;
+        }
+        
+        */
+
 
     }
 }
+
+
+
+
+
