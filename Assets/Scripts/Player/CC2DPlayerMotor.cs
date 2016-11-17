@@ -1,5 +1,5 @@
 ﻿//#define Glide
-//#define DEBUG
+#define DEBUG
 
 using UnityEngine;
 using Utility.ExtensionMethods;
@@ -37,11 +37,6 @@ namespace CC2D
         #region Private
 
         float _wallDetachingInput; //WallSlide specific
-        int _climbableTriggerCount; //Climbing specific. Counts the amount of triggers we are currently touching.
-        Vector3 _fakeParentOffset;
-        List<Velocity2D> _allExternalVelocitys;
-        Vector2 _totalExternalVelocity;
-        int _crouchTrigger;
 
         //Coroutine
         Coroutine _delayedUnGrounding;
@@ -50,8 +45,7 @@ namespace CC2D
 
         protected override void FixedUpdate()
         {
-            if (IsFroozen)
-                return;
+            
 
             _prevMState = _cMState;
             //Check, if we are grounded
@@ -60,6 +54,8 @@ namespace CC2D
             else if (actor.CharacterController2D.collisionState.becameGroundedThisFrame)
                 OnBecameGrounded();
 
+            if (IsFroozen)
+                return;
             var currentInputEvent = _cMovementInput.GetNextEvent();
 
             switch (_cMState)
@@ -259,7 +255,7 @@ namespace CC2D
             FakeTransformParent = null;
         }
 
-#if ete
+#if DEBUG
         #region Debug
 
         void OnGUI()
@@ -272,7 +268,6 @@ namespace CC2D
                 GUILayout.Label("isGrounded = " + _isGrounded + "( raw = " + actor.CharacterController2D.isGrounded + ")");
                 GUILayout.Label("currentLyTouchingClimbables = " + _climbableTriggerCount);
                 GUILayout.Label("isOnSlope = " + actor.CharacterController2D.collisionState.standOnToSteepSlope);
-                GUILayout.Label("currentExternalForceCount = " + _allExternalVelocitys.Count);
                 GUILayout.Label("isFakedParents = " + (_fakeParent != null));
             }
         }

@@ -46,9 +46,6 @@ namespace CC2D
             {
                 /*foreach (EquipmentButtonBinding b in binds)
                 {
-                    if (currentBind == b)
-                        continue;
-
                     if (Input.GetKeyDown(b.key) && actor.MultiSlotsInventory.ContainsItem(b.equipment.itemID) && !actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
                     {
                         if (currentEquipedItem != null)
@@ -70,6 +67,14 @@ namespace CC2D
                         actor.CC2DMotor.frontAnimator.SetTrigger("EquipItem");
                     }
                 }*/
+
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    actor.TwoHandEquipmentManager.EquipNextItem(false);
+                }else if (Input.GetKeyDown(KeyCode.E))
+                {
+                    actor.TwoHandEquipmentManager.EquipNextItem(true);
+                }
             }
         }
 
