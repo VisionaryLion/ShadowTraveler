@@ -1280,6 +1280,9 @@ MonoBehaviour:
   climbingVVelocity: 5
   bounciness: 0
   standartDrag: 0.8
+  crouchHAcc: 3
+  crouchHFric: 3
+  crouchHMaxSpeed: 5
 --- !u!114 &106807432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4933,6 +4936,9 @@ MonoBehaviour:
   climbingVVelocity: 5
   bounciness: 0
   standartDrag: 0.8
+  crouchHAcc: 3
+  crouchHFric: 3
+  crouchHMaxSpeed: 5
 --- !u!61 &362288509
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5149,6 +5155,9 @@ MonoBehaviour:
   climbingVVelocity: 5
   bounciness: 0
   standartDrag: 0.3
+  crouchHAcc: 3
+  crouchHFric: 3
+  crouchHMaxSpeed: 5
 --- !u!114 &366895046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5241,7 +5250,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: 0.0019817352, y: -0.24394226}
+  m_Offset: {x: 0, y: -0.25}
   serializedVersion: 2
   m_Size: {x: 0.34552532, y: 1.107096}
 --- !u!114 &366895050
@@ -7074,6 +7083,9 @@ MonoBehaviour:
   climbingVVelocity: 5
   bounciness: 0
   standartDrag: 0.8
+  crouchHAcc: 3
+  crouchHFric: 3
+  crouchHMaxSpeed: 5
 --- !u!61 &599170216
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10171,6 +10183,9 @@ MonoBehaviour:
   climbingVVelocity: 5
   bounciness: 0
   standartDrag: 0.8
+  crouchHAcc: 3
+  crouchHFric: 3
+  crouchHMaxSpeed: 5
 --- !u!61 &838383304
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -24566,6 +24581,9 @@ MonoBehaviour:
   climbingVVelocity: 5
   bounciness: 0
   standartDrag: 0.8
+  crouchHAcc: 3
+  crouchHFric: 3
+  crouchHMaxSpeed: 5
 --- !u!61 &2089579224
 BoxCollider2D:
   m_ObjectHideFlags: 0

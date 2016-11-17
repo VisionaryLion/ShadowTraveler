@@ -804,6 +804,8 @@ namespace CC2D
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * crouchScaleFactor, spriteRoot.localScale.y * crouchScaleFactor, spriteRoot.localScale.z);
                 actor.BoxCollider2D.size = new Vector2(actor.BoxCollider2D.size.x * crouchScaleFactor, actor.BoxCollider2D.size.y * crouchScaleFactor);
 
+                actor.CC2DMotor.spriteRoot.transform.position = new Vector3(actor.CC2DMotor.spriteRoot.transform.position.x, actor.CC2DMotor.spriteRoot.transform.position.y - .1f, actor.CC2DMotor.spriteRoot.transform.position.z);
+
                 actor.CharacterController2D.warpToGrounded();
             }
             CurrentMovementInput.toggleCrouch = false;
@@ -818,6 +820,9 @@ namespace CC2D
                 Debug.Log("end");
                 spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / crouchScaleFactor, spriteRoot.localScale.y / crouchScaleFactor, spriteRoot.localScale.z);
                 actor.BoxCollider2D.size = new Vector2(actor.BoxCollider2D.size.x / crouchScaleFactor, actor.BoxCollider2D.size.y / crouchScaleFactor);
+
+                actor.CC2DMotor.spriteRoot.transform.position = new Vector3(actor.CC2DMotor.spriteRoot.transform.position.x, actor.CC2DMotor.spriteRoot.transform.position.y + .1f, actor.CC2DMotor.spriteRoot.transform.position.z);
+
 
                 actor.CharacterController2D.move(new Vector3(0, 0.5f), false);
                 actor.CharacterController2D.warpToGrounded();
