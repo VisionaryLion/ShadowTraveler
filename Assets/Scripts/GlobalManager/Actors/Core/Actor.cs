@@ -6,6 +6,7 @@ using UnityEditor;
 
 namespace Actors
 {
+    [SelectionBase]
     public class Actor : MonoBehaviour
     {
         protected virtual void Awake()

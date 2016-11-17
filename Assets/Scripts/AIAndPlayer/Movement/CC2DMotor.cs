@@ -133,6 +133,8 @@ namespace CC2D
         /// </summary>
         public MovementInput CurrentMovementInput { get { return _cMovementInput; } }
 
+        public int FacingDir { get { return _cFacingDir; } }
+
         public void AddVelocity(Vector2 velocity, float damp, Velocity2D.VelocityAllowsThisState velocityAllowsThisState)
         {
             _allExternalVelocitys.Add(new Velocity2D(velocity, damp, velocityAllowsThisState));

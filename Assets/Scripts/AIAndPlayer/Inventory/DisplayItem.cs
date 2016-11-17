@@ -14,7 +14,7 @@ namespace ItemHandler
         [SerializeField]
         Text stackCount;
 
-        public IItem HeldItem { get { return inventory.GetItem(slot.SlotIndex); } }
+        public IItem HeldItem { get { return inventory.GetTopItemOfStack(slot.SlotIndex); } }
 
         public SlotHandler slot;
         public IInventory inventory;
@@ -33,7 +33,7 @@ namespace ItemHandler
             else
             {
                 gameObject.SetActive(true);
-                stackCount.text = cachedItem.GetStackTopString();
+                stackCount.text = inventory.GetStack(slot.SlotIndex).Count.ToString();
                 image.sprite = cachedItem.Icon;
             }
         }

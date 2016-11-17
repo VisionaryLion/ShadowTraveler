@@ -8,13 +8,13 @@ public class EquipmentOffset {
     Offset[] offsets;
 
 
-    public Vector2 GetOffsetPos(int handIndex, int itemId)
+    public Vector2 GetOffsetPos(bool rightHand, int itemId)
     {
         foreach (Offset o in offsets)
         {
             if (o.itemId == itemId)
             {
-                if (handIndex == 1)
+                if (rightHand)
                     return o.offsetPosRight;
                 return o.offsetPosLeft;
             }
@@ -23,13 +23,13 @@ public class EquipmentOffset {
         return Vector2.zero;
     }
 
-    public float GetOffsetRot(int handIndex, int itemId)
+    public float GetOffsetRot(bool rightHand, int itemId)
     {
         foreach (Offset o in offsets)
         {
             if (o.itemId == itemId)
             {
-                if (handIndex == 1)
+                if (rightHand)
                     return o.offsetRotRight;
                 return o.offsetRotLeft;
             }

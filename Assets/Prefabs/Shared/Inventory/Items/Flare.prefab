@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010682163384}
-  - 114: {fileID: 114000013339712764}
+  - 114: {fileID: 114000012278566774}
   - 114: {fileID: 114000012139841878}
   - 114: {fileID: 114000014073011318}
   - 212: {fileID: 212000011444494694}
@@ -54,7 +54,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012685190068}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 6.466, y: -0.779, z: -0.008124948}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04078ef2b5c19d6488916d48feeb78cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  actor: {fileID: 114000012278566774}
   triggerCollider: {fileID: 58000013151413024}
 --- !u!114 &114000012139841878
 MonoBehaviour:
@@ -117,7 +117,8 @@ MonoBehaviour:
     canBePickedUp: 1
     canBeDropped: 0
     canBeTrashed: 0
---- !u!114 &114000013339712764
+    stackTop: 0
+--- !u!114 &114000012278566774
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -125,7 +126,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000012685190068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51583ad0b550c424994ca09f3dd07d8b, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d601773f8e2897428db7865ba643e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemHolder: {fileID: 114000012139841878}
