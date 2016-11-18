@@ -30,10 +30,9 @@ namespace CC2D
         float timeLeft;
         float maxJumpExecutionDelay = .5f;
 
-        void Awake()
+        void Start()
         {
-            bufferedInput = new MovementInput();
-            actor.CC2DMotor.CurrentMovementInput = bufferedInput;
+            bufferedInput = actor.CC2DMotor.CurrentMovementInput;
             timeLeft = (runRight) ? timeRunRight : timeRunLeft;
         }
        

@@ -8,28 +8,42 @@ using UnityEditor;
 
 namespace NavMesh2D.Core
 {
-    public class ContourTree : ScriptableObject
+    public class ContourTree
     {
-        [SerializeField]
         ContourNode headNode; // root
 
         public ContourNode FirstNode { get { return headNode; } }
 
-        public void OnEnabled()
+        public ContourTree()
         {
             //create biggest contour possible
             headNode = new ContourNode(null, false);
         }
 
-        public static ContourTree Build(CollisionGeometrySet cgSet)
+        public static ContourTree Build(CollisionGeometrySet cgSet, float nodeMergeDist, float maxEdgeDeviation)
         {
-            ContourTree result = ScriptableObject.CreateInstance<ContourTree>();
-            result.OnEnabled();
+            ContourTree result = new ContourTree();
             for (int iCol = 0; iCol < cgSet.colliderVerts.Count; iCol++)
             {
                 result.AddContour(cgSet.colliderVerts[iCol]);
             }
+            result.Optimize(nodeMergeDist, maxEdgeDeviation);
             return result;
+        }
+
+        public void Optimize(float nodeMergeDist, float maxEdgeDeviation)
+        {
+            Stack<ContourNode> nodesToProcess = new Stack<ContourNode>(headNode.children);
+
+            while (nodesToProcess.Count > 0)
+            {
+                ContourNode cn = nodesToProcess.Pop();
+                cn.contour.Optimize(nodeMergeDist, maxEdgeDeviation);
+                for (int iOutline = 0; iOutline < cn.children.Count; iOutline++)
+                {
+                    nodesToProcess.Push(cn.children[iOutline]);
+                }
+            }
         }
 
         public void AddContour(Contour outline)

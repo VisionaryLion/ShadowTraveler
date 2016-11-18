@@ -40,8 +40,8 @@ namespace NavMesh2D.Core
 
         public void RemoveVertexAt(int pos)
         {
-            if (pos < 0 || pos >= verticies.Count || verticies.Count == 1)// The remove of the last vertex is not allowed!
-                throw new Exception("Tried to remove vertex failed. Remove index = "+pos+", VertexCount = "+verticies.Count);
+            if (pos < 0 || pos >= verticies.Count || verticies.Count == 3)// The remove of the last vertex is not allowed!
+                throw new Exception("Tried to remove vertex failed. Remove index = " + pos + ", VertexCount = " + verticies.Count);
             verticies.RemoveAt(pos);
             areBoundsValid = false;
         }
@@ -64,6 +64,42 @@ namespace NavMesh2D.Core
             }
             if (verticies[0] == verticies[verticies.Count - 1])
                 verticies.RemoveAt(verticies.Count - 1);
+        }
+
+        public void Optimize(float nodeMergeDist, float maxEdgeDeviation)
+        {
+            Vector2 prevVert = verticies[verticies.Count - 1];
+            Vector2 prevPrevVert = verticies[verticies.Count - 2];
+            float srqMergeDist = nodeMergeDist * nodeMergeDist;
+            for (int i = 0; i < verticies.Count && verticies.Count > 3; i++)
+            {
+                if ((prevVert - verticies[i]).sqrMagnitude <= srqMergeDist)
+                {
+                    //Stage for remove
+                    RemoveVertexAt(i);
+                    i--;
+                }
+                else
+                {
+                    Vector2 nA = prevPrevVert - prevVert;
+                    Vector2 nB = verticies[i] - prevVert;
+                    float angle = Vector2.Angle(nA, nB);
+
+                    if (angle >= 180 - maxEdgeDeviation)
+                    {
+                        //Stage for remove
+                        RemoveVertexAt((verticies.Count + (i - 1)) % verticies.Count);
+                        if (i > 0)
+                            i--;
+                        prevVert = verticies[i];
+                    }
+                    else
+                    {
+                        prevPrevVert = prevVert;
+                        prevVert = verticies[i];
+                    }
+                }
+            }
         }
 
         public bool IsSolid()

@@ -6,12 +6,27 @@ namespace CC2D
 {
     public class MovementInput
     {
+        public bool jump;
+        public bool isJumpConsumed;
+        public float timeOfLastJumpStateChange;
         public float horizontalRaw; //The input for the horizontal axis
         public float verticalRaw; //The input for the vertical axis
         public float horizontal; //The input for the horizontal axis
         public float vertical; //The input for the vertical axis
 
         List<InputEvent> InputEvents = new List<InputEvent>();
+
+        public void ResetToNeutral()
+        {
+            jump = false;
+            isJumpConsumed = false;
+            timeOfLastJumpStateChange = 0;
+            horizontalRaw = 0;
+            verticalRaw = 0;
+            horizontal = 0;
+            vertical = 0;
+            InputEvents.Clear();
+        }
 
         internal void AddEvent(InputEvent newEvent)
         {

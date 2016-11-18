@@ -8,22 +8,19 @@ namespace ItemHandler
     public class StaticItem : IItem, ICloneable
     {
         [SerializeField]
-        ItemData dataSrc;
+        protected ItemData dataSrc;
         [SerializeField]
-        bool canBePickedUp = true;
+        protected bool canBePickedUp = true;
         [SerializeField]
-        bool canBeDropped = true;
+        protected bool canBeDropped = true;
         [SerializeField]
-        bool canBeTrashed = true;
+        protected bool canBeTrashed = true;
 
-        int stackTop = 1;
-
-        public StaticItem(ItemData dataSrc, bool canBePickedUp, bool canBeDropped, int stackTop = 1)
+        public StaticItem(ItemData dataSrc, bool canBePickedUp, bool canBeDropped)
         {
             this.dataSrc = dataSrc;
             this.canBePickedUp = canBePickedUp;
             this.canBeDropped = canBeDropped;
-            this.stackTop = stackTop;
         }
 
         #region Getter, Setter
@@ -91,18 +88,6 @@ namespace ItemHandler
             }
         }
 
-        public override int StackTop
-        {
-            get
-            {
-                return stackTop;
-            }
-            set
-            {
-                stackTop = value;
-            }
-        }
-
         public override GameObject ItemPrefab
         {
             get
@@ -134,19 +119,29 @@ namespace ItemHandler
                 return dataSrc.itemID;
             }
         }
+
+        public override ItemData DataSource
+        {
+            get
+            {
+                return dataSrc;
+            }
+        }
+
         #endregion
 
         #region Validators
         public override bool CanBeDropped(IInventory inv)
         {
-            if (dataSrc.canHoldOnlyOne && inv.ContainsItem(dataSrc.itemID))
-                return false;
-            return canBePickedUp;
+            return canBeDropped;
         }
 
         public override bool CanBePickedUp(IInventory inv)
         {
-            return canBeDropped;
+            if (dataSrc.canHoldOnlyOne && inv.ContainsItem(dataSrc.itemID))
+                return false;
+            return canBePickedUp;
+            
         }
 
         public override bool CanBeTrashed(IInventory inv)
@@ -156,25 +151,16 @@ namespace ItemHandler
         #endregion
 
         #region Events
-        public override bool CanBeStackedWith(IItem other)
-        {
-            if (!IsStackable || (IsStackable && other.ItemId != ItemId))
-                return false;
-            return true;
-        }
         #endregion
 
         public override bool Equals(IItem other)
         {
+            if (other == null)
+                return false;
             return other.ItemId == ItemId;
         }
 
-        public override string GetStackTopString()
-        {
-            return (stackTop == 1) ? "" : stackTop.ToString();
-        }
-
-        public object Clone()
+        public virtual object Clone()
         {
            return base.MemberwiseClone();
         }

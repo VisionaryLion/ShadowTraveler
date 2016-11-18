@@ -1,0 +1,16 @@
+﻿using UnityEngine;
+using System.Collections;
+using System;
+using CC2D;
+
+[Serializable]
+public abstract class IPathSegment {
+    public abstract float TimeOut { get; }
+
+    public abstract void InitTravers(CC2DThightAIMotor motor);
+    public abstract void StopTravers(CC2DThightAIMotor motor);
+    public abstract void UpdateMovementInput(MovementInput input);
+    public abstract bool IsOnTrack(Vector2 position);
+    public abstract bool ReachedTarget(Vector2 position);
+    public abstract void Visualize();
+}
