@@ -20,7 +20,8 @@ namespace Actors
             typeof(SimpleMovementActor),
             typeof(AnimationActor),
             typeof(HumanMovementActor),
-            typeof(BasicEntityWithEquipmentActor)
+            typeof(BasicEntityEquipmentActor),
+            typeof(PlayerActor)
             };
 
         public static readonly string[] ActorSubtypeNames = new string[] {
@@ -34,7 +35,8 @@ namespace Actors
             "SimpleMovementActor",
             "AnimationActor",
             "HumanMovementActor",
-            "BasicEntityWithEquipmentActor"
+            "BasicEntityWithEquipmentActor",
+            "PlayerActor"
             };
 
         public static int ActorTypeToStaticIndex (Type t)
