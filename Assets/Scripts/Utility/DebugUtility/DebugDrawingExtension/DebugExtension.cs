@@ -1013,61 +1013,71 @@ public static class DebugExtension
 	{
 		DrawLocalCube(space, size, Color.white, center);
 	}
-	
-	/// <summary>
-	/// 	- Draws a circle.
-	/// </summary>
-	/// <param name='position'>
-	/// 	- Where the center of the circle will be positioned.
-	/// </param>
-	/// <param name='up'>
-	/// 	- The direction perpendicular to the surface of the circle.
-	/// </param>
-	/// <param name='color'>
-	/// 	- The color of the circle.
-	/// </param>
-	/// <param name='radius'>
-	/// 	- The radius of the circle.
-	/// </param>
-	public static void DrawCircle(Vector3 position, Vector3 up, Color color, float radius = 1.0f)
+
+    public static void DrawCircle(Vector3 position, Vector3 up, Color color, Matrix4x4 localToWorldMatrix, float radius = 1.0f)
+    {
+        up = ((up == Vector3.zero) ? Vector3.up : up).normalized * radius;
+        Vector3 _forward = Vector3.Slerp(up, -up, 0.5f);
+        Vector3 _right = Vector3.Cross(up, _forward).normalized * radius;
+
+        Matrix4x4 matrix = new Matrix4x4();
+
+        matrix[0] = _right.x;
+        matrix[1] = _right.y;
+        matrix[2] = _right.z;
+
+        matrix[4] = up.x;
+        matrix[5] = up.y;
+        matrix[6] = up.z;
+
+        matrix[8] = _forward.x;
+        matrix[9] = _forward.y;
+        matrix[10] = _forward.z;
+
+        matrix = localToWorldMatrix * matrix;
+        position = localToWorldMatrix.MultiplyPoint3x4(position);
+
+        Vector3 _lastPoint = position + matrix.MultiplyPoint3x4(new Vector3(Mathf.Cos(0), 0, Mathf.Sin(0)));
+        Vector3 _nextPoint = Vector3.zero;
+
+        Color oldColor = Gizmos.color;
+        Gizmos.color = (color == default(Color)) ? Color.white : color;
+
+        for (var i = 0; i < 91; i++)
+        {
+            _nextPoint.x = Mathf.Cos((i * 4) * Mathf.Deg2Rad);
+            _nextPoint.z = Mathf.Sin((i * 4) * Mathf.Deg2Rad);
+            _nextPoint.y = 0;
+
+            _nextPoint = position + matrix.MultiplyPoint3x4(_nextPoint);
+
+            Gizmos.DrawLine(_lastPoint, _nextPoint);
+            _lastPoint = _nextPoint;
+        }
+
+        Gizmos.color = oldColor;
+    }
+
+    /// <summary>
+    /// 	- Draws a circle.
+    /// </summary>
+    /// <param name='position'>
+    /// 	- Where the center of the circle will be positioned.
+    /// </param>
+    /// <param name='up'>
+    /// 	- The direction perpendicular to the surface of the circle.
+    /// </param>
+    /// <param name='color'>
+    /// 	- The color of the circle.
+    /// </param>
+    /// <param name='radius'>
+    /// 	- The radius of the circle.
+    /// </param>
+    public static void DrawCircle(Vector3 position, Vector3 up, Color color, float radius = 1.0f)
 	{
-		up = ((up == Vector3.zero) ? Vector3.up : up).normalized * radius;
-		Vector3 _forward = Vector3.Slerp(up, -up, 0.5f);
-		Vector3 _right = Vector3.Cross(up, _forward).normalized*radius;
-		
-		Matrix4x4 matrix = new Matrix4x4();
-		
-		matrix[0] = _right.x;
-		matrix[1] = _right.y;
-		matrix[2] = _right.z;
-		
-		matrix[4] = up.x;
-		matrix[5] = up.y;
-		matrix[6] = up.z;
-		
-		matrix[8] = _forward.x;
-		matrix[9] = _forward.y;
-		matrix[10] = _forward.z;
-		
-		Vector3 _lastPoint = position + matrix.MultiplyPoint3x4(new Vector3(Mathf.Cos(0), 0, Mathf.Sin(0)));
-		Vector3 _nextPoint = Vector3.zero;
-		
-		Color oldColor = Gizmos.color;
-		Gizmos.color = (color == default(Color)) ? Color.white : color;
-		
-		for(var i = 0; i < 91; i++){
-			_nextPoint.x = Mathf.Cos((i*4)*Mathf.Deg2Rad);
-			_nextPoint.z = Mathf.Sin((i*4)*Mathf.Deg2Rad);
-			_nextPoint.y = 0;
-			
-			_nextPoint = position + matrix.MultiplyPoint3x4(_nextPoint);
-			
-			Gizmos.DrawLine(_lastPoint, _nextPoint);
-			_lastPoint = _nextPoint;
-		}
-		
-		Gizmos.color = oldColor;
-	}
+        DrawCircle(position, up, color, Matrix4x4.identity, radius);
+
+    }
 	
 	/// <summary>
 	/// 	- Draws a circle.
@@ -1083,7 +1093,7 @@ public static class DebugExtension
 	/// </param>
 	public static void DrawCircle(Vector3 position, Color color, float radius = 1.0f)
 	{
-		DrawCircle(position, Vector3.up, color, radius);
+		DrawCircle(position, Vector3.up, color, Matrix4x4.identity, radius);
 	}
 	
 	/// <summary>
@@ -1100,7 +1110,7 @@ public static class DebugExtension
 	/// </param>
 	public static void DrawCircle(Vector3 position, Vector3 up, float radius = 1.0f)
 	{
-		DrawCircle(position, position, Color.white, radius);
+		DrawCircle(position, position, Color.white, Matrix4x4.identity, radius);
 	}
 	
 	/// <summary>
@@ -1114,7 +1124,7 @@ public static class DebugExtension
 	/// </param>
 	public static void DrawCircle(Vector3 position, float radius = 1.0f)
 	{
-		DrawCircle(position, Vector3.up, Color.white, radius);
+		DrawCircle(position, Vector3.up, Color.white, Matrix4x4.identity, radius);
 	}
 	
 	//Wiresphere already exists
