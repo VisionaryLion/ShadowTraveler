@@ -1,10 +1,7 @@
-﻿/*
- * Inventory script. Add to an empty and parent it to the player.
- */
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Actors;
 
 namespace ItemHandler
 {
@@ -12,7 +9,10 @@ namespace ItemHandler
     {
         [SerializeField]
         int inventorySize;//Number of distinct elements the inventory can support 
+        [SerializeField]
+        int initialPerSlotAllocationCount; //Initial size of the item holding list for each slot
 
+<<<<<<< HEAD
         public bool IsInventoryFull { get { return inventorySize == filledSlotCount; } }
         public int InventorySize { get { return inventorySize; } }
         public int InventoryFreeSpace { get { return inventorySize - filledSlotCount; } }
@@ -22,280 +22,231 @@ namespace ItemHandler
         int filledSlotCount = 0;
 
         void Awake()
+=======
+        public bool AllSlotsFull { get { return inventorySize == filledSlotCount; } }
+
+        public override int TotalSlotCount
+>>>>>>> refs/remotes/origin/master
         {
-            inventoryCache = new IItem[inventorySize];
-            pooledItems = new Dictionary<int, Stack<GameObject>>(inventorySize);
+            get
+            {
+                return inventorySize;
+            }
         }
 
-        //Will try to add the item as slot saving as possible.
-        public override bool AddItem(IItem item, GameObject itemInstance) //TODO: Add system of return codes
+        public override int FilledSlotCount
         {
-            if (item.IsStackable && item.StackLimit > item.StackTop)
+            get
             {
-                for (int iSlot = 0; iSlot < inventorySize; iSlot++)
-                {
-                    if (inventoryCache[iSlot] == null)
-                        continue;
-                    AddItemToStack(item, inventoryCache[iSlot]);
-                    if (item.StackTop <= 0)
-                    {
-                        AddGameObjectCopyOfItem(item, itemInstance);
-                        item.OnPickedUp(this);
-
-                        InvokeOnInventoryChanged(this);
-                        return true;
-                    }
-                }
+                return filledSlotCount;
             }
-            return AddItemToEmptyTile(item, itemInstance);
         }
 
-        public override bool CouldAddItem(IItem item) //TODO: Add system of return codes
+        public override int FreeSlotCount
         {
-            if (item.IsStackable && item.StackLimit > item.StackTop)
+            get
             {
-                int fakeItemTop = item.StackTop;
-                for (int iSlot = 0; iSlot < inventorySize; iSlot++)
-                {
-                    if (inventoryCache[iSlot] == null)
-                        continue;
-                    if (!item.CanBeStackedWith(inventoryCache[iSlot]))
-                        continue;
-
-                    int freeSpace = inventoryCache[iSlot].StackLimit - inventoryCache[iSlot].StackTop;
-                    int itemsToAdd = Mathf.Min(freeSpace, item.StackTop);
-                    fakeItemTop -= itemsToAdd;
-
-                    if (fakeItemTop <= 0)
-                    {
-                        return true;
-                    }
-                }
+                return inventorySize - filledSlotCount;
             }
+        }
 
-            if (IsInventoryFull)
+        List<IItem>[] inventoryCache; // Each index represents a unique tile
+        Dictionary<int, Stack<ItemActor>> pooledItems;
+        int filledSlotCount = 0;
+
+        void Awake()
+        {
+            inventoryCache = new List<IItem>[inventorySize];
+            for (int iStack = 0; iStack < inventorySize; iStack++)
+            {
+                inventoryCache[iStack] = new List<IItem>(initialPerSlotAllocationCount);
+            }
+            pooledItems = new Dictionary<int, Stack<ItemActor>>(inventorySize);
+        }
+
+        public override IItem GetItem(int stackIndex, int itemIndex)
+        {
+            return inventoryCache[stackIndex][itemIndex];
+        }
+
+        public override IItem GetTopItemOfStack(int stackIndex)
+        {
+            return inventoryCache[stackIndex][0];
+        }
+
+        public override List<IItem> GetStack(int stackIndex)
+        {
+            return inventoryCache[stackIndex];
+        }
+
+        public override int GetNextNotEmptyStack(int stackIndex)
+        {
+            for (int iStack = stackIndex + 1; iStack < inventoryCache.Length; iStack++)
+            {
+                if (inventoryCache[iStack].Count != 0)
+                    return iStack;
+            }
+            for (int iStack = 0; iStack <= stackIndex; iStack++)
+            {
+                if (inventoryCache[iStack].Count != 0)
+                    return iStack;
+            }
+            return -1;
+        }
+
+        public override ItemActor GetObjectOfItem(int stackIndex)
+        {
+            Debug.Assert(inventoryCache[stackIndex].Count != 0);
+            IItem item = inventoryCache[stackIndex][0];
+
+            ItemActor newItem;
+            Stack<ItemActor> pooledObjs;
+            if (item.ShouldPool && pooledItems.TryGetValue(item.ItemId, out pooledObjs))
+            {
+                ItemActor actor = pooledObjs.Pop();
+                if (pooledObjs.Count == 0)
+                    pooledItems.Remove(item.ItemId);
+                newItem = actor;
+                newItem.gameObject.SetActive(true);
+            }
+            else
+                newItem = Instantiate(item.ItemPrefab).GetComponent<ItemActor>();
+
+            newItem.Item = item;
+            return newItem;
+        }
+
+        public override bool TryMoveItem(int fromStack, int toStack)
+        {
+            return TryMoveItem(fromStack, 0, toStack);
+        }
+
+        public override bool TryMoveItem(int fromStack, int fromItemIndex, int toStack)
+        {
+            var targetStack = inventoryCache[toStack];
+            var sourceStack = inventoryCache[fromStack];
+
+            if (targetStack[0].ItemId != sourceStack[fromItemIndex].ItemId || targetStack[0].StackLimit >= targetStack.Count + 1)
                 return false;
-            for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+
+            targetStack.Add(sourceStack[fromItemIndex]);
+            sourceStack.RemoveAt(fromItemIndex);
+            return true;
+        }
+
+        public override bool CouldAddItem(IItem item)
+        {
+            if (item.IsStackable)
             {
-                if (inventoryCache[iSlot] == null)
+                List<IItem> stack;
+                int emptyStackIndex = -1;
+                for (int iStack = 0; iStack < inventoryCache.Length; iStack++)
                 {
+                    stack = inventoryCache[iStack];
+
+                    if (stack.Count == 0)
+                    {
+                        emptyStackIndex = iStack;
+                        continue;
+                    }
+                    if (stack[0].ItemId != item.ItemId || item.StackLimit >= stack.Count)
+                        continue;
+
                     return true;
                 }
+
+                if (emptyStackIndex != -1)
+                    return true;
+                else
+                    return false;
             }
-            return false;
+            else
+            {
+                if (AllSlotsFull)
+                    return false;
+
+                List<IItem> stack;
+                for (int iStack = 0; iStack < inventoryCache.Length; iStack++)
+                {
+                    stack = inventoryCache[iStack];
+                    if (stack.Count == 0)
+                    {
+                        return true;
+                    }
+                }
+                throw new Exception("Inventory isn't full, but we couldn't add an item to an empty slot.");
+            }
         }
 
-        //Adds an item to the next open slot.
-        public override bool AddItemToEmptyTile(IItem item, GameObject itemInstance)
+        public override int AddItem(ItemActor obj)
         {
-            if (IsInventoryFull)
-                return false;
+            int newStackIndex = AddItem(obj.Item);
+            if (newStackIndex == -1)
+                return -1;
+            PoolCopyOfItem(obj);
+            return newStackIndex;
+        }
 
-            for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+        public override int AddItem(IItem item)
+        {
+            if (item.IsStackable)
             {
-                if (inventoryCache[iSlot] == null)
+                List<IItem> stack;
+                int emptyStackIndex = -1;
+                for (int iStack = 0; iStack < inventoryCache.Length; iStack++)
                 {
-                    inventoryCache[iSlot] = item;
-                    AddGameObjectCopyOfItem(item, itemInstance);
-                    item.OnPickedUp(this);
+                    stack = inventoryCache[iStack];
+
+                    if (stack.Count == 0)
+                    {
+                        emptyStackIndex = iStack;
+                        continue;
+                    }
+                    if (stack[0].ItemId != item.ItemId || item.StackLimit >= stack.Count)
+                        continue;
+
+                    stack.Add(item);
+                    return iStack;
+                }
+
+                if (emptyStackIndex != -1)
+                {
+                    inventoryCache[emptyStackIndex].Add(item);
                     filledSlotCount++;
-                    InvokeOnInventoryChanged(this);
-                    return true;
+                    return emptyStackIndex;
                 }
-            }
-            return false; //should never happen!
-        }
-
-        //Find and delete from cache
-        public void TrashAllItemsAt(int index)
-        {
-            if (inventoryCache[index] == null || !inventoryCache[index].CanBeTrashed(this))
-                return;
-
-            if (inventoryCache[index].ShouldPool)
-            {
-                //Should the pool be deleted?
-                bool deltePool = true;
-                for (int iSlot = 0; iSlot < index; iSlot++)
-                {
-                    if (inventoryCache[iSlot].Equals(inventoryCache[index]))
-                    {
-                        deltePool = false;
-                        break;
-                    }
-                }
-                for (int iSlot = index + 1; iSlot < inventorySize; iSlot++)
-                {
-                    if (inventoryCache[iSlot].Equals(inventoryCache[index]))
-                    {
-                        deltePool = false;
-                        break;
-                    }
-                }
-                if (deltePool)
-                    DeletePool(inventoryCache[index]);
-            }
-            inventoryCache[index].OnTrashed(this);
-            inventoryCache[index] = null;
-            filledSlotCount--;
-            InvokeOnInventoryChanged(this);
-        }
-
-        //Find and delete from cache
-        public void TrashItemAt(int index, int count = 1)
-        {
-            if (inventoryCache[index] == null || !inventoryCache[index].CanBeTrashed(this))
-                return;
-
-            if (inventoryCache[index].StackTop - count <= 0)
-                TrashAllItemsAt(index);
-
-            inventoryCache[index].OnTrashed(this);
-            inventoryCache[index].StackTop -= count;
-
-
-            InvokeOnInventoryChanged(this);
-        }
-
-        //Drop an item from inventory
-        public override GameObject DropFromInventory(int index)
-        {
-            Debug.Assert(inventoryCache[index] != null);
-            IItem item = inventoryCache[index];
-
-            if (!item.CanBeDropped(this))
-                return null;
-
-            GameObject newItem;
-            if (item.ShouldPool)
-            {
-                newItem = DepoolItemGameObject(item);
-                newItem.SetActive(true);
+                else
+                    return -1;
             }
             else
-                newItem = Instantiate(item.ItemPrefab);
-            item.OnDropped(this, newItem);
-            TrashItemAt(index);
-            InvokeOnInventoryChanged(this);
-            return newItem;
-        }
-
-        public override GameObject DropFromInventorySilent(int index)
-        {
-            Debug.Assert(inventoryCache[index] != null);
-            IItem item = inventoryCache[index];
-
-            if (!item.IsEquipment)
-                return null;
-
-            GameObject newItem;
-            if (item.ShouldPool)
             {
-                newItem = DepoolItemGameObject(item);
-                newItem.SetActive(true);
+                return AddItemToEmptyStack(item);
             }
-            else
-                newItem = Instantiate(item.ItemPrefab);
-            InvokeOnInventoryChanged(this);
-            return newItem;
         }
 
-        public override bool TryMoveItem(int from, int to)
+        public override int AddItemToEmptyStack(ItemActor obj)
         {
-            if (inventoryCache[to] == null)
-            {
-                inventoryCache[to] = inventoryCache[from];
-                inventoryCache[from] = null;
-
-                InvokeOnInventoryChanged(this);
-                return true;
-            }
-            else if (inventoryCache[to].CanBeStackedWith(inventoryCache[from]))
-            {
-                AddItemToStack(inventoryCache[from], inventoryCache[to]);
-                //if (inventoryCache[from].StackTop <= 0)
-                //    return true;
-                InvokeOnInventoryChanged(this);
-                return true; // ambiguous will return true, even if not the whole stack could be moved.
-            }
-            else
-                return false;
+            Debug.Assert(obj != null);
+            int newStackIndex = AddItemToEmptyStack(obj.Item);
+            if (newStackIndex == -1)
+                return -1;
+            PoolCopyOfItem(obj);
+            return newStackIndex;
         }
 
-        public override void AddGameObjectCopyOfItem(IItem item, GameObject itemInstance)
+        public override bool ContainsItem(int id)
         {
-            if (itemInstance == null)
-                return;
-
-            if (!item.ShouldPool)
-            {
-                Destroy(itemInstance);
-                return;
-            }
-
-            if (!ContainsItem(item.ItemId))
-            {
-                Destroy(itemInstance);
-                return;
-            }
-
-            Stack<GameObject> pooledObjs;
-            if (pooledItems.TryGetValue(item.ItemId, out pooledObjs))
-            {
-                if (pooledObjs.Count >= item.PoolLimit)
-                {
-                    Destroy(itemInstance);
-                    return;
-                }
-                itemInstance.SetActive(false);
-                itemInstance.transform.parent = transform;
-                pooledObjs.Push(itemInstance);
-                return;
-            }
-            pooledObjs = new Stack<GameObject>(1);
-            pooledObjs.Push(itemInstance);
-            pooledItems.Add(item.ItemId, pooledObjs);
-            itemInstance.SetActive(false);
-            itemInstance.transform.parent = transform;
+            return FindItemWithId(id) != -1;
         }
 
-        void AddItemToStack(IItem item, IItem target)
-        {
-            if (!item.CanBeStackedWith(target))
-                return;
-            int freeSpace = target.StackLimit - target.StackTop;
-            if (freeSpace <= 0)
-                return;
-            int itemsToAdd = Mathf.Min(freeSpace, item.StackTop);
-            target.StackTop += itemsToAdd;
-            item.StackTop -= itemsToAdd;
-        }
-
-        void DeletePool(IItem item)
-        {
-            pooledItems.Remove(item.ItemId);
-        }
-
-        GameObject DepoolItemGameObject(IItem item)
-        {
-            Stack<GameObject> pooledObjs;
-            if (pooledItems.TryGetValue(item.ItemId, out pooledObjs))
-            {
-                return pooledObjs.Pop();
-            }
-            return Instantiate(item.ItemPrefab);
-        }
-
-        public override IItem GetItem(int index)
-        {
-            return inventoryCache[index];
-        }
-
-        public override int FindItem(int id)
+        public override int FindItemWithId(int id)
         {
             for (int iSlot = 0; iSlot < inventorySize; iSlot++)
             {
-                if (inventoryCache[iSlot].ItemId == id)
+                if (inventoryCache[iSlot].Count == 0)
+                    continue;
+
+                if (inventoryCache[iSlot][0].ItemId == id)
                 {
                     return iSlot;
                 }
@@ -303,16 +254,162 @@ namespace ItemHandler
             return -1;
         }
 
-        public override bool ContainsItem(int id)
+        public override ItemActor DropFromInventory(int stackIndex, bool forced = false, bool silent = false)
         {
-            for (int iSlot = 0; iSlot < inventorySize; iSlot++)
+            return DropFromInventory(stackIndex, 0, forced, silent);
+        }
+
+        public override ItemActor DropFromInventory(int stackIndex, int itemIndex, bool forced = false, bool silent = false)
+        {
+            Debug.Assert(inventoryCache.Length < stackIndex && stackIndex > 0 && inventoryCache[stackIndex].Count > itemIndex && itemIndex > 0);
+
+            if (!forced && !inventoryCache[stackIndex][itemIndex].CanBeDropped(this))
+                return null;
+
+            ItemActor newActor = GetObjectOfItem(stackIndex);
+
+            if (inventoryCache[stackIndex].Count == 1)
             {
-                if (inventoryCache[iSlot] == null)
-                    continue;
-                if (inventoryCache[iSlot].ItemId == id)
-                    return true;
+                pooledItems.Remove(inventoryCache[stackIndex][itemIndex].ItemId);
+                filledSlotCount--;
             }
-            return false;
+            inventoryCache[stackIndex].RemoveAt(itemIndex);
+            return newActor;
+        }
+
+        public override bool TrashItemFromStack(int stackIndex, int count = 1, bool forced = false)
+        {
+            for (int deletedItems = 0; deletedItems < count; deletedItems++)
+            {
+                if (!TrashItemAt(stackIndex, 0))
+                    return false;
+            }
+            return true;
+        }
+
+        public override bool TrashItemAt(int stackIndex, int itemIndex, bool forced = false)
+        {
+            Debug.Assert(inventoryCache.Length < stackIndex && stackIndex > 0 && inventoryCache[stackIndex].Count > itemIndex && itemIndex > 0);
+
+            if (!forced && !inventoryCache[stackIndex][itemIndex].CanBeTrashed(this))
+                return false;
+
+            if (inventoryCache[stackIndex].Count == 1)
+            {
+                pooledItems.Remove(inventoryCache[stackIndex][itemIndex].ItemId);
+                filledSlotCount--;
+            }
+            inventoryCache[stackIndex].RemoveAt(itemIndex);
+            return true;
+        }
+
+        public override void PoolCopyOfItem(ItemActor itemInstance)
+        {
+            Debug.Assert(itemInstance != null);
+
+            if (!itemInstance.Item.ShouldPool)
+            {
+                Destroy(itemInstance.gameObject);
+                return;
+            }
+
+            if (!ContainsItem(itemInstance.Item.ItemId))
+            {
+                Destroy(itemInstance.gameObject);
+                return;
+            }
+
+            Stack<ItemActor> pooledObjs;
+            if (pooledItems.TryGetValue(itemInstance.Item.ItemId, out pooledObjs))
+            {
+                if (pooledObjs.Count >= itemInstance.Item.PoolLimit)
+                {
+                    Destroy(itemInstance);
+                    return;
+                }
+                itemInstance.gameObject.SetActive(false);
+                itemInstance.transform.parent = transform;
+                pooledObjs.Push(itemInstance);
+                return;
+            }
+            pooledObjs = new Stack<ItemActor>(1);
+            pooledObjs.Push(itemInstance);
+            pooledItems.Add(itemInstance.Item.ItemId, pooledObjs);
+            itemInstance.gameObject.SetActive(false);
+            itemInstance.transform.parent = transform;
+        }
+
+        public override void DeletePoolOfItem(int itemId)
+        {
+            pooledItems.Remove(itemId);
+        }
+
+        public override int ItemAddingPreferability(IItem item)
+        {
+            if (item.IsStackable)
+            {
+                List<IItem> stack;
+                int emptyStackIndex = -1;
+                for (int iStack = 0; iStack < inventoryCache.Length; iStack++)
+                {
+                    stack = inventoryCache[iStack];
+
+                    if (stack.Count == 0)
+                    {
+                        emptyStackIndex = iStack;
+                        continue;
+                    }
+                    if (stack[0].ItemId != item.ItemId || item.StackLimit >= stack.Count)
+                        continue;
+
+                    return 1000000000;
+                }
+
+                if (emptyStackIndex != -1)
+                    return FreeSlotCount;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (AllSlotsFull)
+                    return -1;
+
+                List<IItem> stack;
+                for (int iStack = 0; iStack < inventoryCache.Length; iStack++)
+                {
+                    stack = inventoryCache[iStack];
+                    if (stack.Count == 0)
+                    {
+                        return FreeSlotCount;
+                    }
+                }
+                throw new Exception("Inventory isn't full, but we couldn't add an item to an empty slot.");
+            }
+        }
+
+        public override IEnumerator<List<IItem>> GetEnumerator()
+        {
+            return (IEnumerator<List<IItem>>)inventoryCache.GetEnumerator();
+        }
+
+        int AddItemToEmptyStack(IItem item)
+        {
+            if (AllSlotsFull)
+                return -1;
+
+            List<IItem> stack;
+            for (int iStack = 0; iStack < inventoryCache.Length; iStack++)
+            {
+                stack = inventoryCache[iStack];
+                if (stack.Count == 0)
+                {
+                    stack.Add(item);
+                    filledSlotCount++;
+                    return iStack;
+                }
+            }
+            throw new Exception("Inventory isn't full, but we couldn't add an item to an empty slot.");
         }
     }
 }

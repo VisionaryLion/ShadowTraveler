@@ -5,7 +5,7 @@ using ItemHandler;
 
 namespace Actors
 {
-    public class PlayerActor : BasicEntityWithEquipmentActor
+    public class PlayerActor : BasicEntityEquipmentActor
     {
         [SerializeField]
         HumanInput humanInput;

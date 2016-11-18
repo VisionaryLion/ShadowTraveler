@@ -133,6 +133,8 @@ namespace CC2D
         /// </summary>
         public MovementInput CurrentMovementInput { get { return _cMovementInput; } }
 
+        public int FacingDir { get { return _cFacingDir; } }
+
         public void AddVelocity(Vector2 velocity, float damp, Velocity2D.VelocityAllowsThisState velocityAllowsThisState)
         {
             _allExternalVelocitys.Add(new Velocity2D(velocity, damp, velocityAllowsThisState));
@@ -211,6 +213,7 @@ namespace CC2D
             _cMovementInput = new MovementInput();
             _cFacingDir = 1; // Assume the sprite starts looking at the right side.
             _allExternalVelocitys = new List<Velocity2D>(1);
+            triggeredColliderHash = new List<int>(2);
             if (startWrappedDown)
             {
                 actor.CharacterController2D.warpToGrounded();
@@ -227,10 +230,13 @@ namespace CC2D
 
         protected abstract void FixedUpdate();
 
+        List<int> triggeredColliderHash;
         protected void OnTriggerExit2D(Collider2D obj)
         {
             if (obj.CompareTag(climbableTag))
             {
+                if (!triggeredColliderHash.Remove(obj.GetHashCode()))
+                    return;
                 _climbableTriggerCount--;
                 if (_climbableTriggerCount == 0) //No more climbable triggers are touching us. Abort climbing.
                 {
@@ -240,6 +246,8 @@ namespace CC2D
             }
             else if (obj.CompareTag("Crouch"))
             {
+                if (!triggeredColliderHash.Remove(obj.GetHashCode()))
+                    return;
                 _crouchTrigger--;
                 Debug.Assert(_crouchTrigger >= 0);
                 if (_crouchTrigger == 0)
@@ -254,17 +262,23 @@ namespace CC2D
         {
             if (obj.CompareTag(climbableTag))
             {
+                if (triggeredColliderHash.Contains(obj.GetHashCode()))
+                    return;
                 if (_cMState != MState.Climb) //If we aren't already climbing, start now!
                 {
                     StartClimbing();
                 }
                 _climbableTriggerCount++;
+                triggeredColliderHash.Add(obj.GetHashCode());
             }
             else if (obj.CompareTag("Crouch"))
             {
+                if (triggeredColliderHash.Contains(obj.GetHashCode()))
+                    return;
                 _crouchTrigger++;
                 if (_cMState != MState.Crouched)
                     StartCrouch();
+                triggeredColliderHash.Add(obj.GetHashCode());
             }
         }
 
