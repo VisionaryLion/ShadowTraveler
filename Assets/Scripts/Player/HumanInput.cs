@@ -70,10 +70,10 @@ namespace CC2D
 
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    actor.EquipmentManager.EquipNextItem(-1);
+                    actor.TwoHandEquipmentManager.EquipNextItem(false);
                 }else if (Input.GetKeyDown(KeyCode.E))
                 {
-                    actor.EquipmentManager.EquipNextItem(1);
+                    actor.TwoHandEquipmentManager.EquipNextItem(true);
                 }
             }
         }

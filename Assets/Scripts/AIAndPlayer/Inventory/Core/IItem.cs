@@ -15,7 +15,6 @@ namespace ItemHandler
         public abstract bool CanBePickedUp(IInventory inv);
         public abstract bool CanBeTrashed(IInventory inv);
         public abstract bool CanBeDropped(IInventory inv);
-        public abstract bool CanBeStackedWith(IItem other);
 
         //Events
         public virtual void OnPickedUp(IInventory inv)
@@ -54,10 +53,8 @@ namespace ItemHandler
         public abstract bool IsStackable { get; }
         public abstract bool ShouldPool { get; }
         public abstract int StackLimit { get; }
-        public abstract int StackTop { get; set; }
         public abstract int PoolLimit { get; } // 0 = no pooling
-
-        public abstract string GetStackTopString();
+        public abstract ItemData DataSource { get; }
 
         public override bool Equals(object obj)
         {

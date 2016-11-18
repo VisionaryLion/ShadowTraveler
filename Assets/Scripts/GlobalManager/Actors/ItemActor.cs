@@ -7,10 +7,10 @@ namespace Actors
     public class ItemActor : Actor
     {
         [SerializeField]
-        ItemHolder itemHolder;
+        IItemHolder itemHolder;
 
         #region public
-        public IItem Item { get { return itemHolder.item; } }
+        public IItem Item { get { return itemHolder.Item; } set { itemHolder.Item = value; } }
         #endregion
 
 #if UNITY_EDITOR
@@ -18,7 +18,7 @@ namespace Actors
         {
             base.Refresh();
 
-            itemHolder = LoadComponent<ItemHolder>(itemHolder);
+            itemHolder = LoadComponent<IItemHolder>(itemHolder);
         }
 #endif
     }
