@@ -453,7 +453,7 @@ public class SwitchActivateByActor : ISwitchActivation, ISerializationCallbackRe
 public class SwitchActivateByItem : ISwitchActivation
 {
     [SerializeField]
-    int itemId;
+    ItemHandler.ItemData item;
     [SerializeField]
     bool _onLeave;
 
@@ -461,10 +461,10 @@ public class SwitchActivateByItem : ISwitchActivation
     {
         if (_onLeave != left)
             return false;
-        Actors.BasicEntityWithEquipmentActor actor = target.GetComponentInChildren<Actors.BasicEntityWithEquipmentActor>();
+        IInventoryEntity actor = target.GetComponentInChildren<IInventoryEntity>();
         if (actor == null)
             return false;
-        return actor.MultiSlotsInventory.ContainsItem(itemId);
+        return actor.Inventory.ContainsItem(item.itemID);
     }
 }
 
