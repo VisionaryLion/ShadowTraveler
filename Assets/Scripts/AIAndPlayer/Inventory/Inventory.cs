@@ -12,21 +12,9 @@ namespace ItemHandler
         [SerializeField]
         int initialPerSlotAllocationCount; //Initial size of the item holding list for each slot
 
-<<<<<<< HEAD
-        public bool IsInventoryFull { get { return inventorySize == filledSlotCount; } }
-        public int InventorySize { get { return inventorySize; } }
-        public int InventoryFreeSpace { get { return inventorySize - filledSlotCount; } }
-
-        public IItem[] inventoryCache; // Each index represents a unique tile
-        Dictionary<int, Stack<GameObject>> pooledItems;
-        int filledSlotCount = 0;
-
-        void Awake()
-=======
         public bool AllSlotsFull { get { return inventorySize == filledSlotCount; } }
 
         public override int TotalSlotCount
->>>>>>> refs/remotes/origin/master
         {
             get
             {
