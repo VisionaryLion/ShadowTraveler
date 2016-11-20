@@ -129,7 +129,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 82341855}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.6, y: 8.35, z: 0}
+  m_LocalPosition: {x: 1.32, y: 0.88, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -207,8 +207,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ff32bfd2665a8a438e70d8708205fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 16.44, y: -1.35}
-  currentColor: {x: 0, y: 0, z: 0, w: 1}
+  position: {x: 1.28, y: 0.91}
+  currentColor: {x: 1.9085324, y: 1.9085324, z: 1.9085324, w: 1}
   lightMarker:
   - {fileID: 82341856}
   - {fileID: 148444415}

@@ -487,7 +487,7 @@ namespace Utility.Polygon2D
             }
 
             /** Is the line segment (p, other.p) below point x */
-            public bool IsBelow(Vector2 o) { return (left) ? ExMathf.SignedAreaDoubledTris(p, other.p, o) > 0 : ExMathf.SignedAreaDoubledTris(other.p, p, o) > 0; }
+            public bool IsBelow(Vector2 o) { return (left) ? ExtendedGeometry.SignedAreaDoubledTris(p, other.p, o) > 0 : ExtendedGeometry.SignedAreaDoubledTris(other.p, p, o) > 0; }
             /** Is the line segment (p, other.p) above point x */
             public bool IsAbove(Vector2 o) { return !IsBelow(o); }
 
@@ -600,7 +600,7 @@ namespace Utility.Polygon2D
             {
                 if (se1 == se2)
                     return false;
-                if (ExMathf.SignedAreaDoubledTris(se1.p, se1.other.p, se2.p) != 0 || ExMathf.SignedAreaDoubledTris(se1.p, se1.other.p, se2.other.p) != 0)
+                if (ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.p) != 0 || ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.other.p) != 0)
                 {
                     if (se1.p == se2.p)
                         return se1.IsBelow(se2.other.p);

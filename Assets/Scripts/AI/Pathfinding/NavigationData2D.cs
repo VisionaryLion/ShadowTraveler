@@ -6,6 +6,7 @@ using Pathfinding2D;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Runtime.Serialization;
+using LightSensing;
 using AI;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,6 +18,7 @@ namespace NavMesh2D
     {
         const float mapPointMaxDeviation = 3;
         const float mapPointInstantAcceptDeviation = 0.01f;
+        public const float colorMapDensity = 0.1f;
 
         //identifiers
         public new string name;
@@ -59,11 +61,9 @@ namespace NavMesh2D
                 map_cNavNode = nodes[iNavNode];
 
                 //Extended bounds test
-                if (map_cNavNode.min.x - mapPointMaxDeviation > point.x || map_cNavNode.max.x + mapPointMaxDeviation < point.x
-                || map_cNavNode.min.y - mapPointMaxDeviation > point.y || map_cNavNode.max.y + mapPointMaxDeviation < point.y)
+                if (map_cNavNode.bounds.min.x - mapPointMaxDeviation > point.x || map_cNavNode.bounds.max.x + mapPointMaxDeviation < point.x
+                || map_cNavNode.bounds.min.y - mapPointMaxDeviation > point.y || map_cNavNode.bounds.max.y + mapPointMaxDeviation < point.y)
                 {
-                    Bounds b = new Bounds();
-                    b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
                     //Failed test
                     continue;
                 }
@@ -71,8 +71,6 @@ namespace NavMesh2D
                 if (map_cNavNode.isClosed && map_cNavNode.Contains(point))
                 {
                     //maybe later check children, not implemented though
-                    Bounds b = new Bounds();
-                    b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
                     return false;
                 }
 
@@ -93,6 +91,17 @@ namespace NavMesh2D
             }
 
             return map_minDist != float.MaxValue;
+        }
+
+        public void HandleDynamicLightMarker(LightMarker marker)
+        {
+            Bounds markerBounds = marker.Bounds;
+            foreach (var node in nodes)
+            {
+                if (!markerBounds.Intersects(node.bounds))
+                    continue;
+                node.HandleDynamicLightMarker(marker);
+            }
         }
 
 #if UNITY_EDITOR
@@ -127,8 +136,7 @@ namespace NavMesh2D
         const float maxDeviationInside = 0.1f;
         const float maxDeviationOutside = 0.001f;
 
-        public Vector2 min;
-        public Vector2 max;
+        public Bounds bounds;
         public bool isClosed;
         public int hierachyIndex; // 0 = hole, 1 = solid, 2 = hole, 3 = solid, ...
 
@@ -143,18 +151,7 @@ namespace NavMesh2D
         public NavNode(NavVert[] verts, Bounds bounds, bool isClosed, int hierachyIndex)
         {
             this.verts = verts;
-            min = bounds.min;
-            max = bounds.max;
-            this.isClosed = isClosed;
-            this.hierachyIndex = hierachyIndex;
-            links = new IOffNodeLink[0];
-        }
-
-        public NavNode(NavVert[] verts, Vector2 min, Vector2 max, bool isClosed, int hierachyIndex)
-        {
-            this.verts = verts;
-            this.min = min;
-            this.max = max;
+            this.bounds = bounds;
             this.isClosed = isClosed;
             this.hierachyIndex = hierachyIndex;
             links = new IOffNodeLink[0];
@@ -164,7 +161,7 @@ namespace NavMesh2D
         {
             Debug.Assert(isClosed);
 
-            if (min.x > point.x || max.x < point.x || min.y > point.y || max.y < point.y)
+            if (!bounds.Contains(point))
             {
                 //Bound test failed
                 return false;
@@ -234,6 +231,21 @@ namespace NavMesh2D
             }
             distance = Mathf.Sqrt(distance);
             return true;
+        }
+
+        public void HandleDynamicLightMarker(LightMarker marker)
+        {
+            Bounds markerBounds = marker.Bounds;
+            NavVert vert;
+            for (int iVert = 0; iVert < verts.Length - 1; iVert++)
+            {
+                vert = verts[iVert];
+                if (!ExtendedGeometry.DoesLineIntersectBounds(vert.PointB, verts[iVert + 1].PointB, markerBounds))
+                    continue;
+                if (!ExtendedGeometry.IsOnLeftSideOfLine(vert.PointB, verts[iVert + 1].PointB, marker.LightOrigin))
+                    continue;
+                vert.HandleDynamicLightMarker(marker);
+            }
         }
 
         public void VisualDebug(int colorId)
@@ -311,7 +323,9 @@ namespace NavMesh2D
 
         [SerializeField]
         Vector2 pointB; // a -> b -> c
-        
+        [SerializeField]
+        RGBColor[] dynamicLightColors;
+
         public int[] linkIndex;
 
         public NavVert(Vector2 point, float angleABC, float slopeAngleBC, float distanceBC)
@@ -320,11 +334,18 @@ namespace NavMesh2D
             this.angleABC = angleABC;
             this.slopeAngleBC = slopeAngleBC;
             this.distanceBC = distanceBC;
+            dynamicLightColors = new RGBColor[Mathf.CeilToInt(distanceBC / NavigationData2D.colorMapDensity)];
         }
 
         public NavVert(Vector2 point)
         {
             this.pointB = point;
+            dynamicLightColors = new RGBColor[0];
+        }
+
+        public void HandleDynamicLightMarker(LightMarker marker)
+        {
+            
         }
     }
 
@@ -332,5 +353,20 @@ namespace NavMesh2D
     public class DynamicObstruction
     {
 
+    }
+
+    [SerializeField]
+    public class RGBColor
+    {
+        public float r;
+        public float g;
+        public float b;
+
+        public RGBColor(Color color)
+        {
+            r = color.r;
+            g = color.g;
+            b = color.b;
+        }
     }
 }

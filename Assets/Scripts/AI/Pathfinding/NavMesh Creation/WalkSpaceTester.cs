@@ -176,7 +176,7 @@ namespace NavMesh2D.Core
                             }
                         }
 
-                        if (DoesLineIntersectBounds(pn.pointB, pn.pointC, circleBounds))
+                        if (OribowsUtilitys.DoesLineIntersectBounds(pn.pointB, pn.pointC, circleBounds))
                         {
                             if (DoesLineIntersectCircleSector(pn.pointB, pn.pointC, radSquared, rectC, rectB, rectA))
                             {
@@ -197,7 +197,7 @@ namespace NavMesh2D.Core
                     rectB = firstExSeg.b;
                     rectC = firstExSeg.src.pointC;
                     rectD = firstExSeg.src.pointB;
-                    doubledAreaOfRect = Mathf.Abs(ExMathf.SignedAreaDoubledRect(rectA, rectB, rectC, rectD)) + fudgeFactor;
+                    doubledAreaOfRect = Mathf.Abs(ExtendedGeometry.SignedAreaDoubledRect(rectA, rectB, rectC, rectD)) + fudgeFactor;
 #if DEBUG_SELF_EDGE
                     Debug.DrawLine(rectA, rectB, Color.cyan);
                     Debug.DrawLine(rectB, rectC, Color.cyan);
@@ -393,7 +393,7 @@ namespace NavMesh2D.Core
                                 break;
                             }
                         }
-                        if (DoesLineIntersectBounds(pn.pointB, pn.pointC, circleBounds))
+                        if (OribowsUtilitys.DoesLineIntersectBounds(pn.pointB, pn.pointC, circleBounds))
                         {
                             if (DoesLineIntersectCircleSector(pn.pointB, pn.pointC, radSquared, rectC, rectB, rectA))
                             {
@@ -409,7 +409,7 @@ namespace NavMesh2D.Core
                     rectB = firstExSeg.b;
                     rectC = firstExSeg.src.pointC;
                     rectD = firstExSeg.src.pointB;
-                    doubledAreaOfRect = Mathf.Abs(ExMathf.SignedAreaDoubledRect(rectA, rectB, rectC, rectD)) + fudgeFactor;
+                    doubledAreaOfRect = Mathf.Abs(ExtendedGeometry.SignedAreaDoubledRect(rectA, rectB, rectC, rectD)) + fudgeFactor;
 #if DEBUG_OTHER_EDGE
                     Debug.DrawLine(rectA, rectB, Color.cyan);
                     Debug.DrawLine(rectB, rectC, Color.cyan);
@@ -556,19 +556,19 @@ namespace NavMesh2D.Core
         private static bool IsPointInsideRect(float doubledAreaOfRect, Vector2 rectA, Vector2 rectB, Vector2 rectC, Vector2 rectD, Vector2 point)
         {
 
-            float totalTriArea = Mathf.Abs(ExMathf.SignedAreaDoubledTris(rectA, rectB, point));
+            float totalTriArea = Mathf.Abs(ExtendedGeometry.SignedAreaDoubledTris(rectA, rectB, point));
             if (totalTriArea > doubledAreaOfRect)
                 return false;
 
-            totalTriArea += Mathf.Abs(ExMathf.SignedAreaDoubledTris(rectB, rectC, point));
+            totalTriArea += Mathf.Abs(ExtendedGeometry.SignedAreaDoubledTris(rectB, rectC, point));
             if (totalTriArea > doubledAreaOfRect)
                 return false;
 
-            totalTriArea += Mathf.Abs(ExMathf.SignedAreaDoubledTris(rectC, rectD, point));
+            totalTriArea += Mathf.Abs(ExtendedGeometry.SignedAreaDoubledTris(rectC, rectD, point));
             if (totalTriArea > doubledAreaOfRect)
                 return false;
 
-            totalTriArea += Mathf.Abs(ExMathf.SignedAreaDoubledTris(rectD, rectA, point));
+            totalTriArea += Mathf.Abs(ExtendedGeometry.SignedAreaDoubledTris(rectD, rectA, point));
             if (totalTriArea > doubledAreaOfRect)
                 return false;
 
@@ -686,21 +686,6 @@ namespace NavMesh2D.Core
             }
 
             return false;
-        }
-
-        private static bool DoesLineIntersectBounds(Vector2 pA, Vector2 pB, Bounds bounds)
-        {
-            if (pA.x > bounds.max.x && pB.x > bounds.max.x) return false;
-            if (pA.x < bounds.min.x && pB.x < bounds.min.x) return false;
-            if (pA.y > bounds.max.y && pB.y > bounds.max.y) return false;
-            if (pA.y < bounds.min.y && pB.y < bounds.min.y) return false;
-
-            float z = pB.x * pA.y - pA.x * pB.y;
-            float x = pB.y - pA.y;
-            float y = pA.x - pB.x;
-
-            float sign = Mathf.Sign(bounds.max.x * x + bounds.max.y * y + z);
-            return (sign == Mathf.Sign(bounds.min.x * x + bounds.max.y * y + z) && sign == Mathf.Sign(bounds.max.x * x + bounds.max.y * y + z) && sign == Mathf.Sign(bounds.max.x * x + bounds.max.y * y + z));
         }
 
         class Segment
