@@ -26,52 +26,27 @@ namespace ItemHandler
 
         PlayerActor player;
         Sprite emptySprite = null;
+        public static HUDManager hudManager;
 
         void Awake()
         {
+            hudManager = this;
             player = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
+
+            EmptyLeft();
+            EmptyRight();
         }
 
-        void Update()
+
+        public void EquipLeft(IItem item)  // or player.EquipmentManager.CurrentEquipedGameObjectLeft
         {
-            if (player.GetComponentInChildren<ItemHolder>() != null)
-            {
-                if (!leftItemIcon.enabled)
-                {
-                    leftItemIcon.enabled = true;
-                }                
-
-                leftItemName.text = player.GetComponentInChildren<ItemHolder>().item.Title;
-                leftItemIcon.sprite = player.GetComponentInChildren<ItemHolder>().item.Icon;
-                leftItemDescription.text = player.GetComponentInChildren<ItemHolder>().item.Description;
-
-            }
-            else
-            {
-                leftItemName.text = "";
-                leftItemDescription.text = "";
-                leftItemIcon.enabled = false;
-            }                      
-        }
-
-        /* Once new system implemented
-
-        void EquipLeft(StaticItem item)  // or player.EquipmentManager.CurrentEquipedGameObjectLeft
-        {
-            leftItemDescription.text = "";
-            leftItemName.text = "";
+            leftItemDescription.text = item.Description;
+            leftItemName.text = item.Title;
             leftItemIcon.enabled = true;
-            leftItemIcon.sprite = null;
-        }
-        
-        void EmptyLeft(StaticItem item)
-        {
-            leftItemDescription.text = "";
-            leftItemName.text = "";
-            leftItemIcon.enabled = false;
+            leftItemIcon.sprite = item.Icon;
         }
 
-        void EquipRight(StaticItem item)
+        public void EquipRight(IItem item)
         {
             rightItemDescription.text = item.Description;
             rightItemName.text = item.Title;
@@ -79,16 +54,19 @@ namespace ItemHandler
             rightItemIcon.sprite = item.Icon;
         }
 
-        void EmptyRight(StaticItem item)
+        public void EmptyLeft()
+        {
+            leftItemDescription.text = "";
+            leftItemName.text = "";
+            leftItemIcon.enabled = false;
+        }
+
+        public void EmptyRight()
         {
             rightItemDescription.text = "";
             rightItemName.text = "";
             rightItemIcon.enabled = false;
         }
-        
-        */
-
-
     }
 }
 
