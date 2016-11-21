@@ -10,6 +10,9 @@ public class NavAgent : MonoBehaviour
     [SerializeField]
     Transform pathStartPoint;
 
+    [SerializeField]
+    LightSkin lightSkin;
+
     //only for debug!!
     [SerializeField]
     Transform goal;
@@ -37,7 +40,7 @@ public class NavAgent : MonoBehaviour
     {
         Debug.Assert(cPathFoundCallback == null);
         cPathFoundCallback = onPathFinished;
-        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnPathCompleted));
+        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnPathCompleted, lightSkin));
     }
 
     void OnPathCompleted(NavPath path)

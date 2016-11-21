@@ -47,7 +47,11 @@ namespace LightSensing
 
         public override bool IsPointInsideMarker(Vector2 pos)
         {
-            pos = transform.InverseTransformPoint(pos);
+            return IsPointInsideMarkerLocal(transform.InverseTransformPoint(pos));
+        }
+
+        public bool IsPointInsideMarkerLocal(Vector2 pos)
+        {
             pos -= centerOffset;
             float y = (pos.y + heightHalfed);
             return pos.x >= -widthPerHeight * y && pos.x <= widthPerHeight * y && pos.y >= -heightHalfed && pos.y <= heightHalfed;
@@ -56,10 +60,62 @@ namespace LightSensing
         public override Color SampleColorAt(Vector2 pos)
         {
             pos = transform.InverseTransformPoint(pos);
-            float dist = (pos.y - (centerOffset.y - heightHalfed)) / height;
+            return SampleColorAt((pos.y - (centerOffset.y - heightHalfed)) / height);
+        }
+
+        public Color SampleColorAt(float distToSource)
+        {
             if (squaredInterpolation)
-                Mathf.Sqrt(dist);
-            return Color.Lerp(colorA, colorB, dist);
+                Mathf.Sqrt(distToSource);
+            return Color.Lerp(colorA, colorB, distToSource);
+        }
+
+        public override bool IsTraversable(LightSkin skin, Vector2 pointA, Vector2 pointB, out float traverseCostsMulitplier)
+        {
+            pointA = transform.InverseTransformPoint(pointA);
+            pointB = transform.InverseTransformPoint(pointB);
+            traverseCostsMulitplier = 1;
+
+            if (!Utility.ExtendedGeometry.DoesLineIntersectBounds(pointA, pointB, Bounds))
+                return true;
+
+            Vector2 triA = new Vector2(centerOffset.x, centerOffset.y - heightHalfed);
+            Vector2 triB = new Vector2(centerOffset.x + widthHalfed, centerOffset.y + heightHalfed);
+            Vector2 triC = new Vector2(centerOffset.x - widthHalfed, centerOffset.y + heightHalfed);
+
+            Vector2 inter;
+            float maxY = 0;
+
+            if (IsPointInsideMarkerLocal(pointA))
+            {
+                maxY = (pointA - centerOffset).y + heightHalfed;
+            }
+            if (IsPointInsideMarkerLocal(pointB))
+            {
+                if (maxY != 0)
+                {
+                    maxY = Mathf.Max((pointB - centerOffset).y + heightHalfed, maxY);
+                    return skin.IsTraverable(SampleColorAt(maxY), out traverseCostsMulitplier);
+                }
+            }
+            if (Utility.ExtendedGeometry.FindLineIntersection(pointA, pointB, triA, triB, out inter))
+            {
+                maxY = Mathf.Max((inter - centerOffset).y + heightHalfed, maxY);
+            }
+            if (Utility.ExtendedGeometry.FindLineIntersection(pointA, pointB, triA, triC, out inter))
+            {
+                maxY = Mathf.Max((inter - centerOffset).y + heightHalfed, maxY);
+            }
+            if (maxY == 0 && Utility.ExtendedGeometry.FindLineIntersection(pointA, pointB, triB, triC, out inter))
+            {
+                maxY = (inter - centerOffset).y + heightHalfed;
+            }
+            if (maxY == 0)
+            {
+                return true;
+            }
+
+            return skin.IsTraverable(SampleColorAt(maxY), out traverseCostsMulitplier);
         }
 
         void Awake()

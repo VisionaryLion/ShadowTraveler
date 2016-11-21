@@ -57,14 +57,43 @@ namespace LightSensing
         public override Color SampleColorAt(Vector2 pos)
         {
             pos = transform.InverseTransformPoint(pos);
-            float dist;
-            dist = (pos - centerOffset).magnitude;
-            dist /= radius;
+            float dist = (pos - centerOffset).magnitude;
+            return SampleColorAt(dist);
+        }
+
+        public Color SampleColorAt(float distanceFromCenter)
+        {
+            distanceFromCenter /= radius;
             if (squaredInterpolation)
             {
-                dist = Mathf.Sqrt(dist);
+                distanceFromCenter = Mathf.Sqrt(distanceFromCenter);
             }
-            return Color.Lerp(centerColor, edgeColor, dist);
+            return Color.Lerp(centerColor, edgeColor, distanceFromCenter);
+        }
+
+        const float LineCircle_FudgeFactor = 0.00001f;
+        public override bool IsTraversable(LightSkin skin, Vector2 pointA, Vector2 pointB, out float traverseCostsMulitplier)
+        {
+            traverseCostsMulitplier = 1;
+            if (!Utility.ExtendedGeometry.DoesLineIntersectBounds(pointA, pointB, Bounds))
+                return true;
+
+            pointA = transform.InverseTransformPoint(pointA);
+            pointB = transform.InverseTransformPoint(pointB);
+
+            Vector2 dir = (pointB - pointA).normalized;
+            float t = dir.x * (centerOffset.x - pointA.x) + dir.y * (centerOffset.y - pointA.y);
+            Vector2 tangent = t * dir + pointA;
+            float distToCenter = (tangent - centerOffset).magnitude;
+
+            if (distToCenter <= radius)
+            {
+                return skin.IsTraverable(SampleColorAt(distToCenter), out traverseCostsMulitplier);
+            }
+            else
+            {
+                return true;
+            }
         }
 
         void Awake()

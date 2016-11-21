@@ -5,6 +5,7 @@ using NavMesh2D;
 using Priority_Queue;
 using Pathfinding2D;
 using System;
+using LightSensing;
 
 public class PathPlaner : MonoBehaviour
 {
@@ -71,6 +72,7 @@ public class PathPlaner : MonoBehaviour
         openList.Enqueue(cNode, cNode.totalCost);
         int newVertIndex;
         float costSoFar;
+        float costMultiplier = 1;
 
         while (openList.Count > 0)
         {
@@ -82,47 +84,49 @@ public class PathPlaner : MonoBehaviour
 
             closedList.Add(cNode);
 
-            if (cNode.navVertIndex - 1 >= 0)
+            if (cNode.navVertIndex - 1 < 0)
             {
                 newVertIndex = cNode.navVertIndex - 1;
-                if (!IsNodeClosed(cNode.navNode, newVertIndex))
-                {
-                    costSoFar = cNode.costSoFar + cNode.navNode.verts[newVertIndex].distanceBC;
-                    PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
-                    openList.Enqueue(newNode, newNode.costSoFar);
-                }
             }
             else if (cNode.navNode.isClosed)
             {
                 newVertIndex = cNode.navNode.verts.Length - 1;
-                if (!IsNodeClosed(cNode.navNode, newVertIndex))
-                {
-                    costSoFar = cNode.costSoFar + cNode.navNode.verts[newVertIndex].distanceBC;
-                    PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
-                    openList.Enqueue(newNode, newNode.costSoFar);
-                }
             }
+            else
+            {
+                goto SkipAdding;
+            }
+
+            if (!IsNodeClosed(cNode.navNode, newVertIndex) && IsLineTraversable(request, cNode.NVert.PointB, cNode.navNode.verts[newVertIndex].PointB, out costMultiplier))
+            {
+                costSoFar = cNode.costSoFar + cNode.navNode.verts[newVertIndex].distanceBC;
+                PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
+                openList.Enqueue(newNode, newNode.costSoFar);
+            }
+
+            SkipAdding:
 
             if (cNode.navVertIndex + 1 < cNode.navNode.verts.Length)
             {
                 newVertIndex = cNode.navVertIndex + 1;
-                if (!IsNodeClosed(cNode.navNode, newVertIndex))
-                {
-                    costSoFar = cNode.costSoFar + cNode.NVert.distanceBC;
-                    PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
-                    openList.Enqueue(newNode, newNode.costSoFar);
-                }
             }
             else if (cNode.navNode.isClosed)
             {
                 newVertIndex = 0;
-                if (!IsNodeClosed(cNode.navNode, newVertIndex))
-                {
-                    costSoFar = cNode.costSoFar + cNode.NVert.distanceBC;
-                    PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
-                    openList.Enqueue(newNode, newNode.costSoFar);
-                }
             }
+            else
+            {
+                goto SkipAdding2;
+            }
+
+            if (!IsNodeClosed(cNode.navNode, newVertIndex) && IsLineTraversable(request, cNode.NVert.PointB, cNode.navNode.verts[newVertIndex].PointB, out costMultiplier))
+            {
+                costSoFar = cNode.costSoFar + cNode.NVert.distanceBC * costMultiplier;
+                PathNode newNode = new PathNode(cNode, cNode.navNode, newVertIndex, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[newVertIndex].PointB));
+                openList.Enqueue(newNode, newNode.costSoFar);
+            }
+
+            SkipAdding2:
 
             if (cNode.navNode.verts[cNode.navVertIndex].linkIndex.Length > 0)
             {
@@ -130,7 +134,7 @@ public class PathPlaner : MonoBehaviour
                 for (int iLink = 0; iLink < linkIndecies.Length; iLink++)
                 {
                     IOffNodeLink cLink = cNode.navNode.links[linkIndecies[iLink]];
-                    if (!IsNodeClosed(navData.nodes[cLink.targetNodeIndex], cLink.targetVertIndex))
+                    if (!IsNodeClosed(navData.nodes[cLink.targetNodeIndex], cLink.targetVertIndex) && IsLineTraversable(request, cNode.NVert.PointB, cLink.startPoint, out costMultiplier))
                     {
                         costSoFar = cNode.costSoFar + cLink.traversCosts;
                         PathNode newNode = new PathNode(cNode, navData.nodes[cLink.targetNodeIndex], cLink.targetVertIndex, costSoFar, Vector2.Distance(goal_point, cLink.endPoint), linkIndecies[iLink]);
@@ -150,18 +154,10 @@ public class PathPlaner : MonoBehaviour
         float distance = 0;
         while (cNode.parent != null)
         {
-            /*if (cNode.linkIndex == -1)
-            {
-                distance += (cNode.NVert.PointB - prevPoint).magnitude;
-            }
-            else
-            {*/
-
             pathSegments.Add(new PathSegment(cNode.Link.endPoint, prevPoint, (distance + (cNode.Link.endPoint - prevPoint).magnitude) / navData.navAgentSettings.maxXVel));
             distance = 0;
             pathSegments.Add(new JumpSegment((JumpLink)cNode.Link));
             prevPoint = cNode.Link.startPoint;
-            // }
             cNode = cNode.parent;
         }
         pathSegments.Add(new PathSegment(start_point, prevPoint, distance + (start_point - prevPoint).magnitude));
@@ -172,6 +168,19 @@ public class PathPlaner : MonoBehaviour
             inversedSeg[iSeg] = pathSegments[iInv];
         }
         request.callback(new NavPath() { pathSegments = inversedSeg });
+    }
+
+    bool IsLineTraversable(PathRequest requestData, Vector2 pointA, Vector2 pointB, out float costMultiplier)
+    {
+        costMultiplier = 1;
+        foreach (var marker in requestData.lightMarker)
+        {
+            float result;
+            if (!marker.IsTraversable(requestData.skin, pointA, pointB, out result))
+                return false;
+            costMultiplier += result;
+        }
+        return true;
     }
 
     bool IsNodeClosed(NavNode nn, int vertIndex)
@@ -225,13 +234,17 @@ public class PathRequest
 
     public readonly Vector2 start;
     public readonly Vector2 goal;
+    public readonly LightSkin skin;
+    public readonly LightMarker[] lightMarker;
     public readonly PathCompleted callback;
 
-    public PathRequest(Vector2 start, Vector2 goal, PathCompleted callback)
+    public PathRequest(Vector2 start, Vector2 goal, PathCompleted callback, LightSkin skin, params LightMarker[] lightMarker)
     {
+        this.skin = skin;
         this.start = start;
         this.goal = goal;
         this.callback = callback;
+        this.lightMarker = lightMarker;
     }
 }
 

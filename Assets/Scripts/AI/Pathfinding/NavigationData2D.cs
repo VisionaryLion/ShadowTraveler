@@ -18,7 +18,6 @@ namespace NavMesh2D
     {
         const float mapPointMaxDeviation = 3;
         const float mapPointInstantAcceptDeviation = 0.01f;
-        public const float colorMapDensity = 0.1f;
 
         //identifiers
         public new string name;
@@ -91,17 +90,6 @@ namespace NavMesh2D
             }
 
             return map_minDist != float.MaxValue;
-        }
-
-        public void HandleDynamicLightMarker(LightMarker marker)
-        {
-            Bounds markerBounds = marker.Bounds;
-            foreach (var node in nodes)
-            {
-                if (!markerBounds.Intersects(node.bounds))
-                    continue;
-                node.HandleDynamicLightMarker(marker);
-            }
         }
 
 #if UNITY_EDITOR
@@ -233,21 +221,6 @@ namespace NavMesh2D
             return true;
         }
 
-        public void HandleDynamicLightMarker(LightMarker marker)
-        {
-            Bounds markerBounds = marker.Bounds;
-            NavVert vert;
-            for (int iVert = 0; iVert < verts.Length - 1; iVert++)
-            {
-                vert = verts[iVert];
-                if (!ExtendedGeometry.DoesLineIntersectBounds(vert.PointB, verts[iVert + 1].PointB, markerBounds))
-                    continue;
-                if (!ExtendedGeometry.IsOnLeftSideOfLine(vert.PointB, verts[iVert + 1].PointB, marker.LightOrigin))
-                    continue;
-                vert.HandleDynamicLightMarker(marker);
-            }
-        }
-
         public void VisualDebug(int colorId)
         {
             if (verts.Length == 0)
@@ -323,8 +296,6 @@ namespace NavMesh2D
 
         [SerializeField]
         Vector2 pointB; // a -> b -> c
-        [SerializeField]
-        RGBColor[] dynamicLightColors;
 
         public int[] linkIndex;
 
@@ -334,18 +305,11 @@ namespace NavMesh2D
             this.angleABC = angleABC;
             this.slopeAngleBC = slopeAngleBC;
             this.distanceBC = distanceBC;
-            dynamicLightColors = new RGBColor[Mathf.CeilToInt(distanceBC / NavigationData2D.colorMapDensity)];
         }
 
         public NavVert(Vector2 point)
         {
             this.pointB = point;
-            dynamicLightColors = new RGBColor[0];
-        }
-
-        public void HandleDynamicLightMarker(LightMarker marker)
-        {
-            
         }
     }
 
@@ -353,20 +317,5 @@ namespace NavMesh2D
     public class DynamicObstruction
     {
 
-    }
-
-    [SerializeField]
-    public class RGBColor
-    {
-        public float r;
-        public float g;
-        public float b;
-
-        public RGBColor(Color color)
-        {
-            r = color.r;
-            g = color.g;
-            b = color.b;
-        }
     }
 }

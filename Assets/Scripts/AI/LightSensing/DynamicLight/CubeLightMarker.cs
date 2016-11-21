@@ -55,10 +55,28 @@ namespace LightSensing
         public override Color SampleColorAt(Vector2 pos)
         {
             pos = transform.InverseTransformPoint(pos);
-            float dist = (pos.y - (centerOffset.y - heightHalfed)) / height;
+            return SampleColorAt(pos.y - (centerOffset.y - heightHalfed));
+        }
+
+        public Color SampleColorAt(float distanceFromSource)
+        {
+            distanceFromSource /= height;
             if (squaredInterpolation)
-                Mathf.Sqrt(dist);
-            return Color.Lerp(colorA, colorB, dist);
+                Mathf.Sqrt(distanceFromSource);
+            return Color.Lerp(colorA, colorB, distanceFromSource);
+        }
+
+        public override bool IsTraversable(LightSkin skin, Vector2 pointA, Vector2 pointB, out float traverseCostsMulitplier)
+        {
+            pointA = transform.InverseTransformPoint(pointA);
+            pointB = transform.InverseTransformPoint(pointB);
+            traverseCostsMulitplier = 1;
+
+            if (!Utility.ExtendedGeometry.DoesLineIntersectBounds(pointA, pointB, Bounds))
+                return true;
+
+            float maxY = Mathf.Max(pointA.y, pointB.y) - (centerOffset.y - heightHalfed);
+            return skin.IsTraverable(SampleColorAt(maxY), out traverseCostsMulitplier);
         }
 
         void Awake()

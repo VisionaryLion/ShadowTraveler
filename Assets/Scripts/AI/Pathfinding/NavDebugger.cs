@@ -25,6 +25,8 @@ public class NavDebugger : MonoBehaviour
     public NavAgentGroundWalkerSettings agentSettings;
     [SerializeField]
     public NavPath path;
+    [SerializeField]
+    LightSkin lightSkin;
     public bool showDebug;
 
     public Transform goal;
@@ -87,7 +89,7 @@ public class NavDebugger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, PathCalcFinished));
+        PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, PathCalcFinished, lightSkin));
 
         if (!showDebug)
             return;
