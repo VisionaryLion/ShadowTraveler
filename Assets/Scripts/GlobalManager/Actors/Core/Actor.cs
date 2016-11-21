@@ -6,8 +6,50 @@ using UnityEditor;
 
 namespace Actors
 {
+    [SelectionBase]
     public class Actor : MonoBehaviour
     {
+        public static readonly Type[] ActorSubtypes = new Type[] {
+            typeof(Actor),
+            typeof(BasicEntityActor),
+            typeof(ElevatorActor),
+            typeof(GameStateActor),
+            typeof(HealthActor),
+            typeof(ItemActor),
+            typeof(MovingPlatformActor),
+            typeof(SimpleMovementActor),
+            typeof(AnimationActor),
+            typeof(HumanMovementActor),
+            typeof(BasicEntityEquipmentActor),
+            typeof(PlayerActor)
+            };
+
+        public static readonly string[] ActorSubtypeNames = new string[] {
+            "Actor",
+            "BasicEntityActor",
+            "ElevatorActor",
+            "GameStateActor",
+            "HealthActor",
+            "ItemActor",
+            "MovingPlatformActor",
+            "SimpleMovementActor",
+            "AnimationActor",
+            "HumanMovementActor",
+            "BasicEntityWithEquipmentActor",
+            "PlayerActor"
+            };
+
+        public static int ActorTypeToStaticIndex (Type t)
+        {
+            for (int iType = 0; iType < ActorSubtypes.Length; iType++)
+            {
+                if (ActorSubtypes[iType].Equals(t))
+                    return iType;
+            }
+            Debug.LogError("Unkown Actor type = "+t);
+            return -1;
+        }
+
         protected virtual void Awake()
         {
             ActorDatabase.GetInstance().AddActor(this);
