@@ -23,7 +23,7 @@ namespace CC2D
         bool allowMovementInput = true;
         bool allowEquipmentInput = true;
 
-        void Start ()
+        void Start()
         {
             bufferedInput = actor.CC2DMotor.CurrentMovementInput;
         }
@@ -34,30 +34,12 @@ namespace CC2D
             {
                 if (Input.GetButtonDown("Jump"))
                 {
-<<<<<<< HEAD
-                    bufferedInput.AddEvent(new JumpEvent());
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
-                    bufferedInput.jump = true;
-                    bufferedInput.isJumpConsumed = false;
-=======
                     bufferedInput.AddEvent(new JumpEvent(maxJumpExecutionDelay));
->>>>>>> refs/remotes/origin/master
                 }
                 else if (Input.GetButtonDown("Crouch"))
                 {
                     bufferedInput.AddEvent(new CrouchEvent());
                 }
-<<<<<<< HEAD
-                else if (Input.GetButtonDown("Crouch"))
-                {
-                    bufferedInput.AddEvent(new CrouchEvent());
-
-                    bufferedInput.toggleCrouch = !bufferedInput.toggleCrouch;
-                }
-                else
-                    bufferedInput.jump = Input.GetButton("Jump");
-=======
->>>>>>> refs/remotes/origin/master
             }
 
             if (allowEquipmentInput)
@@ -89,7 +71,8 @@ namespace CC2D
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
                     actor.TwoHandEquipmentManager.EquipNextItem(false);
-                }else if (Input.GetKeyDown(KeyCode.E))
+                }
+                else if (Input.GetKeyDown(KeyCode.E))
                 {
                     actor.TwoHandEquipmentManager.EquipNextItem(true);
                 }

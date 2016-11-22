@@ -35,7 +35,7 @@ namespace CC2D
             bufferedInput = actor.CC2DMotor.CurrentMovementInput;
             timeLeft = (runRight) ? timeRunRight : timeRunLeft;
         }
-       
+
         // Update is called once per frame
         void Update()
         {
@@ -60,14 +60,7 @@ namespace CC2D
                 bufferedInput.horizontal = 1;
                 if (actor.CharacterController2D.collisionState.right || Random.Range(0, randomJumpChance) == 0)
                 {
-<<<<<<< HEAD
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
-                    bufferedInput.isJumpConsumed = false;
-                    bufferedInput.jump = true;
-                    bufferedInput.AddEvent(new JumpEvent());
-=======
                     bufferedInput.AddEvent(new JumpEvent(maxJumpExecutionDelay));
->>>>>>> refs/remotes/origin/master
                 }
             }
             else
@@ -82,14 +75,7 @@ namespace CC2D
                 bufferedInput.horizontal = -1;
                 if (actor.CharacterController2D.collisionState.left || Random.Range(0, randomJumpChance) == 0)
                 {
-<<<<<<< HEAD
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
-                    bufferedInput.isJumpConsumed = false;
-                    bufferedInput.jump = true;
-                    bufferedInput.AddEvent(new JumpEvent());
-=======
                     bufferedInput.AddEvent(new JumpEvent(maxJumpExecutionDelay));
->>>>>>> refs/remotes/origin/master
                 }
             }
         }
