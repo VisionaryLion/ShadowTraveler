@@ -17,7 +17,7 @@ namespace NavMesh2D.Core
         private const float fudgeFactor = 0.0001f;
         private const float maxVertDeviation = 0.01f;
 
-        public static void MarkNotWalkableSegments(MarkableContour sp, List<ExpandedNode> cps, float minWalkableHeight, int markerFlag)
+        public static void MarkNotWalkableSegments(MarkableContour sp, List<ExpandedNode> cps, float minWalkableHeight)
         {
             Bounds inflatedBounds;
             int segmentCount;
@@ -25,23 +25,23 @@ namespace NavMesh2D.Core
             Segment pSeg = firstExSeg;
 
 
-            MarkSelfIntersections(firstExSeg, sp, markerFlag, minWalkableHeight);
+            MarkSelfIntersections(firstExSeg, sp, minWalkableHeight);
             foreach (ExpandedNode cp in cps)
             {
                 if (cp.contour == sp)
                     continue;
                 if (cp.contour.bounds.Intersects(sp.bounds))
-                    MarkIntersections(firstExSeg, cp.contour, markerFlag, minWalkableHeight);
+                    MarkIntersections(firstExSeg, cp.contour, minWalkableHeight);
             }
         }
 
-        public static void MarkSelfIntersections(MarkableContour sp, float minWalkableHeight, int markerFlag)
+        public static void MarkSelfIntersections(MarkableContour sp, float minWalkableHeight)
         {
             Bounds inflatedBounds;
             int segmentCount;
             Segment firstExSeg = InflateContour(sp, minWalkableHeight, out inflatedBounds, out segmentCount);
             Segment pSeg = firstExSeg;
-            MarkSelfIntersections(firstExSeg, sp, markerFlag, minWalkableHeight);
+            MarkSelfIntersections(firstExSeg, sp, minWalkableHeight);
         }
 
         private static Segment InflateContour(MarkableContour mC, float minWalkableHeight, out Bounds inflatedBounds, out int segmentCount)
@@ -121,7 +121,7 @@ namespace NavMesh2D.Core
             return result;
         }
 
-        private static void MarkSelfIntersections(Segment firstExSeg, MarkableContour sp, int markerIndex, float minWalkableHeight)
+        private static void MarkSelfIntersections(Segment firstExSeg, MarkableContour sp, float minWalkableHeight)
         {
             Vector2 rectA, rectB, rectC, rectD;
             float doubledAreaOfRect, start = 0, end = 0, dot;
@@ -171,7 +171,7 @@ namespace NavMesh2D.Core
                                 DebugExtension.DebugArrow(rectC, rectB, Color.gray);
                                 DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);
 #endif
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                firstExSeg.next.src.MarkPointNotWalkable();
                                 break;
                             }
                         }
@@ -184,7 +184,7 @@ namespace NavMesh2D.Core
                                 DebugExtension.DebugArrow(rectC, pn.pointB - rectC, Color.gray);
                                 DebugExtension.DebugArrow(rectC, pn.pointC - rectC, Color.gray);
 #endif
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                firstExSeg.next.src.MarkPointNotWalkable();
                                 break;
                             }
                         }
@@ -340,7 +340,7 @@ namespace NavMesh2D.Core
             } while ((firstExSeg = firstExSeg.next) != null);
         }
 
-        private static void MarkIntersections(Segment firstExSeg, MarkableContour cp, int markerIndex, float minWalkableHeight)
+        private static void MarkIntersections(Segment firstExSeg, MarkableContour cp, float minWalkableHeight)
         {
             Vector2 rectA, rectB, rectC, rectD;
             float doubledAreaOfRect, start = 0, end = 0, dot;
@@ -358,7 +358,7 @@ namespace NavMesh2D.Core
             {
                 if (firstExSeg.isCorner)//circle
                 {
-                    if (!firstExSeg.src.IsPointWalkable(markerIndex))
+                    if (!firstExSeg.src.IsPointWalkable())
                         continue;
 
                     rectA = firstExSeg.a;
@@ -389,7 +389,7 @@ namespace NavMesh2D.Core
                                 DebugExtension.DebugArrow(rectC, rectB, Color.gray);
                                 DebugExtension.DebugPoint(pn.pointB, Color.cyan, 2);
 #endif
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                firstExSeg.next.src.MarkPointNotWalkable();
                                 break;
                             }
                         }
@@ -397,7 +397,7 @@ namespace NavMesh2D.Core
                         {
                             if (DoesLineIntersectCircleSector(pn.pointB, pn.pointC, radSquared, rectC, rectB, rectA))
                             {
-                                firstExSeg.next.src.MarkPointNotWalkable(markerIndex);
+                                firstExSeg.next.src.MarkPointNotWalkable();
                                 break;
                             }
                         }

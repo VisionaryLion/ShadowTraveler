@@ -13,16 +13,19 @@ namespace CC2D
         PlayerActor actor;
 
         [SerializeField]
+        [Tooltip("Max time a jump will be buffered.")]
+        float maxJumpExecutionDelay = 0.5f;
+
+        [SerializeField]
         EquipmentButtonBinding[] binds; //according to keyboard numbers
 
         MovementInput bufferedInput;
         bool allowMovementInput = true;
         bool allowEquipmentInput = true;
 
-        void Awake()
+        void Start ()
         {
-            bufferedInput = new MovementInput();
-            actor.CC2DMotor.CurrentMovementInput = bufferedInput;
+            bufferedInput = actor.CC2DMotor.CurrentMovementInput;
         }
 
         void Update()
@@ -31,15 +34,20 @@ namespace CC2D
             {
                 if (Input.GetButtonDown("Jump"))
                 {
+<<<<<<< HEAD
                     bufferedInput.AddEvent(new JumpEvent());
                     bufferedInput.timeOfLastJumpStateChange = Time.time;
                     bufferedInput.jump = true;
                     bufferedInput.isJumpConsumed = false;
+=======
+                    bufferedInput.AddEvent(new JumpEvent(maxJumpExecutionDelay));
+>>>>>>> refs/remotes/origin/master
                 }
-                else if (Input.GetButtonUp("Jump"))
+                else if (Input.GetButtonDown("Crouch"))
                 {
-                    bufferedInput.timeOfLastJumpStateChange = Time.time;
+                    bufferedInput.AddEvent(new CrouchEvent());
                 }
+<<<<<<< HEAD
                 else if (Input.GetButtonDown("Crouch"))
                 {
                     bufferedInput.AddEvent(new CrouchEvent());
@@ -48,15 +56,14 @@ namespace CC2D
                 }
                 else
                     bufferedInput.jump = Input.GetButton("Jump");
+=======
+>>>>>>> refs/remotes/origin/master
             }
 
             if (allowEquipmentInput)
             {
                 /*foreach (EquipmentButtonBinding b in binds)
                 {
-                    if (currentBind == b)
-                        continue;
-
                     if (Input.GetKeyDown(b.key) && actor.MultiSlotsInventory.ContainsItem(b.equipment.itemID) && !actor.PlayerLimitationHandler.AreAnimationTriggerLocked())
                     {
                         if (currentEquipedItem != null)
@@ -78,6 +85,14 @@ namespace CC2D
                         actor.CC2DMotor.frontAnimator.SetTrigger("EquipItem");
                     }
                 }*/
+
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    actor.TwoHandEquipmentManager.EquipNextItem(false);
+                }else if (Input.GetKeyDown(KeyCode.E))
+                {
+                    actor.TwoHandEquipmentManager.EquipNextItem(true);
+                }
             }
         }
 
@@ -117,9 +132,6 @@ namespace CC2D
             bufferedInput.horizontalRaw = 0;
             bufferedInput.vertical = 0;
             bufferedInput.verticalRaw = 0;
-            bufferedInput.jump = false;
-            bufferedInput.isJumpConsumed = false;
-            bufferedInput.timeOfLastJumpStateChange = 0;
         }
 
         [Serializable]
