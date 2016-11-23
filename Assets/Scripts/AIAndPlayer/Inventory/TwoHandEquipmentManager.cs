@@ -89,7 +89,7 @@ namespace ItemHandler
             {
                 rightHandItemActor = toEquipActor;
                 rightHandItemIndex = itemIndex;
-                actor.AnimationHandler.StartListenToAnimationEnd("Equip_Item_Anim", new AnimationHandler.AnimationEvent(EquipFinishedRightHandler));                
+                actor.AnimationHandler.StartListenToAnimationEnd("Equip_Item_Anim", new AnimationHandler.AnimationEvent(EquipFinishedRightHandler));
             }
             else
             {
@@ -110,6 +110,14 @@ namespace ItemHandler
             {
                 UnequipItem(rightHand);
                 EquipItem(rightHand, actor.TwoHandInventory.GetObjectOfItem(nxtIndex), nxtIndex);
+                if (rightHand)
+                {
+                    HUDManager.hudManager.EquipRight(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                }
+                else
+                {
+                    HUDManager.hudManager.EquipLeft(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                }
             }
         }
 
