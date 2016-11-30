@@ -169,7 +169,10 @@ namespace CC2D
         {
             _cVelocity.x = 0;
             _cVelocity.y = Mathf.Min(_cVelocity.y, 0);
+            
         }
+
+        
 
         #endregion
 
@@ -559,33 +562,18 @@ namespace CC2D
         protected virtual void StartCrouch()
         {
             _prevMState = _cMState;
-
-
-            spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * crouchScaleFactor, spriteRoot.localScale.y * crouchScaleFactor, spriteRoot.localScale.z);
-            actor.BoxCollider2D.size = new Vector2(actor.BoxCollider2D.size.x * crouchScaleFactor, actor.BoxCollider2D.size.y * crouchScaleFactor);
-            spriteRoot.transform.position = new Vector2(spriteRoot.transform.position.x, spriteRoot.transform.position.y - .1f);
-
-
-            actor.CharacterController2D.warpToGrounded();
-
-            actor.CharacterController2D.recalculateDistanceBetweenRays();
-
-
+            /*
+            start anim
+            */
             _cMState = MState.Crouched;
         }
 
         protected virtual void EndCrouch()
         {
             _prevMState = _cMState;
-            //Stop crouch the char down, only for debug!
-            spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / crouchScaleFactor, spriteRoot.localScale.y / crouchScaleFactor, spriteRoot.localScale.z);
-            actor.BoxCollider2D.size = new Vector2(actor.BoxCollider2D.size.x / crouchScaleFactor, actor.BoxCollider2D.size.y / crouchScaleFactor);
-
-            spriteRoot.transform.position = new Vector2(spriteRoot.transform.position.x, spriteRoot.transform.position.y + .1f);
-
-            actor.CharacterController2D.move(new Vector3(0, 0.5f), false);
-            actor.CharacterController2D.warpToGrounded();
-
+            /*
+            stop anim
+            */
             actor.CharacterController2D.recalculateDistanceBetweenRays();
         }
 
