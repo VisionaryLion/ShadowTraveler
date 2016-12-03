@@ -109,7 +109,7 @@ namespace Equipment
                 else if (Input.GetMouseButtonDown(actor.EquipedWithRightHand ? 1 : 0))
                 {
                     detachedAndBurning = true;
-                    actor.transform.parent = this.transform;
+                    actor.transform.parent = null;
                     equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);                    
                     rigidbody2d.isKinematic = false;
                     mainCollider.enabled = true;
