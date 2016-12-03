@@ -59,6 +59,8 @@ namespace ItemHandler
 
         public override IItem GetTopItemOfStack(int stackIndex)
         {
+            if (inventoryCache[stackIndex].Count == 0)
+                return null;
             return inventoryCache[stackIndex][0];
         }
 
@@ -277,7 +279,7 @@ namespace ItemHandler
 
         public override bool TrashItemAt(int stackIndex, int itemIndex, bool forced = false)
         {
-            Debug.Assert(inventoryCache.Length < stackIndex && stackIndex > 0 && inventoryCache[stackIndex].Count > itemIndex && itemIndex > 0);
+            Debug.Assert(inventoryCache.Length > stackIndex && stackIndex >= 0 && inventoryCache[stackIndex].Count > itemIndex && itemIndex >= 0);
 
             if (!forced && !inventoryCache[stackIndex][itemIndex].CanBeTrashed(this))
                 return false;

@@ -7934,7 +7934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b808f63c106e042ff9194fa3e2ca9644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _renderInSceneView: 1
+  _renderInSceneView: 0
   _linearLightBlending: 1
   _shadows: 1
   _ambientLight: {r: 0, g: 0, b: 0, a: 1}
