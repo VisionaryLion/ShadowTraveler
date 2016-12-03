@@ -54,7 +54,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010310848334}
   - 212: {fileID: 212000013441596348}
-  - 114: {fileID: 114000014275123580}
   m_Layer: 0
   m_Name: OverheadLightPannel
   m_TagString: Untagged
@@ -170,8 +169,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012342506354}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.485, y: 3.329, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.27, y: 0.09000015, z: -10.9921875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -281,27 +280,6 @@ MonoBehaviour:
   - {x: 0.6000004, y: -0.1650005}
   - {x: -0.59999967, y: -0.1650005}
   - {x: -0.59999967, y: 0.031995237}
-  _looped: 1
-  _shadowLayers: 0
-  _lightPenetration: 0
-  _opacity: 1
-  circleVertCount: 10
---- !u!114 &114000014275123580
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011741540856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f7b15544ddfa4e49b82852d600f44d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _verts:
-  - {x: -0.8999996, y: -0.23000002}
-  - {x: -0.8999996, y: 0.23000002}
-  - {x: 0.8999996, y: 0.23000002}
-  - {x: 0.8999996, y: -0.23000002}
   _looped: 1
   _shadowLayers: 0
   _lightPenetration: 0
