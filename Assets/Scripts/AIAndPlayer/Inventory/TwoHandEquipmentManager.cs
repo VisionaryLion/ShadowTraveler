@@ -123,7 +123,7 @@ namespace ItemHandler
 
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
-            actor.TwoHandInventory.TrashItemAt(itemIndex, count);
+            actor.TwoHandInventory.TrashItemFromStack(itemIndex, 1, false);
 
             if (actor.TwoHandInventory.GetTopItemOfStack(itemIndex) == null)
             {
