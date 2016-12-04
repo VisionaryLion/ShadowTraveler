@@ -89,8 +89,8 @@ namespace Equipment
                     flareParticle.Play();
                 }
             }
-            else if(!burnedOut)
-            {     
+            else if (!burnedOut)
+            {
                 item.duration -= durationUsagePerSecond * Time.deltaTime;
                 if (item.duration <= 0)
                 {
@@ -110,10 +110,10 @@ namespace Equipment
                 {
                     detachedAndBurning = true;
                     actor.transform.parent = null;
-                    equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);                    
+                    equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);
                     rigidbody2d.isKinematic = false;
                     mainCollider.enabled = true;
-                    
+
                     Vector2 dirForce = throwForce;
                     dirForce.x *= equiperActor.CC2DMotor.FacingDir;
                     rigidbody2d.AddForce(dirForce, ForceMode2D.Impulse);
@@ -121,10 +121,11 @@ namespace Equipment
                     this.enabled = false;
 
 
-                    if(actor.EquipedWithRightHand)
+                    if (actor.EquipedWithRightHand)
                     {
                         HUDManager.hudManager.EmptyRight();
-                    } else
+                    }
+                    else
                     {
                         HUDManager.hudManager.EmptyLeft();
                     }
