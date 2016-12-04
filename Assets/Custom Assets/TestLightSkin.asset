@@ -12,22 +12,19 @@ MonoBehaviour:
   m_Name: TestLightSkin
   m_EditorClassIdentifier: 
   lovesLight: 0
-  stuntBrightness: 1
-  stuntTimeThreshold: 0
-  deathBrightness: 1
-  deathTimeThreshold: 0
-  fleeBrigthness: 1
-  fleeTimeThreshold: 0
+  stuntBrightness: 0.785
+  deathBrightness: 0.785
+  fleeBrigthness: 0.79
   pathfindingCostFunction:
     serializedVersion: 2
     m_Curve:
     - time: 0
-      value: 0
+      value: 1
       inSlope: 1
       outSlope: 1
       tangentMode: 10
     - time: 1
-      value: 1
+      value: 2
       inSlope: 1
       outSlope: 1
       tangentMode: 10

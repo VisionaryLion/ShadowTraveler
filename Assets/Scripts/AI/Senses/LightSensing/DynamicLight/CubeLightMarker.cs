@@ -46,6 +46,14 @@ namespace LightSensing
             }
         }
 
+        public override Vector2 Center
+        {
+            get
+            {
+                return transform.TransformPoint(centerOffset);
+            }
+        }
+
         public override bool IsPointInsideMarker(Vector2 pos)
         {
             pos = transform.InverseTransformPoint(pos);

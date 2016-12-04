@@ -11,6 +11,8 @@ namespace Actors
         HumanInput humanInput;
         [SerializeField]
         InteractiveInputUIMarker interactiveInputUIMarker;
+        [SerializeField]
+        HumanMovementActor humanMovementActor;
 
         PlayerInteractiveInputHandler playerInteractiveInputHandler;
 
@@ -18,6 +20,11 @@ namespace Actors
         public HumanInput HumanInput { get { return humanInput; } }
         public PlayerInteractiveInputHandler PlayerInteractiveInputHandler { get { return playerInteractiveInputHandler; } }
         public InteractiveInputUIMarker InteractiveInputUIMarker { get { return interactiveInputUIMarker; } }
+
+        public CharacterController2D CharacterController2D { get { return movementActor.CharacterController2D; } }
+        public CC2DMotor CC2DMotor { get { return movementActor.CC2DMotor; } }
+        public Rigidbody2D Rigidbody2D { get { return movementActor.Rigidbody2D; } }
+        public BoxCollider2D BoxCollider2D { get { return movementActor.BoxCollider2D; } }
         #endregion
 
         protected override void InitInteractiveInputHandler()
@@ -34,6 +41,8 @@ namespace Actors
             //Load components
             humanInput = GetComponentInChildren<HumanInput>();
             interactiveInputUIMarker = GetComponentInChildren<InteractiveInputUIMarker>();
+            humanMovementActor = LoadComponent<HumanMovementActor>(humanMovementActor);
+            movementActor = humanMovementActor;
 
             //Setup some script vars automatically.
             this.tag = "Player"; //Built-in-Tag can't go wrong.

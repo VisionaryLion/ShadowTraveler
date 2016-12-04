@@ -197,7 +197,7 @@ public class CC2DThightAIMotor : CC2DMotor
         if (_cMState == MState.Walk || _cMState == MState.WallSlide || (_cMState == MState.Crouched && _crouchTrigger > 0)
             || (_cMState == MState.Climb && _cVelocity.x != 0))
         {
-            _cVelocity.y = jumpForce;
+            _cVelocity.y = jumpForce +0.01f;
             _prevMState = _cMState;
             _cMState = MState.Jump;
             return true;

@@ -4,12 +4,12 @@ using CC2D;
 
 namespace Actors
 {
-    public class HumanMovementActor : SimpleMovementActor
+    public class HumanMovementActor : IMovementActor
     {
         [SerializeField]
         CC2DMotor cC2DMotor;
 
-        public CC2DMotor CC2DMotor { get { return cC2DMotor; } }
+        public override CC2DMotor CC2DMotor { get { return cC2DMotor; } }
 
 #if UNITY_EDITOR
         public override void Refresh()

@@ -6,13 +6,10 @@ public class LightSkin : ScriptableObject {
     public bool lovesLight;
     [Range(0, 1)]
     public float stuntBrightness;
-    public float stuntTimeThreshold;
     [Range(0, 1)]
     public float deathBrightness;
-    public float deathTimeThreshold;
     [Range(0, 1)]
     public float fleeBrigthness;
-    public float fleeTimeThreshold;
 
     public AnimationCurve pathfindingCostFunction;
 

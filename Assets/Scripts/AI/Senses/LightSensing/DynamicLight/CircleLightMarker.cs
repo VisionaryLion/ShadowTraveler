@@ -30,10 +30,18 @@ namespace LightSensing
             {
                 if (transform.hasChanged)
                 {
-                    chachedBounds = new Bounds(transform.position, new Vector3(radius * transform.lossyScale.x, radius * transform.lossyScale.y));
+                    chachedBounds = new Bounds(transform.position, new Vector3(radius * transform.lossyScale.x * 2, radius * transform.lossyScale.y * 2));
                     transform.hasChanged = false;
                 }
                 return chachedBounds;
+            }
+        }
+
+        public override Vector2 Center
+        {
+            get
+            {
+                return transform.TransformPoint(centerOffset);
             }
         }
 
@@ -74,10 +82,18 @@ namespace LightSensing
         const float LineCircle_FudgeFactor = 0.00001f;
         public override bool IsTraversable(LightSkin skin, Vector2 pointA, Vector2 pointB, out float traverseCostsMulitplier)
         {
+            Debug.DrawLine(pointA, pointB, Color.cyan);
+            Debug.DrawLine(pointA + Vector2.up * 0.2f, pointB + Vector2.up * 0.2f, Color.cyan);
             traverseCostsMulitplier = 1;
+           // DebugExtension.DebugBounds(Bounds, Color.magenta);
+            Vector2 dir2 = (pointA + ((pointB - pointA).magnitude / 2) * (pointB - pointA).normalized) - Center;
             if (!Utility.ExtendedGeometry.DoesLineIntersectBounds(pointA, pointB, Bounds))
+            {
+                //Debug.DrawRay(Center, dir2, Color.magenta);
                 return true;
+            }
 
+            
             pointA = transform.InverseTransformPoint(pointA);
             pointB = transform.InverseTransformPoint(pointB);
 
@@ -85,13 +101,15 @@ namespace LightSensing
             float t = dir.x * (centerOffset.x - pointA.x) + dir.y * (centerOffset.y - pointA.y);
             Vector2 tangent = t * dir + pointA;
             float distToCenter = (tangent - centerOffset).magnitude;
-
+           
             if (distToCenter <= radius)
             {
+                //Debug.DrawRay(Center, dir2, Color.green);
                 return skin.IsTraverable(SampleColorAt(distToCenter), out traverseCostsMulitplier);
             }
             else
             {
+                //Debug.DrawRay(Center, dir2, Color.red);
                 return true;
             }
         }

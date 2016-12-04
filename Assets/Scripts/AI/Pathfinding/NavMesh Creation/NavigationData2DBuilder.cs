@@ -44,7 +44,7 @@ namespace NavMesh2D.Core
 
             foreach (PointNode pn in mc)
             {
-                if (/*!pn.IsPointWalkable() ||*/ pn.FirstObstructedSegment != null || !IsEdgeAcceptable(pn))
+                if (/*!pn.IsPointWalkable() ||*/ pn.FirstObstructedSegment == null && IsEdgeAcceptable(pn))
                 {
                     startPointNode = pn;
                     isClosed = false;

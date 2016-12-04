@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using CC2D;
+using System;
 
 namespace Actors
 {
-    public class ThightAIMovementActor : SimpleMovementActor
+    public class ThightAIMovementActor : IMovementActor
     {
         [SerializeField]
         CC2DThightAIMotor cC2DThightAIMotor;
@@ -15,6 +16,8 @@ namespace Actors
 
         public CC2DThightAIMotor CC2DThightAIMotor { get { return cC2DThightAIMotor; } }
         public NavAgent NavAgent { get { return navAgent; } }
+        public override CC2DMotor CC2DMotor { get { return cC2DThightAIMotor; } }
+
 
 #if UNITY_EDITOR
         public override void Refresh()

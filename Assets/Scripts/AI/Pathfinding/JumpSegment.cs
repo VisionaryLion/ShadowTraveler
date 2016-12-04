@@ -50,7 +50,7 @@ public class JumpSegment : IPathSegment
         }
     }
 
-    public override void UpdateMovementInput(MovementInput input)
+    public override void UpdateMovementInput(MovementInput input, CC2DThightAIMotor motor)
     {
     }
 
@@ -68,7 +68,7 @@ public class JumpSegment : IPathSegment
         return false;
     }
 
-    public override void InitTravers(CC2DThightAIMotor motor)
+    public override void InitTravers(CC2DThightAIMotor motor, IPathSegment nextSeg)
     {
         motor.EnsureCorrectPosition(start.x); //Little teleporting hack, to ensure correct jumping!
         
@@ -86,5 +86,10 @@ public class JumpSegment : IPathSegment
     {
        
         Debug.DrawLine(start, goal, Color.blue);
+    }
+
+    public override float StartSpeed(CC2DThightAIMotor motor)
+    {
+        return xVel;
     }
 }

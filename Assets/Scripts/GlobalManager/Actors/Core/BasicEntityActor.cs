@@ -12,7 +12,7 @@ namespace Actors
 
         //other actors
         [SerializeField]
-        HumanMovementActor movementActor;
+        protected IMovementActor movementActor;
         [SerializeField]
         HealthActor healthActor;
         [SerializeField]
@@ -52,7 +52,7 @@ namespace Actors
 
             //Load components
             audioSource = LoadComponent<AudioSource>(audioSource);
-            movementActor = LoadComponent<HumanMovementActor>(movementActor);
+            movementActor = LoadComponent<IMovementActor>(movementActor);
             healthActor = LoadComponent<HealthActor>(healthActor);
             animationActor = LoadComponent<AnimationActor>(animationActor);
 

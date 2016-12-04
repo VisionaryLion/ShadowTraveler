@@ -11,9 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ec06694e8b283d439a376ceade6b302, type: 3}
   m_Name: GroundWalkerSettings
   m_EditorClassIdentifier: 
-  height: 1.1030549
+  height: 1.103054
   width: 0.34107733
   jumpForce: 20
   gravity: 20
-  maxXVel: 5
-  slopeLimit: 30
+  maxXVel: 10
+  slopeLimit: 50
