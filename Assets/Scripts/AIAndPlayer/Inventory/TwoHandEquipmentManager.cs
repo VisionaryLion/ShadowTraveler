@@ -73,6 +73,7 @@ namespace ItemHandler
 
         public void EquipItem(bool rightHand, ItemActor toEquipObject, int itemIndex)
         {
+
             if (!actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 1))
                 return;
 
@@ -109,6 +110,14 @@ namespace ItemHandler
             {
                 UnequipItem(rightHand);
                 EquipItem(rightHand, actor.TwoHandInventory.GetObjectOfItem(nxtIndex), nxtIndex);
+                if (rightHand)
+                {
+                    HUDManager.hudManager.EquipRight(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                }
+                else
+                {
+                    HUDManager.hudManager.EquipLeft(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                }
             }
         }
 
@@ -125,7 +134,11 @@ namespace ItemHandler
             if (actor.TwoHandInventory.GetTopItemOfStack(itemIndex) == null)
             {
                 if (rightHand)
+                {
                     rightHandItemActor = null;
+                    Debug.Log("empty");
+                    HUDManager.hudManager.EmptyRight();
+                }
                 else
                     leftHandItemActor = null;
                 EquipNextItem(rightHand);
@@ -231,6 +244,9 @@ namespace ItemHandler
 
                 itemInProccessOfPicking.TriggerEquiped(actor, false);
                 leftHandItemActor = itemInProccessOfPicking;
+
+                HUDManager.hudManager.EquipLeft(itemInProccessOfPicking.Item);
+
             }
             else
             {
@@ -239,6 +255,9 @@ namespace ItemHandler
 
                 itemInProccessOfPicking.TriggerEquiped(actor, true);
                 rightHandItemActor = itemInProccessOfPicking;
+
+                HUDManager.hudManager.EquipRight(itemInProccessOfPicking.Item);
+
             }
             actor.SetBlockAllNonMovement(false);
             itemInProccessOfPicking = null;
