@@ -44,8 +44,7 @@ namespace CC2D
         #endregion
 
         protected override void FixedUpdate()
-        {
-            
+        {         
 
             _prevMState = _cMState;
             //Check, if we are grounded
@@ -108,7 +107,7 @@ namespace CC2D
                     AccelerateHorizontal(ref crouchHAcc, ref crouchHFric, ref crouchHMaxSpeed);
                     _cVelocity.y = -0.02f; //Small downwards velocity, to keep the CC2D grounded.
                     ApplyGravity(ref gravityAcceleration, ref fallCap);
-
+                    
                     if (_crouchTrigger > 0)
                         break;
 
