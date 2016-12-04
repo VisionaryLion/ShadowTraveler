@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Crowbar
   m_EditorClassIdentifier: 
   itemID: 2
-  displaySprite: {fileID: 0}
+  displaySprite: {fileID: 21300000, guid: dfda9d4c7d15369499ffbbb12e0f7cea, type: 3}
   itemPrefab: {fileID: 1000012685190068, guid: 3b203f00937e13e4c8e37ac695e8d7ae, type: 2}
   isEquipment: 1
   isConsumable: 0
@@ -21,5 +21,5 @@ MonoBehaviour:
   stackLimit: 20
   poolLimit: 1
   itemName: Crowbar
-  description: Hit you enemys on theire head!
-  tooltips: Hit you enemys on theire head!
+  description: Hit your enemys on their head!
+  tooltips: Hit your enemys on their head!
