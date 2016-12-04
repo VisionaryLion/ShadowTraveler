@@ -35,7 +35,7 @@ namespace CC2D
             bufferedInput = actor.CC2DMotor.CurrentMovementInput;
             timeLeft = (runRight) ? timeRunRight : timeRunLeft;
         }
-       
+
         // Update is called once per frame
         void Update()
         {
