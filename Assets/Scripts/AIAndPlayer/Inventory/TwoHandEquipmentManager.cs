@@ -36,6 +36,7 @@ namespace ItemHandler
 
         void Awake()
         {
+
             // actor.CC2DMotor.FaceDirectionChangeHandler += CC2DMotor_FaceDirectionChangeHandler;
         }
 
@@ -102,12 +103,14 @@ namespace ItemHandler
 
         public void EquipNextItem(bool rightHand)
         {
+            if (actor.TwoHandInventory.FilledSlotCount == 1)
+                return;
             ItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
             int nxtIndex = actor.TwoHandInventory.GetNextNotEmptyStack(itemIndex);
             if (nxtIndex != -1 && (itemIndex != nxtIndex || itemActor == null))
-            {
+            {                              
                 UnequipItem(rightHand);
                 EquipItem(rightHand, actor.TwoHandInventory.GetObjectOfItem(nxtIndex), nxtIndex);
                 if (rightHand)
@@ -129,7 +132,7 @@ namespace ItemHandler
 
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
-            actor.TwoHandInventory.TrashItemAt(itemIndex, count);
+            actor.TwoHandInventory.TrashItemFromStack(itemIndex, 1, false);
 
             if (actor.TwoHandInventory.GetTopItemOfStack(itemIndex) == null)
             {
@@ -177,15 +180,20 @@ namespace ItemHandler
         public void UnequipItem(bool rightHand)
         {
             TwoHandItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
+
             if (itemActor == null)
+            {
                 return;
+            }
 
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
             (rightHand ? rightHandItemActor : leftHandItemActor).TriggerUnequiped();
             actor.TwoHandInventory.PoolCopyOfItem(itemActor);
 
             if (rightHand)
+            {
                 rightHandItemActor = null;
+            }
             else
                 leftHandItemActor = null;
         }
