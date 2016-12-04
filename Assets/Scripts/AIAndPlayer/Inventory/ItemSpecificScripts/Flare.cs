@@ -118,6 +118,16 @@ namespace Equipment
                     dirForce.x *= equiperActor.CC2DMotor.FacingDir;
                     rigidbody2d.AddForce(dirForce, ForceMode2D.Impulse);
                     equiperActor = null;
+                    this.enabled = false;
+
+
+                    if(actor.EquipedWithRightHand)
+                    {
+                        HUDManager.hudManager.EmptyRight();
+                    } else
+                    {
+                        HUDManager.hudManager.EmptyLeft();
+                    }
                 }
             }
         }
