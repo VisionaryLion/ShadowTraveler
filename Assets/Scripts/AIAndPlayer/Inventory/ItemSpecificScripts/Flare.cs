@@ -90,7 +90,7 @@ namespace Equipment
                 }
             }
             else if(!burnedOut)
-            {
+            {     
                 item.duration -= durationUsagePerSecond * Time.deltaTime;
                 if (item.duration <= 0)
                 {
@@ -109,8 +109,8 @@ namespace Equipment
                 else if (Input.GetMouseButtonDown(actor.EquipedWithRightHand ? 1 : 0))
                 {
                     detachedAndBurning = true;
-                    equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);
-                    actor.transform.parent = OrganisationalTransforms.Instance.DroppedItemRoot;
+                    actor.transform.parent = null;
+                    equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);                    
                     rigidbody2d.isKinematic = false;
                     mainCollider.enabled = true;
                     
@@ -118,6 +118,16 @@ namespace Equipment
                     dirForce.x *= equiperActor.CC2DMotor.FacingDir;
                     rigidbody2d.AddForce(dirForce, ForceMode2D.Impulse);
                     equiperActor = null;
+                    this.enabled = false;
+
+
+                    if(actor.EquipedWithRightHand)
+                    {
+                        HUDManager.hudManager.EmptyRight();
+                    } else
+                    {
+                        HUDManager.hudManager.EmptyLeft();
+                    }
                 }
             }
         }

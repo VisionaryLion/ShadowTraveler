@@ -1,0 +1,71 @@
+﻿Merge remote-tracking branch 'refs/remotes/origin/master' into Demo-Level
+
+# Conflicts:
+#	Assets/3thrd Party/codeandweb.com.meta~HEAD.meta
+#	Assets/3thrd Party/codeandweb.com.meta~HEAD_0.meta
+#	Assets/3thrd Party/codeandweb.com.meta~HEAD_1.meta
+#	Assets/3thrd Party/codeandweb.com.meta~HEAD_2.meta
+#	Assets/3thrd Party/codeandweb.com.meta~HEAD_3.meta
+#	Assets/3thrd Party/codeandweb.com.meta~HEAD_4.meta
+#	Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching.meta
+#	Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_0.meta
+#	Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_1.meta
+#	Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_2.meta
+#	Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_3.meta
+#	Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_4.meta
+#	Assets/Art/Shared/Minimap/Render Texture.meta~HEAD.meta
+#	Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_0.meta
+#	Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_1.meta
+#	Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching.meta
+#	Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_0.meta
+#	Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_1.meta
+#	Assets/Prefabs/Shared/UI/UI.prefab
+#	Assets/Scenes/Ryan/MovementTest2.unity
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch Demo-Level
+# Your branch is up-to-date with 'origin/Demo-Level'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~HEAD.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~HEAD_0.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~HEAD_1.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~HEAD_2.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~HEAD_3.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~HEAD_4.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_0.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_1.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_2.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_3.meta
+#	modified:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_4.meta
+#	new file:   Assets/Art/Shared/Minimap.meta~HEAD
+#	new file:   Assets/Art/Shared/Minimap.meta~HEAD.meta
+#	new file:   Assets/Art/Shared/Minimap.meta~refs_remotes_origin_ItemSystemFix
+#	new file:   Assets/Art/Shared/Minimap.meta~refs_remotes_origin_ItemSystemFix.meta
+#	modified:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD.meta
+#	modified:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_0.meta
+#	modified:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_1.meta
+#	modified:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching.meta
+#	modified:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_0.meta
+#	modified:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_1.meta
+#	modified:   Assets/Custom Assets/Items/Flare.asset
+#	modified:   Assets/Prefabs/Shared/UI/UI.prefab
+#	modified:   Assets/Scenes/Ryan/DemoLevel_02.unity
+#	modified:   Assets/Scenes/Ryan/MovementTest2.unity
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/Inventory.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/ItemSpecificScripts/Flare.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/ItemSpecificScripts/SwingCrowbar.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/TwoHandEquipmentManager.cs
+#	modified:   Assets/StreamingAssets/Robot_Assistant.bank.meta
+#
+
