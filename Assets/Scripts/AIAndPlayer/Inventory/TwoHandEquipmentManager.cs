@@ -222,7 +222,7 @@ namespace ItemHandler
                 return false;
 
             actor.AnimationHandler.SetAnyStateTransitionPriority(0, 2);
-            actor.SetBlockAllInput(true);
+            actor.SetBlockAllInput(true);            
             actor.CC2DMotor.FreezeAndResetMovement(true);
             actor.Animator.SetTrigger("PickUp");
             actor.AnimationHandler.StartListenToAnimationEvent("PickUpReachedItem", new AnimationHandler.AnimationEvent(PickUpReachedItemHandler));

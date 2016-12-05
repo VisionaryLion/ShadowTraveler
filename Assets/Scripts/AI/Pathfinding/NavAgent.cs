@@ -49,7 +49,7 @@ public class NavAgent : MonoBehaviour
         {
             EnableMovementAgain();
             cPath.AssignNewPath(path);
-            cPath.CurrentSegement.InitTravers(actor.CC2DThightAIMotor);
+            cPath.CurrentSegement.InitTravers(actor.CC2DMotor);
             cPathFoundCallback(true);
         }
 
@@ -77,7 +77,7 @@ public class NavAgent : MonoBehaviour
 
         if (cPath.CurrentSegement.ReachedTarget(pathStartPoint.position))
         {
-            cPath.CurrentSegement.StopTravers(actor.CC2DThightAIMotor);
+            cPath.CurrentSegement.StopTravers(actor.CC2DMotor);
             if (!cPath.NextSegment())
             {
                 cPath.path = null;
@@ -86,7 +86,7 @@ public class NavAgent : MonoBehaviour
                 return;
             }
             Debug.Log("Next Segment!");
-            cPath.CurrentSegement.InitTravers(actor.CC2DThightAIMotor);
+            cPath.CurrentSegement.InitTravers(actor.CC2DMotor);
         }
         /*else if (cPath.IsSegmentTimedOut)
         {
@@ -104,19 +104,19 @@ public class NavAgent : MonoBehaviour
         }
         // else
         // {
-        cPath.CurrentSegement.UpdateMovementInput(actor.CC2DThightAIMotor.CurrentMovementInput);
+        cPath.CurrentSegement.UpdateMovementInput(actor.CC2DMotor.CurrentMovementInput);
         // }        
     }
 
     void StopMoving()
     {
-        actor.CC2DThightAIMotor.CurrentMovementInput.ResetToNeutral();
-        actor.CC2DThightAIMotor.SetManualXSpeed(0);
+        actor.CC2DMotor.CurrentMovementInput.ResetToNeutral();
+        actor.CC2DMotor.SetManualXSpeed(0);
     }
 
     void EnableMovementAgain()
     {
-        actor.CC2DThightAIMotor.StopUsingManualSpeed();
+        actor.CC2DMotor.StopUsingManualSpeed();
     }
 
     class NavPathIterator

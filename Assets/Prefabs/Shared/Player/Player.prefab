@@ -125,8 +125,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000011281812556}
-  - 114: {fileID: 114000011454644942}
   - 114: {fileID: 114000010566740840}
+  - 114: {fileID: 114000012798105260}
   m_Layer: 8
   m_Name: Inventory
   m_TagString: Untagged
@@ -1489,7 +1489,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010318793156}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.187, y: 0.496, z: -0.9140625}
+  m_LocalPosition: {x: 5.455309, y: 5.7928, z: -0.9140625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -1821,7 +1821,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftInventory: {fileID: 114000012538622770}
   rightInventory: {fileID: 114000012165864234}
-  mainInventory: {fileID: 114000011531843582}
 --- !u!114 &114000010653267576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2000,22 +1999,6 @@ MonoBehaviour:
   m_Spacing: 6.07
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
---- !u!114 &114000011454644942
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010671802520}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce33c85f732ec4429ee4c92a6ef6792, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actor: {fileID: 114000011846946954}
-  equipmentSpawnPointLeft: {fileID: 4000010740474800}
-  equipmentSpawnPointRight: {fileID: 4000013870830202}
-  equipmentOffset:
-    offsets: []
 --- !u!114 &114000011466290368
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2079,6 +2062,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventorySize: 10
+  initialPerSlotAllocationCount: 0
 --- !u!114 &114000011801337590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2112,8 +2096,8 @@ MonoBehaviour:
   movementActor: {fileID: 114000010106076342}
   healthActor: {fileID: 114000012801377668}
   animationActor: {fileID: 114000013416032882}
-  multiSlotsInventory: {fileID: 114000010566740840}
-  equipmentManager: {fileID: 114000011454644942}
+  twoHandInventory: {fileID: 114000010566740840}
+  twoHandEquipmentManager: {fileID: 114000012798105260}
   humanInput: {fileID: 114000010213684754}
   interactiveInputUIMarker: {fileID: 114000010360017506}
 --- !u!114 &114000011886094664
@@ -2203,6 +2187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventorySize: 3
+  initialPerSlotAllocationCount: 0
 --- !u!114 &114000012261422030
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2318,6 +2303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventorySize: 3
+  initialPerSlotAllocationCount: 0
 --- !u!114 &114000012705623678
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2356,6 +2342,22 @@ MonoBehaviour:
   m_PreferredHeight: 35
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+--- !u!114 &114000012798105260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010671802520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 400b417d4bca58d46950afe74b10a44d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actor: {fileID: 114000011846946954}
+  equipmentSpawnPointLeft: {fileID: 0}
+  equipmentSpawnPointRight: {fileID: 0}
+  equipmentOffset:
+    offsets: []
 --- !u!114 &114000012801377668
 MonoBehaviour:
   m_ObjectHideFlags: 1
