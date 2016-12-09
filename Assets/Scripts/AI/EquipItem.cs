@@ -14,6 +14,7 @@ public class EquipItem : MonoBehaviour {
 	void Start ()
     {
         GameObject clone = Instantiate(itemToEquip);
-        actor.TwoHandEquipmentManager.TryPickMeUp(clone.GetComponent<TwoHandItemActor>());       
+        actor.TwoHandInventory.AddItem(clone.GetComponent<TwoHandItemActor>());        
+        actor.TwoHandEquipmentManager.EquipNextItem(false);        
     }
 }
