@@ -73,6 +73,7 @@ namespace Actors
             animationActor.Animator.SetBool("IsWallSliding", CC2DMotor.MotorState == CC2DMotor.MState.WallSlide);
             animationActor.Animator.SetBool("IsOnLadder", CC2DMotor.MotorState == CC2DMotor.MState.Climb);
             animationActor.Animator.SetBool("IsGrounded", CharacterController2D.isGrounded);
+            animationActor.Animator.SetBool("IsCrouching", CC2DMotor.MotorState == CC2DMotor.MState.Crouched);
 
             if (CC2DMotor.MotorState == CC2DMotor.MState.Jump && CC2DMotor.PrevMotorState != CC2DMotor.MState.Jump)
                 animationActor.Animator.SetTrigger("Jump");

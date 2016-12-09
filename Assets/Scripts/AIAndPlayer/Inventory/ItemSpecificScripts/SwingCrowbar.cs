@@ -8,7 +8,7 @@ public class SwingCrowbar : MonoBehaviour, IEquipment
 {
     [SerializeField]
     AreaHarzard2D hitBox;
-
+        
     AnimationActor actor;
     AnimationHandler.AnimationEvent callBack;
 
@@ -40,6 +40,7 @@ public class SwingCrowbar : MonoBehaviour, IEquipment
     // Update is called once per frame
     void Update()
     {
+        actor = GetComponentInParent<AnimationActor>();
         if (Input.GetButton("Fire1") && !hitBox.dealDamage && actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 0) && !actor.Animator.GetCurrentAnimatorStateInfo(1).IsName("SwingCrowbar_Anim"))
         {
             actor.Animator.SetTrigger("SwingCrowbar");

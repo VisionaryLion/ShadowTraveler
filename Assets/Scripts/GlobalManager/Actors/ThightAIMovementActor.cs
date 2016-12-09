@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using CC2D;
+using ItemHandler;
 
 namespace Actors
 {
@@ -13,7 +14,7 @@ namespace Actors
         [SerializeField]
         AnimationActor animationActor;
 
-        public CC2DThightAIMotor CC2DThightAIMotor { get { return cC2DThightAIMotor; } }
+        public CC2DThightAIMotor CC2DMotor { get { return cC2DThightAIMotor; } }
         public NavAgent NavAgent { get { return navAgent; } }
 
 #if UNITY_EDITOR
@@ -32,12 +33,12 @@ namespace Actors
             animationActor.Animator.SetFloat("VelocityX", Mathf.Abs(cC2DThightAIMotor.Velocity.x));
             animationActor.Animator.SetFloat("VelocityY", cC2DThightAIMotor.Velocity.y);
 
-            animationActor.Animator.SetBool("IsFalling", cC2DThightAIMotor.MotorState == CC2DMotor.MState.Fall);
-            animationActor.Animator.SetBool("IsWallSliding", cC2DThightAIMotor.MotorState == CC2DMotor.MState.WallSlide);
-            animationActor.Animator.SetBool("IsOnLadder", cC2DThightAIMotor.MotorState == CC2DMotor.MState.Climb);
+            animationActor.Animator.SetBool("IsFalling", cC2DThightAIMotor.MotorState == CC2D.CC2DMotor.MState.Fall);
+            animationActor.Animator.SetBool("IsWallSliding", cC2DThightAIMotor.MotorState == CC2D.CC2DMotor.MState.WallSlide);
+            animationActor.Animator.SetBool("IsOnLadder", cC2DThightAIMotor.MotorState == CC2D.CC2DMotor.MState.Climb);
             animationActor.Animator.SetBool("IsGrounded", CharacterController2D.isGrounded);
 
-            if (cC2DThightAIMotor.MotorState == CC2DMotor.MState.Jump && cC2DThightAIMotor.PrevMotorState != CC2DMotor.MState.Jump)
+            if (cC2DThightAIMotor.MotorState == CC2D.CC2DMotor.MState.Jump && cC2DThightAIMotor.PrevMotorState != CC2D.CC2DMotor.MState.Jump)
                 animationActor.Animator.SetTrigger("Jump");
         }
     }
