@@ -1,0 +1,36 @@
+﻿Merge remote-tracking branch 'refs/remotes/origin/master' into Demo-Level
+
+# Conflicts:
+#	Assets/Prefabs/Shared/Inventory/Items/Flare.prefab
+#	Assets/Prefabs/Shared/Player/Player.prefab
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch Demo-Level
+# Your branch is up-to-date with 'origin/Demo-Level'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   Assets/Prefabs/Shared/Enemys/PathfindingEnemy.prefab
+#	modified:   Assets/Prefabs/Shared/Inventory/Items/Crowbar.prefab
+#	modified:   Assets/Prefabs/Shared/Inventory/Items/Flare.prefab
+#	modified:   Assets/Prefabs/Shared/Inventory/Items/Flashlight.prefab
+#	modified:   Assets/Prefabs/Shared/Player/Player.prefab
+#	modified:   Assets/Scenes/Kyle/DemoLevel_02.unity
+#	modified:   Assets/Scenes/Oribow/PathfindingTest2.unity
+#	new file:   Assets/Scripts/AI/EquipItem.cs
+#	new file:   Assets/Scripts/AI/EquipItem.cs.meta
+#	modified:   Assets/Scripts/AI/Pathfinding/NavAgent.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/TwoHandEquipmentManager.cs
+#	renamed:    Assets/Scripts/GlobalManager/Actors/Core/BasicEntityTwoHandEquipmentActor.cs -> Assets/Scripts/GlobalManager/Actors/Core/BasicEntityEquipmentActor.cs
+#	renamed:    Assets/Scripts/GlobalManager/Actors/Core/BasicEntityTwoHandEquipmentActor.cs.meta -> Assets/Scripts/GlobalManager/Actors/Core/BasicEntityEquipmentActor.cs.meta
+#	modified:   Assets/Scripts/GlobalManager/Actors/ThightAIMovementActor.cs
+#
+

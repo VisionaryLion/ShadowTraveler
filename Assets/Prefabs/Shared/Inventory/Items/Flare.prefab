@@ -88,8 +88,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012685190068}
+<<<<<<< HEAD
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -10.8, y: 3.87, z: -0.008124948}
+=======
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+>>>>>>> refs/remotes/origin/master
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -210,8 +215,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d601773f8e2897428db7865ba643e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   itemHolder: {fileID: 114000010097640758}
 --- !u!114 &114000013011905514
+=======
+  item:
+    dataSrc: {fileID: 11400000, guid: bb0a512d81b8fde47a6b83a37486295d, type: 2}
+    canBePickedUp: 1
+    canBeDropped: 0
+    canBeTrashed: 0
+--- !u!114 &114000012278566774
+>>>>>>> refs/remotes/origin/master
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

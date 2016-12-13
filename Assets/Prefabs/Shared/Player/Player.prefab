@@ -126,7 +126,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011281812556}
   - 114: {fileID: 114000010566740840}
+<<<<<<< HEAD
   - 114: {fileID: 114000010669997818}
+=======
+  - 114: {fileID: 114000012798105260}
+>>>>>>> refs/remotes/origin/master
   m_Layer: 8
   m_Name: Inventory
   m_TagString: Untagged
@@ -1489,7 +1493,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010318793156}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+<<<<<<< HEAD
   m_LocalPosition: {x: 45.406303, y: -4.375551, z: -0.9140625}
+=======
+  m_LocalPosition: {x: 5.455309, y: 5.7928, z: -0.9140625}
+>>>>>>> refs/remotes/origin/master
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -2113,7 +2121,11 @@ MonoBehaviour:
   healthActor: {fileID: 114000012801377668}
   animationActor: {fileID: 114000013416032882}
   twoHandInventory: {fileID: 114000010566740840}
+<<<<<<< HEAD
   twoHandEquipmentManager: {fileID: 114000010669997818}
+=======
+  twoHandEquipmentManager: {fileID: 114000012798105260}
+>>>>>>> refs/remotes/origin/master
   humanInput: {fileID: 114000010213684754}
   interactiveInputUIMarker: {fileID: 114000010360017506}
 --- !u!114 &114000011886094664
@@ -2358,6 +2370,22 @@ MonoBehaviour:
   m_PreferredHeight: 35
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+--- !u!114 &114000012798105260
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010671802520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 400b417d4bca58d46950afe74b10a44d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actor: {fileID: 114000011846946954}
+  equipmentSpawnPointLeft: {fileID: 0}
+  equipmentSpawnPointRight: {fileID: 0}
+  equipmentOffset:
+    offsets: []
 --- !u!114 &114000012801377668
 MonoBehaviour:
   m_ObjectHideFlags: 1
