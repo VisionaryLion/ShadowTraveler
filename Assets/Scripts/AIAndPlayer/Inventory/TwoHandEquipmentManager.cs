@@ -103,8 +103,9 @@ namespace ItemHandler
 
         public void EquipNextItem(bool rightHand)
         {
-            if (actor.TwoHandInventory.FilledSlotCount == 1)
+            if (actor.CompareTag("Player") && actor.TwoHandInventory.FilledSlotCount == 1)
                 return;
+
             ItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
