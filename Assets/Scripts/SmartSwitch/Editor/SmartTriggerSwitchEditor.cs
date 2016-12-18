@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEditor;
 using UnityEditorInternal;
-using System.Collections.Generic;
-using UnityEngine.Events;
 
 [CustomEditor(typeof(SmartTriggerSwitch))]
 public class SmartTriggerSwitchEditor : Editor
@@ -32,6 +29,10 @@ public class SmartTriggerSwitchEditor : Editor
 
     void OnEnable()
     {
+        activatorGroupsFoldout = EditorPrefs.GetBool("SmartSwitch_Global_Foldout_Activator", false);
+        switchedOnFoldout = EditorPrefs.GetBool("SmartSwitch_Global_Foldout_SwitchedOn", false);
+        switchedOffFoldout = EditorPrefs.GetBool("SmartSwitch_Global_Foldout_SwitchedOff", false);
+
         switchOnTex = (Texture)EditorGUIUtility.Load("SmartSwitch/SmartSwitchOn.png");
         switchOffTex = (Texture)EditorGUIUtility.Load("SmartSwitch/SmartSwitchOff.png");
         switchOnLockedTex = (Texture)EditorGUIUtility.Load("SmartSwitch/SmartSwitchOn_Locked.png");
@@ -139,7 +140,7 @@ public class SmartTriggerSwitchEditor : Editor
             else if (activeActivator.intValue == 4)
             {
                 SerializedProperty activateItem = element.FindPropertyRelative("_activateItem");
-                SerializedProperty itemIdToRec = activateItem.FindPropertyRelative("itemId");
+                SerializedProperty itemIdToRec = activateItem.FindPropertyRelative("item");
                 SerializedProperty onLeft = activateItem.FindPropertyRelative("_onLeave");
 
                 if (inverseCondition.boolValue)
@@ -150,7 +151,7 @@ public class SmartTriggerSwitchEditor : Editor
                 GUI.enabled = true;
                 EditorGUIUtility.labelWidth = 130;
 
-                itemIdToRec.intValue = EditorGUI.IntField(new Rect(rect.x, rect.y, rect.width - 5, EditorGUIUtility.singleLineHeight), "ItemID", itemIdToRec.intValue);
+                EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width - 5, EditorGUIUtility.singleLineHeight), itemIdToRec, new GUIContent("Item"));
             }
             else if (activeActivator.intValue == 5)
             {
@@ -193,6 +194,13 @@ public class SmartTriggerSwitchEditor : Editor
         };
     }
 
+    void OnDestroy()
+    {
+        EditorPrefs.SetBool("SmartSwitch_Global_Foldout_Activator", activatorGroupsFoldout);
+        EditorPrefs.SetBool("SmartSwitch_Global_Foldout_SwitchedOn", switchedOnFoldout);
+        EditorPrefs.SetBool("SmartSwitch_Global_Foldout_SwitchedOff", switchedOffFoldout);
+    }
+
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
@@ -204,7 +212,15 @@ public class SmartTriggerSwitchEditor : Editor
 
         if (GUILayout.Button(switchStateTex, GUILayout.Width(70), GUILayout.Height(70)))
         {
-            switchState.boolValue = !switchState.boolValue;
+            if (EditorApplication.isPlaying)
+            {
+                if (switchState.boolValue)
+                    ((SmartTriggerSwitch)target).FlipSwitchOff();
+                else
+                    ((SmartTriggerSwitch)target).FlipSwitchOn();
+            }
+            else
+                switchState.boolValue = !switchState.boolValue;
         }
 
         GUILayout.Space(15);

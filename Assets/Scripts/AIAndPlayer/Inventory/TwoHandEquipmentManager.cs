@@ -36,6 +36,7 @@ namespace ItemHandler
 
         void Awake()
         {
+
             // actor.CC2DMotor.FaceDirectionChangeHandler += CC2DMotor_FaceDirectionChangeHandler;
         }
 
@@ -73,6 +74,7 @@ namespace ItemHandler
 
         public void EquipItem(bool rightHand, ItemActor toEquipObject, int itemIndex)
         {
+
             if (!actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 1))
                 return;
 
@@ -101,14 +103,25 @@ namespace ItemHandler
 
         public void EquipNextItem(bool rightHand)
         {
+            if (actor.CompareTag("Player") && actor.TwoHandInventory.FilledSlotCount == 1)
+                return;
+
             ItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
             int nxtIndex = actor.TwoHandInventory.GetNextNotEmptyStack(itemIndex);
             if (nxtIndex != -1 && (itemIndex != nxtIndex || itemActor == null))
-            {
+            {                              
                 UnequipItem(rightHand);
                 EquipItem(rightHand, actor.TwoHandInventory.GetObjectOfItem(nxtIndex), nxtIndex);
+                if (rightHand)
+                {
+                    HUDManager.hudManager.EquipRight(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                }
+                else
+                {
+                    HUDManager.hudManager.EquipLeft(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                }
             }
         }
 
@@ -120,12 +133,16 @@ namespace ItemHandler
 
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
-            actor.TwoHandInventory.TrashItemAt(itemIndex, count);
+            actor.TwoHandInventory.TrashItemFromStack(itemIndex, 1, false);
 
             if (actor.TwoHandInventory.GetTopItemOfStack(itemIndex) == null)
             {
                 if (rightHand)
+                {
                     rightHandItemActor = null;
+                    Debug.Log("empty");
+                    HUDManager.hudManager.EmptyRight();
+                }
                 else
                     leftHandItemActor = null;
                 EquipNextItem(rightHand);
@@ -164,15 +181,20 @@ namespace ItemHandler
         public void UnequipItem(bool rightHand)
         {
             TwoHandItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
+
             if (itemActor == null)
+            {
                 return;
+            }
 
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
             (rightHand ? rightHandItemActor : leftHandItemActor).TriggerUnequiped();
             actor.TwoHandInventory.PoolCopyOfItem(itemActor);
 
             if (rightHand)
+            {
                 rightHandItemActor = null;
+            }
             else
                 leftHandItemActor = null;
         }
@@ -201,7 +223,7 @@ namespace ItemHandler
                 return false;
 
             actor.AnimationHandler.SetAnyStateTransitionPriority(0, 2);
-            actor.SetBlockAllInput(true);
+            actor.SetBlockAllInput(true);            
             actor.CC2DMotor.FreezeAndResetMovement(true);
             actor.Animator.SetTrigger("PickUp");
             actor.AnimationHandler.StartListenToAnimationEvent("PickUpReachedItem", new AnimationHandler.AnimationEvent(PickUpReachedItemHandler));
@@ -231,6 +253,9 @@ namespace ItemHandler
 
                 itemInProccessOfPicking.TriggerEquiped(actor, false);
                 leftHandItemActor = itemInProccessOfPicking;
+
+                HUDManager.hudManager.EquipLeft(itemInProccessOfPicking.Item);
+
             }
             else
             {
@@ -239,6 +264,9 @@ namespace ItemHandler
 
                 itemInProccessOfPicking.TriggerEquiped(actor, true);
                 rightHandItemActor = itemInProccessOfPicking;
+
+                HUDManager.hudManager.EquipRight(itemInProccessOfPicking.Item);
+
             }
             actor.SetBlockAllNonMovement(false);
             itemInProccessOfPicking = null;

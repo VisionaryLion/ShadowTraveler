@@ -17,7 +17,7 @@ MonoBehaviour:
   isEquipment: 1
   isConsumable: 0
   isStackable: 0
-  canHoldOnlyOne: 1
+  canHoldOnlyOne: 0
   stackLimit: 20
   poolLimit: 1
   itemName: Flare
