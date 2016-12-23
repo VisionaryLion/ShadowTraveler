@@ -27,4 +27,11 @@ public class LineOfSight : MonoBehaviour {
         enemy = null;
         return false;
     }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawRay(rayOrigin.position - Vector3.up * sightRange, Vector3.up * sightRange * 2);
+        Gizmos.DrawRay(rayOrigin.position - Vector3.right * sightRange, Vector3.right * sightRange * 2);
+        DebugExtension.DrawCircle(rayOrigin.position, Vector3.forward, sightRange);
+    }
 }

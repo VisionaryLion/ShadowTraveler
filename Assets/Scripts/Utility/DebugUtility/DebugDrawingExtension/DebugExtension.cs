@@ -1110,7 +1110,7 @@ public static class DebugExtension
 	/// </param>
 	public static void DrawCircle(Vector3 position, Vector3 up, float radius = 1.0f)
 	{
-		DrawCircle(position, position, Color.white, Matrix4x4.identity, radius);
+		DrawCircle(position, up, Color.white, Matrix4x4.identity, radius);
 	}
 	
 	/// <summary>

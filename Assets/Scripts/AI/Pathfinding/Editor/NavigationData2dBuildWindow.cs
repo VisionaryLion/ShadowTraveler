@@ -251,20 +251,20 @@ namespace NavMesh2D.Core
             Handles.color = Color.white;
         }
 
-        void DrawJumpArc(JumpLinkPlacer.JumpLink link, Vector2 origin)
+        void DrawJumpArc(JumpLinkPlacer.JumpLink link, Vector2 offset)
         {
             Vector2 swapPos;
-            Vector2 prevPos = new Vector2(link.jumpArc.startX, link.jumpArc.Calc(0)) + origin;
-            int steps = Mathf.FloorToInt((link.jumpArc.maxX - link.jumpArc.minX) / 0.1f);
-            float dir = link.jumpArc.endX < link.jumpArc.startX ? -0.1f : 0.1f;
-            float absDir = Mathf.Abs(dir);
-            for (float n = 0; n < steps; n++)
+            Vector2 prevPos = new Vector2(link.jumpArc.startX, link.jumpArc.Calc(0)) + offset;
+            float absStepWidth = (link.jumpArc.maxX - link.jumpArc.minX) / 100;
+            float stepWidth = absStepWidth * (link.jumpArc.endX < link.jumpArc.startX ? -1f : 1f);
+
+            for (int n = 0; n <= 100; n++)
             {
-                swapPos = new Vector2(link.jumpArc.startX + n * dir, link.jumpArc.Calc(n * absDir)) + origin;
+                swapPos = new Vector2(link.jumpArc.startX + (n * stepWidth), link.jumpArc.Calc(n * absStepWidth)) + offset;
                 Handles.DrawLine(prevPos, swapPos);
                 prevPos = swapPos;
             }
-            Handles.DrawLine(prevPos, new Vector2(link.jumpArc.endX, link.jumpArc.Calc(link.jumpArc.maxX - link.jumpArc.minX)) + origin);
+            //Handles.DrawLine(prevPos, new Vector2(link.jumpArc.endX, link.jumpArc.Calc(link.jumpArc.maxX - link.jumpArc.minX)) + origin);
         }
     }
 

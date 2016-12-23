@@ -15,6 +15,7 @@ public class JumpSegment : IPathSegment
     float yMin;
     float yMax;
     float timeOut;
+    float duration;
     Vector2 goal;
     Vector2 start; //only for debug
 
@@ -38,8 +39,8 @@ public class JumpSegment : IPathSegment
             xMax = goal.x + 0.1f;
             xVel = link.xVel;
         }
-        timeOut = ((link.xMax - link.xMin) / xVel) + TimeOutFudgeSeconds;
-       
+        duration = Mathf.Abs((link.xMax - link.xMin) / xVel);
+        timeOut = duration + TimeOutFudgeSeconds;
     }
 
     public override float TimeOut
@@ -71,9 +72,8 @@ public class JumpSegment : IPathSegment
     public override void InitTravers(CC2DThightAIMotor motor, IPathSegment nextSeg)
     {
         motor.EnsureCorrectPosition(start.x); //Little teleporting hack, to ensure correct jumping!
-        
         motor.SetManualXSpeed(xVel);
-        motor.ManualJump(jumpForce);
+        motor.ManualJump(jumpForce, duration);
         motor.CurrentMovementInput.ResetToNeutral();
     }
 
@@ -84,7 +84,6 @@ public class JumpSegment : IPathSegment
 
     public override void Visualize()
     {
-       
         Debug.DrawLine(start, goal, Color.blue);
     }
 

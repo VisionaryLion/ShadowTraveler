@@ -28,6 +28,11 @@ namespace CC2D
             InputEvents.Clear();
         }
 
+        public bool Exists<T>()
+        {
+            return InputEvents.Exists((x) => x.GetType() == typeof(T));
+        }
+
         internal void AddEvent(InputEvent newEvent)
         {
             if (newEvent.AllowMultiple == false)
@@ -70,7 +75,7 @@ namespace CC2D
         }
     }
 
-    internal abstract class InputEvent
+    public abstract class InputEvent
     {
         internal bool AllowMultiple;
         /// <summary>
@@ -84,7 +89,7 @@ namespace CC2D
 
         internal InputEvent(float liveTime) : this()
         {
-            LiveTime = liveTime;
+            LiveTime = Time.time + liveTime;
         }
         internal InputEvent()
         {
@@ -92,15 +97,18 @@ namespace CC2D
         }
     }
 
-    internal class JumpEvent : InputEvent
+    class JumpEvent : InputEvent
     {
+        public float eventCreationTime;
+
         internal JumpEvent(float maxJumpExecutionDelay) : base(maxJumpExecutionDelay)
         {
             AllowMultiple = true;
+            this.eventCreationTime = Time.time;
         }
     }
 
-    internal class CrouchEvent : InputEvent
+    class CrouchEvent : InputEvent
     {
     }
 }

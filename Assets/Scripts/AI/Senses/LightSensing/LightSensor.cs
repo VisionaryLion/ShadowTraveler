@@ -54,18 +54,39 @@ namespace LightSensing
             _currentBrightness = GlobalLightSensor.Instance.GetDynamicLightAt(transform.position);
         }
 
+        //Debug ONLY!
+
+        void Start()
+        {
+            DebugGraph.Instance.StartNewGraph(GetHashCode(), new Graph(new string[] { "Brightness", "State" }), "LightSensor");
+        }
         void Update()
         {
             if (ShouldDie())
+            {
                 levelOfComfort = "Die";
+                DebugGraph.Instance.FeedChannel(GetHashCode(), 1, 3);
+            }
             else if (ShouldFlee())
+            {
                 levelOfComfort = "Flee";
+                DebugGraph.Instance.FeedChannel(GetHashCode(), 1, 2);
+            }
             else if (ShouldBeStunt())
+            {
                 levelOfComfort = "Stunt";
+                DebugGraph.Instance.FeedChannel(GetHashCode(), 1, 1);
+            }
             else
+            {
                 levelOfComfort = "Comfortable";
+                DebugGraph.Instance.FeedChannel(GetHashCode(), 1, 0);
+            }
 
             _currentBrightnessDebug = CurrentBrightness;
+            DebugGraph.Instance.FeedChannel(GetHashCode(), 0, _currentBrightnessDebug.grayscale);
+
         }
+        //-------------
     }
 }

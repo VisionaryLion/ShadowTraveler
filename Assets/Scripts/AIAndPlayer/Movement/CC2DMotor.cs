@@ -58,9 +58,9 @@ namespace CC2D
         [Tooltip("Max velocity, that can be reached by falling.")]
         protected float fallCap = 100;
 
-        [Header("Jumping:")]
+        [Header("Jumping: (Change only applies after restart!)")]
         [SerializeField]
-        protected float jumpVAcc = 20;
+        protected float jumpMaxHeight = 7;
 
         [Header("Gliding:")]
         [SerializeField]
@@ -203,6 +203,9 @@ namespace CC2D
         protected int _crouchTrigger;
         protected MovementInput _cMovementInput;
         protected float _cJumpLockTime;
+        protected InputEvent currentInputEvent;
+        protected float jumpVVelocity;
+        protected Vector2 _cAcceleration; //current acceleration, gets reset to 0,gravity every fixed update
 
         //External reference
         protected Transform _fakeParent;
@@ -215,6 +218,8 @@ namespace CC2D
             _cFacingDir = 1; // Assume the sprite starts looking at the right side.
             _allExternalVelocitys = new List<Velocity2D>(1);
             triggeredColliderHash = new List<int>(2);
+            jumpVVelocity = Mathf.Sqrt(jumpMaxHeight * gravityAcceleration * 2);
+
             if (startWrappedDown)
             {
                 actor.CharacterController2D.warpToGrounded();
@@ -229,7 +234,21 @@ namespace CC2D
             HandleFakeParenting();
         }
 
-        protected abstract void FixedUpdate();
+        protected virtual void FixedUpdate()
+        {
+            if (IsFroozen)
+                return;
+
+            InitStateUpdate();
+
+            if (actor.CharacterController2D.collisionState.wasGroundedLastFrame && !actor.CharacterController2D.isGrounded)
+                OnIsNotGrounded();
+            else if (actor.CharacterController2D.collisionState.becameGroundedThisFrame)
+                OnBecameGrounded();
+
+            UpdateCurrentState();
+            EndStateUpdate();
+        }
 
         List<int> triggeredColliderHash;
         protected void OnTriggerExit2D(Collider2D obj)
@@ -359,12 +378,14 @@ namespace CC2D
             _totalExternalVelocity = CalculateTotalExternalAccerleration();
             if (_fakeParent != null)
             {
-                _fakeParentOffset += actor.CharacterController2D.calcMoveVector((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
+                _fakeParentOffset += actor.CharacterController2D.calcMoveVector((_cVelocity + _totalExternalVelocity + _cAcceleration * Time.deltaTime * 0.5f) * Time.deltaTime, _cMState == MState.Jump);
             }
             else
-                actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity) * Time.fixedDeltaTime, _cMState == MState.Jump);
-
-            
+                actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity + _cAcceleration * Time.deltaTime * 0.5f) * Time.deltaTime, _cMState == MState.Jump);
+            if (actor.CharacterController2D.collisionState.hasCollision())
+                _cVelocity = actor.CharacterController2D.velocity;
+            else
+                _cVelocity += _cAcceleration * Time.deltaTime;
 
             //We turned out to be slower then our external velocity demanded us. We presumably hit something, so reset forces.
             if (_totalExternalVelocity.x == 0)
@@ -449,13 +470,13 @@ namespace CC2D
                 if (_cMovementInput.horizontalRaw > 0)
                 {
                     _cVelocity.x = Mathf.Abs(_cVelocity.x);
-                    _cVelocity.x += acc * Time.fixedDeltaTime;
+                    _cVelocity.x += acc * Time.deltaTime;
                     _cVelocity.x = Mathf.Min(cap, _cVelocity.x);
                 }
                 else
                 {
                     _cVelocity.x = -Mathf.Abs(_cVelocity.x);
-                    _cVelocity.x -= acc * Time.fixedDeltaTime;
+                    _cVelocity.x -= acc * Time.deltaTime;
                     _cVelocity.x = Mathf.Max(-cap, _cVelocity.x);
                 }
             }
@@ -463,25 +484,19 @@ namespace CC2D
             {
                 /*if (_cVelocity.x < 0)
                 {
-                    _cVelocity.x += fric * Time.fixedDeltaTime;
+                    _cVelocity.x += fric * Time.deltaTime;
                     if (_cVelocity.x > 0)
                         _cVelocity.x = 0;
                 }
                 else
                 {
-                    _cVelocity.x -= fric * Time.fixedDeltaTime;
+                    _cVelocity.x -= fric * Time.deltaTime;
                     if (_cVelocity.x < 0)
                         _cVelocity.x = 0;
                 }*/
                 _cVelocity.x = 0;
             }
 
-        }
-
-        protected void ApplyGravity(ref float gravity, ref float cap)
-        {
-            _cVelocity.y -= gravity * Time.fixedDeltaTime;
-            Mathf.Max(cap, gravity);
         }
 
         protected void ApplyFrictionHorizontal(ref float fric)
@@ -491,16 +506,67 @@ namespace CC2D
 
             if (_cVelocity.x > 0)
             {
-                _cVelocity.x -= fric * Time.fixedDeltaTime;
+                _cVelocity.x -= fric * Time.deltaTime;
                 if (_cVelocity.x < 0)
                     _cVelocity.x = 0;
             }
             else
             {
-                _cVelocity.x += fric * Time.fixedDeltaTime;
+                _cVelocity.x += fric * Time.deltaTime;
                 if (_cVelocity.x > 0)
                     _cVelocity.x = 0;
             }
+        }
+
+        protected virtual void InitStateUpdate()
+        {
+            _cAcceleration = new Vector2(0, -gravityAcceleration); //start with gravity applied
+            _prevMState = _cMState;
+            currentInputEvent = _cMovementInput.GetNextEvent();
+        }
+
+        protected virtual void UpdateCurrentState()
+        {
+            switch (_cMState)
+            {
+                case MState.Walk:
+                    State_Walk();
+                    break;
+
+                case MState.Crouched:
+                    State_Crouched();
+                    break;
+
+                case MState.Fall:
+                    State_Fall();
+                    break;
+
+                case MState.Jump:
+                    State_Jump();
+                    break;
+
+                case MState.LockedJump:
+                    State_LockedJump();
+                    break;
+
+                case MState.Glide:
+                    State_Glide();
+                    break;
+
+                case MState.WallSlide:
+                    State_WallSlide();
+                    break;
+
+                case MState.Climb:
+                    State_Climb();
+                    break;
+            }
+        }
+
+        protected virtual void EndStateUpdate()
+        {
+            AdjustFacingDirToVelocity();
+            MoveCC2DByVelocity();
         }
 
         Vector2 CalculateTotalExternalAccerleration()
@@ -512,7 +578,7 @@ namespace CC2D
             {
                 pForce = _allExternalVelocitys[iForce];
                 result += pForce.Velocity;
-                pForce.DampVelocity(Time.fixedDeltaTime);
+                pForce.DampVelocity(Time.deltaTime);
                 if (pForce.IsVelocityZero() || !pForce.velocityAllowsThisState(_cMState))//Force is zero remove it!
                 {
                     _allExternalVelocitys.RemoveAt(iForce);
@@ -540,7 +606,7 @@ namespace CC2D
         {
             _isGrounded = false;
             _stateStartTime = Time.time;
-            _cVelocity.y = jumpVAcc;
+            _cVelocity.y = jumpVVelocity;
             //frontAnimator.SetTrigger("Jump");
             _prevMState = _cMState;
             _cMState = MState.Jump;
@@ -551,7 +617,7 @@ namespace CC2D
             _cJumpLockTime = lockedTime;
             _isGrounded = false;
             _stateStartTime = Time.time;
-            _cVelocity.y = jumpVAcc;
+            _cVelocity.y = jumpVVelocity;
             _prevMState = _cMState;
             _cMState = MState.LockedJump;
         }
@@ -600,6 +666,158 @@ namespace CC2D
         {
             _cMState = MState.Climb;
             _prevMState = _cMState;
+        }
+
+        #endregion
+
+        #region State Methods
+
+        protected virtual void State_Walk()
+        {
+            //Handle sliding of a top step slope
+            if (actor.CharacterController2D.collisionState.standOnToSteepSlope || actor.CharacterController2D.manuallyCheckForSteepSlopes(-actor.CharacterController2D.collisionState.belowHit.normal.x))
+            {
+                HandleSlope();
+                if (currentInputEvent as JumpEvent != null)
+                {
+                    _cMovementInput.ConsumeEvent(currentInputEvent);
+                    StartLockedJump(jumpOfSteepSlopeLock);
+                    return;
+                }
+            }
+
+            AccelerateHorizontal(ref walkHAcc, ref walkHFric, ref walkHMaxSpeed);
+
+            if (currentInputEvent as JumpEvent != null)
+            {
+                _cMovementInput.ConsumeEvent(currentInputEvent);
+                StartJump();
+            }
+            else if (actor.CharacterController2D.collisionState.belowHit.collider.CompareTag(movingPlatformTag))
+            {
+                if (actor.CharacterController2D.collisionState.belowHit.collider.transform.rotation != Quaternion.identity || actor.CharacterController2D.collisionState.belowHit.collider.transform.localScale != new Vector3(1, 1, 1))
+                    FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
+                else
+                    FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform;
+                transform.parent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
+                ReCalculateFakeParentOffset();
+            }
+            else
+            {
+                transform.parent = null;
+                FakeTransformParent = null;
+            }
+
+            if (currentInputEvent as CrouchEvent != null)
+            {
+                _cMovementInput.ConsumeEvent(currentInputEvent);
+                StartCrouch();
+            }
+        }
+
+        protected virtual void State_Crouched()
+        {
+            AccelerateHorizontal(ref crouchHAcc, ref crouchHFric, ref crouchHMaxSpeed);
+
+            if (_crouchTrigger > 0)
+                return;
+
+            if (currentInputEvent as CrouchEvent != null)
+            {
+                _cMovementInput.ConsumeEvent(currentInputEvent);
+                EndCrouch();
+                StartWalk();
+            }
+            else if (currentInputEvent as JumpEvent != null)
+            {
+                _cMovementInput.ConsumeEvent(currentInputEvent);
+                EndCrouch();
+                StartJump();
+            }
+        }
+
+        protected virtual void State_Fall()
+        {
+            AccelerateHorizontal(ref inAirHAcc, ref inAirHFric, ref inAirHMaxSpeed);
+
+            //Possible transitions
+#if Glide
+                    if (!_cMovementInput.isJumpConsumed && _cMovementInput.jump && Time.time - _cMovementInput.timeOfLastJumpStateChange >= minGlideButtonHoldTime) //Should we glide?
+                        {
+                    StartGliding();
+                    frontAnimator.SetBool("IsFalling", false);
+                    }
+                    else
+#endif
+            if (ShouldWallSlide())
+            {
+                StartWallSliding();
+            }
+        }
+
+        protected virtual void State_Jump()
+        {
+            AccelerateHorizontal(ref inAirHAcc, ref inAirHFric, ref inAirHMaxSpeed);
+
+            //Possible transitions
+            if (_cVelocity.y <= 0) //Finished jumping, gravity catch us!
+                StartFalling();
+        }
+
+        protected virtual void State_LockedJump()
+        {
+            //Possible transitions
+            if (Time.time - _stateStartTime >= jumpOfSteepSlopeLock)
+            {
+                //Switch seamless to normal jumping!
+                _cMState = MState.Jump;
+            }
+            else if (actor.CharacterController2D.collisionState.above) // Probably hit the ceiling. Abort Jump to avoid "hovering at the ceiling"!
+            {
+                _cVelocity.y = 0;
+                StartFalling();
+            }
+        }
+
+        protected virtual void State_Glide()
+        {
+            AccelerateHorizontal(ref glideHAcc, ref glideHFric, ref glideHMaxSpeed);
+            if (currentInputEvent as JumpEvent == null)
+            {
+                _cMovementInput.ConsumeEvent(currentInputEvent);
+                StartFalling();
+            }
+        }
+
+        protected virtual void State_WallSlide()
+        {
+            if (_cFacingDir * _cMovementInput.horizontalRaw < 0) //They don't share the same sign and horizontalRaw != 0
+            {
+                StartFalling();
+            }
+
+            if (currentInputEvent as JumpEvent != null)
+            {
+                _cMovementInput.ConsumeEvent(currentInputEvent);
+                StartWallJump();
+            }
+            if (!actor.CharacterController2D.manuallyCheckForCollisionsH(_cFacingDir * 0.01f)) //The wall suddenly ended in mid air!
+                StartFalling();
+        }
+
+        protected virtual void State_Climb()
+        {
+            AccelerateHorizontal(ref inAirHAcc, ref inAirHFric, ref inAirHMaxSpeed);
+            _cVelocity.y = _cMovementInput.verticalRaw * climbingVVelocity;
+
+            //Possible transitions
+            //To allow jumping, even when not grounded, but only when some sort of x movement is applied.
+            //For a straight up jump, climbing shouldn't be used!
+            if (currentInputEvent as JumpEvent != null && _cVelocity.x != 0)
+            {
+                _cMovementInput.ConsumeEvent(currentInputEvent);
+                StartJump();
+            }
         }
 
         #endregion
