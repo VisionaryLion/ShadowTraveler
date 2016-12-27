@@ -2,7 +2,7 @@
 using System.Collections;
 using Combat;
 
-namespace Entity
+namespace Entities
 {
     public class HealthEntity : Entity
     {

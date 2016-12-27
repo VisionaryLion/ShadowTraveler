@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Entity;
+using Entities;
 using LightSensing;
 
 public class NavAgent : MonoBehaviour

@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Entity;
+using Entities;
 
 
 namespace CC2D

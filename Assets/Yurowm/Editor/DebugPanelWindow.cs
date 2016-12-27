@@ -228,7 +228,7 @@ public class DebugPanelWindow : EditorWindow {
 	{
 		foreach (KeyValuePair<string, DebugPanel.Field> pair in DebugPanel.main.parameters)
 			if (pair.Value.category == key)
-				DrawField(pair.Value.name);
+				DrawField(pair.Key);
 	}
 
 	void DrawFieldHeader (string key) {
@@ -271,7 +271,7 @@ public class DebugPanelWindow : EditorWindow {
 			GUILayout.Space(20);
 		}
 
-		content.text = key;
+		content.text = DebugPanel.main.parameters[key].name;
 		fieldTextStyle.fontStyle = FontStyle.Normal;
 		tWidth = Mathf.Clamp(tWidth, fieldTextStyle.CalcSize(content).x, 300);
 		EditorGUILayout.LabelField(content, fieldTextStyle, GUILayout.Width(titleWidth));

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using ItemHandler;
-using Entity;
+using Entities;
 using System;
 
 namespace Equipment

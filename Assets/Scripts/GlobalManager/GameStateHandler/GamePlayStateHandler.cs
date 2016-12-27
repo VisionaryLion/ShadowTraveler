@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using Entity;
+using Entities;
 
 namespace Manager
 {

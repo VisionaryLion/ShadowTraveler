@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Entity;
+using Entities;
 
 /*
 Author: Oribow

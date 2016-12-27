@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Entity;
+using Entities;
 using FMODUnity;
 
 public class ElevatorPlatform : MonoBehaviour

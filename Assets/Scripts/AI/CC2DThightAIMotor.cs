@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using CC2D;
 
-
-
 public class CC2DThightAIMotor : CC2DMotor
 {
     bool useManualXSpeed;
@@ -45,20 +43,7 @@ public class CC2DThightAIMotor : CC2DMotor
         Vector3 pos = transform.position;
         pos.x = x;
         transform.position = pos;
-        actor.CharacterController2D.warpToGrounded();
+        entity.CharacterController2D.warpToGrounded();
         _cMState = MState.Walk;
     }
-
-#if DEBUG_THIS
-    void OnGUI()
-    {
-        GUILayout.Label("cState = " + _cMState.ToString());
-        GUILayout.Label("MoveOutput = " + _cVelocity);
-        GUILayout.Label("Real velocity = " + actor.CharacterController2D.velocity);
-        GUILayout.Label("isGrounded = " + _isGrounded + "( raw = " + actor.CharacterController2D.isGrounded + ")");
-        GUILayout.Label("currentLyTouchingClimbables = " + _climbableTriggerCount);
-        GUILayout.Label("isOnSlope = " + actor.CharacterController2D.collisionState.standOnToSteepSlope);
-        GUILayout.Label("isFakedParents = " + (_fakeParent != null));
-    }
-#endif
 }

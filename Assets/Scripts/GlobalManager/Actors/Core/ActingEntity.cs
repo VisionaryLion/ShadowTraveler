@@ -2,8 +2,9 @@
 using CC2D;
 using Combat;
 using AI.Brain;
+using Utility;
 
-namespace Entity
+namespace Entities
 {
     public class ActingEntity : Entity
     {
@@ -29,12 +30,19 @@ namespace Entity
         public CC2DMotor CC2DMotor { get { return movementEntity.CC2DMotor; } }
         public Rigidbody2D Rigidbody2D { get { return movementEntity.Rigidbody2D; } }
         public BoxCollider2D BoxCollider2D { get { return movementEntity.BoxCollider2D; } }
+
         //---HealthEntity
         public IHealth IHealth { get { return healthEntity.IHealth; } }
+
         //---AnimationEntity
         public Animator Animator { get { return animationEntity.Animator; } }
         public AnimationHandler AnimationHandler { get { return animationEntity.AnimationHandler; } }
         #endregion
+
+#if UNITY_EDITOR
+        [SerializeField, HideInInspector]
+        int nameIndex = -1;
+#endif
 
         protected override void Awake()
         {
@@ -66,6 +74,12 @@ namespace Entity
 
             //Print some custom reminder.
             Debug.LogWarning(GenerateSetUpReminderShort("Layer"));
+
+            //Change name to help debuging
+            if (nameIndex == -1)
+            {
+                this.name = relationshipMarker.actorType.ToString() + " - " + RandomFirstNames.GetRandomFirstName(out nameIndex);
+            }
         }
 #endif
 

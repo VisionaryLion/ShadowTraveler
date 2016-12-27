@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 using UnityEditor;
 
-namespace Entity
+namespace Entities
 {
     [SelectionBase]
     public class Entity : MonoBehaviour

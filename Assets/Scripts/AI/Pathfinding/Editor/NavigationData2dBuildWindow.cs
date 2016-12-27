@@ -8,7 +8,7 @@ using System.Linq;
 using Utility.ExtensionMethods;
 using System.Collections.Generic;
 using CC2D;
-using Entity;
+using Entities;
 
 namespace NavMesh2D.Core
 {

@@ -68,22 +68,40 @@ public class DebugPanel : MonoBehaviour {
 		}
 
 	public static void Log (string name, string category, string trace, object o) {
-		if (!main.parameters.ContainsKey(name))
-			main.parameters.Add(name, new Field());
-		main.parameters [name].name = name;
-		main.parameters [name].value = o.ToString ();
-		main.parameters [name].category = category;
-		main.parameters [name].trace = trace;
+        string id = name + category;
+		if (!main.parameters.ContainsKey(id))
+			main.parameters.Add(id, new Field());
+		main.parameters [id].name = name;
+		main.parameters [id].value = o.ToString ();
+		main.parameters [id].category = category;
+		main.parameters [id].trace = trace;
 		if (!main.categories.ContainsKey(category))
 			main.categories.Add (category, true);
 		}
 
-	public static void Break (string name) {
-		if (main.parameters.ContainsKey(name))
-			main.parameters.Remove(name);
+	public static void Break (string name, string category) {
+        string id = name + category;
+        if (main.parameters.ContainsKey(id))
+			main.parameters.Remove(id);
 	}
 
-	public static void Clear () {
+    public static void BreakCategory(string category)
+    {
+        List<string> keys = new List<string>(main.parameters.Keys);
+        foreach (string key in keys)
+        {
+            if (main.parameters[key].category == category)
+                Break(key);
+        }
+    }
+
+    public static void Break(string id)
+    {
+        if (main.parameters.ContainsKey(id))
+            main.parameters.Remove(id);
+    }
+
+    public static void Clear () {
 		main.parameters.Clear ();
 		main.categories.Clear ();
 	}

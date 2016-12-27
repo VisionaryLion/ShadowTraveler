@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections;
 
-namespace Entity
+namespace Entities
 {
     [CustomEditor(typeof(Entity), true)]
     public class EntityEditor : Editor

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Entity
+namespace Entities
 {
     public class ElevatorEntity : Entity
     {

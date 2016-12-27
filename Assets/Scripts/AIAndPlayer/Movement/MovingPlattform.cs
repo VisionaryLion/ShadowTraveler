@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Entity;
+using Entities;
 
 [RequireComponent(typeof(PositionHolder2D))]
 [RequireComponent(typeof(Rigidbody2D))]

@@ -1,10 +1,12 @@
 ﻿using AI.Sensor;
-using Entity;
+using Entities;
 
 namespace AI.Brain
 {
     public class BlackboardHolder
     {
+        public Blackboard Blackboard { get { return _blackboard; } }
+
         Blackboard _blackboard;
         ISensor[] _sensors;
 
@@ -41,6 +43,15 @@ namespace AI.Brain
         //Light
         public float brigthness;
         public LightLevelOfComfort lightLevelOfComfort;
+
+#if UNITY_EDITOR
+        public void LogBlackboardContent(string handle)
+        {
+            DebugPanel.Log("Brigthness", handle + ": Blackboard", brigthness);
+            DebugPanel.Log("Light Level Of Comfort", handle + ": Blackboard", lightLevelOfComfort);
+            DebugPanel.Log("Visible Enemy Count", handle + ": Blackboard", visibleHostileEntities.Length);
+        }
+#endif
     }
 }
 

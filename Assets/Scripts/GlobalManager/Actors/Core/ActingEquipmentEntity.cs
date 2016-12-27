@@ -3,7 +3,7 @@ using System.Collections;
 using ItemHandler;
 using System;
 
-namespace Entity
+namespace Entities
 {
     public class ActingEquipmentEntity : ActingEntity, IInventoryEntity
     {

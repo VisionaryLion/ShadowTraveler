@@ -135,7 +135,7 @@ public class SmartTriggerSwitchEditor : Editor
                 GUI.enabled = true;
                 EditorGUIUtility.labelWidth = 130;
 
-                actorToRec.intValue = EditorGUI.Popup(new Rect(rect.x, rect.y, rect.width - 5, EditorGUIUtility.singleLineHeight), actorToRec.intValue, Entity.Entity.EntitySubtypeNames);
+                actorToRec.intValue = EditorGUI.Popup(new Rect(rect.x, rect.y, rect.width - 5, EditorGUIUtility.singleLineHeight), actorToRec.intValue, Entities.Entity.EntitySubtypeNames);
             }
             else if (activeActivator.intValue == 4)
             {

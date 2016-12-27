@@ -2,7 +2,7 @@
 using Manager;
 using System.Collections;
 
-namespace Entity
+namespace Entities
 {
     [RequireComponent(typeof(DeathStateHandler))]
     [RequireComponent(typeof(PauseMenuStateHandler))]

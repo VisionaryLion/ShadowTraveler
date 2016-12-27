@@ -3,7 +3,7 @@ using CC2D;
 using Combat;
 using ItemHandler;
 
-namespace Entity
+namespace Entities
 {
     public class PlayerEntity : ActingEquipmentEntity
     {

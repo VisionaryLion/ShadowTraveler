@@ -5,7 +5,7 @@ using UnityEngine;
 using Utility.ExtensionMethods;
 using System.Collections;
 using System.Collections.Generic;
-using Entity;
+using Entities;
 
 namespace CC2D
 {
@@ -14,7 +14,7 @@ namespace CC2D
         [SerializeField]
         [HideInInspector]
         [AssignEntityAutomaticly]
-        protected SimpleMovingEntity actor;
+        protected SimpleMovingEntity entity;
 
         #region Inspector vars
         [Header("External Reference")]
@@ -225,7 +225,7 @@ namespace CC2D
 
             if (startWrappedDown)
             {
-                actor.CharacterController2D.warpToGrounded();
+                entity.CharacterController2D.warpToGrounded();
                 StartWalk();
             }
             else
@@ -244,13 +244,16 @@ namespace CC2D
 
             InitStateUpdate();
 
-            if (actor.CharacterController2D.collisionState.wasGroundedLastFrame && !actor.CharacterController2D.isGrounded)
+            if (entity.CharacterController2D.collisionState.wasGroundedLastFrame && !entity.CharacterController2D.isGrounded)
                 OnIsNotGrounded();
-            else if (actor.CharacterController2D.collisionState.becameGroundedThisFrame)
+            else if (entity.CharacterController2D.collisionState.becameGroundedThisFrame)
                 OnBecameGrounded();
 
             UpdateCurrentState();
             EndStateUpdate();
+#if UNITY_EDITOR
+            LogDebugStats();
+#endif
         }
 
         List<int> triggeredColliderHash;
@@ -328,7 +331,7 @@ namespace CC2D
 
             // Calculate impulse scalar
             float j = -(1 + e) * velAlongNormal;
-            j /= 1 / actor.Rigidbody2D.mass + 1 / oRi.mass;
+            j /= 1 / entity.Rigidbody2D.mass + 1 / oRi.mass;
 
             // Apply impulse
             Vector2 impulse = j * col.contacts[0].normal;
@@ -381,12 +384,12 @@ namespace CC2D
             _totalExternalVelocity = CalculateTotalExternalAccerleration();
             if (_fakeParent != null)
             {
-                _fakeParentOffset += actor.CharacterController2D.calcMoveVector((_cVelocity + _totalExternalVelocity + _cAcceleration * Time.deltaTime * 0.5f) * Time.deltaTime, _cMState == MState.Jump);
+                _fakeParentOffset += entity.CharacterController2D.calcMoveVector((_cVelocity + _totalExternalVelocity + _cAcceleration * Time.deltaTime * 0.5f) * Time.deltaTime, _cMState == MState.Jump);
             }
             else
-                actor.CharacterController2D.move((_cVelocity + _totalExternalVelocity + _cAcceleration * Time.deltaTime * 0.5f) * Time.deltaTime, _cMState == MState.Jump);
-            if (actor.CharacterController2D.collisionState.hasCollision())
-                _cVelocity = actor.CharacterController2D.velocity;
+                entity.CharacterController2D.move((_cVelocity + _totalExternalVelocity + _cAcceleration * Time.deltaTime * 0.5f) * Time.deltaTime, _cMState == MState.Jump);
+            if (entity.CharacterController2D.collisionState.hasCollision())
+                _cVelocity = entity.CharacterController2D.velocity;
             else
                 _cVelocity += _cAcceleration * Time.deltaTime;
 
@@ -395,7 +398,7 @@ namespace CC2D
                 return;
             if (_totalExternalVelocity.x > 0)
             {
-                if (actor.CharacterController2D.collisionState.right)
+                if (entity.CharacterController2D.collisionState.right)
                 {
                     _allExternalVelocitys.Clear();
                     return;
@@ -403,7 +406,7 @@ namespace CC2D
             }
             else
             {
-                if (actor.CharacterController2D.collisionState.left)
+                if (entity.CharacterController2D.collisionState.left)
                 {
                     _allExternalVelocitys.Clear();
                     return;
@@ -413,7 +416,7 @@ namespace CC2D
                 return;
             if (_totalExternalVelocity.y > 0)
             {
-                if (actor.CharacterController2D.collisionState.above)
+                if (entity.CharacterController2D.collisionState.above)
                 {
                     _allExternalVelocitys.Clear();
                     return;
@@ -421,7 +424,7 @@ namespace CC2D
             }
             else
             {
-                if (actor.CharacterController2D.collisionState.below)
+                if (entity.CharacterController2D.collisionState.below)
                 {
                     _allExternalVelocitys.Clear();
                     return;
@@ -431,22 +434,22 @@ namespace CC2D
 
         protected bool ShouldWallSlide()
         {
-            if (actor.CharacterController2D.collisionState.right) //we hit a wall in that direction
+            if (entity.CharacterController2D.collisionState.right) //we hit a wall in that direction
             {
-                if (Mathf.Approximately(actor.CharacterController2D.collisionState.rightHit.normal.y, 0)) // no sliding on overhangs!
-                    if (wallSlideable.IsLayerWithinMask(actor.CharacterController2D.collisionState.rightHit.collider.gameObject.layer))
+                if (Mathf.Approximately(entity.CharacterController2D.collisionState.rightHit.normal.y, 0)) // no sliding on overhangs!
+                    if (wallSlideable.IsLayerWithinMask(entity.CharacterController2D.collisionState.rightHit.collider.gameObject.layer))
                         return true; //the walls layer is contained in all allowed layers.
             }
-            else if (actor.CharacterController2D.collisionState.left) //we hit a wall in that direction
-                if (actor.CharacterController2D.collisionState.leftHit.normal.y >= 0) // no sliding on overhangs!
-                    if (wallSlideable.IsLayerWithinMask(actor.CharacterController2D.collisionState.leftHit.collider.gameObject.layer))
+            else if (entity.CharacterController2D.collisionState.left) //we hit a wall in that direction
+                if (entity.CharacterController2D.collisionState.leftHit.normal.y >= 0) // no sliding on overhangs!
+                    if (wallSlideable.IsLayerWithinMask(entity.CharacterController2D.collisionState.leftHit.collider.gameObject.layer))
                         return true; //the walls layer is contained in all allowed layers.
             return false;
         }
 
         protected void HandleSlope()
         {
-            _cVelocity = new Vector2(actor.CharacterController2D.collisionState.belowHit.normal.y, -actor.CharacterController2D.collisionState.belowHit.normal.x) * steepSlopeGravity * actor.CharacterController2D.collisionState.belowHit.normal.x;
+            _cVelocity = new Vector2(entity.CharacterController2D.collisionState.belowHit.normal.y, -entity.CharacterController2D.collisionState.belowHit.normal.x) * steepSlopeGravity * entity.CharacterController2D.collisionState.belowHit.normal.x;
         }
 
         protected void HandleFakeParenting()
@@ -641,7 +644,7 @@ namespace CC2D
             /*
             stop anim
             */
-            actor.CharacterController2D.recalculateDistanceBetweenRays();
+            entity.CharacterController2D.recalculateDistanceBetweenRays();
         }
 
         protected virtual void StartGliding()
@@ -681,7 +684,7 @@ namespace CC2D
         protected virtual void State_Walk()
         {
             //Handle sliding of a top step slope
-            if (actor.CharacterController2D.collisionState.standOnToSteepSlope || actor.CharacterController2D.manuallyCheckForSteepSlopes(-actor.CharacterController2D.collisionState.belowHit.normal.x))
+            if (entity.CharacterController2D.collisionState.standOnToSteepSlope || entity.CharacterController2D.manuallyCheckForSteepSlopes(-entity.CharacterController2D.collisionState.belowHit.normal.x))
             {
                 HandleSlope();
                 if (currentInputEvent as JumpEvent != null)
@@ -699,13 +702,13 @@ namespace CC2D
                 _cMovementInput.ConsumeEvent(currentInputEvent);
                 StartJump();
             }
-            else if (actor.CharacterController2D.collisionState.belowHit.collider.CompareTag(movingPlatformTag))
+            else if (entity.CharacterController2D.collisionState.belowHit.collider.CompareTag(movingPlatformTag))
             {
-                if (actor.CharacterController2D.collisionState.belowHit.collider.transform.rotation != Quaternion.identity || actor.CharacterController2D.collisionState.belowHit.collider.transform.localScale != new Vector3(1, 1, 1))
-                    FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
+                if (entity.CharacterController2D.collisionState.belowHit.collider.transform.rotation != Quaternion.identity || entity.CharacterController2D.collisionState.belowHit.collider.transform.localScale != new Vector3(1, 1, 1))
+                    FakeTransformParent = entity.CharacterController2D.collisionState.belowHit.collider.transform.parent;
                 else
-                    FakeTransformParent = actor.CharacterController2D.collisionState.belowHit.collider.transform;
-                transform.parent = actor.CharacterController2D.collisionState.belowHit.collider.transform.parent;
+                    FakeTransformParent = entity.CharacterController2D.collisionState.belowHit.collider.transform;
+                transform.parent = entity.CharacterController2D.collisionState.belowHit.collider.transform.parent;
                 ReCalculateFakeParentOffset();
             }
             else
@@ -778,7 +781,7 @@ namespace CC2D
                 //Switch seamless to normal jumping!
                 _cMState = MState.Jump;
             }
-            else if (actor.CharacterController2D.collisionState.above) // Probably hit the ceiling. Abort Jump to avoid "hovering at the ceiling"!
+            else if (entity.CharacterController2D.collisionState.above) // Probably hit the ceiling. Abort Jump to avoid "hovering at the ceiling"!
             {
                 _cVelocity.y = 0;
                 StartFalling();
@@ -807,7 +810,7 @@ namespace CC2D
                 _cMovementInput.ConsumeEvent(currentInputEvent);
                 StartWallJump();
             }
-            if (!actor.CharacterController2D.manuallyCheckForCollisionsH(_cFacingDir * 0.01f)) //The wall suddenly ended in mid air!
+            if (!entity.CharacterController2D.manuallyCheckForCollisionsH(_cFacingDir * 0.01f)) //The wall suddenly ended in mid air!
                 StartFalling();
         }
 
@@ -850,6 +853,18 @@ namespace CC2D
         }
 
         #endregion
+
+#if UNITY_EDITOR
+        void LogDebugStats()
+        {
+            DebugPanel.Log("cState", entity.name+": Movement", _cMState);
+            DebugPanel.Log("Velocity", entity.name + ": Movement", entity.CharacterController2D.velocity);
+            DebugPanel.Log("isGrounded", entity.name + ": Movement", _isGrounded);
+            DebugPanel.Log("currentLyTouchingClimbables", entity.name + ": Movement", _climbableTriggerCount);
+            DebugPanel.Log("isOnSlope", entity.name + ": Movement", entity.CharacterController2D.collisionState.standOnToSteepSlope);
+            DebugPanel.Log("isFakedParents", entity.name + ": Movement", (_fakeParent != null));
+        }
+#endif
     }
 
     public class Velocity2D

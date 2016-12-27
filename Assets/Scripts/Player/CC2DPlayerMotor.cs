@@ -1,6 +1,4 @@
-﻿#define DEBUG
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CC2D
 {
@@ -54,7 +52,7 @@ namespace CC2D
                 _cMovementInput.ConsumeEvent(currentInputEvent);
                 StartWallJump();
             }
-            if (!actor.CharacterController2D.manuallyCheckForCollisionsH(_cFacingDir * 0.01f)) //The wall suddenly ended in mid air!
+            if (!entity.CharacterController2D.manuallyCheckForCollisionsH(_cFacingDir * 0.01f)) //The wall suddenly ended in mid air!
                 StartFalling();
         }
 
@@ -95,21 +93,5 @@ namespace CC2D
             }
             FakeTransformParent = null;
         }
-
-#if DEBUG
-        void OnGUI()
-        {
-            if (gameObject.CompareTag("Player"))
-            {
-                GUILayout.Label("cState = " + _cMState.ToString());
-                GUILayout.Label("MoveOutput = " + _cVelocity);
-                GUILayout.Label("Real velocity = " + actor.CharacterController2D.velocity);
-                GUILayout.Label("isGrounded = " + _isGrounded + "( raw = " + actor.CharacterController2D.isGrounded + ")");
-                GUILayout.Label("currentLyTouchingClimbables = " + _climbableTriggerCount);
-                GUILayout.Label("isOnSlope = " + actor.CharacterController2D.collisionState.standOnToSteepSlope);
-                GUILayout.Label("isFakedParents = " + (_fakeParent != null));
-            }
-        }
-#endif
     }
 }

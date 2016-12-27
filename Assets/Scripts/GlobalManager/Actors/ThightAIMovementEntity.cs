@@ -3,7 +3,7 @@ using System.Collections;
 using CC2D;
 using System;
 
-namespace Entity
+namespace Entities
 {
     public class ThightAIMovementEntity : IMovementEntity
     {

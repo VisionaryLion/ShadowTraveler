@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Entity;
+using Entities;
 using AI.Brain;
 using System.Collections.Generic;
 
@@ -14,9 +14,14 @@ namespace AI.Sensor
         Transform rayOrigin; // eyes
         [SerializeField]
         float sightRange = 40;
-        
 
+        List<Entity> queueryResultBuffer;
         EntityDatabase actorDatabase;
+
+        void Awake()
+        {
+            queueryResultBuffer = new List<Entity>(4);
+        }
 
         void Start()
         {
@@ -30,24 +35,25 @@ namespace AI.Sensor
 
         public Blackboard.OtherEntity[] GetVisibleActors(RelationshipType requiredRel)
         {
-            List<Blackboard.OtherEntity> inSight = new List<Blackboard.OtherEntity>(1); 
-            ActingEntity[] allActors = actorDatabase.Find<ActingEntity>();
+            List<Blackboard.OtherEntity> inSight = new List<Blackboard.OtherEntity>(1);
+            queueryResultBuffer.Clear();
+            actorDatabase.Find<ActingEntity>(ref queueryResultBuffer);
             float sightRangeSqared = sightRange * sightRange;
-
-            foreach (var actor in allActors)
+            ActingEntity ae;
+            foreach (var e in queueryResultBuffer)
             {
-                if (entity.RelationshipMarker.GetRelationship(actor) != RelationshipType.Hostile)
+                ae = (ActingEntity)e;
+                if (this.entity.RelationshipMarker.GetRelationship(ae) != RelationshipType.Hostile)
                     continue;
-                if ((actor.transform.position - rayOrigin.position).sqrMagnitude + 1 > sightRangeSqared)
+                if ((e.transform.position - rayOrigin.position).sqrMagnitude + 1 > sightRangeSqared)
                     continue;
 
-                RaycastHit2D hit = Physics2D.Raycast(rayOrigin.position, actor.transform.position - rayOrigin.position, sightRange);
-                if (hit && hit.collider.gameObject == actor.gameObject)
+                RaycastHit2D hit = Physics2D.Raycast(rayOrigin.position, e.transform.position - rayOrigin.position, sightRange);
+                if (hit && hit.collider.gameObject == e.gameObject)
                 {
-                    inSight.Add(new Blackboard.OtherEntity(actor, Vector2.Distance(rayOrigin.position, entity.transform.position)));
+                    inSight.Add(new Blackboard.OtherEntity(ae, Vector2.Distance(rayOrigin.position, this.entity.transform.position)));
                 }
             }
-
             return inSight.ToArray();
         }
 

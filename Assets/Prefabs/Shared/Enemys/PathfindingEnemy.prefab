@@ -1282,8 +1282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: 8b42719f794a4b2488d905c3d91ed80a, type: 2}
-  levelOfComfort: 
-  _currentBrightnessDebug: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &114000010058442124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1627,6 +1625,7 @@ MonoBehaviour:
   movementEntity: {fileID: 114000014054586058}
   healthEntity: {fileID: 114000012387000604}
   animationEntity: {fileID: 114000014145071798}
+  nameIndex: 387
   lineOfSight: {fileID: 114000011430638456}
   lightSensor: {fileID: 114000010051799260}
   navAgent: {fileID: 114000013734588984}
@@ -1818,7 +1817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 524418b21dee64341bfb6d34b9022800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 114000014054586058}
+  entity: {fileID: 114000014054586058}
   spriteRoot: {fileID: 4000012401693880}
   startWrappedDown: 1
   gravityAcceleration: 20

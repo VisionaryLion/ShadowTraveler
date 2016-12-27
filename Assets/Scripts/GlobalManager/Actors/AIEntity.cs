@@ -2,7 +2,7 @@
 using AI.Brain;
 using AI.Sensor;
 
-namespace Entity
+namespace Entities
 {
     public class AIEntity : ActingEntity, IAILogic {
 
@@ -32,6 +32,12 @@ namespace Entity
             GlobalAILogicScheduler.Instance.AddAILogic(this);
         }
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            GlobalAILogicScheduler.Instance.RemoveAILogic(this);
+        }
+
 #if UNITY_EDITOR
         public override void Refresh()
         {
@@ -47,6 +53,10 @@ namespace Entity
         {
             blackboardHolder.Update();
 
+#if UNITY_EDITOR
+            blackboardHolder.Blackboard.LogBlackboardContent(this.name);
+            DebugPanel.Log("Health", this.name+": Blackboard", IHealth.CurrentHealth);
+#endif
         }
     }
 }

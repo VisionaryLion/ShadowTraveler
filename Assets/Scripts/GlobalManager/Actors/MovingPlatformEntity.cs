@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Entity
+namespace Entities
 {
     public class MovingPlatformEntity : Entity
     {

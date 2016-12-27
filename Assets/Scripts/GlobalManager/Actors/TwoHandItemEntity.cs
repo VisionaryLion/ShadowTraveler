@@ -2,7 +2,7 @@
 using System.Collections;
 using ItemHandler;
 
-namespace Entity
+namespace Entities
 {
     public class TwoHandItemEntity : ItemEntity
     {

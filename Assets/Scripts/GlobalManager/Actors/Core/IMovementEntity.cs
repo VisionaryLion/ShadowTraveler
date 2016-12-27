@@ -2,7 +2,7 @@
 using System.Collections;
 using CC2D;
 
-namespace Entity
+namespace Entities
 {
     public abstract class IMovementEntity : SimpleMovingEntity
     {
