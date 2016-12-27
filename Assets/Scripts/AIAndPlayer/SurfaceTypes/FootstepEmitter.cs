@@ -1,15 +1,15 @@
 ﻿// - AUTHOR : Oribow
 using UnityEngine;
-using Actors;
+using Entity;
 
 namespace SurfaceTypeUser
 {
     public class FootstepEmitter : MonoBehaviour
     {
         [SerializeField]
-        [AssignActorAutomaticly]
+        [AssignEntityAutomaticly]
         [HideInInspector]
-        BasicEntityActor actor;
+        ActingEntity actor;
 
         [FMODUnity.EventRef]
         [SerializeField]

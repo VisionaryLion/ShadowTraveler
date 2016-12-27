@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entity;
 
 
 namespace CC2D
@@ -10,8 +10,8 @@ namespace CC2D
 
         [SerializeField]
         [HideInInspector]
-        [AssignActorAutomaticly]
-        BasicEntityActor actor;
+        [AssignEntityAutomaticly]
+        ActingEntity actor;
 
         [SerializeField]
         float timeRunLeft;
@@ -35,7 +35,7 @@ namespace CC2D
             bufferedInput = actor.CC2DMotor.CurrentMovementInput;
             timeLeft = (runRight) ? timeRunRight : timeRunLeft;
         }
-       
+
         // Update is called once per frame
         void Update()
         {

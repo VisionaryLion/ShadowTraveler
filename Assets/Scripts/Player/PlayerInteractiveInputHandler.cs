@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entity;
 
 public class PlayerInteractiveInputHandler : InteractiveInputHandler
 {
     public bool blockAllInput = false;
     InteractiveInputUIMarker.UIInputItem[] itemQueue;
 
-    public PlayerInteractiveInputHandler(PlayerActor actor) : base(actor)
+    public PlayerInteractiveInputHandler(PlayerEntity actor) : base(actor)
     {
-        UnityEventHog.GetInstance().AddUpdateListener(Update);
+        UnityEventHook.GetInstance().AddUpdateListener(Update);
         itemQueue = actor.InteractiveInputUIMarker.uiItemQueue;
     }
 

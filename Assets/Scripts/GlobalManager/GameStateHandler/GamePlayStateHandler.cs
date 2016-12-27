@@ -1,26 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using Actors;
+using Entity;
 
 namespace Manager
 {
     public class GamePlayStateHandler : MonoBehaviour, IGameState
     {    
-        [AssignActorAutomaticly]
-        GameStateActor actor;
+        [AssignEntityAutomaticly]
+        GameStateEntity actor;
 
 
         void Start()
         {
-            GameStateManager.GetInstance().AssignDefaultState(this);
+            GameStateManager.Instance.AssignDefaultState(this);
         }
 
         public void OnStateActive()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                GameStateManager.GetInstance().StartNewState(actor.PauseMenuStateHandler);
+                GameStateManager.Instance.StartNewState(actor.PauseMenuStateHandler);
             }
         }
 

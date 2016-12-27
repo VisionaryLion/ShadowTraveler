@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entity;
 using ItemHandler;
 using System;
 
@@ -9,8 +9,8 @@ namespace Equipment
     public class Flare : MonoBehaviour
     {
 
-        [SerializeField, HideInInspector, AssignActorAutomaticly]
-        TwoHandItemActor actor;
+        [SerializeField, HideInInspector, AssignEntityAutomaticly]
+        TwoHandItemEntity actor;
 
 
         [SerializeField]
@@ -26,7 +26,7 @@ namespace Equipment
         [SerializeField]
         Vector2 throwForce;
 
-        BasicEntityEquipmentActor equiperActor;
+        ActingEquipmentEntity equiperActor;
         bool isBurning = false;
         bool burnedOut = false;
         bool detachedAndBurning = false;
@@ -55,7 +55,7 @@ namespace Equipment
             }
         }
 
-        private void Actor_PickUpHandler(BasicEntityEquipmentActor equiper)
+        private void Actor_PickUpHandler(ActingEquipmentEntity equiper)
         {
             equiperActor = equiper;
             rigidbody2d.isKinematic = true;
@@ -72,7 +72,7 @@ namespace Equipment
             //enabled = false;
         }
 
-        private void OnEquiped(BasicEntityEquipmentActor equiper)
+        private void OnEquiped(ActingEquipmentEntity equiper)
         {
             enabled = true;
         }
@@ -90,7 +90,7 @@ namespace Equipment
                 }
             }
             else if(!burnedOut)
-            {
+            {     
                 item.duration -= durationUsagePerSecond * Time.deltaTime;
                 if (item.duration <= 0)
                 {
@@ -109,8 +109,8 @@ namespace Equipment
                 else if (Input.GetMouseButtonDown(actor.EquipedWithRightHand ? 1 : 0))
                 {
                     detachedAndBurning = true;
-                    equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);
-                    actor.transform.parent = OrganisationalTransforms.Instance.DroppedItemRoot;
+                    actor.transform.parent = null;
+                    equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);                    
                     rigidbody2d.isKinematic = false;
                     mainCollider.enabled = true;
                     
@@ -118,6 +118,16 @@ namespace Equipment
                     dirForce.x *= equiperActor.CC2DMotor.FacingDir;
                     rigidbody2d.AddForce(dirForce, ForceMode2D.Impulse);
                     equiperActor = null;
+                    this.enabled = false;
+
+
+                    if(actor.EquipedWithRightHand)
+                    {
+                        HUDManager.hudManager.EmptyRight();
+                    } else
+                    {
+                        HUDManager.hudManager.EmptyLeft();
+                    }
                 }
             }
         }

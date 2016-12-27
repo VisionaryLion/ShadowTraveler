@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entity;
 
 
 namespace ItemHandler
@@ -8,8 +8,8 @@ namespace ItemHandler
     [RequireComponent(typeof(Collider2D))]
     public class ItemPickup : MonoBehaviour
     {
-        [AssignActorAutomaticly, SerializeField, HideInInspector]
-        ItemActor actor;
+        [AssignEntityAutomaticly, SerializeField, HideInInspector]
+        ItemEntity actor;
 
         [SerializeField]
         Collider2D triggerCollider;

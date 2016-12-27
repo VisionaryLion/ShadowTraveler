@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entity;
 using LightSensing;
 
 public class NavAgent : MonoBehaviour
 {
-    [SerializeField, HideInInspector, AssignActorAutomaticly]
-    ThightAIMovementActor actor;
+    [SerializeField, HideInInspector, AssignEntityAutomaticly]
+    ThightAIMovementEntity actor;
 
     [SerializeField]
     Transform pathStartPoint;

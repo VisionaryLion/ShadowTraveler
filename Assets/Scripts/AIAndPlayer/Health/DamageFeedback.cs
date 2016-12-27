@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Actors;
+using Entity;
 
 /*
 Author: Oribow
@@ -8,8 +8,8 @@ namespace Combat
 {
     public class DamageFeedback : MonoBehaviour
     {
-        [AssignActorAutomaticly]
-        BasicEntityActor actor;
+        [AssignEntityAutomaticly]
+        ActingEntity actor;
 
         [SerializeField]
         DamageFeedbackDefinition damgeFeedbackDef;

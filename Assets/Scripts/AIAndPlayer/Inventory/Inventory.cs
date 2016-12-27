@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using Actors;
+using Entity;
 
 namespace ItemHandler
 {
@@ -39,7 +39,7 @@ namespace ItemHandler
         }
 
         List<IItem>[] inventoryCache; // Each index represents a unique tile
-        Dictionary<int, Stack<ItemActor>> pooledItems;
+        Dictionary<int, Stack<ItemEntity>> pooledItems;
         int filledSlotCount = 0;
 
         void Awake()
@@ -49,7 +49,7 @@ namespace ItemHandler
             {
                 inventoryCache[iStack] = new List<IItem>(initialPerSlotAllocationCount);
             }
-            pooledItems = new Dictionary<int, Stack<ItemActor>>(inventorySize);
+            pooledItems = new Dictionary<int, Stack<ItemEntity>>(inventorySize);
         }
 
         public override IItem GetItem(int stackIndex, int itemIndex)
@@ -59,6 +59,8 @@ namespace ItemHandler
 
         public override IItem GetTopItemOfStack(int stackIndex)
         {
+            if (inventoryCache[stackIndex].Count == 0)
+                return null;
             return inventoryCache[stackIndex][0];
         }
 
@@ -82,23 +84,23 @@ namespace ItemHandler
             return -1;
         }
 
-        public override ItemActor GetObjectOfItem(int stackIndex)
+        public override ItemEntity GetObjectOfItem(int stackIndex)
         {
             Debug.Assert(inventoryCache[stackIndex].Count != 0);
             IItem item = inventoryCache[stackIndex][0];
 
-            ItemActor newItem;
-            Stack<ItemActor> pooledObjs;
+            ItemEntity newItem;
+            Stack<ItemEntity> pooledObjs;
             if (item.ShouldPool && pooledItems.TryGetValue(item.ItemId, out pooledObjs))
             {
-                ItemActor actor = pooledObjs.Pop();
+                ItemEntity actor = pooledObjs.Pop();
                 if (pooledObjs.Count == 0)
                     pooledItems.Remove(item.ItemId);
                 newItem = actor;
                 newItem.gameObject.SetActive(true);
             }
             else
-                newItem = Instantiate(item.ItemPrefab).GetComponent<ItemActor>();
+                newItem = Instantiate(item.ItemPrefab).GetComponent<ItemEntity>();
 
             newItem.Item = item;
             return newItem;
@@ -166,7 +168,7 @@ namespace ItemHandler
             }
         }
 
-        public override int AddItem(ItemActor obj)
+        public override int AddItem(ItemEntity obj)
         {
             int newStackIndex = AddItem(obj.Item);
             if (newStackIndex == -1)
@@ -212,7 +214,7 @@ namespace ItemHandler
             }
         }
 
-        public override int AddItemToEmptyStack(ItemActor obj)
+        public override int AddItemToEmptyStack(ItemEntity obj)
         {
             Debug.Assert(obj != null);
             int newStackIndex = AddItemToEmptyStack(obj.Item);
@@ -242,19 +244,19 @@ namespace ItemHandler
             return -1;
         }
 
-        public override ItemActor DropFromInventory(int stackIndex, bool forced = false, bool silent = false)
+        public override ItemEntity DropFromInventory(int stackIndex, bool forced = false, bool silent = false)
         {
             return DropFromInventory(stackIndex, 0, forced, silent);
         }
 
-        public override ItemActor DropFromInventory(int stackIndex, int itemIndex, bool forced = false, bool silent = false)
+        public override ItemEntity DropFromInventory(int stackIndex, int itemIndex, bool forced = false, bool silent = false)
         {
             Debug.Assert(inventoryCache.Length < stackIndex && stackIndex > 0 && inventoryCache[stackIndex].Count > itemIndex && itemIndex > 0);
 
             if (!forced && !inventoryCache[stackIndex][itemIndex].CanBeDropped(this))
                 return null;
 
-            ItemActor newActor = GetObjectOfItem(stackIndex);
+            ItemEntity newActor = GetObjectOfItem(stackIndex);
 
             if (inventoryCache[stackIndex].Count == 1)
             {
@@ -277,7 +279,7 @@ namespace ItemHandler
 
         public override bool TrashItemAt(int stackIndex, int itemIndex, bool forced = false)
         {
-            Debug.Assert(inventoryCache.Length < stackIndex && stackIndex > 0 && inventoryCache[stackIndex].Count > itemIndex && itemIndex > 0);
+            Debug.Assert(inventoryCache.Length > stackIndex && stackIndex >= 0 && inventoryCache[stackIndex].Count > itemIndex && itemIndex >= 0);
 
             if (!forced && !inventoryCache[stackIndex][itemIndex].CanBeTrashed(this))
                 return false;
@@ -291,7 +293,7 @@ namespace ItemHandler
             return true;
         }
 
-        public override void PoolCopyOfItem(ItemActor itemInstance)
+        public override void PoolCopyOfItem(ItemEntity itemInstance)
         {
             Debug.Assert(itemInstance != null);
 
@@ -307,7 +309,7 @@ namespace ItemHandler
                 return;
             }
 
-            Stack<ItemActor> pooledObjs;
+            Stack<ItemEntity> pooledObjs;
             if (pooledItems.TryGetValue(itemInstance.Item.ItemId, out pooledObjs))
             {
                 if (pooledObjs.Count >= itemInstance.Item.PoolLimit)
@@ -320,7 +322,7 @@ namespace ItemHandler
                 pooledObjs.Push(itemInstance);
                 return;
             }
-            pooledObjs = new Stack<ItemActor>(1);
+            pooledObjs = new Stack<ItemEntity>(1);
             pooledObjs.Push(itemInstance);
             pooledItems.Add(itemInstance.Item.ItemId, pooledObjs);
             itemInstance.gameObject.SetActive(false);

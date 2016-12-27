@@ -8,7 +8,7 @@ using System.Linq;
 using Utility.ExtensionMethods;
 using System.Collections.Generic;
 using CC2D;
-using Actors;
+using Entity;
 
 namespace NavMesh2D.Core
 {
@@ -546,7 +546,7 @@ namespace NavMesh2D.Core
     {
         [SerializeField]
         NavigationData2dBuildWindow buildWindow;
-        IMovementActor iMovementActor;
+        IMovementEntity iMovementActor;
 
         public NavAgentUI(NavigationData2dBuildWindow buildWindow)
         {
@@ -604,7 +604,7 @@ namespace NavMesh2D.Core
         {
             if (Selection.activeGameObject != null)
             {
-                iMovementActor = Selection.activeGameObject.GetComponent<IMovementActor>();
+                iMovementActor = Selection.activeGameObject.GetComponent<IMovementEntity>();
                 buildWindow.RepaintThisWindow();
             }
         }
@@ -618,7 +618,7 @@ namespace NavMesh2D.Core
         {
             if (Selection.activeGameObject != null)
             {
-                iMovementActor = Selection.activeGameObject.GetComponent<HumanMovementActor>();
+                iMovementActor = Selection.activeGameObject.GetComponent<HumanMovementEntity>();
                 buildWindow.RepaintThisWindow();
             }
             SceneView.RepaintAll();

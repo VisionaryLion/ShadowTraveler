@@ -8,20 +8,21 @@ namespace Manager
     {
 
         static GameStateManager instance;
-        public static GameStateManager GetInstance() { if (instance == null) instance = new GameStateManager(); return instance; }
+        public static GameStateManager Instance { get { return instance; } }
 
         public IGameState CurrentState { get { return stateStack.Peek(); } }
 
         private Stack<IGameState> stateStack;
-        private UnityEventHog.OnEvent update;
-        private UnityEventHog.OnEvent onDestroy;
+        private UnityEventHook.OnEvent update;
+        private UnityEventHook.OnEvent onDestroy;
 
         public GameStateManager()
         {
-            update = new UnityEventHog.OnEvent(Update);
-            onDestroy = new UnityEventHog.OnEvent(OnDestroy);
-            UnityEventHog.GetInstance().AddUpdateListener(update);
-            UnityEventHog.GetInstance().AddOnDestroyListener(onDestroy);
+            instance = this;
+            update = new UnityEventHook.OnEvent(Update);
+            onDestroy = new UnityEventHook.OnEvent(OnDestroy);
+            UnityEventHook.GetInstance().AddUpdateListener(update);
+            UnityEventHook.GetInstance().AddOnDestroyListener(onDestroy);
             stateStack = new Stack<IGameState>(2);
         }
 

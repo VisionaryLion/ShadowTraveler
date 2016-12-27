@@ -5,7 +5,7 @@ using UnityEngine;
 using Utility.ExtensionMethods;
 using System.Collections;
 using System.Collections.Generic;
-using Actors;
+using Entity;
 
 namespace CC2D
 {
@@ -13,8 +13,8 @@ namespace CC2D
     {
         [SerializeField]
         [HideInInspector]
-        [AssignActorAutomaticly]
-        protected SimpleMovementActor actor;
+        [AssignEntityAutomaticly]
+        protected SimpleMovingEntity actor;
 
         #region Inspector vars
         [Header("External Reference")]
@@ -170,7 +170,10 @@ namespace CC2D
         {
             _cVelocity.x = 0;
             _cVelocity.y = Mathf.Min(_cVelocity.y, 0);
+            
         }
+
+        
 
         #endregion
 
@@ -626,16 +629,19 @@ namespace CC2D
         protected virtual void StartCrouch()
         {
             _prevMState = _cMState;
-            //Crouch the char down, only for debug!
-            spriteRoot.localScale = new Vector3(spriteRoot.localScale.x * crouchScaleFactor, spriteRoot.localScale.y * crouchScaleFactor, spriteRoot.localScale.z);
+            /*
+            start anim
+            */
             _cMState = MState.Crouched;
         }
 
         protected virtual void EndCrouch()
         {
             _prevMState = _cMState;
-            //Stop crouch the char down, only for debug!
-            spriteRoot.localScale = new Vector3(spriteRoot.localScale.x / crouchScaleFactor, spriteRoot.localScale.y / crouchScaleFactor, spriteRoot.localScale.z);
+            /*
+            stop anim
+            */
+            actor.CharacterController2D.recalculateDistanceBetweenRays();
         }
 
         protected virtual void StartGliding()

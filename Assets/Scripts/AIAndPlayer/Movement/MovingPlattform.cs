@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Actors;
+using Entity;
 
 [RequireComponent(typeof(PositionHolder2D))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -11,8 +11,8 @@ public class MovingPlattform : MonoBehaviour
         Loop,
         PingPong
     }
-    [AssignActorAutomaticly]
-    public MovingPlatformActor actor;
+    [AssignEntityAutomaticly]
+    public MovingPlatformEntity actor;
     [SerializeField]
     float timeForOneTravel = 20;
     [SerializeField]

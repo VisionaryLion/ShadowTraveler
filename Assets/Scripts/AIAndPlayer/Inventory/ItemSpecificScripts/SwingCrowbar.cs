@@ -1,21 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entity;
 using System;
 using Combat;
 
-public class SwingCrowbar : MonoBehaviour, IEquipment
+public class SwingCrowbar : MonoBehaviour
 {
+    [SerializeField, AssignEntityAutomaticly, HideInInspector]
+    TwoHandItemEntity entity;
     [SerializeField]
     AreaHarzard2D hitBox;
-
-    AnimationActor actor;
+        
+    AnimationEntity actor;
     AnimationHandler.AnimationEvent callBack;
 
-    void Start()
+    void Start ()
     {
+        entity.EquipedHandler += Entity_EquipedHandler;
+        entity.UnequipedHandler += Entity_UnequipedHandler;
+
         hitBox.hitHandler += HitBox_hitHandler;
         callBack = new AnimationHandler.AnimationEvent(CrowbarSwingFinishedHandler);
+        enabled = false;
+    }
+
+    private void Entity_UnequipedHandler()
+    {
+        enabled = false;
+    }
+
+    private void Entity_EquipedHandler(ActingEquipmentEntity equiper)
+    {
+        enabled = true;
+        actor = GetComponentInParent<AnimationEntity>();
     }
 
     private void HitBox_hitHandler(IDamageReciever reciever)
@@ -26,17 +43,6 @@ public class SwingCrowbar : MonoBehaviour, IEquipment
         CrowbarSwingFinishedHandler();
     }
 
-    public void OnEquiped()
-    {
-        enabled = true;
-        actor = GetComponentInParent<AnimationActor>();
-    }
-
-    public void OnUnequiped()
-    {
-        enabled = false;
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -45,7 +51,6 @@ public class SwingCrowbar : MonoBehaviour, IEquipment
             actor.Animator.SetTrigger("SwingCrowbar");
             actor.AnimationHandler.StartListenToAnimationEnd("SwingCrowbar_Anim", callBack);
             hitBox.dealDamage = true;
-
         }
     }
 

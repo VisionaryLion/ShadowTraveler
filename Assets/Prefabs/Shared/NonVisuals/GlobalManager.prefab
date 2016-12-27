@@ -69,6 +69,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012686561466}
   - 114: {fileID: 114000010654420344}
+  - 114: {fileID: 114000013231023052}
+  - 114: {fileID: 114000011794734338}
+  - 114: {fileID: 114000010117902582}
   m_Layer: 0
   m_Name: Singeltons
   m_TagString: Untagged
@@ -208,6 +211,17 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
+--- !u!114 &114000010117902582
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012872804480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ebf3e49708f88d478bb8c27c2dbbc42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000010143003158
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -256,6 +270,18 @@ MonoBehaviour:
   deathStateHandler: {fileID: 114000012325204734}
   pauseMenuStateHandler: {fileID: 114000010143003158}
   gamePlayStateHandler: {fileID: 114000010531690888}
+--- !u!114 &114000011794734338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012872804480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 704d2907586f8314aa2ca88d8782fbd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navData: {fileID: 11400000, guid: 3bde37f4e5acee04f943654172039cb3, type: 2}
 --- !u!114 &114000012250471480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -299,8 +325,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   globalLightMarker:
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+--- !u!114 &114000013231023052
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012872804480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad1fcefae3d7e843a14ab821516cb01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navData: {fileID: 11400000, guid: 3bde37f4e5acee04f943654172039cb3, type: 2}
 --- !u!114 &114000013311307378
 MonoBehaviour:
   m_ObjectHideFlags: 1

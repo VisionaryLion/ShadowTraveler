@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Actors;
+using Entity;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -18,26 +18,26 @@ namespace ItemHandler
         public abstract IItem GetTopItemOfStack(int stackIndex);
         public abstract List<IItem> GetStack(int stackIndex);
         public abstract int GetNextNotEmptyStack(int stackIndex);
-        public abstract ItemActor GetObjectOfItem(int stackIndex);
+        public abstract ItemEntity GetObjectOfItem(int stackIndex);
 
         public abstract bool TryMoveItem(int fromStack, int toStack);
         public abstract bool TryMoveItem(int fromStack, int fromItemIndex, int toStack);
         public abstract bool CouldAddItem(IItem item);
         public abstract int ItemAddingPreferability(IItem item); // How good would it be to add the item to this inventory. -1 means not addable.
 
-        public abstract int AddItem(ItemActor obj);
+        public abstract int AddItem(ItemEntity obj);
         public abstract int AddItem(IItem item);
-        public abstract int AddItemToEmptyStack(ItemActor obj);
+        public abstract int AddItemToEmptyStack(ItemEntity obj);
 
         public abstract bool ContainsItem(int id);
         public abstract int FindItemWithId(int id);
 
-        public abstract ItemActor DropFromInventory(int stackIndex, bool forced = false, bool silent = false);
-        public abstract ItemActor DropFromInventory(int stackIndex, int itemIndex, bool forced = false, bool silent = false);
+        public abstract ItemEntity DropFromInventory(int stackIndex, bool forced = false, bool silent = false);
+        public abstract ItemEntity DropFromInventory(int stackIndex, int itemIndex, bool forced = false, bool silent = false);
         public abstract bool TrashItemFromStack(int stackIndex, int count = 1, bool forced = false);
         public abstract bool TrashItemAt(int stackIndex, int itemIndex, bool forced = false);
 
-        public abstract void PoolCopyOfItem(ItemActor itemInstance);
+        public abstract void PoolCopyOfItem(ItemEntity itemInstance);
         public abstract void DeletePoolOfItem(int itemId);
 
         public delegate void OnInventoryChanged(IInventory inventory);
