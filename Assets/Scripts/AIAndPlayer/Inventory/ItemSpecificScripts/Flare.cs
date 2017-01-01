@@ -124,18 +124,11 @@ namespace Equipment
 
                     if (actor.EquipedWithRightHand)
                     {
-<<<<<<< HEAD
                         HUDManager.hudManager.EmptyRight();
                     }
-                    else
-=======
+                    else {
                         HUDManager.hudManager.decreaseRight = false;
-                        HUDManager.hudManager.EmptyRight();                        
-                    } else
->>>>>>> refs/remotes/origin/master
-                    {
-                        HUDManager.hudManager.decreaseLeft = false;
-                        HUDManager.hudManager.EmptyLeft();
+                        HUDManager.hudManager.EmptyRight();
                     }
                 }
             }
