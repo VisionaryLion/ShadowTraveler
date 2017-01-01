@@ -19,6 +19,15 @@ namespace ItemHandler
         [SerializeField]
         EquipmentOffset equipmentOffset;
 
+        public delegate void equipItem(IItem item);
+        public delegate void depleteItem();
+        
+        public event equipItem EquipLeftHandler;
+        public event equipItem EquipRightHandler;
+
+        public event depleteItem DepleteLeft;
+        public event depleteItem DepleteRight;
+
 
         public IItem CurrentEquipedItemLeft { get { return leftHandItemActor.Item; } }
         public IItem CurrentEquipedItemRight { get { return rightHandItemActor.Item; } }
@@ -116,11 +125,11 @@ namespace ItemHandler
                 EquipItem(rightHand, actor.TwoHandInventory.GetObjectOfItem(nxtIndex), nxtIndex);
                 if (rightHand)
                 {
-                    HUDManager.hudManager.EquipRight(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                    EquipRightHandler(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);                    
                 }
                 else
                 {
-                    HUDManager.hudManager.EquipLeft(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                    EquipLeftHandler(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
                 }
             }
         }
@@ -140,11 +149,13 @@ namespace ItemHandler
                 if (rightHand)
                 {
                     rightHandItemActor = null;
-                    Debug.Log("empty");
-                    HUDManager.hudManager.EmptyRight();
+                    DepleteRight();
                 }
                 else
+                {
                     leftHandItemActor = null;
+                    DepleteLeft();
+                }
                 EquipNextItem(rightHand);
             }
             else
@@ -254,8 +265,8 @@ namespace ItemHandler
                 itemInProccessOfPicking.TriggerEquiped(actor, false);
                 leftHandItemActor = itemInProccessOfPicking;
 
-                HUDManager.hudManager.EquipLeft(itemInProccessOfPicking.Item);
-
+                if (EquipRightHandler != null)
+                    EquipLeftHandler(itemInProccessOfPicking.Item);
             }
             else
             {
@@ -265,7 +276,8 @@ namespace ItemHandler
                 itemInProccessOfPicking.TriggerEquiped(actor, true);
                 rightHandItemActor = itemInProccessOfPicking;
 
-                HUDManager.hudManager.EquipRight(itemInProccessOfPicking.Item);
+                if(EquipRightHandler != null)
+                    EquipRightHandler(itemInProccessOfPicking.Item);
 
             }
             actor.SetBlockAllNonMovement(false);
