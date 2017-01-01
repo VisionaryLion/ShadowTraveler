@@ -28,27 +28,34 @@ namespace ItemHandler
         [SerializeField]
         Image rightItemDurability;
 
+
         PlayerActor player;
         Sprite emptySprite = null;
         public static HUDManager hudManager;
 
-        public bool decreaseLeft = false;
-        public bool decreaseRight = false;
-
         DurableItem leftDurableItem;
         DurableItem rightDurableItem;
+
+        public bool decreaseLeft = false;
+        public bool decreaseRight = false;
 
         void Awake()
         {
             hudManager = this;
+
             player = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
 
+            player.TwoHandEquipmentManager.EquipLeftHandler += EquipLeft;
+            player.TwoHandEquipmentManager.EquipRightHandler += EquipRight;
+
+            player.TwoHandEquipmentManager.DepleteLeft += EmptyLeft;
+            player.TwoHandEquipmentManager.DepleteRight += EmptyRight;
+
             EmptyLeft();
-            EmptyRight();
+            EmptyRight();            
         }
 
-
-        public void EquipLeft(IItem item)  // or player.EquipmentManager.CurrentEquipedGameObjectLeft
+        public void EquipLeft(IItem item)
         {
             leftItemDescription.text = item.Description;
             leftItemName.text = item.Title;
@@ -71,7 +78,7 @@ namespace ItemHandler
             leftItemDescription.text = "";
             leftItemName.text = "";
             leftItemIcon.enabled = false;
-            leftItemDurability.fillAmount = 0;
+            leftItemDurability.fillAmount = 0f;
         }
 
         public void EmptyRight()
@@ -79,7 +86,20 @@ namespace ItemHandler
             rightItemDescription.text = "";
             rightItemName.text = "";
             rightItemIcon.enabled = false;
-            rightItemDurability.fillAmount = 0;
+            rightItemDurability.fillAmount = 0f;
+        }
+
+        void Update()
+        {
+            if (decreaseLeft)
+            {
+                leftItemDurability.fillAmount = leftDurableItem.duration / 100;
+            }
+
+            if (decreaseRight)
+            {
+                rightItemDurability.fillAmount = rightDurableItem.duration / 100;
+            }
         }
 
         public void startBurn(bool right, DurableItem item)
@@ -95,18 +115,10 @@ namespace ItemHandler
                 leftDurableItem = item;
             }
         }
-
-        void Update()
-        {
-            if (decreaseLeft)
-            {
-                leftItemDurability.fillAmount = leftDurableItem.duration / 100;
-            }
-
-            if (decreaseRight)
-            {
-                rightItemDurability.fillAmount = rightDurableItem.duration / 100;
-            }
-        }
     }
 }
+
+
+
+
+
