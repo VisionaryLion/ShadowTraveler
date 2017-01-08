@@ -1,35 +1,35 @@
 fileFormatVersion: 2
 guid: edebcda6fe1373a459d90bd1207e97d5
-timeCreated: 1483393140
+timeCreated: 1483899635
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: spaceStation-tilesheet-pixel_0
-    21300002: spaceStation-tilesheet-pixel_1
-    21300004: spaceStation-tilesheet-pixel_2
-    21300006: spaceStation-tilesheet-pixel_3
-    21300008: spaceStation-tilesheet-pixel_4
-    21300010: spaceStation-tilesheet-pixel_5
-    21300012: spaceStation-tilesheet-pixel_6
-    21300014: spaceStation-tilesheet-pixel_7
+    21300000: pillar-bkgrd-01
+    21300002: pillar-wire-01
+    21300004: bkgrd
+    21300006: piston-02-back
+    21300008: pillar-blocks
+    21300010: circuit-bkgrd-01
+    21300012: pillar-block-02
+    21300014: floor-3block
     21300016: cloneChamber
-    21300018: spaceStation-tilesheet-pixel_9
-    21300020: spaceStation-tilesheet-pixel_10
-    21300022: spaceStation-tilesheet-pixel_11
-    21300024: spaceStation-tilesheet-pixel_12
-    21300026: spaceStation-tilesheet-pixel_13
-    21300028: spaceStation-tilesheet-pixel_14
+    21300018: floor-top-01
+    21300020: floor-1block
+    21300022: gear-01
+    21300024: gear-02
+    21300026: gear-03
+    21300028: gear-04
     21300030: piston
     21300032: pistonBase
-    21300034: spaceStation-tilesheet-pixel_15
-    21300036: spaceStation-tilesheet-pixel_16
-    21300038: spaceStation-tilesheet-pixel_17
-    21300040: spaceStation-tilesheet-pixel_18
-    21300042: spaceStation-tilesheet-pixel_19
-    21300044: spaceStation-tilesheet-pixel_20
-    21300046: spaceStation-tilesheet-pixel_21
-    21300048: spaceStation-tilesheet-pixel_22
-    21300050: water
+    21300034: piston-pump-01
+    21300036: piston-pump-02
+    21300038: water-01
+    21300040: water-02
+    21300042: floor-bottom-01
+    21300044: vent-01
+    21300046: cog-01
+    21300048: cog-02
+    21300050: water-03
     21300052: cloneChamberBack
     21300054: floor-angle-01
   serializedVersion: 2
@@ -81,7 +81,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_0
+      name: pillar-bkgrd-01
       rect:
         serializedVersion: 2
         x: 16
@@ -94,7 +94,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_1
+      name: pillar-wire-01
       rect:
         serializedVersion: 2
         x: 536
@@ -107,7 +107,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_2
+      name: bkgrd
       rect:
         serializedVersion: 2
         x: 1024
@@ -120,7 +120,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_3
+      name: piston-02-back
       rect:
         serializedVersion: 2
         x: 1572
@@ -133,7 +133,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_4
+      name: pillar-blocks
       rect:
         serializedVersion: 2
         x: 16
@@ -146,7 +146,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_5
+      name: circuit-bkgrd-01
       rect:
         serializedVersion: 2
         x: 200
@@ -159,7 +159,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_6
+      name: pillar-block-02
       rect:
         serializedVersion: 2
         x: 408
@@ -172,7 +172,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_7
+      name: floor-3block
       rect:
         serializedVersion: 2
         x: 577
@@ -198,7 +198,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_9
+      name: floor-top-01
       rect:
         serializedVersion: 2
         x: 577
@@ -211,7 +211,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_10
+      name: floor-1block
       rect:
         serializedVersion: 2
         x: 812
@@ -224,7 +224,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_11
+      name: gear-01
       rect:
         serializedVersion: 2
         x: 8
@@ -237,7 +237,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_12
+      name: gear-02
       rect:
         serializedVersion: 2
         x: 147
@@ -250,7 +250,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_13
+      name: gear-03
       rect:
         serializedVersion: 2
         x: 231
@@ -263,7 +263,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_14
+      name: gear-04
       rect:
         serializedVersion: 2
         x: 361
@@ -302,7 +302,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_15
+      name: piston-pump-01
       rect:
         serializedVersion: 2
         x: 1753
@@ -315,7 +315,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_16
+      name: piston-pump-02
       rect:
         serializedVersion: 2
         x: 1753
@@ -328,7 +328,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_17
+      name: water-01
       rect:
         serializedVersion: 2
         x: 1852
@@ -341,7 +341,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_18
+      name: water-02
       rect:
         serializedVersion: 2
         x: 1960
@@ -354,7 +354,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_19
+      name: floor-bottom-01
       rect:
         serializedVersion: 2
         x: 577
@@ -367,7 +367,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_20
+      name: vent-01
       rect:
         serializedVersion: 2
         x: 1034
@@ -380,7 +380,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_21
+      name: cog-01
       rect:
         serializedVersion: 2
         x: 1753
@@ -393,7 +393,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: spaceStation-tilesheet-pixel_22
+      name: cog-02
       rect:
         serializedVersion: 2
         x: 1754
@@ -406,7 +406,7 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: water
+      name: water-03
       rect:
         serializedVersion: 2
         x: 14
