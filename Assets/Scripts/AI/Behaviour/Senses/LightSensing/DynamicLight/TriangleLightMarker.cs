@@ -103,7 +103,7 @@ namespace LightSensing
                 if (maxY != 0)
                 {
                     maxY = Mathf.Max((pointB - centerOffset).y + heightHalfed, maxY);
-                    return skin.IsTraverable(SampleColorAt(maxY), out traverseCostsMulitplier);
+                    return skin.IsTraversable(SampleColorAt(maxY), out traverseCostsMulitplier);
                 }
             }
             if (Utility.ExtendedGeometry.FindLineIntersection(pointA, pointB, triA, triB, out inter))
@@ -123,7 +123,7 @@ namespace LightSensing
                 return true;
             }
 
-            return skin.IsTraverable(SampleColorAt(maxY), out traverseCostsMulitplier);
+            return skin.IsTraversable(SampleColorAt(maxY), out traverseCostsMulitplier);
         }
 
         void Awake()

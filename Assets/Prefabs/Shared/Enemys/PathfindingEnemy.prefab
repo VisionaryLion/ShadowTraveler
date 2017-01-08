@@ -154,6 +154,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010551083338}
   - 114: {fileID: 114000012101838448}
+  - 114: {fileID: 114000012336788048}
+  - 114: {fileID: 114000011192475480}
   m_Layer: 8
   m_Name: Brain
   m_TagString: Untagged
@@ -207,23 +209,6 @@ GameObject:
   - 114: {fileID: 114000011055871618}
   m_Layer: 8
   m_Name: Health
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &1000011408340134
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 4000014131606594}
-  - 114: {fileID: 114000011430638456}
-  - 114: {fileID: 114000010051799260}
-  m_Layer: 0
-  m_Name: Sensors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -739,7 +724,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 4000014131606594}
+  - {fileID: 4000011919407044}
   m_Father: {fileID: 4000012438114512}
   m_RootOrder: 3
 --- !u!4 &4000010623038848
@@ -885,11 +870,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011721230162}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.037, y: 0.229, z: 0}
+  m_LocalPosition: {x: 0.03700018, y: 0.22900009, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 4000014131606594}
+  m_Father: {fileID: 4000010551083338}
   m_RootOrder: 0
 --- !u!4 &4000012019968984
 Transform:
@@ -1191,20 +1176,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000013374658082}
   m_RootOrder: 0
---- !u!4 &4000014131606594
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011408340134}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 4000011919407044}
-  m_Father: {fileID: 4000010551083338}
-  m_RootOrder: 0
 --- !u!50 &50000010690530142
 Rigidbody2D:
   serializedVersion: 2
@@ -1270,18 +1241,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114000010051799260
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011408340134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfc800c56819fb240aa6de7ab2dda8d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skin: {fileID: 11400000, guid: 8b42719f794a4b2488d905c3d91ed80a, type: 2}
 --- !u!114 &114000010058442124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1431,6 +1390,17 @@ MonoBehaviour:
   damgeFeedbackDef: {fileID: 0}
   hitAnimName: Take_Damage_Anim
   waitTillClipFinished: 1
+--- !u!114 &114000011192475480
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010782349752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c5aab5c06712854f8ef50b960e9f07c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114000011324237834
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1465,20 +1435,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actor: {fileID: 114000013576800046}
---- !u!114 &114000011430638456
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011408340134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd37f0b2cce2b5042915cf836bd0c6d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entity: {fileID: 114000013576800046}
-  rayOrigin: {fileID: 4000011919407044}
-  sightRange: 10
 --- !u!114 &114000011484663218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1554,6 +1510,178 @@ MonoBehaviour:
   - otherEntity: 1
     relationshipType: 0
   fallbackRelationship: 2
+--- !u!114 &114000012336788048
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010782349752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b08dac9f765ece4ea8985d2b170ba7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pizarra:
+    intParams: 
+    intParamsNames: []
+    intParamsLostDefaultValue: 
+    boolParams: 
+    boolParamsNames: []
+    boolParamsLostDefaultValue: 
+    floatParams: []
+    floatParamsNames: []
+    floatParamsLostDefaultValue: 
+    stringParams: []
+    stringParamsNames: []
+    stringParamsLostDefaultValue: 
+    colorParams: []
+    colorParamsNames: []
+    colorParamsLostDefaultValue: 
+    objectParams: []
+    objectParamsNames: []
+    objectParamsLostDefaultValue: 
+    layerMaskParams: []
+    layerMaskParamsNames: []
+    layerMaskParamsLostDefaultValue: 
+    enumParamsNames: []
+    enumParamsLostDefaultValue: 
+    vector2Params: []
+    vector2ParamsNames: []
+    vector2ParamsLostDefaultValue: 
+    vector3Params: []
+    vector3ParamsNames: []
+    vector3ParamsLostDefaultValue: 
+    vector4Params: []
+    vector4ParamsNames: []
+    vector4ParamsLostDefaultValue: 
+    rectParams: []
+    rectParamsNames: []
+    rectParamsLostDefaultValue: 
+    animationCurveParams: []
+    animationCurveParamsNames: []
+    animationCurveParamsLostDefaultValue: 
+    boundsParams: []
+    boundsParamsNames: []
+    boundsParamsLostDefaultValue: 
+    gradientParams: []
+    gradientParamsNames: []
+    gradientParamsLostDefaultValue: 
+    quaternionParams: []
+    quaternionParamsNames: []
+    quaternionParamsLostDefaultValue: 
+  maxTasksPerTick: 500
+  behavior: {fileID: 11400000, guid: 4560dc7a5c79d2d48a3483efed6692c0, type: 2}
+  paused: 0
+  restartWhenFinished: 0
+  blackboard:
+    intParams: 
+    intParamsNames: []
+    intParamsLostDefaultValue: 
+    boolParams: 
+    boolParamsNames: []
+    boolParamsLostDefaultValue: 
+    floatParams: []
+    floatParamsNames: []
+    floatParamsLostDefaultValue: 
+    stringParams: []
+    stringParamsNames: []
+    stringParamsLostDefaultValue: 
+    colorParams: []
+    colorParamsNames: []
+    colorParamsLostDefaultValue: 
+    objectParams:
+    - {fileID: 114000013576800046}
+    - {fileID: 0}
+    - {fileID: 114000013576800046}
+    - {fileID: 4000011919407044}
+    - {fileID: 0}
+    - {fileID: 114000012387000604}
+    objectParamsNames:
+    - AIEntity
+    - Patrolpoints
+    - ActingEntity
+    - EyePos
+    - SafetyPoints
+    - HealthEntity
+    objectParamsLostDefaultValue: 
+    layerMaskParams: []
+    layerMaskParamsNames: []
+    layerMaskParamsLostDefaultValue: 
+    enumParamsNames: []
+    enumParamsLostDefaultValue: 
+    vector2Params:
+    - {x: 0, y: 0}
+    vector2ParamsNames:
+    - Start Position
+    vector2ParamsLostDefaultValue: 
+    vector3Params: []
+    vector3ParamsNames: []
+    vector3ParamsLostDefaultValue: 
+    vector4Params: []
+    vector4ParamsNames: []
+    vector4ParamsLostDefaultValue: 
+    rectParams: []
+    rectParamsNames: []
+    rectParamsLostDefaultValue: 
+    animationCurveParams: []
+    animationCurveParamsNames: []
+    animationCurveParamsLostDefaultValue: 
+    boundsParams: []
+    boundsParamsNames: []
+    boundsParamsLostDefaultValue: 
+    gradientParams: []
+    gradientParamsNames: []
+    gradientParamsLostDefaultValue: 
+    quaternionParams: []
+    quaternionParamsNames: []
+    quaternionParamsLostDefaultValue: 
+  intParams: 
+  intParamsNames: []
+  intParamsLostDefaultValue: 
+  boolParams: 
+  boolParamsNames: []
+  boolParamsLostDefaultValue: 
+  floatParams: []
+  floatParamsNames: []
+  floatParamsLostDefaultValue: 
+  stringParams: []
+  stringParamsNames: []
+  stringParamsLostDefaultValue: 
+  colorParams: []
+  colorParamsNames: []
+  colorParamsLostDefaultValue: 
+  objectParams: []
+  objectParamsNames: []
+  objectParamsLostDefaultValue: 
+  layerMaskParams: []
+  layerMaskParamsNames: []
+  layerMaskParamsLostDefaultValue: 
+  enumParamsNames: []
+  enumParamsLostDefaultValue: 
+  vector2Params: []
+  vector2ParamsNames: []
+  vector2ParamsLostDefaultValue: 
+  vector3Params: []
+  vector3ParamsNames: []
+  vector3ParamsLostDefaultValue: 
+  vector4Params: []
+  vector4ParamsNames: []
+  vector4ParamsLostDefaultValue: 
+  rectParams: []
+  rectParamsNames: []
+  rectParamsLostDefaultValue: 
+  animationCurveParams: []
+  animationCurveParamsNames: []
+  animationCurveParamsLostDefaultValue: 
+  boundsParams: []
+  boundsParamsNames: []
+  boundsParamsLostDefaultValue: 
+  gradientParams: []
+  gradientParamsNames: []
+  gradientParamsLostDefaultValue: 
+  quaternionParams: []
+  quaternionParamsNames: []
+  quaternionParamsLostDefaultValue: 
 --- !u!114 &114000012348889958
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1625,10 +1753,9 @@ MonoBehaviour:
   movementEntity: {fileID: 114000014054586058}
   healthEntity: {fileID: 114000012387000604}
   animationEntity: {fileID: 114000014145071798}
-  nameIndex: 387
-  lineOfSight: {fileID: 114000011430638456}
-  lightSensor: {fileID: 114000010051799260}
+  nameIndex: 58
   navAgent: {fileID: 114000013734588984}
+  behaviorExecutor: {fileID: 114000012336788048}
 --- !u!114 &114000013642362360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1645,7 +1772,7 @@ MonoBehaviour:
   _skinWidth: 0.02
   platformMask:
     serializedVersion: 2
-    m_Bits: 4294966527
+    m_Bits: 1
   triggerMask:
     serializedVersion: 2
     m_Bits: 512
@@ -1702,6 +1829,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actor: {fileID: 114000014054586058}
   pathStartPoint: {fileID: 4000012783450266}
+  lightSkin: {fileID: 11400000, guid: 8b42719f794a4b2488d905c3d91ed80a, type: 2}
 --- !u!114 &114000013744476904
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1757,7 +1885,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 10
+  currentHealth: 100
   resistance:
     resistances:
     - 1

@@ -10,14 +10,18 @@ public class NavAgent : MonoBehaviour
 
     [SerializeField]
     Transform pathStartPoint;
+    [SerializeField]
+    public LightSkin lightSkin;
 
     PathPlaner pathPlaner;
     OnPathComputationFinished cPathFoundCallback;
     NavPathIterator cPath;
     LightMarker[] emptyMarkerArray;
+    bool reachedGoal;
 
     public bool IsFollowingAPath { get { return cPath.path != null; } }
     public bool IsOnEdgeNode { get { return IsFollowingAPath && cPath.CurrentSegement.GetType() == typeof(PathSegment); } }
+    public bool ReachedGoal { get { return reachedGoal; } }
 
     void Awake()
     {
@@ -28,7 +32,7 @@ public class NavAgent : MonoBehaviour
 
     public delegate void OnPathComputationFinished(bool foundPath);
 
-    public void SetDestination(Vector2 dest, LightMarker[] lightMarker, LightSkin lightSkin, OnPathComputationFinished onPathFinished)
+    public void SetDestination(Vector2 dest, LightMarker[] lightMarker, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false)
     {
         Debug.Assert(cPathFoundCallback == null);
         cPathFoundCallback = onPathFinished;
@@ -37,19 +41,20 @@ public class NavAgent : MonoBehaviour
             OnPathCompleted(null);
             return;
         }
-        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnPathCompleted, lightSkin, lightMarker));
+        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnPathCompleted, lightSkin, startsInUncomfortableLight, lightMarker));
+        reachedGoal = false;
     }
 
-    public void SetDestination(Vector2 dest, LightSkin lightSkin, OnPathComputationFinished onPathFinished)
+    public void SetDestination(Vector2 dest, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false)
     {
-        SetDestination(dest, emptyMarkerArray, lightSkin, onPathFinished);
+        SetDestination(dest, emptyMarkerArray, onPathFinished);
     }
 
-    public void UpdateDestination(Vector2 dest, LightSkin lightSkin, OnPathComputationFinished onPathFinished)
+    public void UpdateDestination(Vector2 dest, OnPathComputationFinished onPathFinished)
     {
         if (cPath.path == null)
         {
-            SetDestination(dest, emptyMarkerArray, lightSkin, onPathFinished);
+            SetDestination(dest, emptyMarkerArray, onPathFinished);
             return;
         }
         if (cPath.path.goal == dest)
@@ -61,7 +66,17 @@ public class NavAgent : MonoBehaviour
             OnUpdatePathCompleted(null);
             return;
         }
-        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnUpdatePathCompleted, lightSkin, emptyMarkerArray));
+        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnUpdatePathCompleted, lightSkin, false, emptyMarkerArray));
+        reachedGoal = false;
+    }
+
+    public void Stop()
+    {
+        if (cPath.path == null)
+            return;
+        cPath.CurrentSegement.StopTravers(actor.CC2DThightAIMotor);
+        cPath.path = null;
+        StopMoving();
     }
 
     void OnPathCompleted(NavPath path)
@@ -108,11 +123,10 @@ public class NavAgent : MonoBehaviour
             if (!cPath.NextSegment())
             {
                 cPath.path = null;
-                Debug.Log("Finished Path!");
                 StopMoving();
+                reachedGoal = true;
                 return;
             }
-            Debug.Log("Next Segment!");
             cPath.CurrentSegement.InitTravers(actor.CC2DThightAIMotor, cPath.GetNextSegment());
         }
         /*else if (cPath.IsSegmentTimedOut)

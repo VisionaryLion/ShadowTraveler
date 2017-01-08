@@ -1,6 +1,4 @@
-﻿using AI.Brain;
-using AI.Sensor;
-using System;
+﻿using System;
 using UnityEngine;
 /*
 Author: Oribow

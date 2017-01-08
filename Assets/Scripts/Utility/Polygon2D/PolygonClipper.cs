@@ -7,7 +7,7 @@ namespace Utility.Polygon2D
 {
     public static class PolygonClipper
     {
-        const float fudgeFactor = 0.00001f;
+        static readonly float fudgeFactor = 0.001f;
 
         public enum BoolOpType { INTERSECTION, UNION, DIFFERENCE, XOR };
         public enum ResultType { NoOverlap, SuccesfullyClipped, FullyContained, FullyContains };
@@ -53,12 +53,44 @@ namespace Utility.Polygon2D
             float minRightBounds = Mathf.Min(sp.Bounds.max.x, cp.Bounds.max.x);
             bool changesMade = false;
             Connector connector = new Connector(10);
-
+            int orgCount = eventQueue.Count;
             const float fudgeFactor = 0.00001f;
-
+            VectorHistoryDrawer.SetNewestOnlyFlag(5, true);
+            VectorHistoryDrawer.SetNewestOnlyFlag(3, true);
+            VectorHistoryDrawer.SetNewestOnlyFlag(6, true);
             while (eventQueue.Count != 0)
             {
                 cEvent = eventQueue.Dequeue();
+                VectorHistoryDrawer.MoveFurther();
+                VectorHistoryDrawer.EnqueueNewLines(3, new Color[] { cEvent.left ? Color.green : Color.red, Color.white }, new Vector2[] { cEvent.p, cEvent.other.p }, new string[] { "", "" });
+                foreach (var er in sweepRay.s)
+                {
+                    VectorHistoryDrawer.EnqueueNewLines(5, new Color[] { er.inOut ? Color.green : Color.red }, new Vector2[] { er.p, er.other.p }, new string[] { "", "" });
+                    VectorHistoryDrawer.EnqueueNewLines(6, new Color[] { er.inside ? Color.green : Color.red }, new Vector2[] { er.p, er.other.p }, new string[] { "", "" });
+                }
+
+                if (!cEvent.left)
+                {
+                    Color colorToDebug = Color.white;
+                    SweepEvent sewe = cEvent.left ? cEvent.other : cEvent;
+                    switch (sewe.type)
+                    {
+                        case (EdgeType.NORMAL):
+                            if (!sewe.other.inside)
+                                colorToDebug = Color.green;
+                            else
+                                colorToDebug = Color.grey;
+                            break;
+                        case (EdgeType.SAME_TRANSITION):
+                            colorToDebug = Color.blue;
+                            break;
+                        case (EdgeType.DIFFERENT_TRANSITION):
+                            colorToDebug = Color.red;
+                            break;
+                    }
+                    VectorHistoryDrawer.EnqueueNewLines(1, new Color[] { colorToDebug, colorToDebug }, new Vector2[] { cEvent.p, cEvent.other.p }, new string[] { "", "" });
+                }
+                DebugExtension.DebugArrow(cEvent.p, cEvent.other.p - cEvent.p, Color.Lerp(Color.black, Color.white, eventQueue.Count / orgCount));
                 if ((op == BoolOpType.INTERSECTION && (cEvent.p.x > minRightBounds + fudgeFactor)) || (op == BoolOpType.DIFFERENCE && cEvent.p.x > sp.Bounds.max.x + fudgeFactor))
                 {
                     //Exit the loop. No more intersections are to be found.
@@ -89,25 +121,38 @@ namespace Utility.Polygon2D
                     int pos = sweepRay.Add(cEvent);
                     SweepEvent prev = sweepRay.Previous(pos);
                     if (prev == null)
-                        cEvent.inside = cEvent.inOut = false;
+                    {
+                        cEvent.inside = false;//cEvent.inOut = false;
+                    }
                     else if (prev.type != EdgeType.NORMAL)
                     {
-                        if (pos - 1 == 0)
+                        if (pos - 2 < 0)
                         {
-                            cEvent.inside = true;
-                            cEvent.inOut = false;
+                            /*cEvent.inside = true;
+                            cEvent.inOut = false;*/
+                            cEvent.inside = false;
+                            //cEvent.inOut = false;
+                            if (prev.type != cEvent.type)
+                            { // [MC: where does this come from?]
+                                cEvent.inside = true;
+
+                            }
+                            else
+                            {
+                                //cEvent.inOut = true;
+                            }
                         }
                         else
                         {
                             SweepEvent sliEvent = sweepRay.Previous(pos - 1);
                             if (prev.pl == cEvent.pl)
                             {
-                                cEvent.inOut = !prev.inOut;
+                                //cEvent.inOut = !prev.inOut;
                                 cEvent.inside = !sliEvent.inOut;
                             }
                             else
                             {
-                                cEvent.inOut = !sliEvent.inOut;
+                                //cEvent.inOut = !sliEvent.inOut;
                                 cEvent.inside = !prev.inOut;
                             }
                         }
@@ -115,12 +160,12 @@ namespace Utility.Polygon2D
                     else if (cEvent.pl == prev.pl)
                     { // previous line segment in S belongs to the same polygon that "cEvent" belongs to
                         cEvent.inside = prev.inside;
-                        cEvent.inOut = !prev.inOut;
+                        //cEvent.inOut = !prev.inOut;
                     }
                     else
                     {                          // previous line segment in S belongs to a different polygon that "cEvent" belongs to
                         cEvent.inside = !prev.inOut;
-                        cEvent.inOut = prev.inside;
+                        //cEvent.inOut = prev.inside;
                     }
 
                     SweepEvent nextEvent = sweepRay.Next(pos);
@@ -131,6 +176,7 @@ namespace Utility.Polygon2D
                 }
                 else
                 {// the line segment must be removed from S
+                    VectorHistoryDrawer.EnqueueNewLines(4, cEvent.p, cEvent.other.p);
                     int pos = sweepRay.Find(cEvent.other);
                     switch (cEvent.type)
                     {
@@ -183,7 +229,20 @@ namespace Utility.Polygon2D
             for (int iVert = 0; iVert < c.verticies.Count; iVert++)
             {
                 cVal = c.verticies[iVert];
-                if (cVal.x < cPrevVal.x || (cVal.x == cPrevVal.x && cVal.y < cPrevVal.y))
+                if (Approximately(cVal.x, cPrevVal.x))
+                {
+                    if (cVal.y < cPrevVal.y)
+                    {
+                        se1 = new SweepEvent(cVal, true, false, pType);
+                        se2 = new SweepEvent(cPrevVal, false, true, pType);
+                    }
+                    else
+                    {
+                        se1 = new SweepEvent(cVal, false, false, pType);
+                        se2 = new SweepEvent(cPrevVal, true, true, pType);
+                    }
+                }
+                else if (cVal.x < cPrevVal.x)
                 {
                     se1 = new SweepEvent(cVal, true, false, pType);
                     se2 = new SweepEvent(cPrevVal, false, true, pType);
@@ -215,7 +274,7 @@ namespace Utility.Polygon2D
             Vector2 d1 = se2_End - se2_Begin;
             Vector2 e = se2_Begin - se1_Begin;
 
-            float sqrEpsilon = 0.0000001f; // 0.001 before
+            float sqrEpsilon = 0.00001f; // 0.001 before
 
             float kross = d0.x * d1.y - d0.y * d1.x;
             float sqrKross = kross * kross;
@@ -237,10 +296,10 @@ namespace Utility.Polygon2D
                 }
                 // intersection of lines is a point an each segment
                 pA = se1_Begin + s * d0;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_Begin), 0)) pA = se1_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_End), 0)) pA = se1_End;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_Begin), 0)) pA = se2_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_End), 0)) pA = se2_End;
+                if (ApproximatelyEqual(pA, se1_Begin)) pA = se1_Begin;
+                if (ApproximatelyEqual(pA, se1_End)) pA = se1_End;
+                if (ApproximatelyEqual(pA, se2_Begin)) pA = se2_Begin;
+                if (ApproximatelyEqual(pA, se2_End)) pA = se2_End;
                 return 1;
             }
 
@@ -265,10 +324,10 @@ namespace Utility.Polygon2D
             if (imax > 0)
             {
                 pA = se1_Begin + w[0] * d0;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_Begin), 0)) pA = se1_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se1_End), 0)) pA = se1_End;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_Begin), 0)) pA = se2_Begin;
-                if (Mathf.Approximately(Vector2.Distance(pA, se2_End), 0)) pA = se2_End;
+                if (ApproximatelyEqual(pA, se1_Begin)) pA = se1_Begin;
+                if (ApproximatelyEqual(pA, se1_End)) pA = se1_End;
+                if (ApproximatelyEqual(pA, se2_Begin)) pA = se2_Begin;
+                if (ApproximatelyEqual(pA, se2_End)) pA = se2_End;
                 if (imax > 1)
                 {
                     pB = se1_Begin + w[1] * d0;
@@ -303,7 +362,7 @@ namespace Utility.Polygon2D
                 return 1;
             }
         }
-
+        static string msgs;
         private static void HandlePossibleIntersection(HeapPriorityQueue<SweepEvent> eventQueue, SweepEvent e1, SweepEvent e2, ref bool changesMade)
         {
 
@@ -313,26 +372,35 @@ namespace Utility.Polygon2D
             if ((nintersections = FindIntersection(e1, e2, out ip1, out ip2)) == 0)
                 return;
 
-            if ((nintersections == 1) && ((e1.p == e2.p) || (e1.other.p == e2.other.p)))
+            if ((nintersections == 1) && (ApproximatelyEqual(e1.p, e2.p) || ApproximatelyEqual(e1.other.p, e2.other.p)))
+            {
+                //Debug.Log(" The line segments intersect at an endpoint of both line segments \n" + e1.ToString() + "\n" + e2.ToString());
                 return; // the line segments intersect at an endpoint of both line segments
+            }
 
             if (nintersections == 2 && e1.pl == e2.pl)
+            {
+                //Debug.Log("Overlap: Both lines are from the same polygon");
+                msgs = "Overlap: Both lines are from the same polygon";
                 return; // the line segments overlap, but they belong to the same polygon
+            }
 
             changesMade = true;
             // The line segments associated to e1 and e2 intersect
             if (nintersections == 1)
             {
-                if (e1.p != ip1 && e1.other.p != ip1)  // if ip1 is not an endpoint of the line segment associated to e1 then divide "e1"
+                //Debug.Log("The line segments associated to e1 and e2 intersect \n" + e1.ToString() + "\n" + e2.ToString());
+                msgs = "The line segments associated to e1 and e2 intersect \n" + e1.ToString() + "\n" + e2.ToString();
+                if (!ApproximatelyEqual(e1.p, ip1) && !ApproximatelyEqual(e1.other.p, ip1))  // if ip1 is not an endpoint of the line segment associated to e1 then divide "e1"
                     DivideEdge(eventQueue, e1, ip1);
-                if (e2.p != ip1 && e2.other.p != ip1)  // if ip1 is not an endpoint of the line segment associated to e2 then divide "e2"
+                if (!ApproximatelyEqual(e2.p, ip1) && !ApproximatelyEqual(e2.other.p, ip1))  // if ip1 is not an endpoint of the line segment associated to e2 then divide "e2"
                     DivideEdge(eventQueue, e2, ip1);
                 return;
             }
 
             // The line segments overlap
-            List<SweepEvent> sortedEvents = new List<SweepEvent>(2);
-            if (e1.p == e2.p)
+            List<SweepEvent> sortedEvents = new List<SweepEvent>(4);
+            if (ApproximatelyEqual(e1.p, e2.p))
             {
                 sortedEvents.Add(null);
             }
@@ -347,7 +415,7 @@ namespace Utility.Polygon2D
                 sortedEvents.Add(e2);
             }
 
-            if (e1.other.p == e2.other.p)
+            if (ApproximatelyEqual(e1.other.p, e2.other.p))
             {
                 sortedEvents.Add(null);
             }
@@ -364,12 +432,16 @@ namespace Utility.Polygon2D
 
             if (sortedEvents.Count == 2)
             { // are both line segments equal?
+                //Debug.Log("Overlap: Both lines are equal");
+                msgs = "Overlap: Both lines are equal";
                 e1.type = e1.other.type = EdgeType.NON_CONTRIBUTING;
                 e2.type = e2.other.type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
                 return;
             }
             if (sortedEvents.Count == 3)
             { // the line segments share an endpoint
+                //Debug.Log("Overlap: Lines share an endpoint \n" + e1.ToString() + "\n" + e2.ToString());
+                msgs = "Overlap: Lines share an endpoint \n" + e1.ToString() + "\n" + e2.ToString();
                 sortedEvents[1].type = sortedEvents[1].other.type = EdgeType.NON_CONTRIBUTING;
                 if (sortedEvents[0] != null)         // is the right endpoint the shared point?
                     sortedEvents[0].other.type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
@@ -380,12 +452,16 @@ namespace Utility.Polygon2D
             }
             if (sortedEvents[0] != sortedEvents[3].other)
             { // no line segment includes totally the other one
+                //Debug.Log("Overlap: Lines overlap");
+                msgs = "Overlap: Lines overlap";
                 sortedEvents[1].type = EdgeType.NON_CONTRIBUTING;
                 sortedEvents[2].type = (e1.inOut == e2.inOut) ? EdgeType.SAME_TRANSITION : EdgeType.DIFFERENT_TRANSITION;
                 DivideEdge(eventQueue, sortedEvents[0], sortedEvents[1].p);
                 DivideEdge(eventQueue, sortedEvents[1], sortedEvents[2].p);
                 return;
             }
+            //Debug.Log("Overlap: one line segment includes the other one");
+            msgs = "Overlap: one line segment includes the other one";
             // one line segment includes the other one
             sortedEvents[1].type = sortedEvents[1].other.type = EdgeType.NON_CONTRIBUTING;
             DivideEdge(eventQueue, sortedEvents[0], sortedEvents[1].p);
@@ -417,11 +493,14 @@ namespace Utility.Polygon2D
             e.other = r;
             eventQueue.Enqueue(r);
             eventQueue.Enqueue(l);
+
+            VectorHistoryDrawer.EnqueueNewLines(2, new Vector2[] { e.p, e.other.p }, new string[] { msgs, msgs });
+            VectorHistoryDrawer.EnqueueNewLines(2, new Vector2[] { l.p, l.other.p }, new string[] { msgs, msgs });
         }
 
         private static ResultType EvaluateResult(BoolOpType op, bool edgesIntersect, Contour[] result, Contour sp, Contour cp)
         {
-            
+
             switch (op)
             {
                 case BoolOpType.DIFFERENCE:
@@ -463,6 +542,19 @@ namespace Utility.Polygon2D
             throw new System.Exception("Unknown operation type: " + op);
         }
 
+        public static bool ApproximatelyEqual(Vector2 v1, Vector2 v2)
+        {
+            return (v1 - v2).magnitude < fudgeFactor;
+        }
+
+        public static bool Approximately(float f1, float f2)
+        {
+            if (f1 > f2)
+                return (f1 - f2) < fudgeFactor;
+            else
+                return (f2 - f1) < fudgeFactor;
+        }
+
         class SweepEvent : PriorityQueueNode
         {
             public Vector2 p;           // point associated with the event
@@ -470,7 +562,7 @@ namespace Utility.Polygon2D
             public PolygonType pl;    // Polygon to which the associated segment belongs to
             public SweepEvent other; // Event associated to the other endpoint of the segment
                                      /**  Does the segment (p, other.p) represent an inside-outside transition in the polygon for a vertical ray from (p.x, -infinite) that crosses the segment? */
-            public bool inOut;
+            public bool inOut { get { return wrapWiseLeft != left; } }
             public EdgeType type;
             public bool inside; // Only used in "left" events. Is the segment (p, other.p) inside the other polygon?
 
@@ -492,19 +584,26 @@ namespace Utility.Polygon2D
             public bool IsAbove(Vector2 o) { return !IsBelow(o); }
 
             // Return true(1) means that e1 is placed at the event queue after e2, i.e,, e1 is processed by the algorithm after e2
+            // -1|0|1
             public override int CompareTo(PriorityQueueNode other)
             {
                 if (other.GetType() == typeof(SweepEvent))
                 {
                     SweepEvent so = (SweepEvent)other;
-                    if (p.x > so.p.x)
-                        return 1;
-                    if (p.x < so.p.x)
-                        return -1;
-                    if (p.y > so.p.y)
-                        return 1;
-                    if (p.y < so.p.y)
-                        return -1;
+                    if (!Approximately(p.x, so.p.x))
+                    {
+                        if (p.x > so.p.x)
+                            return 1;
+                        else
+                            return -1;
+                    }
+                    if (!Approximately(p.y, so.p.y))
+                    {
+                        if (p.y > so.p.y)
+                            return 1;
+                        else
+                            return -1;
+                    }
                     if (left != so.left)
                     {
                         if (left)
@@ -525,7 +624,7 @@ namespace Utility.Polygon2D
                     return object.ReferenceEquals(se2, null);
                 if (object.ReferenceEquals(se2, null))
                     return object.ReferenceEquals(se1, null);
-                return (se1.p == se2.p && se1.left == se2.left && se1.other.p == se2.other.p);
+                return (se1.p == se2.p && se1.left == se2.left && se1.other.p == se2.other.p && se1.pl == se2.pl);
             }
 
             public static bool operator !=(SweepEvent se1, SweepEvent se2)
@@ -541,7 +640,7 @@ namespace Utility.Polygon2D
 
         class SweepRay
         {
-            List<SweepEvent> s;
+            public List<SweepEvent> s;
 
             public SweepRay(int capacity)
             {
@@ -600,18 +699,24 @@ namespace Utility.Polygon2D
             {
                 if (se1 == se2)
                     return false;
-                if (ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.p) != 0 || ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.other.p) != 0)
+
+                if (!PolygonClipper.Approximately(ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.p), 0) || !PolygonClipper.Approximately(ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.other.p), 0))
                 {
-                    if (se1.p == se2.p)
+                    // Segments are not collinear
+                    // If they share their left endpoint use the right endpoint to sort
+                    if (ApproximatelyEqual(se1.p, se2.p))
                         return se1.IsBelow(se2.other.p);
 
-                    if (se1.CompareTo(se2) > 0)
-                        return se2.IsAbove(se1.p);
-                    return se1.IsBelow(se2.p);
+                    if (se1.CompareTo(se2) < 0)// has the segment associated to e1 been sorted in evp before the segment associated to e2?
+                        return se1.IsBelow(se2.p);
+                    // The segment associated to e2 has been sorted in evp before the segment associated to e1
+                    return se2.IsAbove(se1.p);
                 }
-                if (se1.p == se2.p)
-                    return false; //Not sure here. Seems like lines exactly overlap each other. Didnt found the < operator though.
-                return se1.CompareTo(se2) > 0;
+                // Segments are collinear. Just a consistent criterion is used
+                if (ApproximatelyEqual(se1.p, se2.p))
+                    return se1.GetHashCode() < se2.GetHashCode(); //Not sure here. Seems like lines exactly overlap each other. Didnt found the < operator though.
+
+                return se1.CompareTo(se2) < 0;
             }
         }
     }

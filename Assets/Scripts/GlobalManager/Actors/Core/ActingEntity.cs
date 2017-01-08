@@ -61,6 +61,11 @@ namespace Entities
             interactiveInputHandler = new InteractiveInputHandler(this);
         }
 
+        void Reset()
+        {
+            Rename();
+        }
+
 #if UNITY_EDITOR
         public override void Refresh()
         {
@@ -80,6 +85,11 @@ namespace Entities
             {
                 this.name = relationshipMarker.actorType.ToString() + " - " + RandomFirstNames.GetRandomFirstName(out nameIndex);
             }
+        }
+
+        public void Rename()
+        {
+            this.name = relationshipMarker.actorType.ToString() + " - " + RandomFirstNames.GetRandomFirstName(out nameIndex);
         }
 #endif
 

@@ -42,6 +42,7 @@ namespace NavMesh2D.Core
         private static void LoadBoxColliderVerts(BoxCollider2D collider, List<Vector2> inOutVerts)
         {
             Vector2 halfSize = collider.size / 2;
+            int startIndex = inOutVerts.Count;
             inOutVerts.Add(collider.transform.TransformPoint(halfSize + collider.offset));
             inOutVerts.Add(collider.transform.TransformPoint(new Vector2(-halfSize.x, halfSize.y) + collider.offset));
             inOutVerts.Add(collider.transform.TransformPoint(-halfSize + collider.offset));

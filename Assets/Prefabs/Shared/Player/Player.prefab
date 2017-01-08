@@ -2153,10 +2153,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd269de17cbfe94bb413ee77fe25d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  relationshipMarker: {fileID: 0}
+  relationshipMarker: {fileID: 114000010337594586}
   movementEntity: {fileID: 114000010106076342}
   healthEntity: {fileID: 114000012801377668}
   animationEntity: {fileID: 114000013416032882}
+  nameIndex: 210
   twoHandInventory: {fileID: 114000010566740840}
   twoHandEquipmentManager: {fileID: 114000011454644942}
   humanInput: {fileID: 114000010213684754}
@@ -2520,7 +2521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 856b95170cc131b40a9677020043c146, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  actor: {fileID: 114000013416032882}
 --- !u!114 &114000013414725942
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2692,7 +2693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b808f63c106e042ff9194fa3e2ca9644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _renderInSceneView: 1
+  _renderInSceneView: 0
   _linearLightBlending: 1
   _shadows: 1
   _ambientLight: {r: 0, g: 0, b: 0, a: 1}
@@ -2735,7 +2736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06a24604cfbfd7449c35fd8bf057a4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 114000010106076342}
+  entity: {fileID: 0}
   spriteRoot: {fileID: 4000013123472454}
   startWrappedDown: 1
   gravityAcceleration: 20

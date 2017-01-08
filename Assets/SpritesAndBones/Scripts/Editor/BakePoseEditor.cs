@@ -177,7 +177,7 @@ public class BakePoseEditor : EditorWindow {
 		}
 		foreach (Skeleton s in Poses.Keys){
 			#if UNITY_EDITOR
-			ScriptableObjectUtility.CreateAsset((Pose)Poses[s], "Poses/" + s.name + " Pose");
+			Utility.ScriptableObjectUtility.CreateAsset((Pose)Poses[s], "Poses/" + s.name + " Pose");
 			#endif
 			Debug.Log("Saved Baked Poses for " + s.name);
 		}

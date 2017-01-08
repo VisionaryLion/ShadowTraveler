@@ -128,6 +128,8 @@ public class PathPlaner : MonoBehaviour
                     }
                 }
             }
+
+            request.startsInNotWalkableLight = false;
         }
 
         request.callback(null);
@@ -182,6 +184,10 @@ public class PathPlaner : MonoBehaviour
                 Debug.DrawLine((Vector3)marker.Center + forwardLift, (Vector3)(pointB + upLift) + forwardLift, Color.red);
                 Debug.DrawLine((Vector3)marker.Center + forwardLift, (Vector3)(pointA + upLift) + forwardLift, Color.red);
                 Debug.Log("Path found to be not traversable!");
+                if (requestData.startsInNotWalkableLight)
+                {
+                    return true;
+                }
                 return false;
             }
             if (result != 1)
@@ -449,15 +455,17 @@ public class PathRequest
     public readonly Vector2 goal;
     public readonly LightSkin skin;
     public readonly LightMarker[] lightMarker;
+    public bool startsInNotWalkableLight;
     public readonly PathCompleted callback;
 
-    public PathRequest(Vector2 start, Vector2 goal, PathCompleted callback, LightSkin skin, params LightMarker[] lightMarker)
+    public PathRequest(Vector2 start, Vector2 goal, PathCompleted callback, LightSkin skin, bool startsInNotWalkableLight, params LightMarker[] lightMarker)
     {
         this.skin = skin;
         this.start = start;
         this.goal = goal;
         this.callback = callback;
         this.lightMarker = lightMarker;
+        this.startsInNotWalkableLight = startsInNotWalkableLight;
     }
 }
 

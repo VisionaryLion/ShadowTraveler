@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿//#define DO_STACKTRACE
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -49,7 +51,7 @@ public class DebugPanel : MonoBehaviour {
 	Color defaultColor;
 
 	void Awake () {
-		Application.RegisterLogCallback(HandleLog);
+		Application.logMessageReceived += HandleLog;
 		transform.SetSiblingIndex (0);
 		IngorDefLog(ignoreDefLogByDefault);
 		if (visible && !(hideInEditMode && Application.isEditor)) gameObject.AddComponent<DebugPanelViewport> ();
@@ -60,8 +62,8 @@ public class DebugPanel : MonoBehaviour {
 		}
 	
 	public static void Log (string name, string category, object o) {
-		#if UNITY_EDITOR
-		Log (name, category, UnityEngine.StackTraceUtility.ExtractStackTrace(), o);
+#if UNITY_EDITOR && DO_STACKTRACE
+        Log(name, category, UnityEngine.StackTraceUtility.ExtractStackTrace(), o);
 		#else
 		Log (name, category, "", o);
 		#endif

@@ -13,7 +13,7 @@ public class LightSkin : ScriptableObject {
 
     public AnimationCurve pathfindingCostFunction;
 
-    public bool IsTraverable(Color color, out float traverseCostsMulitplier)
+    public bool IsTraversable(Color color, out float traverseCostsMulitplier)
     {
         float brightness = color.grayscale;
         traverseCostsMulitplier = float.MaxValue;

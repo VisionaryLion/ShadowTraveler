@@ -1,5 +1,5 @@
 ﻿//#define Glide
-//#define DEBUG
+//#define DEBUG_THIS
 
 using UnityEngine;
 using Utility.ExtensionMethods;
@@ -251,7 +251,7 @@ namespace CC2D
 
             UpdateCurrentState();
             EndStateUpdate();
-#if UNITY_EDITOR
+#if UNITY_EDITOR && DEBUG_THIS
             LogDebugStats();
 #endif
         }
@@ -854,7 +854,7 @@ namespace CC2D
 
         #endregion
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && DEBUG_THIS
         void LogDebugStats()
         {
             DebugPanel.Log("cState", entity.name+": Movement", _cMState);

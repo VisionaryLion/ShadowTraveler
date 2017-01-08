@@ -644,7 +644,7 @@ namespace NavMesh2D.Core
             SerializedObject spMotor = new SerializedObject(iMovementActor.CC2DMotor);
             buildWindow.groundWalkerSettings.maxXVel = spMotor.FindProperty("walkHMaxSpeed").floatValue;
             buildWindow.groundWalkerSettings.gravity = spMotor.FindProperty("gravityAcceleration").floatValue;
-            buildWindow.groundWalkerSettings.jumpForce = spMotor.FindProperty("jumpVAcc").floatValue;
+            buildWindow.groundWalkerSettings.jumpForce = Mathf.Sqrt(spMotor.FindProperty("jumpMaxHeight").floatValue * buildWindow.groundWalkerSettings.gravity * 2);
 
             SerializedObject spCC2D = new SerializedObject(iMovementActor.CharacterController2D);
             buildWindow.groundWalkerSettings.slopeLimit = spCC2D.FindProperty("slopeLimit").floatValue;

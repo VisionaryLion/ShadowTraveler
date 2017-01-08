@@ -84,7 +84,7 @@ namespace LightSensing
                 return true;
 
             float maxY = Mathf.Max(pointA.y, pointB.y) - (centerOffset.y - heightHalfed);
-            return skin.IsTraverable(SampleColorAt(maxY), out traverseCostsMulitplier);
+            return skin.IsTraversable(SampleColorAt(maxY), out traverseCostsMulitplier);
         }
 
         void Awake()

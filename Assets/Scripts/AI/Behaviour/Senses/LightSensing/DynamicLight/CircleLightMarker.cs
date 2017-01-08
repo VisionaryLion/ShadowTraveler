@@ -105,7 +105,7 @@ namespace LightSensing
             if (distToCenter <= radius)
             {
                 //Debug.DrawRay(Center, dir2, Color.green);
-                return skin.IsTraverable(SampleColorAt(distToCenter), out traverseCostsMulitplier);
+                return skin.IsTraversable(SampleColorAt(distToCenter), out traverseCostsMulitplier);
             }
             else
             {
