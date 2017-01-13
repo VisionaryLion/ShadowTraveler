@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: edebcda6fe1373a459d90bd1207e97d5
-timeCreated: 1483899635
+timeCreated: 1484290795
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -32,6 +32,11 @@ TextureImporter:
     21300050: water-03
     21300052: cloneChamberBack
     21300054: floor-angle-01
+    21300056: crate-01
+    21300058: crate-01-broken
+    21300060: crate-02
+    21300062: crate-02-broken
+    21300064: bkgrd-02
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -111,7 +116,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1024
-        y: 1536
+        y: 1535
         width: 520
         height: 512
       alignment: 0
@@ -439,6 +444,71 @@ TextureImporter:
         y: 1269
         width: 209
         height: 208
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: crate-01
+      rect:
+        serializedVersion: 2
+        x: 1435
+        y: 1349
+        width: 168
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: crate-01-broken
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1349
+        width: 168
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: crate-02
+      rect:
+        serializedVersion: 2
+        x: 1783
+        y: 1425
+        width: 94
+        height: 94
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: crate-02-broken
+      rect:
+        serializedVersion: 2
+        x: 1643
+        y: 1463
+        width: 94
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: bkgrd-02
+      rect:
+        serializedVersion: 2
+        x: 1433
+        y: 1134
+        width: 200
+        height: 200
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
