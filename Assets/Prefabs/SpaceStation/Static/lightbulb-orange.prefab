@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _radius: 0.1
-  _intensity: 0.09
+  _intensity: 0.15
   _color: {r: 1, g: 1, b: 0.6392157, a: 1}
   _cookieTexture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
   _shadowLayers:
