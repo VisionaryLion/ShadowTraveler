@@ -24,6 +24,9 @@ namespace UnityStandardAssets._2D
         public int allowedJumps = 2; //total number of jumps allowed
         private int totalJumps;  //for counting the number of jumps
 
+        [SerializeField]
+        GameObject FollowFriend;
+
         private void Awake()
         {
             // Setting up references.
@@ -122,6 +125,12 @@ namespace UnityStandardAssets._2D
             Vector3 theScale = transform.localScale;
             theScale.x *= -1;
             transform.localScale = theScale;
+
+            //change the follower's direction
+            //Vector3 RobotScale = FollowFriend.transform.localScale;
+            //RobotScale.x *= -1;
+            //FollowFriend.transform.localScale = RobotScale;
+
         }
     }
 }
