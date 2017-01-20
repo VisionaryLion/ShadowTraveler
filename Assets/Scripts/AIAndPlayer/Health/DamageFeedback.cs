@@ -8,7 +8,7 @@ namespace Combat
 {
     public class DamageFeedback : MonoBehaviour
     {
-        [AssignActorAutomaticly]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         BasicEntityActor actor;
 
         [SerializeField]

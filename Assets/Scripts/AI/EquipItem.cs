@@ -8,7 +8,7 @@ public class EquipItem : MonoBehaviour {
     [SerializeField]
     GameObject itemToEquip;
 
-    [AssignActorAutomaticly]
+    [AssignActorAutomaticly, SerializeField, HideInInspector]
     BasicEntityEquipmentActor actor;
 
 	void Start ()

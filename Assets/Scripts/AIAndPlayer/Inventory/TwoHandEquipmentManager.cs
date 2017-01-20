@@ -7,9 +7,7 @@ namespace ItemHandler
 {
     public class TwoHandEquipmentManager : MonoBehaviour
     {
-        [AssignActorAutomaticly]
-        [SerializeField]
-        [HideInInspector]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         BasicEntityEquipmentActor actor;
 
         [SerializeField]

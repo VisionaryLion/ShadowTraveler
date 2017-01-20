@@ -7,9 +7,7 @@ namespace Combat
 {
     public class DeathHandler : MonoBehaviour
     {
-        [SerializeField]
-        [HideInInspector]
-        [AssignActorAutomaticly]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         BasicEntityActor actor;
 
         GameStateActor gameStateActor;

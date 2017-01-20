@@ -62,9 +62,7 @@ namespace CC2D
 
         #region events, properties and fields
 
-        [SerializeField]
-        [HideInInspector]
-        [AssignActorAutomaticly]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         SimpleMovementActor actor;
 
 

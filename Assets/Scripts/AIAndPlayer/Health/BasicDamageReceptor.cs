@@ -9,8 +9,7 @@ namespace Combat
 {
     public class BasicDamageReceptor : IDamageReciever
     {
-        [AssignActorAutomaticly]
-        [SerializeField]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         HealthActor actor;
         [SerializeField]
         float multiplikator = 1;

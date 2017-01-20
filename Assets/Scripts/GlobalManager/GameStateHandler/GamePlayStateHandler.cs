@@ -6,8 +6,8 @@ using Actors;
 namespace Manager
 {
     public class GamePlayStateHandler : MonoBehaviour, IGameState
-    {    
-        [AssignActorAutomaticly]
+    {
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         GameStateActor actor;
 
 

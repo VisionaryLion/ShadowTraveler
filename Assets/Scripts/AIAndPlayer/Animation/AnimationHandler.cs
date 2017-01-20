@@ -5,9 +5,7 @@ using System.Collections.Generic;
 
 public class AnimationHandler : MonoBehaviour
 {
-    [SerializeField]
-    [AssignActorAutomaticly]
-    [HideInInspector]
+    [AssignActorAutomaticly, SerializeField, HideInInspector]
     AnimationActor actor;
 
     public delegate void AnimationEvent();

@@ -7,9 +7,7 @@ namespace CC2D
 {
     public class HumanInput : MonoBehaviour
     {
-        [SerializeField]
-        [HideInInspector]
-        [AssignActorAutomaticly]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         PlayerActor actor;
 
         [SerializeField]

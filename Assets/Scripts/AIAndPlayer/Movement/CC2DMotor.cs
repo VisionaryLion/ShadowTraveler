@@ -11,9 +11,7 @@ namespace CC2D
 {
     public abstract class CC2DMotor : MonoBehaviour
     {
-        [SerializeField]
-        [HideInInspector]
-        [AssignActorAutomaticly]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         protected SimpleMovementActor actor;
 
         #region Inspector vars

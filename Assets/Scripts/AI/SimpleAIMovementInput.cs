@@ -8,9 +8,7 @@ namespace CC2D
     public class SimpleAIMovementInput : MonoBehaviour
     {
 
-        [SerializeField]
-        [HideInInspector]
-        [AssignActorAutomaticly]
+        [AssignActorAutomaticly, SerializeField, HideInInspector]
         BasicEntityActor actor;
 
         [SerializeField]
