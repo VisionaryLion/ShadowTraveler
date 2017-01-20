@@ -36,7 +36,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000013293096234}
   - 212: {fileID: 212000011712400768}
-  - 60: {fileID: 60000010749301718}
   m_Layer: 0
   m_Name: floor-angle-01
   m_TagString: Untagged
@@ -100,25 +99,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000012422474076}
   m_RootOrder: 1
---- !u!60 &60000010749301718
-PolygonCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012155653450}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: 3626fe8e008014f6bbd19bb72937b311, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
-  m_Points:
-    m_Paths:
-    - - {x: 0.97499996, y: 1.04}
-      - {x: -1.045, y: -0.96999997}
-      - {x: -1.045, y: -1.04}
-      - {x: 1.045, y: -1.04}
-      - {x: 1.045, y: 1.04}
 --- !u!212 &212000010890370290
 SpriteRenderer:
   m_ObjectHideFlags: 1

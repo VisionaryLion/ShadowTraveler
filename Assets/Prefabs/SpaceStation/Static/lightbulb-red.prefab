@@ -54,9 +54,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d39184e4f3fd7422a9c8150c72505064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 0
-  _intensity: 0.05
-  _color: {r: 1, g: 0.2901961, b: 0.2901961, a: 1}
+  _radius: 0.1
+  _intensity: 0.25
+  _color: {r: 0.6784314, g: 0, b: 0.7647059, a: 1}
   _cookieTexture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
   _shadowLayers:
     serializedVersion: 2
@@ -91,7 +91,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300012, guid: 7a11fa17e64e406429ca65c4559b448c, type: 3}
-  m_Color: {r: 1, g: 0.2901961, b: 0.2901961, a: 1}
+  m_Color: {r: 0.6808316, g: 0, b: 0.766, a: 1}
   m_FlipX: 0
   m_FlipY: 0
 --- !u!224 &224000010951155950
