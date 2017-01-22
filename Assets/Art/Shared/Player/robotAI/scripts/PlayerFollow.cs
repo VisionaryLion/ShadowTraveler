@@ -3,46 +3,44 @@ using System.Collections;
 
 public class PlayerFollow : MonoBehaviour 
 {
-	public float xMargin = 1f;		// Distance in the x axis the player can move before the camera follows.
-	public float yMargin = 1f;		// Distance in the y axis the player can move before the camera follows.
-	public float xSmooth = 8f;		// How smoothly the camera catches up with it's target movement in the x axis.
-	public float ySmooth = 8f;		// How smoothly the camera catches up with it's target movement in the y axis.
-	public Vector2 maxXAndY;		// The maximum x and y coordinates the camera can have.
-	public Vector2 minXAndY;		// The minimum x and y coordinates the camera can have.
+	public float xMargin = 1f;		// Distance in the x axis the player can move before the friend follows.
+	public float yMargin = 1f;		// Distance in the y axis the player can move before the friend follows.
+	public float xSmooth = 8f;		// How smoothly the friend catches up with it's target movement in the x axis.
+	public float ySmooth = 8f;		// How smoothly the friend catches up with it's target movement in the y axis.
     [SerializeField]
-    float RotationSpeed = 8;
+    float RotationSpeed = 15;
+    
+    private Transform player;		// Reference to the player's transform location, specifically the gameobject "RobotAILocation"
+    //private Transform Guntip;       // Reference to the gun's tip
+    public Vector2 Guntip;
+    public GameObject Gunshot;
 
+    public float fireRate = 0.2f;
+    public float bulletSpeed = 1.5f;
+    public GameObject Bullet;
+    public static float damage = 10;
 
-    private Transform player;		// Reference to the player's transform.
+    private float lastShot = 0.0f;
+
 
 
 	void Awake ()
 	{
-		// Setting up the reference.
-		player = GameObject.FindGameObjectWithTag("RobotAILocation").transform;
+        // Setting up the reference location for friend to follow.
+        player = GameObject.FindGameObjectWithTag("RobotAILocation").transform;
     }
-
-
-	bool CheckXMargin()
-	{
-		// Returns true if the distance between the camera and the player in the x axis is greater than the x margin.
-		return Mathf.Abs(transform.position.x - player.position.x) > xMargin;
-	}
-
-
-	bool CheckYMargin()
-	{
-		// Returns true if the distance between the camera and the player in the y axis is greater than the y margin.
-		return Mathf.Abs(transform.position.y - player.position.y) > yMargin;
-	}
-
-
+    
 	void FixedUpdate ()
 	{
 		TrackPlayer();
         RotateMe();
+
+        Guntip = new Vector2(Gunshot.transform.position.x, Gunshot.transform.position.y);
+
+        if (Input.GetButton("RobotFire")) {
+                Shoot();
+        }
 	}
-	
 	
 	void TrackPlayer ()
 	{
@@ -50,20 +48,12 @@ public class PlayerFollow : MonoBehaviour
 		float targetX = transform.position.x;
 		float targetY = transform.position.y;
 
-		// If the player has moved beyond the x margin...
-		//if(CheckXMargin())
-			// ... the target x coordinate should be a Lerp between the camera's current x position and the player's current x position.
-			targetX = Mathf.Lerp(transform.position.x, player.position.x, xSmooth * Time.deltaTime);
+		// ... the target x coordinate should be a Lerp between the camera's current x position and the player's current x position.
+		targetX = Mathf.Lerp(transform.position.x, player.position.x, xSmooth * Time.deltaTime);
 
-		// If the player has moved beyond the y margin...
-		//if(CheckYMargin())
-			// ... the target y coordinate should be a Lerp between the camera's current y position and the player's current y position.
-			targetY = Mathf.Lerp(transform.position.y, player.position.y, ySmooth * Time.deltaTime);
-
-		// The target x and y coordinates should not be larger than the maximum or smaller than the minimum.
-		//targetX = Mathf.Clamp(targetX, minXAndY.x, maxXAndY.x);
-		//targetY = Mathf.Clamp(targetY, minXAndY.y, maxXAndY.y);
-
+		// ... the target y coordinate should be a Lerp between the camera's current y position and the player's current y position.
+		targetY = Mathf.Lerp(transform.position.y, player.position.y, ySmooth * Time.deltaTime);
+        
 		// Set the camera's position to the target position with the same z component.
 		transform.position = new Vector3(targetX, targetY, transform.position.z);
 	}
@@ -71,15 +61,20 @@ public class PlayerFollow : MonoBehaviour
    
     void RotateMe()
     {
+        transform.Rotate(0.0f, 0.0f, -Input.GetAxis("RobotHorizontal") * RotationSpeed);  
+    }
 
-        transform.Rotate(0.0f, 0.0f, -Input.GetAxis("RobotHorizontal") * RotationSpeed);
-
-        //transform.Rotate(0.0f, -Input.GetAxis("RobotHorizontal") * RotationSpeed, 0.0f);
-        
-        
-        //float angle = Input.GetAxis("RobotHorizontal");
-        //player.transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, angle));
-        //float angle = Mathf.Atan2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * Mathf.Rad2Deg;
-        //player.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+    void Shoot()
+    {
+        //Debug.LogError("Shoot");
+        //check the rate of fire
+        if (Time.time > fireRate + lastShot)
+        {
+            //Instantiate a bullet
+            GameObject bulletClone = Instantiate(Bullet, Guntip, Quaternion.identity) as GameObject;
+            Rigidbody2D clonerb = bulletClone.GetComponent<Rigidbody2D>();
+            clonerb.AddRelativeForce(transform.TransformDirection(new Vector2((Mathf.Cos(transform.rotation.z * Mathf.Deg2Rad) * bulletSpeed), (Mathf.Sin(transform.rotation.z * Mathf.Deg2Rad) * bulletSpeed))), ForceMode2D.Impulse);
+            lastShot = Time.time;
+        }
     }
 }

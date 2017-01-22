@@ -11,6 +11,9 @@ TagManager:
   - onlyTrigger
   - Enemy
   - Crouch
+  - RobotAILocation
+  - Bullet
+  - FollowFriend
   layers:
   - Default
   - TransparentFX
@@ -25,8 +28,8 @@ TagManager:
   - Rigidbody
   - Platform
   - Shadows
-  - 
-  - 
+  - Player
+  - IgnorePlayer
   - 
   - 
   - 
