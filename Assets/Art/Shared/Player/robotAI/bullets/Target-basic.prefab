@@ -181,9 +181,6 @@ MonoBehaviour:
   HP: 1
   TargetExplode: {fileID: 198000012258005480, guid: 24b264c8baa54a045b9590997c58c007,
     type: 2}
-  delayTime: 5
-  xSmooth: 8
-  ySmooth: 8
   TargetSpeed: 5
   FollowPlayer: 1
 --- !u!212 &212000010201129088
