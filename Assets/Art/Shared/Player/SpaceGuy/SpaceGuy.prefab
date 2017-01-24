@@ -63,6 +63,8 @@ GameObject:
   - 61: {fileID: 61000010934558998}
   - 114: {fileID: 114000010737829262}
   - 114: {fileID: 114000010577618618}
+  - 232: {fileID: 232000013548104164}
+  - 114: {fileID: 114000012367903636}
   m_Layer: 13
   m_Name: SpaceGuy
   m_TagString: Player
@@ -154,7 +156,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010687184314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.16, y: 5.96, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -395,6 +397,21 @@ MonoBehaviour:
   _fogColor: {r: 1, g: 1, b: 1, a: 0}
   _scatterColor: {r: 0.08823532, g: 0.08823532, b: 0.08823532, a: 0}
   _softHardMix: 0
+--- !u!114 &114000012367903636
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010687184314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac77097e35736a48aa8373dda2a659c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 10
+  mask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &114000012479771816
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2294,3 +2311,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 6.97}
   m_SizeDelta: {x: 44.9, y: 28.45}
   m_Pivot: {x: 0.01, y: 0.5}
+--- !u!232 &232000013548104164
+DistanceJoint2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010687184314}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_EnableCollision: 1
+  m_ConnectedRigidBody: {fileID: 0}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 0
+  m_Anchor: {x: -1.32, y: 0.1}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_AutoConfigureDistance: 1
+  m_Distance: 0.39713475
+  m_MaxDistanceOnly: 1
