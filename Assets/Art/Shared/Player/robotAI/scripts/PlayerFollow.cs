@@ -21,7 +21,12 @@ public class PlayerFollow : MonoBehaviour
     public static float damage = 10;
 
     private float lastShot = 0.0f;
+    public GameObject PullOrb;
+    public GameObject PullLine;
+    public GameObject ThrowLine;
 
+    private bool holding = false;
+    private float ThrowDelay = .08f;
 
 
 	void Awake ()
@@ -30,17 +35,29 @@ public class PlayerFollow : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("RobotAILocation").transform;
     }
     
+    void Update()
+    {
+        if (Input.GetButton("RobotFire")) //&& (holding = false)
+        {
+            Shoot();
+        }
+        if (Input.GetButton("RobotGrab")) //(Input.GetKey(KeyCode.Joystick1Button5)
+        {
+            Grab();
+        }
+        if (Input.GetButtonUp("RobotGrab")) //(Input.GetKeyUp(KeyCode.Joystick1Button5)
+        {     
+            DropObject();
+        }
+    }
+
 	void FixedUpdate ()
 	{
 		TrackPlayer();
         RotateMe();
 
-        Guntip = new Vector2(Gunshot.transform.position.x, Gunshot.transform.position.y);
-
-        if (Input.GetButton("RobotFire")) {
-                Shoot();
-        }
-	}
+        Guntip = new Vector2(Gunshot.transform.position.x, Gunshot.transform.position.y);        
+    }
 	
 	void TrackPlayer ()
 	{
@@ -68,13 +85,40 @@ public class PlayerFollow : MonoBehaviour
     {
         //Debug.LogError("Shoot");
         //check the rate of fire
-        if (Time.time > fireRate + lastShot)
+        if (holding == false)
         {
-            //Instantiate a bullet
-            GameObject bulletClone = Instantiate(Bullet, Guntip, Quaternion.identity) as GameObject;
-            Rigidbody2D clonerb = bulletClone.GetComponent<Rigidbody2D>();
-            clonerb.AddRelativeForce(transform.TransformDirection(new Vector2((Mathf.Cos(transform.rotation.z * Mathf.Deg2Rad) * bulletSpeed), (Mathf.Sin(transform.rotation.z * Mathf.Deg2Rad) * bulletSpeed))), ForceMode2D.Impulse);
-            lastShot = Time.time;
+            if (Time.time > fireRate + lastShot)
+            {
+                //Instantiate a bullet
+                GameObject bulletClone = Instantiate(Bullet, Guntip, Quaternion.identity) as GameObject;
+                Rigidbody2D clonerb = bulletClone.GetComponent<Rigidbody2D>();
+                clonerb.AddRelativeForce(transform.TransformDirection(new Vector2((Mathf.Cos(transform.rotation.z * Mathf.Deg2Rad) * bulletSpeed), (Mathf.Sin(transform.rotation.z * Mathf.Deg2Rad) * bulletSpeed))), ForceMode2D.Impulse);
+                lastShot = Time.time;
+            }
         }
+    }
+
+    void Grab()
+    {
+        //check if shoot button pressed
+        holding = true;
+        PullOrb.SetActive(true);
+        PullLine.SetActive(true);
+    }
+
+    void DropObject()
+    {
+        holding = false;
+        PullOrb.SetActive(false);
+        PullLine.SetActive(false);
+        //activate throw for a short time
+        StartCoroutine(ThrowTime());
+    }
+
+    private IEnumerator ThrowTime()
+    {
+        ThrowLine.SetActive(true);
+        yield return new WaitForSeconds(ThrowDelay);
+        ThrowLine.SetActive(false);
     }
 }

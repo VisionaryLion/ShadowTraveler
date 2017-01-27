@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: edebcda6fe1373a459d90bd1207e97d5
-timeCreated: 1485230940
+timeCreated: 1485481918
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -40,6 +40,7 @@ TextureImporter:
     21300066: lightbulb-02
     21300068: lightbulb-01
     21300070: lightbulb-03
+    21300072: gravityCenter
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
