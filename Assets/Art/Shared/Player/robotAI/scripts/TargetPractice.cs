@@ -8,7 +8,8 @@ public class TargetPractice : MonoBehaviour {
 
     private Transform player;
     public float TargetSpeed = 2f;
-    public bool FollowPlayer = false;
+    private bool FollowPlayer = false;
+
     // Use this for initialization
     void Start () {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -26,13 +27,33 @@ public class TargetPractice : MonoBehaviour {
     {
         if (FollowPlayer == false)
         {
-            transform.localPosition = new Vector3(0, 0, 0);
+            //transform.localPosition = new Vector3(0, 0, 0);
+            transform.position = Vector2.MoveTowards(transform.position, transform.position, TargetSpeed * Time.deltaTime);
         }
         else
         {
             //moves toward player, having issues where targets bottleneck in corners
-            //...may need a seperate environment collider for smooth target movement
+            //...may need a seperate environment collider for smooth target movement 
             transform.position = Vector2.MoveTowards(transform.position, player.position, TargetSpeed * Time.deltaTime);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if ((other.gameObject.CompareTag("Player")))
+        {
+            FollowPlayer = true;
+            //transform.position = Vector2.MoveTowards(transform.position, player.position, TargetSpeed * Time.deltaTime);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if ((other.gameObject.CompareTag("Player")))
+        {
+            FollowPlayer = false;
+            //transform.localPosition = new Vector3(0, 0, 0);
+            //transform.position = Vector2.MoveTowards(transform.position, 0, TargetSpeed * Time.deltaTime);
         }
     }
 
@@ -49,6 +70,8 @@ public class TargetPractice : MonoBehaviour {
             //destroy the object after its HP reaches 0    
             if (HP <= 0)
             {
+                //lower the TotalEnemies count
+                TargetManager.TotalEnemies = TargetManager.TotalEnemies - 1;
                 Destroy(gameObject);
             }          
         }
