@@ -57,17 +57,6 @@ namespace Utility.Polygon2D
             {
                 result[iChain] = new Contour(closedChains[iChain].chain.ToArray());
             }
-            //Debug.Assert(openChains.Count == 0);
-            if (openChains.Count != 0)
-            {
-                foreach (PointChain chain in openChains)
-                {
-                    foreach (var v in chain.chain)
-                    {
-                        Debug.Log(VectorHistoryDrawer.instance.time.ToString()+v);
-                    }
-                }
-            }
             return result;
         }
     }

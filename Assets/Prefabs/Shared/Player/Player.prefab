@@ -79,6 +79,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000010284229512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000011837853666}
+  m_Layer: 8
+  m_Name: AIFollowPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000010318793156
 GameObject:
   m_ObjectHideFlags: 0
@@ -1207,6 +1222,19 @@ Transform:
   - {fileID: 4000012971638872}
   m_Father: {fileID: 4000014023142646}
   m_RootOrder: 1
+--- !u!4 &4000011837853666
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010284229512}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.371, y: 0.279, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4000014189272724}
+  m_RootOrder: 8
 --- !u!4 &4000012108595380
 Transform:
   m_ObjectHideFlags: 1
@@ -1518,8 +1546,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010318793156}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.423356, y: 13.772999, z: -0.9140625}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -26.425, y: -24.133, z: -0.9140625}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000013463496666}
@@ -1530,6 +1558,7 @@ Transform:
   - {fileID: 224000012742087892}
   - {fileID: 224000013097382532}
   - {fileID: 4000011051816320}
+  - {fileID: 4000011837853666}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &4000014265473648
@@ -1565,7 +1594,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 2.28
+  orthographic size: 5.28
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -2740,7 +2769,7 @@ MonoBehaviour:
   spriteRoot: {fileID: 4000013123472454}
   startWrappedDown: 1
   gravityAcceleration: 20
-  walkHAcc: 5
+  walkHAcc: 11
   walkHFric: 5
   walkHMaxSpeed: 5
   steepSlopeGravity: 5
@@ -2750,7 +2779,7 @@ MonoBehaviour:
   inAirHFric: 5
   inAirHMaxSpeed: 6
   fallCap: 100
-  jumpMaxHeight: 3
+  jumpMaxHeight: 5
   glideVVelocity: 3
   glideHAcc: 11
   glideHFric: 5
@@ -2856,7 +2885,7 @@ MonoBehaviour:
   oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 0
-  slopeLimit: 30
+  slopeLimit: 60
   slopeSpeedMultiplier:
     serializedVersion: 2
     m_Curve:

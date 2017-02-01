@@ -164,13 +164,13 @@ namespace UnityEngine
 
         public static bool operator ==(Vector2d lhs, Vector2d rhs)
         {
-            return Math.Abs(lhs.x - rhs.x) < double.Epsilon && Math.Abs(lhs.y - rhs.y) < double.Epsilon;
+            return Math.Abs(lhs.x - rhs.x) < kEpsilon && Math.Abs(lhs.y - rhs.y) < kEpsilon;
             //return Vector2d.SqrMagnitude(lhs - rhs) < 0.0 / 1.0;
         }
 
         public static bool operator !=(Vector2d lhs, Vector2d rhs)
         {
-            return Math.Abs(lhs.x - rhs.x) > double.Epsilon || Math.Abs(lhs.y - rhs.y) > double.Epsilon;
+            return Math.Abs(lhs.x - rhs.x) > kEpsilon || Math.Abs(lhs.y - rhs.y) > kEpsilon;
             //return (double)Vector2d.SqrMagnitude(lhs - rhs) >= 0.0 / 1.0;
         }
 

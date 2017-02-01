@@ -116,7 +116,7 @@ namespace Utility.Polygon2D
                 chain.RemoveFirst();
                 chain.PrependRange(other.chain);
             }
-            /*else if (other.FirstPoint == FirstPoint)
+            else if (other.FirstPoint == FirstPoint)
             {
                 Debug.Log("Shouldn't happen (firstPoint == Firstpoint) and will lead to a wrapping issue!");
                 chain.RemoveFirst();
@@ -129,7 +129,7 @@ namespace Utility.Polygon2D
                 chain.RemoveLast();
                 other.chain.Reverse();
                 chain.AppendRange(other.chain);
-            }*/
+            }
             else
                 return false; //Other PointChain couldnt be attached
 

@@ -63,7 +63,7 @@ public class NavDebugger : MonoBehaviour
 
             cgs = CollisionGeometrySetBuilder.Build(allCollider, circleVertCount);
             Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
-
+            
             totalEllapsedTime += watch.ElapsedMilliseconds;
             watch.Reset();
             watch.Start();
@@ -85,7 +85,7 @@ public class NavDebugger : MonoBehaviour
             /* navData2D = new RawNavigationData2DBuilder(agentSettings).Build(exTrees, ScriptableObject.CreateInstance<RawNavigationData2D>())
                  .ToNavigationData2D();
              Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");*/
-
+             
             totalEllapsedTime += watch.ElapsedMilliseconds;
             watch.Stop();
             Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");

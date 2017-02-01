@@ -55,7 +55,7 @@ namespace NavMesh2D.Core
                             }
                             else
                             {
-                                RoundVerts(inOutVerts);
+                                //RoundVerts(inOutVerts);
                                 result.AddCollider(inOutVerts);
                                 inOutVerts.Clear();
                             }
@@ -105,6 +105,7 @@ namespace NavMesh2D.Core
             {
                 inOutVerts.Add(localToWorld.MultiplyPoint(collider.points[iVert] + collider.offset));
             }
+            inOutVerts.Reverse();
         }
 
         private static void LoadVerts(Vector2[] verts, Matrix4x4 localToWorld, Vector2 offset, List<Vector2> inOutVerts)
@@ -113,6 +114,7 @@ namespace NavMesh2D.Core
             {
                 inOutVerts.Add(localToWorld.MultiplyPoint(verts[iVert] + offset));
             }
+            inOutVerts.Reverse();
         }
 
         private static void LoadEdgeColliderVerts(EdgeCollider2D collider, List<Vector2> inOutVerts)
