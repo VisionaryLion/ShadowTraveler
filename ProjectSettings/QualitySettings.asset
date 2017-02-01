@@ -155,7 +155,7 @@ QualitySettings:
     softVegetation: 1
     realtimeReflectionProbes: 1
     billboardsFaceCameraPosition: 1
-    vSyncCount: 1
+    vSyncCount: 0
     lodBias: 2
     maximumLODLevel: 0
     particleRaycastBudget: 4096
@@ -165,5 +165,9 @@ QualitySettings:
   m_PerPlatformDefaultQuality:
     Android: 0
     Standalone: 0
+<<<<<<< HEAD
     WebGL: 5
     iPhone: 0
+=======
+    WebGL: 0
+>>>>>>> refs/remotes/origin/CloudsLevel-01
