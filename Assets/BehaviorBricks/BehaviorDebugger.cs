@@ -3,7 +3,7 @@ using Entities;
 
 public class BehaviorDebugger : MonoBehaviour {
 #if UNITY_EDITOR
-    [AssignEntityAutomaticly]
+    [AssignEntityAutomaticly, SerializeField, HideInInspector]
     ActingEntity entity;
 
     string category;

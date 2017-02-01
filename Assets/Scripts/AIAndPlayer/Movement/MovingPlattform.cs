@@ -11,7 +11,7 @@ public class MovingPlattform : MonoBehaviour
         Loop,
         PingPong
     }
-    [AssignEntityAutomaticly]
+    [AssignEntityAutomaticly, SerializeField, HideInInspector]
     public MovingPlatformEntity actor;
     [SerializeField]
     float timeForOneTravel = 20;

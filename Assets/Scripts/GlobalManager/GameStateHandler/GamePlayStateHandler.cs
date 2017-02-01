@@ -6,8 +6,8 @@ using Entities;
 namespace Manager
 {
     public class GamePlayStateHandler : MonoBehaviour, IGameState
-    {    
-        [AssignEntityAutomaticly]
+    {
+        [AssignEntityAutomaticly, SerializeField, HideInInspector]
         GameStateEntity actor;
 
 

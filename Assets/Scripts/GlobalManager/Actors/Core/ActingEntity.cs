@@ -63,7 +63,9 @@ namespace Entities
 
         void Reset()
         {
+#if UNITY_EDITOR
             Rename();
+#endif            
         }
 
 #if UNITY_EDITOR
