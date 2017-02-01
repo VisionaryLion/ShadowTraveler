@@ -12,8 +12,9 @@ using AI;
 using UnityEditor;
 #endif
 
-namespace NavMesh2D
+namespace NavData2d
 {
+    [Serializable]
     public class NavigationData2D : ScriptableObject
     {
         const float mapPointMaxDeviation = 3;

@@ -5,11 +5,12 @@ using Utility.Polygon2D;
 
 namespace NavMesh2D.Core
 {
+    [Serializable]
     public class ContourNode
     {
         public Contour contour;
         public List<ContourNode> children;
-        public Bounds Bounds { get { return contour.Bounds; } }
+        public Boundsd Bounds { get { return contour.Bounds; } }
         public bool IsSolid { get { return isSolid; } }
 
         [SerializeField]

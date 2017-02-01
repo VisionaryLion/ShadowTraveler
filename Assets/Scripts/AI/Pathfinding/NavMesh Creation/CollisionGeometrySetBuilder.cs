@@ -14,6 +14,9 @@ namespace NavMesh2D.Core
 
             foreach (Collider2D col in collider)
             {
+                if (col == null)
+                    continue;
+
                 Type cTyp = col.GetType();
 
                 //Sort out any edge collider, as they will be processed differently.
@@ -26,17 +29,55 @@ namespace NavMesh2D.Core
                 else
                 {
                     if (cTyp == typeof(BoxCollider2D))
+                    {
                         LoadBoxColliderVerts((BoxCollider2D)col, inOutVerts);
+                        RoundVerts(inOutVerts);
+                        result.AddCollider(inOutVerts);
+                       
+                        inOutVerts.Clear();
+                    }
                     else if (cTyp == typeof(CircleCollider2D))
+                    {
                         LoadCircleColliderVerts((CircleCollider2D)col, inOutVerts, circleVertCount, anglePerCircleVert);
+                        RoundVerts(inOutVerts);
+                        result.AddCollider(inOutVerts);
+                        inOutVerts.Clear();
+                    }
                     else
-                        LoadPolygonColliderVerts((PolygonCollider2D)col, inOutVerts);
+                    {
+                        PolygonCollider2D polyCol = (PolygonCollider2D)col;
+                        for (int iPath = 0; iPath < polyCol.pathCount; iPath++)
+                        { 
+                            LoadVerts(polyCol.GetPath(iPath), polyCol.transform.localToWorldMatrix, polyCol.offset, inOutVerts);
+                            if (inOutVerts.Count == 0)
+                            {
+                                Debug.LogError("Polygonecollider has chain with zero verts.");
+                            }
+                            else
+                            {
+                                RoundVerts(inOutVerts);
+                                result.AddCollider(inOutVerts);
+                                inOutVerts.Clear();
+                            }
+                        }
+                    }
 
-                    result.AddCollider(inOutVerts);
+                   
                 }
-                inOutVerts.Clear();
+               
             }
             return result;
+        }
+
+        private static void RoundVerts(List<Vector2> inOutVerts)
+        {
+            for (int iVert = 0; iVert < inOutVerts.Count; iVert++)
+            {
+                inOutVerts[iVert] =new Vector2(
+                    (float)Math.Round(inOutVerts[iVert].x, 3),
+                    (float)Math.Round(inOutVerts[iVert].y, 3)
+                    );
+            }
         }
 
         private static void LoadBoxColliderVerts(BoxCollider2D collider, List<Vector2> inOutVerts)
@@ -63,6 +104,14 @@ namespace NavMesh2D.Core
             for (int iVert = 0; iVert < collider.points.Length; iVert++)
             {
                 inOutVerts.Add(localToWorld.MultiplyPoint(collider.points[iVert] + collider.offset));
+            }
+        }
+
+        private static void LoadVerts(Vector2[] verts, Matrix4x4 localToWorld, Vector2 offset, List<Vector2> inOutVerts)
+        {
+            for (int iVert = 0; iVert < verts.Length; iVert++)
+            {
+                inOutVerts.Add(localToWorld.MultiplyPoint(verts[iVert] + offset));
             }
         }
 

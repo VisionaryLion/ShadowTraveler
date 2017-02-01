@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using CC2D;
+using NavData2d.Editor;
 
 namespace Pathfinding2D
 {
@@ -15,7 +16,7 @@ namespace Pathfinding2D
         public float yMin;
         public float yMax;
 
-        public JumpLink(JumpLinkPlacer.JumpLink link)
+        public JumpLink(MetaJumpLink link)
         {
             xVel = link.jumpArc.v ;
             jumpForce = link.jumpArc.j;

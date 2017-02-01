@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using NavMesh2D.Core;
 using NavMesh2D;
 using Utility.Polygon2D;
+using NavData2d;
 
 public class NavDebugger : MonoBehaviour
 {
@@ -91,7 +92,7 @@ public class NavDebugger : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.StackTrace);
+            Debug.Log(e.Message +" -> "+ e.StackTrace);
         }
     }
 

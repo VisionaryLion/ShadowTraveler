@@ -15,54 +15,2126 @@ MonoBehaviour:
   version: 0
   nodes:
   - bounds:
-      m_Center: {x: 118.12, y: 13.269984, z: 0}
-      m_Extent: {x: 1.0400085, y: 0, z: 0}
+      m_Center: {x: 180.535, y: -2.8449998, z: 0}
+      m_Extent: {x: 4.0250015, y: 0.014999986, z: 0}
     isClosed: 0
     hierachyIndex: 0
     verts:
     - angleABC: 0
       slopeAngleBC: 0
       distanceBC: 0
-      pointB: {x: 119.16001, y: 13.269984}
+      pointB: {x: 184.56, y: -2.86}
     - angleABC: 0
       slopeAngleBC: 0
       distanceBC: 0
-      pointB: {x: 117.079994, y: 13.269984}
+      pointB: {x: 176.51, y: -2.83}
   - bounds:
-      m_Center: {x: 118.12, y: 7.7699842, z: 0}
-      m_Extent: {x: 1.0400085, y: 0, z: 0}
+      m_Center: {x: 175.045, y: -4.91, z: 0}
+      m_Extent: {x: 1.4649963, y: 0, z: 0}
     isClosed: 0
     hierachyIndex: 0
     verts:
     - angleABC: 0
       slopeAngleBC: 0
       distanceBC: 0
-      pointB: {x: 119.16001, y: 7.7699842}
+      pointB: {x: 176.51, y: -4.91}
     - angleABC: 0
       slopeAngleBC: 0
       distanceBC: 0
-      pointB: {x: 117.079994, y: 7.7699842}
+      pointB: {x: 173.58, y: -4.91}
   - bounds:
-      m_Center: {x: 118.12, y: 3.049986, z: 0}
-      m_Extent: {x: 1.0400085, y: 0, z: 0}
+      m_Center: {x: 170.5, y: -2.92, z: 0}
+      m_Extent: {x: 3.0800018, y: 0, z: 0}
     isClosed: 0
     hierachyIndex: 0
     verts:
     - angleABC: 0
       slopeAngleBC: 0
       distanceBC: 0
-      pointB: {x: 119.16001, y: 3.049986}
+      pointB: {x: 173.58, y: -2.92}
     - angleABC: 0
       slopeAngleBC: 0
       distanceBC: 0
-      pointB: {x: 117.079994, y: 3.049986}
+      pointB: {x: 167.42, y: -2.92}
+  - bounds:
+      m_Center: {x: 165.8245, y: -4.91, z: 0}
+      m_Extent: {x: 1.5954971, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 167.42, y: -4.91}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 164.229, y: -4.91}
+  - bounds:
+      m_Center: {x: 161.149, y: -2.92, z: 0}
+      m_Extent: {x: 3.0800018, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 164.229, y: -2.92}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 158.069, y: -2.92}
+  - bounds:
+      m_Center: {x: 151.9295, y: -4.91, z: 0}
+      m_Extent: {x: 6.1395035, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 158.069, y: -4.91}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 145.79, y: -4.91}
+  - bounds:
+      m_Center: {x: 142.19, y: -6.92, z: 0}
+      m_Extent: {x: 3.5999985, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 145.79, y: -6.92}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 138.59, y: -6.92}
+  - bounds:
+      m_Center: {x: 135.51, y: -4.9, z: 0}
+      m_Extent: {x: 3.0800018, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 138.59, y: -4.9}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 132.43, y: -4.9}
+  - bounds:
+      m_Center: {x: 130.92, y: -6.92, z: 0}
+      m_Extent: {x: 1.5099945, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 132.43, y: -6.92}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 129.41, y: -6.92}
+  - bounds:
+      m_Center: {x: 120.174, y: -8.916, z: 0}
+      m_Extent: {x: 9.236, y: 0.006000042, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 129.41, y: -8.91}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 110.938, y: -8.922}
+  - bounds:
+      m_Center: {x: 106.889, y: -15.01, z: 0}
+      m_Extent: {x: 4.0490036, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 110.938, y: -15.01}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 102.84, y: -15.01}
+  - bounds:
+      m_Center: {x: 101.82, y: -4.92, z: 0}
+      m_Extent: {x: 1.0199966, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 102.84, y: -4.92}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 100.8, y: -4.92}
+  - bounds:
+      m_Center: {x: 112.005005, y: 39.835, z: 0}
+      m_Extent: {x: 7.1550026, y: 0.034999847, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 119.16, y: 39.87}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 104.85, y: 39.8}
+  - bounds:
+      m_Center: {x: 98.725, y: 37.99, z: 0}
+      m_Extent: {x: 6.125, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 104.85, y: 37.99}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 92.6, y: 37.99}
+  - bounds:
+      m_Center: {x: 80.339584, y: 35.955, z: 0}
+      m_Extent: {x: 12.2595825, y: 0.0049991608, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 92.59917, y: 35.95}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 68.08, y: 35.96}
+  - bounds:
+      m_Center: {x: 63.985, y: 39.985, z: 0}
+      m_Extent: {x: 4.095001, y: 0.034999847, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 68.08, y: 40.02}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 59.89, y: 39.95}
+  - bounds:
+      m_Center: {x: 14.969997, y: 37.92, z: 0}
+      m_Extent: {x: 44.92, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 59.89, y: 37.92}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.95, y: 37.92}
+  - bounds:
+      m_Center: {x: -41.190002, y: 39.995, z: 0}
+      m_Extent: {x: 11.24, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.95, y: 39.995}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -52.43, y: 39.995}
+  - bounds:
+      m_Center: {x: -64.71, y: 42.022, z: 0}
+      m_Extent: {x: 12.279999, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -52.43, y: 42.022}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -76.99, y: 42.022}
+  - bounds:
+      m_Center: {x: 62.9, y: -37.72, z: 0}
+      m_Extent: {x: 0.39999962, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 63.3, y: -37.72}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 62.5, y: -37.72}
+  - bounds:
+      m_Center: {x: 185.565, y: -4.718, z: 0}
+      m_Extent: {x: 1.0050049, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 186.57, y: -4.718}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 184.56, y: -4.718}
+  - bounds:
+      m_Center: {x: 182.45001, y: -12.85, z: 0}
+      m_Extent: {x: 2.040001, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 184.49, y: -12.85}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 180.41, y: -12.85}
+  - bounds:
+      m_Center: {x: 183.49, y: -19, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 184.49, y: -19}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 182.49, y: -19}
+  - bounds:
+      m_Center: {x: 177.3675, y: -29.29, z: 0}
+      m_Extent: {x: 7.122505, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 184.49, y: -29.29}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 170.245, y: -29.29}
+  - bounds:
+      m_Center: {x: 162.0725, y: -27.224, z: 0}
+      m_Extent: {x: 8.172501, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 170.245, y: -27.224}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 153.9, y: -27.224}
+  - bounds:
+      m_Center: {x: 145.73999, y: -25.22, z: 0}
+      m_Extent: {x: 8.159996, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 153.9, y: -25.22}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 137.58, y: -25.22}
+  - bounds:
+      m_Center: {x: 129.414, y: -23.162, z: 0}
+      m_Extent: {x: 8.166, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 137.58, y: -23.162}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 121.248, y: -23.162}
+  - bounds:
+      m_Center: {x: 108.964005, y: -21.1, z: 0}
+      m_Extent: {x: 12.284, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 121.248, y: -21.1}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 96.68, y: -21.1}
+  - bounds:
+      m_Center: {x: 96.666504, y: -29.15, z: 0}
+      m_Extent: {x: 2.043499, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 98.71, y: -29.15}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 94.623, y: -29.15}
+  - bounds:
+      m_Center: {x: 91.92, y: -37.72, z: 0}
+      m_Extent: {x: 6.75, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 98.67, y: -37.72}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 85.17, y: -37.72}
+  - bounds:
+      m_Center: {x: 82.09, y: -35.84, z: 0}
+      m_Extent: {x: 3.079998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 85.17, y: -35.84}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 79.01, y: -35.84}
+  - bounds:
+      m_Center: {x: 72.195, y: -37.72, z: 0}
+      m_Extent: {x: 6.8150024, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 79.01, y: -37.72}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 65.38, y: -37.72}
+  - bounds:
+      m_Center: {x: 66.33769, y: -29.49, z: 0}
+      m_Extent: {x: 1.0223122, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 67.36, y: -29.49}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 65.31538, y: -29.49}
+  - bounds:
+      m_Center: {x: 20.974998, y: -25.39, z: 0}
+      m_Extent: {x: 44.345, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 65.32, y: -25.39}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -23.370003, y: -25.39}
+  - bounds:
+      m_Center: {x: -30.81, y: -25.39, z: 0}
+      m_Extent: {x: 1.2800007, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.529999, y: -25.39}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -32.09, y: -25.39}
+  - bounds:
+      m_Center: {x: -33.105, y: -23.34, z: 0}
+      m_Extent: {x: 1.0149994, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -32.09, y: -23.34}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -34.12, y: -23.34}
+  - bounds:
+      m_Center: {x: -33.114998, y: -17.17, z: 0}
+      m_Extent: {x: 1.0049992, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -32.11, y: -17.17}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -34.12, y: -17.17}
+  - bounds:
+      m_Center: {x: -33.114998, y: -8.968, z: 0}
+      m_Extent: {x: 1.0049992, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -32.11, y: -8.968}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -34.12, y: -8.968}
+  - bounds:
+      m_Center: {x: -32.864998, y: -0.8, z: 0}
+      m_Extent: {x: 0.7250004, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -32.14, y: -0.8}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -33.59, y: -0.8}
+  - bounds:
+      m_Center: {x: -24.3565, y: 15.42, z: 0}
+      m_Extent: {x: 3.0664997, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -21.29, y: 15.42}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -27.423, y: 15.42}
+  - bounds:
+      m_Center: {x: -28.4715, y: 17.49, z: 0}
+      m_Extent: {x: 1.0485001, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -27.423, y: 17.49}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.52, y: 17.49}
+  - bounds:
+      m_Center: {x: -30.5055, y: 19.57, z: 0}
+      m_Extent: {x: 0.9854994, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.52, y: 19.57}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -31.491, y: 19.57}
+  - bounds:
+      m_Center: {x: -30.599998, y: 29.82, z: 0}
+      m_Extent: {x: 1.04, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.56, y: 29.82}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -31.64, y: 29.82}
+  - bounds:
+      m_Center: {x: -33.67, y: 27.72, z: 0}
+      m_Extent: {x: 2.0300007, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -31.64, y: 27.72}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -35.7, y: 27.72}
+  - bounds:
+      m_Center: {x: -37.719, y: 25.69, z: 0}
+      m_Extent: {x: 2.018999, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -35.7, y: 25.69}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -39.738, y: 25.69}
+  - bounds:
+      m_Center: {x: -37.7365, y: 15.43, z: 0}
+      m_Extent: {x: 4.1534996, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -33.583, y: 15.43}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -41.89, y: 15.43}
+  - bounds:
+      m_Center: {x: -42.735092, y: 7.3399997, z: 0}
+      m_Extent: {x: 3.074911, y: 0.009999752, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -39.66018, y: 7.3499994}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -45.81, y: 7.33}
+  - bounds:
+      m_Center: {x: -53.239998, y: -0.81, z: 0}
+      m_Extent: {x: 13.58, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -39.66, y: -0.81}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -66.82, y: -0.81}
+  - bounds:
+      m_Center: {x: -68.856995, y: 1.26, z: 0}
+      m_Extent: {x: 2.0369987, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -66.82, y: 1.26}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -70.894, y: 1.26}
+  - bounds:
+      m_Center: {x: -69.8675, y: 7.35, z: 0}
+      m_Extent: {x: 1.0264969, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -68.841, y: 7.35}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -70.894, y: 7.35}
+  - bounds:
+      m_Center: {x: -70.85, y: 15.53, z: 0}
+      m_Extent: {x: 2.040001, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -68.81, y: 15.53}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -72.89, y: 15.53}
+  - bounds:
+      m_Center: {x: -69.915, y: 23.37, z: 0}
+      m_Extent: {x: 2.9749985, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -66.94, y: 23.37}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -72.89, y: 23.37}
+  - bounds:
+      m_Center: {x: -67.775, y: 31.859001, z: 0}
+      m_Extent: {x: 5.115, y: 0.0010004044, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -62.66, y: 31.858}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -72.89, y: 31.86}
+  - bounds:
+      m_Center: {x: 106.89478, y: 3.148, z: 0}
+      m_Extent: {x: 10.184784, y: 0.0020000935, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 117.07957, y: 3.146}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 96.71, y: 3.15}
+  - bounds:
+      m_Center: {x: 93.66, y: -0.33, z: 0}
+      m_Extent: {x: 3.0499992, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 96.71, y: -0.33}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 90.61, y: -0.33}
+  - bounds:
+      m_Center: {x: 96.676346, y: -9.05, z: 0}
+      m_Extent: {x: 2.0363464, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 98.71269, y: -9.05}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 94.64, y: -9.05}
+  - bounds:
+      m_Center: {x: 116.098, y: -15.022, z: 0}
+      m_Extent: {x: 0.98999786, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 117.088, y: -15.022}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 115.108, y: -15.022}
+  - bounds:
+      m_Center: {x: -44.8285, y: 33.84, z: 0}
+      m_Extent: {x: 9.2185, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -35.61, y: 33.84}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -54.047, y: 33.84}
+  - bounds:
+      m_Center: {x: 134.43, y: -15.96, z: 0}
+      m_Extent: {x: 3.0799942, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 137.51, y: -15.96}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 131.35, y: -15.96}
+  - bounds:
+      m_Center: {x: 8.88, y: 28.19, z: 0}
+      m_Extent: {x: 1.96, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 10.84, y: 28.19}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.92, y: 28.19}
+  - bounds:
+      m_Center: {x: 16.983501, y: 30.24, z: 0}
+      m_Extent: {x: 6.1435003, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 23.127, y: 30.24}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 10.84, y: 30.24}
+  - bounds:
+      m_Center: {x: 72.85, y: 1.18, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 73.85, y: 1.18}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 71.85, y: 1.18}
+  - bounds:
+      m_Center: {x: 75.62, y: -25.22, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 76.62, y: -25.22}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 74.62, y: -25.22}
+  - bounds:
+      m_Center: {x: 112.11, y: 16.34, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 113.11, y: 16.34}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 111.11, y: 16.34}
+  - bounds:
+      m_Center: {x: 17.23, y: 14.21, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 20.31, y: 14.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 14.15, y: 14.21}
+  - bounds:
+      m_Center: {x: -0.5800009, y: 12.21, z: 0}
+      m_Extent: {x: 14.73, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 14.15, y: 12.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -15.31, y: 12.21}
+  - bounds:
+      m_Center: {x: 23.925999, y: 12.21, z: 0}
+      m_Extent: {x: 3.6160002, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 27.542, y: 12.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 20.31, y: 12.21}
+  - bounds:
+      m_Center: {x: 152.53, y: -15.97, z: 0}
+      m_Extent: {x: 3.0800018, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 155.61, y: -15.97}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 149.45, y: -15.97}
+  - bounds:
+      m_Center: {x: -59.355, y: 19.45, z: 0}
+      m_Extent: {x: 5.075001, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -54.28, y: 19.45}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -64.43, y: 19.45}
+  - bounds:
+      m_Center: {x: 160.95, y: -13.24, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 161.95, y: -13.24}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 159.95, y: -13.24}
+  - bounds:
+      m_Center: {x: 82.09, y: -18.601, z: 0}
+      m_Extent: {x: 3.079998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 85.17, y: -18.601}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 79.01, y: -18.601}
+  - bounds:
+      m_Center: {x: 167.36499, y: -17.69, z: 0}
+      m_Extent: {x: 2.034996, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 169.4, y: -17.69}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 165.33, y: -17.69}
+  - bounds:
+      m_Center: {x: 170.44, y: -13.61, z: 0}
+      m_Extent: {x: 1.0400009, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 171.48, y: -13.61}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 169.4, y: -13.61}
+  - bounds:
+      m_Center: {x: 175.63, y: -15.35, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 176.63, y: -15.35}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 174.63, y: -15.35}
+  - bounds:
+      m_Center: {x: 72.74, y: -33.02, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 73.74, y: -33.02}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 71.74, y: -33.02}
+  - bounds:
+      m_Center: {x: 60.92, y: 7.14, z: 0}
+      m_Extent: {x: 1.039999, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 61.96, y: 7.14}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 59.88, y: 7.14}
+  - bounds:
+      m_Center: {x: 68.06, y: 9.21, z: 0}
+      m_Extent: {x: 6.1000023, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 74.16, y: 9.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 61.96, y: 9.21}
+  - bounds:
+      m_Center: {x: -62.23, y: 12.21, z: 0}
+      m_Extent: {x: 3.079998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -59.15, y: 12.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -65.31, y: 12.21}
+  - bounds:
+      m_Center: {x: 48.17, y: 31.23, z: 0}
+      m_Extent: {x: 9.219999, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 57.39, y: 31.23}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 38.95, y: 31.23}
+  - bounds:
+      m_Center: {x: 37.925003, y: 29.17, z: 0}
+      m_Extent: {x: 1.0249996, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 38.95, y: 29.17}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 36.9, y: 29.17}
+  - bounds:
+      m_Center: {x: 58.415, y: 29.23, z: 0}
+      m_Extent: {x: 1.0249996, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 59.44, y: 29.23}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 57.39, y: 29.23}
+  - bounds:
+      m_Center: {x: 179.23, y: -21.08, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 180.23, y: -21.08}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 178.23, y: -21.08}
+  - bounds:
+      m_Center: {x: 70.79, y: -22.55, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 71.79, y: -22.55}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 69.79, y: -22.55}
+  - bounds:
+      m_Center: {x: 125.66, y: -17.75, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 126.66, y: -17.75}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 124.66, y: -17.75}
+  - bounds:
+      m_Center: {x: 82.09, y: -28.32, z: 0}
+      m_Extent: {x: 3.079998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 85.17, y: -28.32}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 79.01, y: -28.32}
+  - bounds:
+      m_Center: {x: 33, y: -1.03, z: 0}
+      m_Extent: {x: 2.0299997, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 35.03, y: -1.03}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 30.97, y: -1.03}
+  - bounds:
+      m_Center: {x: 47.265, y: 1.04, z: 0}
+      m_Extent: {x: 12.235001, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 59.5, y: 1.04}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 35.03, y: 1.04}
+  - bounds:
+      m_Center: {x: -51.96, y: 3.96, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -48.88, y: 3.96}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -55.04, y: 3.96}
+  - bounds:
+      m_Center: {x: -61.72, y: 5.02, z: 0}
+      m_Extent: {x: 3.0800018, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -58.64, y: 5.02}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -64.8, y: 5.02}
+  - bounds:
+      m_Center: {x: 112.11, y: 25.48, z: 0}
+      m_Extent: {x: 1.0400009, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 113.15, y: 25.48}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 111.07, y: 25.48}
+  - bounds:
+      m_Center: {x: -9.17, y: 6.09, z: 0}
+      m_Extent: {x: 6.1400003, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -3.03, y: 6.09}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -15.31, y: 6.09}
+  - bounds:
+      m_Center: {x: -20.275, y: 29.8, z: 0}
+      m_Extent: {x: 5.145, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -15.13, y: 29.8}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -25.42, y: 29.8}
+  - bounds:
+      m_Center: {x: -14.065001, y: 27.75, z: 0}
+      m_Extent: {x: 1.065, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -13, y: 27.75}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -15.13, y: 27.75}
+  - bounds:
+      m_Center: {x: 82.09, y: -8.84, z: 0}
+      m_Extent: {x: 3.079998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 85.17, y: -8.84}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 79.01, y: -8.84}
+  - bounds:
+      m_Center: {x: 34.725, y: 20.38, z: 0}
+      m_Extent: {x: 0.96500015, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 35.69, y: 20.38}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 33.76, y: 20.38}
+  - bounds:
+      m_Center: {x: 18.509998, y: 22.45, z: 0}
+      m_Extent: {x: 15.249999, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 33.76, y: 22.45}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 3.26, y: 22.45}
+  - bounds:
+      m_Center: {x: 1.1499999, y: 24.47, z: 0}
+      m_Extent: {x: 2.11, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 3.26, y: 24.47}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -0.96, y: 24.47}
+  - bounds:
+      m_Center: {x: -3, y: 26.56, z: 0}
+      m_Extent: {x: 2.04, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -0.96, y: 26.56}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -5.04, y: 26.56}
+  - bounds:
+      m_Center: {x: -7.09, y: 24.47, z: 0}
+      m_Extent: {x: 2.0500002, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -5.04, y: 24.47}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -9.14, y: 24.47}
+  - bounds:
+      m_Center: {x: -17.25, y: 22.45, z: 0}
+      m_Extent: {x: 8.110001, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -9.14, y: 22.45}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -25.36, y: 22.45}
+  - bounds:
+      m_Center: {x: 36.769997, y: 16.282, z: 0}
+      m_Extent: {x: 1.0799999, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 37.85, y: 16.282}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 35.69, y: 16.282}
+  - bounds:
+      m_Center: {x: 89.06, y: -15.87, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 90.06, y: -15.87}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 88.06, y: -15.87}
+  - bounds:
+      m_Center: {x: 82.09, y: 9.21, z: 0}
+      m_Extent: {x: 3.079998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 85.17, y: 9.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 79.01, y: 9.21}
+  - bounds:
+      m_Center: {x: 66.03, y: -3.0349998, z: 0}
+      m_Extent: {x: 2.0599976, y: 0.004999995, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 68.09, y: -3.04}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 63.97, y: -3.03}
+  - bounds:
+      m_Center: {x: 62.995003, y: -5.07, z: 0}
+      m_Extent: {x: 0.9750004, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 63.97, y: -5.07}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 62.02, y: -5.07}
+  - bounds:
+      m_Center: {x: 54.5, y: -7.13, z: 0}
+      m_Extent: {x: 7.5200005, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 62.02, y: -7.13}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 46.98, y: -7.13}
+  - bounds:
+      m_Center: {x: 43.9, y: -5.1, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 46.98, y: -5.1}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 40.82, y: -5.1}
+  - bounds:
+      m_Center: {x: 34.14, y: -7.13, z: 0}
+      m_Extent: {x: 6.6800003, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 40.82, y: -7.13}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 27.46, y: -7.13}
+  - bounds:
+      m_Center: {x: 26.45, y: -5.07, z: 0}
+      m_Extent: {x: 1.0099993, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 27.46, y: -5.07}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 25.44, y: -5.07}
+  - bounds:
+      m_Center: {x: 24.445, y: -3.09, z: 0}
+      m_Extent: {x: 0.9949999, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 25.44, y: -3.09}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 23.45, y: -3.09}
+  - bounds:
+      m_Center: {x: 22.415, y: -1.03, z: 0}
+      m_Extent: {x: 1.0350008, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 23.45, y: -1.03}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 21.38, y: -1.03}
+  - bounds:
+      m_Center: {x: 13.799999, y: 1.04, z: 0}
+      m_Extent: {x: 7.58, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 21.38, y: 1.04}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.22, y: 1.04}
+  - bounds:
+      m_Center: {x: 3.1399999, y: 3.08, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 6.22, y: 3.08}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 0.06, y: 3.08}
+  - bounds:
+      m_Center: {x: -10.611, y: 1.04, z: 0}
+      m_Extent: {x: 10.671, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 0.06, y: 1.04}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -21.282, y: 1.04}
+  - bounds:
+      m_Center: {x: -25.406, y: 3.114, z: 0}
+      m_Extent: {x: 4.1240005, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -21.282, y: 3.114}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.53, y: 3.114}
+  - bounds:
+      m_Center: {x: -28.490479, y: -4.99, z: 0}
+      m_Extent: {x: 1.0395212, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -27.450958, y: -4.99}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.53, y: -4.99}
+  - bounds:
+      m_Center: {x: -28.51, y: -13.144, z: 0}
+      m_Extent: {x: 1.0200005, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -27.49, y: -13.144}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.53, y: -13.144}
+  - bounds:
+      m_Center: {x: -28.51, y: -21.16, z: 0}
+      m_Extent: {x: 1.0200005, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -27.49, y: -21.16}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -29.53, y: -21.16}
+  - bounds:
+      m_Center: {x: 65.592224, y: -19.11, z: 0}
+      m_Extent: {x: 1.0077705, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 66.6, y: -19.11}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 64.58446, y: -19.11}
+  - bounds:
+      m_Center: {x: 71.231995, y: -5.08, z: 0}
+      m_Extent: {x: 3.0519981, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 74.284, y: -5.08}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 68.18, y: -5.08}
+  - bounds:
+      m_Center: {x: 20.601414, y: -19.11, z: 0}
+      m_Extent: {x: 41.898586, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 62.5, y: -19.11}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -21.297173, y: -19.11}
+  - bounds:
+      m_Center: {x: 82.09, y: 0.94, z: 0}
+      m_Extent: {x: 3.079998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 85.17, y: 0.94}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 79.01, y: 0.94}
+  - bounds:
+      m_Center: {x: 112.11, y: 11.57, z: 0}
+      m_Extent: {x: 1.0400009, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 113.15, y: 11.57}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 111.07, y: 11.57}
+  - bounds:
+      m_Center: {x: -52.300003, y: 11.22, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -49.22, y: 11.22}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -55.38, y: 11.22}
+  - bounds:
+      m_Center: {x: 92.67, y: -12.42, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 93.67, y: -12.42}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 91.67, y: -12.42}
+  - bounds:
+      m_Center: {x: 82.395004, y: 29.66, z: 0}
+      m_Extent: {x: 16.365002, y: 0.010000229, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 98.76, y: 29.65}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 66.03, y: 29.67}
+  - bounds:
+      m_Center: {x: 65.04, y: 27.97, z: 0}
+      m_Extent: {x: 0.98999786, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 66.03, y: 27.97}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 64.05, y: 27.97}
+  - bounds:
+      m_Center: {x: 63.025, y: 25.98, z: 0}
+      m_Extent: {x: 1.0250015, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 64.05, y: 25.98}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 62, y: 25.98}
+  - bounds:
+      m_Center: {x: 57.875, y: 23.9085, z: 0}
+      m_Extent: {x: 4.125, y: 0.0015001297, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 62, y: 23.91}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 53.75, y: 23.907}
+  - bounds:
+      m_Center: {x: 93.66, y: 9.21, z: 0}
+      m_Extent: {x: 3.0499992, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 96.71, y: 9.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 90.61, y: 9.21}
+  - bounds:
+      m_Center: {x: 102.84088, y: 27.5965, z: 0}
+      m_Extent: {x: 4.079117, y: 0.003499031, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 106.92, y: 27.6}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 98.761765, y: 27.593002}
+  - bounds:
+      m_Center: {x: 102.85, y: 9.209, z: 0}
+      m_Extent: {x: 1.9899979, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 104.84, y: 9.209}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 100.86, y: 9.209}
+  - bounds:
+      m_Center: {x: 99.825, y: 15.35, z: 0}
+      m_Extent: {x: 1.0349998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 100.86, y: 15.35}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 98.79, y: 15.35}
+  - bounds:
+      m_Center: {x: 83.45, y: 17.39, z: 0}
+      m_Extent: {x: 15.34, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 98.79, y: 17.39}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 68.11, y: 17.39}
+  - bounds:
+      m_Center: {x: 143.76, y: -14.36, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 144.76, y: -14.36}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 142.76, y: -14.36}
+  - bounds:
+      m_Center: {x: 90.04, y: -25.13, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 91.04, y: -25.13}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 89.04, y: -25.13}
+  - bounds:
+      m_Center: {x: 44.819, y: 20.309, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 47.899, y: 20.309}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 41.739, y: 20.309}
+  - bounds:
+      m_Center: {x: 42.755, y: 12.23, z: 0}
+      m_Extent: {x: 1.0349998, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 43.79, y: 12.23}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 41.72, y: 12.23}
+  - bounds:
+      m_Center: {x: 39.675003, y: 10.138, z: 0}
+      m_Extent: {x: 2.045, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 41.72, y: 10.138}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 37.63, y: 10.138}
+  - bounds:
+      m_Center: {x: 33.57, y: 8.09, z: 0}
+      m_Extent: {x: 4.0600004, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 37.63, y: 8.09}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 29.51, y: 8.09}
+  - bounds:
+      m_Center: {x: 19.34, y: 6.09, z: 0}
+      m_Extent: {x: 10.17, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 29.51, y: 6.09}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 9.17, y: 6.09}
+  - bounds:
+      m_Center: {x: 48.94, y: 8.09, z: 0}
+      m_Extent: {x: 3.0699997, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 52.01, y: 8.09}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 45.87, y: 8.09}
+  - bounds:
+      m_Center: {x: 55.0745, y: 18.25, z: 0}
+      m_Extent: {x: 7.175501, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 62.25, y: 18.25}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 47.899, y: 18.25}
+  - bounds:
+      m_Center: {x: 112.11, y: 30.7, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 113.11, y: 30.7}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 111.11, y: 30.7}
+  - bounds:
+      m_Center: {x: -57.53, y: 26.62, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -54.45, y: 26.62}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -60.61, y: 26.62}
+  - bounds:
+      m_Center: {x: 30.48, y: 30.24, z: 0}
+      m_Extent: {x: 3.0800009, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 33.56, y: 30.24}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 27.4, y: 30.24}
+  - bounds:
+      m_Center: {x: 90.59, y: -32.36, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 91.59, y: -32.36}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 89.59, y: -32.36}
+  - bounds:
+      m_Center: {x: -47.839996, y: 17.94, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -44.76, y: 17.94}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -50.92, y: 17.94}
+  - bounds:
+      m_Center: {x: 174.32, y: -23.98, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 175.32, y: -23.98}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 173.32, y: -23.98}
+  - bounds:
+      m_Center: {x: 73.11, y: -16.21, z: 0}
+      m_Extent: {x: 1, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 74.11, y: -16.21}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: 72.11, y: -16.21}
+  - bounds:
+      m_Center: {x: -46.93, y: 24.45, z: 0}
+      m_Extent: {x: 3.08, y: 0, z: 0}
+    isClosed: 0
+    hierachyIndex: 0
+    verts:
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -43.85, y: 24.45}
+    - angleABC: 0
+      slopeAngleBC: 0
+      distanceBC: 0
+      pointB: {x: -50.01, y: 24.45}
   selectionMask:
     serializedVersion: 2
     m_Bits: 0
   circleVertCount: 4
   selectAllStatic: 1
   useSelection: 0
-  hideSelectedGeometry: 0
-  nodeMergeDist: 0.001
-  maxEdgeDeviation: 0
-  showType: 1
+  hideSelectedGeometry: 1
+  nodeMergeDist: 0.094
+  maxEdgeDeviation: 2.66
+  showType: 0

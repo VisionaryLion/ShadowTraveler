@@ -1,46 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Utility.ExtensionMethods;
+using System;
 
 namespace Utility.Polygon2D
 {
     internal class PointChain
     {
+        const double fudge = 0.0001;
+
         public bool IsClosed { get; set; }
         public bool IsEmpty { get { return chain.Count == 0; } }
-        public Bounds Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } set { bounds = value; areBoundsValid = true; } }
+        public Boundsd Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } set { bounds = value; areBoundsValid = true; } }
 
-        public Vector2 FirstPoint
+        public Vector2d FirstPoint
         {
             get { return chain.First.Value; }
         }
-        public Vector2 LastPoint
+        public Vector2d LastPoint
         {
             get { return chain.Last.Value; }
         }
-        public LinkedList<Vector2> chain;
+        public LinkedList<Vector2d> chain;
 
         private bool areBoundsValid;
-        private Bounds bounds;
+        private Boundsd bounds;
 
-        public PointChain(ref Vector2 p0, ref Vector2 p1, bool isClosed = false)
+        public PointChain(ref Vector2d p0, ref Vector2d p1, bool isClosed = false)
         {
-            chain = new LinkedList<Vector2>();
+            chain = new LinkedList<Vector2d>();
             chain.AddLast(p0);
             chain.AddLast(p1);
             IsClosed = isClosed;
         }
 
-        public PointChain(IEnumerable<Vector2> verts, bool isClosed = false)
+        public PointChain(IEnumerable<Vector2d> verts, bool isClosed = false)
         {
-            chain = new LinkedList<Vector2>(verts);
+            chain = new LinkedList<Vector2d>(verts);
             if (chain.Count < 2)
                 throw new System.ArgumentOutOfRangeException("verts", "Verts must contain at least two items.");
 
             IsClosed = isClosed;
         }
 
-        public bool LinkSegment(ref Vector2 p0, ref Vector2 p1)
+        public bool LinkSegment(ref Vector2d p0, ref Vector2d p1)
         {
             /*if (p0 == FirstPoint)
             {
@@ -79,8 +82,8 @@ namespace Utility.Polygon2D
                     chain.AddFirst(p0);
 
                     //Update bounds
-                    bounds.min = Vector2.Min(bounds.min, p0);
-                    bounds.max = Vector2.Max(bounds.max, p0);
+                    bounds.min = Vector2d.Min(bounds.min, p0);
+                    bounds.max = Vector2d.Max(bounds.max, p0);
                 }
                 return true;
             }
@@ -93,8 +96,8 @@ namespace Utility.Polygon2D
                     chain.AddLast(p1);
 
                     //Update bounds
-                    bounds.min = Vector2.Min(bounds.min, p1);
-                    bounds.max = Vector2.Max(bounds.max, p1);
+                    bounds.min = Vector2d.Min(bounds.min, p1);
+                    bounds.max = Vector2d.Max(bounds.max, p1);
                 }
                 return true;
             }
@@ -113,7 +116,7 @@ namespace Utility.Polygon2D
                 chain.RemoveFirst();
                 chain.PrependRange(other.chain);
             }
-            else if (other.FirstPoint == FirstPoint)
+            /*else if (other.FirstPoint == FirstPoint)
             {
                 Debug.Log("Shouldn't happen (firstPoint == Firstpoint) and will lead to a wrapping issue!");
                 chain.RemoveFirst();
@@ -126,29 +129,29 @@ namespace Utility.Polygon2D
                 chain.RemoveLast();
                 other.chain.Reverse();
                 chain.AppendRange(other.chain);
-            }
+            }*/
             else
                 return false; //Other PointChain couldnt be attached
 
             //Update bounds
-            bounds.min = Vector2.Min(bounds.min, other.Bounds.min);
-            bounds.max = Vector2.Max(bounds.max, other.Bounds.max);
+            bounds.min = Vector2d.Min(bounds.min, other.Bounds.min);
+            bounds.max = Vector2d.Max(bounds.max, other.Bounds.max);
             return true;
         }
 
         public void VisualDebug()
         {
-            LinkedListNode<Vector2> chainNode = chain.First;
+            LinkedListNode<Vector2d> chainNode = chain.First;
             while ((chainNode = chainNode.Next) != null)
             {
-                Debug.DrawLine(chainNode.Previous.Value, chainNode.Value);
-                DebugExtension.DebugCircle(chainNode.Previous.Value, Vector3.forward, 0.1f);
+                Debug.DrawLine((Vector2)chainNode.Previous.Value, (Vector2)chainNode.Value);
+                DebugExtension.DebugCircle((Vector2)chainNode.Previous.Value, Vector3.forward, 0.1f);
 
             }
             if (IsClosed)
             {
-                Debug.DrawLine(chain.Last.Value, chain.First.Value);
-                DebugExtension.DebugCircle(chain.Last.Value, Vector3.forward, 0.1f);
+                Debug.DrawLine((Vector2)chain.Last.Value, (Vector2)chain.First.Value);
+                DebugExtension.DebugCircle((Vector2)chain.Last.Value, Vector3.forward, 0.1f);
             }
         }
 
@@ -156,13 +159,13 @@ namespace Utility.Polygon2D
         {
             areBoundsValid = true;
 
-            LinkedListNode<Vector2> cNode = chain.First;
+            LinkedListNode<Vector2d> cNode = chain.First;
             bounds.min = cNode.Value;
             bounds.max = cNode.Value;
             while ((cNode = cNode.Next) != null)
             {
-                bounds.min = Vector2.Min(cNode.Value, bounds.min);
-                bounds.max = Vector2.Max(cNode.Value, bounds.max);
+                bounds.min = Vector2d.Min(cNode.Value, bounds.min);
+                bounds.max = Vector2d.Max(cNode.Value, bounds.max);
             }
         }
     }

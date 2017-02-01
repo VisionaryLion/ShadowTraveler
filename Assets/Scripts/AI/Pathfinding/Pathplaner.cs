@@ -6,6 +6,7 @@ using Priority_Queue;
 using Pathfinding2D;
 using System;
 using LightSensing;
+using NavData2d;
 
 public class PathPlaner : MonoBehaviour
 {
