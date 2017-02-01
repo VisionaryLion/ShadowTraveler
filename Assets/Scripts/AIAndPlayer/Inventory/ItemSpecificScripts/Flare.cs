@@ -87,6 +87,7 @@ namespace Equipment
                     isBurning = true;
                     lightSrc.enabled = true;
                     flareParticle.Play();
+                    HUDManager.hudManager.startBurn(actor.EquipedWithRightHand ? true : false, item);
                 }
             }
             else if(!burnedOut)
@@ -123,9 +124,11 @@ namespace Equipment
 
                     if(actor.EquipedWithRightHand)
                     {
-                        HUDManager.hudManager.EmptyRight();
+                        HUDManager.hudManager.decreaseRight = false;
+                        HUDManager.hudManager.EmptyRight();                        
                     } else
                     {
+                        HUDManager.hudManager.decreaseLeft = false;
                         HUDManager.hudManager.EmptyLeft();
                     }
                 }
