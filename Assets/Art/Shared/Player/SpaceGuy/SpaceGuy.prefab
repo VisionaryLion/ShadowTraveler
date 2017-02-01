@@ -41,7 +41,6 @@ GameObject:
   - 92: {fileID: 92000013511188460}
   - 81: {fileID: 81000012436359356}
   - 114: {fileID: 114000012089473300}
-  - 114: {fileID: 114000010195613204}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -64,7 +63,8 @@ GameObject:
   - 61: {fileID: 61000010934558998}
   - 114: {fileID: 114000010737829262}
   - 114: {fileID: 114000010577618618}
-  m_Layer: 0
+  - 114: {fileID: 114000013464971448}
+  m_Layer: 13
   m_Name: SpaceGuy
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - 224: {fileID: 224000013121614308}
   - 114: {fileID: 114000012853589810}
   m_Layer: 0
-  m_Name: Light (34)
+  m_Name: Light-body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -127,7 +127,7 @@ GameObject:
   - 224: {fileID: 224000012255426866}
   - 114: {fileID: 114000012479771816}
   m_Layer: 0
-  m_Name: Light (35)
+  m_Name: Light-headlamps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -155,7 +155,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010687184314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.1, y: 5.7, z: 0}
+  m_LocalPosition: {x: 3.11, y: 5.52, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -292,7 +292,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 1000010687184314}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 11dfcdf1c62ed2d48946e78f64feaf23, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: -0.24, y: -3.18}
@@ -306,7 +306,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1000010687184314}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 11dfcdf1c62ed2d48946e78f64feaf23, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: -0.24, y: -0.38}
@@ -343,23 +343,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114000010195613204
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010420849198}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cab436f9d6940dd4a8c4dddc411e8144, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xMargin: 1
-  yMargin: 1
-  xSmooth: 10
-  ySmooth: 10
-  maxXAndY: {x: 174.8, y: 34}
-  minXAndY: {x: -66.8, y: -33.6}
 --- !u!114 &114000010577618618
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -382,13 +365,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08f91df3bd212f429df17f53ce2f364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MaxSpeed: 4
+  m_MaxSpeed: 5
   m_JumpForce: 700
   m_CrouchSpeed: 0.36
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294942719
   allowedJumps: 3
   FollowFriend: {fileID: 0}
 --- !u!114 &114000012089473300
@@ -402,7 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b808f63c106e042ff9194fa3e2ca9644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _renderInSceneView: 1
+  _renderInSceneView: 0
   _linearLightBlending: 1
   _shadows: 1
   _ambientLight: {r: 0, g: 0, b: 0, a: 1}
@@ -426,7 +409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _radius: 0.15
   _intensity: 1
-  _color: {r: 1, g: 1, b: 1, a: 1}
+  _color: {r: 0.8308824, g: 0.9370183, b: 1, a: 1}
   _cookieTexture: {fileID: 2800000, guid: 5696e14e55cfa47a1b30884b2ccd2a77, type: 3}
   _shadowLayers:
     serializedVersion: 2
@@ -442,13 +425,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d39184e4f3fd7422a9c8150c72505064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _radius: 0.1
-  _intensity: 0.5
-  _color: {r: 1, g: 1, b: 1, a: 1}
+  _radius: 0.4
+  _intensity: 0.55
+  _color: {r: 0.75735295, g: 0.9698783, b: 1, a: 1}
   _cookieTexture: {fileID: 2800000, guid: 8c9424686718749a79efeb06eb69c15c, type: 3}
   _shadowLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114000013464971448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010687184314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db9e995e8feb293408135228a672304b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HoverHeight: {x: 0, y: 0.6}
+  regenDelay: 1.1
+  HoverDuration: 1.2
+  regenRate: 0.05
+  HoverUIbar: {fileID: 0}
 --- !u!124 &124000013815109974
 Behaviour:
   m_ObjectHideFlags: 1
@@ -2285,7 +2284,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0.032582153, w: 0.9994691}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2335569, y: 0.12333281, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: -1.7030001, z: -0.9710001}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -52.623}
   m_Children: []
   m_Father: {fileID: 4000010957774364}
   m_RootOrder: 2

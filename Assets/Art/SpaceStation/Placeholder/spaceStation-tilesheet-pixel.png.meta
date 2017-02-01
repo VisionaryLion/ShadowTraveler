@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: edebcda6fe1373a459d90bd1207e97d5
-timeCreated: 1484290795
+timeCreated: 1485481918
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -37,6 +37,10 @@ TextureImporter:
     21300060: crate-02
     21300062: crate-02-broken
     21300064: bkgrd-02
+    21300066: lightbulb-02
+    21300068: lightbulb-01
+    21300070: lightbulb-03
+    21300072: gravityCenter
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -509,6 +513,45 @@ TextureImporter:
         y: 1134
         width: 200
         height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: lightbulb-02
+      rect:
+        serializedVersion: 2
+        x: 1648
+        y: 1176
+        width: 20
+        height: 155
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: lightbulb-01
+      rect:
+        serializedVersion: 2
+        x: 1687
+        y: 1307
+        width: 65
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: lightbulb-03
+      rect:
+        serializedVersion: 2
+        x: 1768
+        y: 1298
+        width: 53
+        height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
