@@ -41,6 +41,7 @@ namespace NavData2d.Editor
 
         public void OnSelected()
         {
+            if(navSet != null)
             EditorUtility.SetDirty(navSet);
         }
 
