@@ -38,7 +38,9 @@ namespace NavData2d.Editor
             if (GUILayout.Button("Create New"))
             {
                 navBuilder.GlobalBuildContainer = new NavData2dBuildContainer();
+                navBuilder.GlobalBuildContainer.SaveToAsset();
             }
+            GUI.enabled = true;
         }
 
         public void OnSceneGUI(SceneView sceneView)

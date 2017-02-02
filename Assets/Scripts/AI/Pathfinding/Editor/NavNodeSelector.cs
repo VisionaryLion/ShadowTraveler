@@ -220,6 +220,7 @@ namespace NavData2d.Editor
                 name = navBuilder.GlobalBuildContainer.prebuildNavData.name,
                 version = navBuilder.GlobalBuildContainer.prebuildNavData.version
             };
+            EditorUtility.SetDirty(navBuilder.GlobalBuildContainer.filteredNavData);
         }
     }
 }

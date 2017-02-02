@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace NavData2d.Editor
 {
+    [System.Serializable]
     public class MetaJumpLink
     {
         [SerializeField]

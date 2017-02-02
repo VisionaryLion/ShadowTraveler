@@ -99,7 +99,10 @@ namespace NavData2d.Editor
 
         public void OnSelected()
         {
-            
+            if(optimizedTree != null)
+                optimizedTreeVerts = CollectOutlineVerts(optimizedTree);
+            if(unoptimizedTree != null)
+                unoptimizedTreeVerts = CollectOutlineVerts(unoptimizedTree);
         }
 
         public void OnUnselected()

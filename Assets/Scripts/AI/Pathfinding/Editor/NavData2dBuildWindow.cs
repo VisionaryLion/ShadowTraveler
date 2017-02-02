@@ -54,6 +54,9 @@ namespace NavData2d.Editor
         {
             SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
             tabManager.UnselectTab();
+            buildContainer.UpdateAssetRef();
+            EditorUtility.SetDirty(buildContainer);
+            AssetDatabase.SaveAssets();
         }
 
         void OnGUI()

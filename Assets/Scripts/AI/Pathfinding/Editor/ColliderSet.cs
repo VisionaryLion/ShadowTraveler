@@ -43,7 +43,7 @@ namespace NavData2d.Editor
         {
             Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
             colliderList.AddRange(allCollider.Where(x => x.gameObject.isStatic && !colliderList.Any(y => y == x)));
-            UpdateGeometryVerts();
+            TryUpdateGeometryVerts();
         }
 
         public void AddSelectedCollider()
@@ -54,14 +54,14 @@ namespace NavData2d.Editor
                 if (childCollider != null)
                     colliderList.AddRange(childCollider.Where(x => !colliderList.Any(y => y == x)));
             }
-            UpdateGeometryVerts();
+            TryUpdateGeometryVerts();
         }
 
         public void AddColliderOnLayer(LayerMask layerMask)
         {
             Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
             colliderList.AddRange(allCollider.Where(x => layerMask.IsLayerWithinMask(x.gameObject.layer) && !colliderList.Any(y => y == x)));
-            UpdateGeometryVerts();
+            TryUpdateGeometryVerts();
         }
 
         public void RemoveDuplicates()
@@ -74,17 +74,22 @@ namespace NavData2d.Editor
 
             colliderList.Clear();
             colliderList.AddRange(passedValues.ToList());
-            UpdateGeometryVerts();
+            TryUpdateGeometryVerts();
         }
 
         public void RemoveAll()
         {
             colliderList.Clear();
             colliderList.Capacity = Mathf.Min(30, colliderList.Capacity);
-            UpdateGeometryVerts();
+            TryUpdateGeometryVerts();
         }
 
-        public void UpdateGeometryVerts()
+        public void TriggerGeometryVertsUpdate()
+        {
+            colliderVerts = CollisionGeometrySetBuilder.Build(colliderList, circleColliderVerts).colliderVerts.ToArray();
+        }
+
+        public void TryUpdateGeometryVerts()
         {
             if (oldColliderCount != colliderList.Count)
             {

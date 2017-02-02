@@ -50,7 +50,7 @@ namespace NavData2d.Editor
             if (colliderSet == null)
                 colliderSet = new ColliderSet();
             else
-                colliderSet.UpdateGeometryVerts();
+                colliderSet.TriggerGeometryVertsUpdate();
             if (colliderListContainer == null)
                 InitColliderListUI();
             
@@ -75,7 +75,7 @@ namespace NavData2d.Editor
             if (GUILayout.Button("Remove All"))
             {
                 colliderSet.colliderList.Clear();
-                colliderSet.UpdateGeometryVerts();
+                colliderSet.TriggerGeometryVertsUpdate();
             }
             GUILayout.EndHorizontal();
 
@@ -164,7 +164,7 @@ namespace NavData2d.Editor
                 if (GUI.Button(rect, "X"))
                 {
                     colliderSet.colliderList.RemoveAt(index);
-                    colliderSet.UpdateGeometryVerts();
+                    colliderSet.TryUpdateGeometryVerts();
                     navBuilder.TriggerRepaint();
                 }
                 if (EditorGUI.EndChangeCheck())
