@@ -24,8 +24,7 @@ namespace UnityStandardAssets._2D
         public int allowedJumps = 2; //total number of jumps allowed
         private int totalJumps;  //for counting the number of jumps
 
-        [SerializeField]
-        GameObject FollowFriend;
+        [SerializeField] GameObject FollowFriend;
 
         private void Awake()
         {

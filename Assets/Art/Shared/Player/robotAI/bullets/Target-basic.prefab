@@ -51,9 +51,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000011096194644}
   - 212: {fileID: 212000010201129088}
-  - 58: {fileID: 58000010014604314}
   - 114: {fileID: 114000011797147580}
+  - 58: {fileID: 58000010014604314}
   - 50: {fileID: 50000011443938204}
+  - 58: {fileID: 58000013280757770}
   m_Layer: 0
   m_Name: Target-01
   m_TagString: Untagged
@@ -130,7 +131,7 @@ Rigidbody2D:
   m_LinearDrag: 0.2
   m_AngularDrag: 1
   m_GravityScale: -0.1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -149,6 +150,20 @@ CircleCollider2D:
   m_Offset: {x: -0.2, y: 0.09}
   serializedVersion: 2
   m_Radius: 4.3
+--- !u!58 &58000013280757770
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010355844318}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 33
 --- !u!114 &114000011146618970
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -181,8 +196,7 @@ MonoBehaviour:
   HP: 1
   TargetExplode: {fileID: 198000012258005480, guid: 24b264c8baa54a045b9590997c58c007,
     type: 2}
-  TargetSpeed: 5
-  FollowPlayer: 1
+  TargetSpeed: 4.5
 --- !u!212 &212000010201129088
 SpriteRenderer:
   m_ObjectHideFlags: 1
