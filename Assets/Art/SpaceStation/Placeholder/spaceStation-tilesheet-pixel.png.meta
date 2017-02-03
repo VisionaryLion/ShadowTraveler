@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: edebcda6fe1373a459d90bd1207e97d5
-timeCreated: 1485481918
+timeCreated: 1485838529
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -41,6 +41,12 @@ TextureImporter:
     21300068: lightbulb-01
     21300070: lightbulb-03
     21300072: gravityCenter
+    21300074: laserBeam-Base
+    21300076: laserBeam
+    21300078: laserBeam-End
+    21300080: door-frame
+    21300082: door-L
+    21300084: door-R
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -554,6 +560,71 @@ TextureImporter:
         height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: laserBeam-Base
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 582
+        width: 189
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: laserBeam
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 567
+        width: 50
+        height: 10
+      alignment: 9
+      pivot: {x: 0.5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: door-frame
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 399
+        width: 335
+        height: 448
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: door-L
+      rect:
+        serializedVersion: 2
+        x: 1293
+        y: 404
+        width: 198
+        height: 434
+      alignment: 9
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: door-R
+      rect:
+        serializedVersion: 2
+        x: 1497
+        y: 403
+        width: 176
+        height: 435
+      alignment: 9
+      pivot: {x: 1, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -49,6 +49,54 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BkgrdDistant
+    uniqueID: 3239962731
+    locked: 0
+  - name: Bkgrd
+    uniqueID: 311211419
+    locked: 0
+  - name: Midground
+    uniqueID: 633350855
+    locked: 0
+  - name: CloneChambers
+    uniqueID: 527966131
+    locked: 0
+  - name: Doors
+    uniqueID: 2492876987
+    locked: 0
+  - name: MovingPlatforms
+    uniqueID: 2638050665
+    locked: 0
+  - name: MoveableObjects
+    uniqueID: 3589396619
+    locked: 0
+  - name: Player
+    uniqueID: 2774759785
+    locked: 0
+  - name: Enemies
+    uniqueID: 3210098487
+    locked: 0
+  - name: Foreground
+    uniqueID: 1737250499
+    locked: 0
+  - name: Chains
+    uniqueID: 383562513
+    locked: 0
+  - name: Water
+    uniqueID: 3298160659
+    locked: 0
+  - name: Ground
+    uniqueID: 1686353437
+    locked: 0
+  - name: GroundTop
+    uniqueID: 1190247411
+    locked: 0
+  - name: Lights
+    uniqueID: 4228173491
+    locked: 0
+  - name: ClosestForeground
+    uniqueID: 1379632229
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
