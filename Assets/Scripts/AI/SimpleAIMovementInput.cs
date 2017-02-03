@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
 
 
 namespace CC2D
@@ -10,8 +10,8 @@ namespace CC2D
 
         [SerializeField]
         [HideInInspector]
-        [AssignActorAutomaticly]
-        BasicEntityActor actor;
+        [AssignEntityAutomaticly]
+        ActingEntity actor;
 
         [SerializeField]
         float timeRunLeft;

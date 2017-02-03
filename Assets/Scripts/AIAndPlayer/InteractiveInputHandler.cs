@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
 using System.Collections.Generic;
 using System;
 
 public class InteractiveInputHandler {
 
     protected List<InteractiveInputDefinition> inputListener;
-    protected BasicEntityActor actor;
+    protected ActingEntity actor;
 
-    public InteractiveInputHandler(BasicEntityActor actor)
+    public InteractiveInputHandler(ActingEntity actor)
     {
         this.actor = actor;
         inputListener = new List<InteractiveInputDefinition>();

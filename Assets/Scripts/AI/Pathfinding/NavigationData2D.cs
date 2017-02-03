@@ -6,13 +6,15 @@ using Pathfinding2D;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Runtime.Serialization;
+using LightSensing;
 using AI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace NavMesh2D
+namespace NavData2d
 {
+    [Serializable]
     public class NavigationData2D : ScriptableObject
     {
         const float mapPointMaxDeviation = 3;
@@ -59,11 +61,9 @@ namespace NavMesh2D
                 map_cNavNode = nodes[iNavNode];
 
                 //Extended bounds test
-                if (map_cNavNode.min.x - mapPointMaxDeviation > point.x || map_cNavNode.max.x + mapPointMaxDeviation < point.x
-                || map_cNavNode.min.y - mapPointMaxDeviation > point.y || map_cNavNode.max.y + mapPointMaxDeviation < point.y)
+                if (map_cNavNode.bounds.min.x - mapPointMaxDeviation > point.x || map_cNavNode.bounds.max.x + mapPointMaxDeviation < point.x
+                || map_cNavNode.bounds.min.y - mapPointMaxDeviation > point.y || map_cNavNode.bounds.max.y + mapPointMaxDeviation < point.y)
                 {
-                    Bounds b = new Bounds();
-                    b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
                     //Failed test
                     continue;
                 }
@@ -71,8 +71,6 @@ namespace NavMesh2D
                 if (map_cNavNode.isClosed && map_cNavNode.Contains(point))
                 {
                     //maybe later check children, not implemented though
-                    Bounds b = new Bounds();
-                    b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
                     return false;
                 }
 
@@ -127,8 +125,7 @@ namespace NavMesh2D
         const float maxDeviationInside = 0.1f;
         const float maxDeviationOutside = 0.001f;
 
-        public Vector2 min;
-        public Vector2 max;
+        public Bounds bounds;
         public bool isClosed;
         public int hierachyIndex; // 0 = hole, 1 = solid, 2 = hole, 3 = solid, ...
 
@@ -143,18 +140,7 @@ namespace NavMesh2D
         public NavNode(NavVert[] verts, Bounds bounds, bool isClosed, int hierachyIndex)
         {
             this.verts = verts;
-            min = bounds.min;
-            max = bounds.max;
-            this.isClosed = isClosed;
-            this.hierachyIndex = hierachyIndex;
-            links = new IOffNodeLink[0];
-        }
-
-        public NavNode(NavVert[] verts, Vector2 min, Vector2 max, bool isClosed, int hierachyIndex)
-        {
-            this.verts = verts;
-            this.min = min;
-            this.max = max;
+            this.bounds = bounds;
             this.isClosed = isClosed;
             this.hierachyIndex = hierachyIndex;
             links = new IOffNodeLink[0];
@@ -164,7 +150,7 @@ namespace NavMesh2D
         {
             Debug.Assert(isClosed);
 
-            if (min.x > point.x || max.x < point.x || min.y > point.y || max.y < point.y)
+            if (!bounds.Contains(point))
             {
                 //Bound test failed
                 return false;
@@ -311,7 +297,7 @@ namespace NavMesh2D
 
         [SerializeField]
         Vector2 pointB; // a -> b -> c
-        
+
         public int[] linkIndex;
 
         public NavVert(Vector2 point, float angleABC, float slopeAngleBC, float distanceBC)

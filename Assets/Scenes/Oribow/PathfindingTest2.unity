@@ -1886,6 +1886,9 @@ MonoBehaviour:
   nodeMergeDist: 0
   maxEdgeDeviation: 0
   agentSettings: {fileID: 0}
+  path:
+    goal: {x: 0, y: 0}
+  lightSkin: {fileID: 0}
   showDebug: 0
   goal: {fileID: 0}
   start: {fileID: 0}

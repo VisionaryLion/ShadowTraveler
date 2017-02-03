@@ -1,43 +1,82 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
+using LightSensing;
 
 public class NavAgent : MonoBehaviour
 {
-    [SerializeField, HideInInspector, AssignActorAutomaticly]
-    ThightAIMovementActor actor;
+    [SerializeField, HideInInspector, AssignEntityAutomaticly]
+    ThightAIMovementEntity actor;
 
     [SerializeField]
     Transform pathStartPoint;
-
-    //only for debug!!
     [SerializeField]
-    Transform goal;
-    //only for debug!!
-    [SerializeField]
-    bool updatePath = true;
+    public LightSkin lightSkin;
 
     PathPlaner pathPlaner;
     OnPathComputationFinished cPathFoundCallback;
     NavPathIterator cPath;
+    LightMarker[] emptyMarkerArray;
+    bool reachedGoal;
+
+    public bool IsFollowingAPath { get { return cPath.path != null; } }
+    public bool IsOnEdgeNode { get { return IsFollowingAPath && cPath.CurrentSegement.GetType() == typeof(PathSegment); } }
+    public bool ReachedGoal { get { return reachedGoal; } }
 
     void Awake()
     {
         cPath = new NavPathIterator();
-    }
-
-    void Start()
-    {
+        emptyMarkerArray = new LightMarker[] { };
         pathPlaner = PathPlaner.Instance;
     }
 
     public delegate void OnPathComputationFinished(bool foundPath);
 
-    public void SetDestination(Vector2 dest, OnPathComputationFinished onPathFinished)
+    public void SetDestination(Vector2 dest, LightMarker[] lightMarker, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false)
     {
         Debug.Assert(cPathFoundCallback == null);
         cPathFoundCallback = onPathFinished;
-        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnPathCompleted));
+        if (!actor.CharacterController2D.isGrounded)
+        {
+            OnPathCompleted(null);
+            return;
+        }
+        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnPathCompleted, lightSkin, startsInUncomfortableLight, lightMarker));
+        reachedGoal = false;
+    }
+
+    public void SetDestination(Vector2 dest, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false)
+    {
+        SetDestination(dest, emptyMarkerArray, onPathFinished);
+    }
+
+    public void UpdateDestination(Vector2 dest, OnPathComputationFinished onPathFinished)
+    {
+        if (cPath.path == null)
+        {
+            SetDestination(dest, emptyMarkerArray, onPathFinished);
+            return;
+        }
+        if (cPath.path.goal == dest)
+            return;
+        Debug.Assert(cPathFoundCallback == null);
+        cPathFoundCallback = onPathFinished;
+        if (!actor.CharacterController2D.isGrounded)
+        {
+            OnUpdatePathCompleted(null);
+            return;
+        }
+        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnUpdatePathCompleted, lightSkin, false, emptyMarkerArray));
+        reachedGoal = false;
+    }
+
+    public void Stop()
+    {
+        if (cPath.path == null)
+            return;
+        cPath.CurrentSegement.StopTravers(actor.CC2DThightAIMotor);
+        cPath.path = null;
+        StopMoving();
     }
 
     void OnPathCompleted(NavPath path)
@@ -49,27 +88,30 @@ public class NavAgent : MonoBehaviour
         {
             EnableMovementAgain();
             cPath.AssignNewPath(path);
-            cPath.CurrentSegement.InitTravers(actor.CC2DMotor);
+            cPath.CurrentSegement.InitTravers(actor.CC2DThightAIMotor, cPath.GetNextSegment());
             cPathFoundCallback(true);
         }
 
         cPathFoundCallback = null;
     }
 
-    //Only For Debug!!
-    public void PathComputationFinished(bool foundPath)
+    void OnUpdatePathCompleted(NavPath path)
     {
+        Debug.Assert(cPathFoundCallback != null);
+        if (path == null)
+            cPathFoundCallback(false);
+        else
+        {
+            cPath.AssignNewPath(path);
+            cPath.CurrentSegement.InitTravers(actor.CC2DThightAIMotor, cPath.GetNextSegment());
+            cPathFoundCallback(true);
+        }
 
+        cPathFoundCallback = null;
     }
 
     void FixedUpdate()
     {
-        if (updatePath)
-        {
-            SetDestination(goal.position, PathComputationFinished);
-            updatePath = false;
-        }
-
         if (cPath.path == null)
             return;
 
@@ -77,16 +119,15 @@ public class NavAgent : MonoBehaviour
 
         if (cPath.CurrentSegement.ReachedTarget(pathStartPoint.position))
         {
-            cPath.CurrentSegement.StopTravers(actor.CC2DMotor);
+            cPath.CurrentSegement.StopTravers(actor.CC2DThightAIMotor);
             if (!cPath.NextSegment())
             {
                 cPath.path = null;
-                Debug.Log("Finished Path!");
                 StopMoving();
+                reachedGoal = true;
                 return;
             }
-            Debug.Log("Next Segment!");
-            cPath.CurrentSegement.InitTravers(actor.CC2DMotor);
+            cPath.CurrentSegement.InitTravers(actor.CC2DThightAIMotor, cPath.GetNextSegment());
         }
         /*else if (cPath.IsSegmentTimedOut)
         {
@@ -99,24 +140,25 @@ public class NavAgent : MonoBehaviour
         {
             //cPath.path = null;
             Debug.Log("Lost Path. Abort!");
+            cPath.path = null;
             StopMoving();
             return;
         }
         // else
         // {
-        cPath.CurrentSegement.UpdateMovementInput(actor.CC2DMotor.CurrentMovementInput);
+        cPath.CurrentSegement.UpdateMovementInput(actor.CC2DThightAIMotor.CurrentMovementInput, actor.CC2DThightAIMotor);
         // }        
     }
 
     void StopMoving()
     {
-        actor.CC2DMotor.CurrentMovementInput.ResetToNeutral();
-        actor.CC2DMotor.SetManualXSpeed(0);
+        actor.CC2DThightAIMotor.CurrentMovementInput.ResetToNeutral();
+        actor.CC2DThightAIMotor.SetManualXSpeed(0);
     }
 
     void EnableMovementAgain()
     {
-        actor.CC2DMotor.StopUsingManualSpeed();
+        actor.CC2DThightAIMotor.StopUsingManualSpeed();
     }
 
     class NavPathIterator
@@ -127,6 +169,13 @@ public class NavAgent : MonoBehaviour
         public NavPath path;
         int currentSegment;
         float segmentStartTime;
+
+        public IPathSegment GetNextSegment()
+        {
+            if (currentSegment + 1 >= path.pathSegments.Length)
+                return null;
+            return path.pathSegments[currentSegment];
+        }
 
         public bool NextSegment()
         {

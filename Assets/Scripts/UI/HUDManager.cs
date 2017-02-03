@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using Actors;
+using Entities;
 
 
 namespace ItemHandler
@@ -29,7 +29,7 @@ namespace ItemHandler
         Image rightItemDurability;
 
 
-        PlayerActor player;
+        PlayerEntity player;
         Sprite emptySprite = null;
         public static HUDManager hudManager;
 
@@ -42,20 +42,14 @@ namespace ItemHandler
         void Awake()
         {
             hudManager = this;
-
-            player = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
-
-            player.TwoHandEquipmentManager.EquipLeftHandler += EquipLeft;
-            player.TwoHandEquipmentManager.EquipRightHandler += EquipRight;
-
-            player.TwoHandEquipmentManager.DepleteLeft += EmptyLeft;
-            player.TwoHandEquipmentManager.DepleteRight += EmptyRight;
+            player = EntityDatabase.GetInstance().FindFirst<PlayerEntity>();
 
             EmptyLeft();
-            EmptyRight();            
+            EmptyRight();
         }
 
-        public void EquipLeft(IItem item)
+
+        public void EquipLeft(IItem item)  // or player.EquipmentManager.CurrentEquipedGameObjectLeft
         {
             leftItemDescription.text = item.Description;
             leftItemName.text = item.Title;

@@ -3,48 +3,48 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using NavData2d;
 
 namespace NavMesh2D.Core
 {
-    public class RawNavigationData2DBuilder
+    public class NavigationData2DBuilder
     {
         const float fudgeFactor = 0.00001f;
         NavAgentGroundWalkerSettings agentSettings;
+        float minNodeLength;
 
-        public RawNavigationData2DBuilder(NavAgentGroundWalkerSettings agentSettings)
+        public NavigationData2DBuilder(NavAgentGroundWalkerSettings agentSettings, float minNodeLength)
         {
             this.agentSettings = agentSettings;
+            this.minNodeLength = minNodeLength;
         }
 
-        public void Build(ExpandedTree expandedTree, RawNavigationData2D dst)
+        public void Build(ExpandedTree expandedTree, NavigationData2D dst)
         {
-            List<RawNavNode> navNodes = new List<RawNavNode>(10); //-> make it not arbitrary!!
+            List<NavNode> navNodes = new List<NavNode>(10); //-> make it not arbitrary!!
             foreach (ExpandedNode n in expandedTree.headNode.children)
                 HandleMarkableContour(n, navNodes, 1);
-            RawNavNode[] allNN = navNodes.ToArray();
+            NavNode[] allNN = navNodes.ToArray();
             navNodes = null;
             dst.nodes = allNN;
         }
 
-        private void HandleMarkableContour(ExpandedNode exNode, List<RawNavNode> nodes, int hierachyIndex)
+        private void HandleMarkableContour(ExpandedNode exNode, List<NavNode> nodes, int hierachyIndex)
         {
             ConvertMarkableContour(nodes, exNode.contour, hierachyIndex);
             foreach (ExpandedNode n in exNode.children)
                 HandleMarkableContour(n, nodes, hierachyIndex + 1);
         }
 
-        private void ConvertMarkableContour(List<RawNavNode> inOutNodes, MarkableContour mc, int hierachyIndex)
+        private void ConvertMarkableContour(List<NavNode> inOutNodes, MarkableContour mc, int hierachyIndex)
         {
-            //Some debuging
-            DebugExtension.DebugArrow(mc.firstPoint.pointB, mc.firstPoint.pointC - mc.firstPoint.pointB);
-
             //Find start point
             PointNode startPointNode = mc.firstPoint;
             bool isClosed = true;
 
             foreach (PointNode pn in mc)
             {
-                if (/*!pn.IsPointWalkable() ||*/ pn.FirstObstructedSegment != null || !IsEdgeAcceptable(pn))
+                if (/*!pn.IsPointWalkable() ||*/ pn.FirstObstructedSegment == null && IsEdgeAcceptable(pn))
                 {
                     startPointNode = pn;
                     isClosed = false;
@@ -53,7 +53,7 @@ namespace NavMesh2D.Core
             }
             DebugExtension.DebugCircle(startPointNode.pointB, Vector3.forward, Color.magenta, 0.5f);
             //startPointNode points now at the first obstruction
-            List<RawNavVert> vertBuffer = new List<RawNavVert>(mc.pointNodeCount);
+            List<NavVert> vertBuffer = new List<NavVert>(mc.pointNodeCount);
             Bounds inoutBounds = new Bounds(startPointNode.pointB, Vector3.zero);
 
             PointNode cPN = startPointNode;
@@ -66,18 +66,18 @@ namespace NavMesh2D.Core
             HandleEdge(cPN, inOutNodes, vertBuffer, ref inoutBounds, ref isClosed);
             if (vertBuffer.Count > 1)
             {
-                inOutNodes.Add(new RawNavNode(vertBuffer.ToArray(), inoutBounds, isClosed, hierachyIndex));
+                inOutNodes.Add(new NavNode(vertBuffer.ToArray(), inoutBounds, isClosed, hierachyIndex));
             }
         }
 
-        private void HandleEdge(PointNode edge, List<RawNavNode> inoutNodes, List<RawNavVert> inoutVerts, ref Bounds inoutBounds, ref bool isClosed)
+        private void HandleEdge(PointNode edge, List<NavNode> inoutNodes, List<NavVert> inoutVerts, ref Bounds inoutBounds, ref bool isClosed)
         {
             PointNode.ObstructedSegment obstrSeg = edge.FirstObstructedSegment;
             Vector2 startPoint = edge.pointB;
 
             if (!IsEdgeAcceptable(edge))
             {
-                inoutVerts.Add(new RawNavVert(startPoint));
+                inoutVerts.Add(new NavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
                 if (edge.Next != null)
                     EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, edge.Next.pointB);
@@ -89,13 +89,13 @@ namespace NavMesh2D.Core
 
             if (obstrSeg == null)
             {
-                inoutVerts.Add(new RawNavVert(startPoint));
+                inoutVerts.Add(new NavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
                 return;
             }
             else if (obstrSeg.start == 0)
             {
-                inoutVerts.Add(new RawNavVert(startPoint));
+                inoutVerts.Add(new NavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
                 EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, startPoint + edge.tangentBC * obstrSeg.end);
                 if (obstrSeg.next == null)
@@ -103,7 +103,7 @@ namespace NavMesh2D.Core
                     if (edge.distanceBC - obstrSeg.end > fudgeFactor)
                     {
                         startPoint = edge.pointB + edge.tangentBC * obstrSeg.end;
-                        inoutVerts.Add(new RawNavVert(startPoint));
+                        inoutVerts.Add(new NavVert(startPoint));
                         inoutBounds.Encapsulate(startPoint);
                     }
                     return;
@@ -113,9 +113,9 @@ namespace NavMesh2D.Core
 
             while (true)
             {
-                inoutVerts.Add(new RawNavVert(startPoint));
+                inoutVerts.Add(new NavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
-                inoutVerts.Add(new RawNavVert(edge.pointB + edge.tangentBC * obstrSeg.start));
+                inoutVerts.Add(new NavVert(edge.pointB + edge.tangentBC * obstrSeg.start));
                 inoutBounds.Encapsulate(edge.pointB + edge.tangentBC * obstrSeg.start);
                 startPoint = edge.pointB + edge.tangentBC * obstrSeg.end;
                 EndNavNode(inoutNodes, inoutVerts, ref inoutBounds, startPoint);
@@ -128,16 +128,16 @@ namespace NavMesh2D.Core
 
             if (edge.distanceBC - obstrSeg.end > fudgeFactor)
             {
-                inoutVerts.Add(new RawNavVert(startPoint));
+                inoutVerts.Add(new NavVert(startPoint));
                 inoutBounds.Encapsulate(startPoint);
             }
         }
 
-        private void EndNavNode(List<RawNavNode> inoutNodes, List<RawNavVert> inoutVerts, ref Bounds inoutBounds, Vector2 nextPoint)
+        private void EndNavNode(List<NavNode> inoutNodes, List<NavVert> inoutVerts, ref Bounds inoutBounds, Vector2 nextPoint)
         {
             if (inoutVerts.Count > 1)
             {
-                inoutNodes.Add(new RawNavNode(inoutVerts.ToArray(), inoutBounds, false, 0));
+                inoutNodes.Add(new NavNode(inoutVerts.ToArray(), inoutBounds, false, 0));
             }
             inoutBounds = new Bounds(nextPoint, Vector3.zero);
             inoutVerts.Clear();
@@ -145,6 +145,9 @@ namespace NavMesh2D.Core
 
         private bool IsEdgeAcceptable(PointNode edge)
         {
+            if (edge.distanceBC < minNodeLength)
+                return false;
+
             if (true)
             {
                 float angle = Vector2.Angle(Vector2.left, edge.tangentBC);
@@ -223,112 +226,6 @@ namespace NavMesh2D.Core
             {
                 Debug.DrawLine(start, end);
             }
-        }
-    }
-
-    [Serializable]
-    public class JumpArcSegment
-    {
-        [SerializeField]
-        public float j, halfG, v, doubleG;
-        [SerializeField]
-        public float minX, maxX;
-        [SerializeField]
-        public float startX, endX;
-        [SerializeField]
-        public float minY, maxY;
-
-        public JumpArcSegment(float j, float g, float v, float startX, float endX)
-        {
-            this.j = j;
-            this.halfG = g / 2;
-            this.v = v;
-            this.startX = startX;
-            this.endX = endX;
-            if (startX < endX)
-            {
-                minX = startX;
-                maxX = endX;
-            }
-            else
-            {
-                minX = endX;
-                maxX = startX;
-            }
-            minY = Mathf.Min(Calc(0), Calc(maxX - minX));
-            doubleG = g * 2;
-            maxY = (j * j) / (4 * doubleG);
-        }
-
-        public void UpdateArc(float j, float g, float v, float startX, float endX)
-        {
-            this.j = j;
-            this.halfG = g / 2;
-            this.v = v;
-            this.startX = startX;
-            this.endX = endX;
-            if (startX < endX)
-            {
-                minX = startX;
-                maxX = endX;
-            }
-            else
-            {
-                minX = endX;
-                maxX = startX;
-            }
-            minY = Mathf.Min(Calc(0), Calc(maxX - minX));
-            doubleG = g * 2;
-            maxY = (j * j) / (4 * doubleG);
-        }
-
-        public float Calc(float x)
-        {
-            x /= v;
-            return (j - halfG * x) * x;
-        }
-
-        public bool IntersectsWithSegment(RawNavigationData2DBuilder.Segment seg, Vector2 arcOrigin)
-        {
-            /*
-            if (seg.MinX > maxX || seg.MaxX < minX || seg.MinY > maxY || seg.MaxY < minY)
-                return false;
-
-            float b = j - (seg.m / v);
-            float det = (b * b) - (2 * doubleG * seg.n);
-            if (det < 0)
-                return false;
-
-            b = -b / doubleG;
-            det = Mathf.Sqrt(det) / doubleG;
-            float x1 = b + det;
-            float x2 = b - det;
-
-            if (seg.IsPointOnSegment(x1))
-            {
-                if (x1 >= minX && x1 <= maxX)
-                    return true;
-            }
-            else if (seg.IsPointOnSegment(x2))
-            {
-                if (x2 >= minX && x2 <= maxX)
-                    return true;
-            }*/
-            return false;
-        }
-
-        public void VisualDebug(Vector2 origin, Color color)
-        {
-            Vector2 swapPos;
-            Vector2 prevPos = new Vector2(minX, Calc(minX)) + origin;
-            for (float x = minX; x + 0.1f < maxX; x += 0.1f)
-            {
-                swapPos = new Vector2(x, Calc(x)) + origin;
-                Debug.DrawLine(prevPos, swapPos, color);
-                prevPos = swapPos;
-            }
-            Debug.DrawLine(prevPos, new Vector2(maxX, Calc(maxX)) + origin, color);
-
         }
     }
 }

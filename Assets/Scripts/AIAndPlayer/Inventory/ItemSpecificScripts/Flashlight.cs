@@ -1,25 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using ItemHandler;
-using Actors;
+using Entities;
 using System;
 
 namespace Equipment
 {
-    public class Flashlight : MonoBehaviour, IEquipment
+    public class Flashlight : ItemSpecificBase
     {
         [SerializeField]
         SFLight lightSrc;
-
-        public void OnEquiped()
-        {
-            enabled = true;
-        }
-
-        public void OnUnequiped()
-        {
-            enabled = false;
-        }
 
         void Update()
         {
@@ -27,6 +17,14 @@ namespace Equipment
             {
                 lightSrc.enabled = !lightSrc.enabled;
             }
+        }
+
+        void LateUpdate()
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            Vector2 dir = (mousePos - (Vector2)transform.position).normalized * equipedEntity.CC2DMotor.FacingDir;
+            transform.right = dir;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Actors;
+using Entities;
 using System;
 using ItemHandler;
 
@@ -9,8 +9,8 @@ namespace CC2D
     {
         [SerializeField]
         [HideInInspector]
-        [AssignActorAutomaticly]
-        PlayerActor actor;
+        [AssignEntityAutomaticly]
+        PlayerEntity actor;
 
         [SerializeField]
         [Tooltip("Max time a jump will be buffered.")]

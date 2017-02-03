@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
 using ItemHandler;
 
 public class EquipItem : MonoBehaviour {
@@ -8,13 +8,13 @@ public class EquipItem : MonoBehaviour {
     [SerializeField]
     GameObject itemToEquip;
 
-    [AssignActorAutomaticly]
-    BasicEntityEquipmentActor actor;
+    [AssignEntityAutomaticly]
+    ActingEquipmentEntity actor;
 
 	void Start ()
     {
         GameObject clone = Instantiate(itemToEquip);
-        actor.TwoHandInventory.AddItem(clone.GetComponent<TwoHandItemActor>());        
+        actor.TwoHandInventory.AddItem(clone.GetComponent<TwoHandItemEntity>());        
         actor.TwoHandEquipmentManager.EquipNextItem(false);        
     }
 }

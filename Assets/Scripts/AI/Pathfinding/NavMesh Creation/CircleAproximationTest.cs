@@ -2,7 +2,6 @@
 using System.Collections;
 using Utility;
 using Utility.ExtensionMethods;
-using Utility.DebugUtil;
 
 public class CircleAproximationTest : MonoBehaviour
 {
@@ -49,7 +48,7 @@ public class CircleAproximationTest : MonoBehaviour
 
         foreach (Vector2 v in verts)
         {
-             DrawArrow.ForGizmo(M, v, Color.black);
+             DebugExtension.DrawArrow(M, v, Color.black);
         }
 
         for (int i = 0; i < 300; i++)
@@ -61,8 +60,8 @@ public class CircleAproximationTest : MonoBehaviour
                 DebugExtension.DebugPoint(point, Color.red);
         }
 
-        DrawArrow.ForGizmo(M, nA - M);
-        DrawArrow.ForGizmo(M, nB - M);
+        DebugExtension.DrawArrow(M, nA - M);
+        DebugExtension.DrawArrow(M, nB - M);
 
         
     }

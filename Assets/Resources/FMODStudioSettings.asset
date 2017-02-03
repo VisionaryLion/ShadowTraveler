@@ -56,5 +56,5 @@ MonoBehaviour:
   Banks:
   - Items
   - Spider
-  - Player
   - Robot_Assistant
+  - Player

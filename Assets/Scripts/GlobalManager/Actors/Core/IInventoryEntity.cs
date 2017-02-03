@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using ItemHandler;
-using Actors;
+using Entities;
 
 public interface IInventoryEntity {
 
-    bool TryPickItemUp(ItemActor itemActor);
+    bool TryPickItemUp(ItemEntity itemActor);
     IInventory Inventory { get; }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
 using System;
 using System.Collections.Generic;
 
@@ -53,7 +53,7 @@ namespace ItemHandler
             }
         }
 
-        public override int AddItem(ItemActor obj)
+        public override int AddItem(ItemEntity obj)
         {
             int preferabillityLeft = leftInventory.ItemAddingPreferability(obj.Item);
             int preferabillityRight = rightInventory.ItemAddingPreferability(obj.Item);
@@ -99,7 +99,7 @@ namespace ItemHandler
             }
         }
 
-        public override int AddItemToEmptyStack(ItemActor obj)
+        public override int AddItemToEmptyStack(ItemEntity obj)
         {
             if (leftInventory.FreeSlotCount >= rightInventory.FreeSlotCount)
             {
@@ -139,13 +139,13 @@ namespace ItemHandler
             rightInventory.DeletePoolOfItem(itemId);
         }
 
-        public override ItemActor DropFromInventory(int stackIndex, bool forced = false, bool silent = false)
+        public override ItemEntity DropFromInventory(int stackIndex, bool forced = false, bool silent = false)
         {
             int localStackIndex;
             return GetInventory(stackIndex, out localStackIndex).DropFromInventory(localStackIndex, 0, forced, silent);
         }
 
-        public override ItemActor DropFromInventory(int stackIndex, int itemIndex, bool forced = false, bool silent = false)
+        public override ItemEntity DropFromInventory(int stackIndex, int itemIndex, bool forced = false, bool silent = false)
         {
             int localStackIndex;
             return GetInventory(stackIndex, out localStackIndex).DropFromInventory(localStackIndex, itemIndex, forced, silent);
@@ -184,7 +184,7 @@ namespace ItemHandler
             return LocalToWorldIndexWithOrg(stackIndex, GetInventory(stackIndex, out localStackIndex).GetNextNotEmptyStack(localStackIndex));
         }
 
-        public override ItemActor GetObjectOfItem(int stackIndex)
+        public override ItemEntity GetObjectOfItem(int stackIndex)
         {
             int localStackIndex;
             return GetInventory(stackIndex, out localStackIndex).GetObjectOfItem(localStackIndex);
@@ -201,7 +201,7 @@ namespace ItemHandler
             return Mathf.Max(leftInventory.ItemAddingPreferability(item), rightInventory.ItemAddingPreferability(item));
         }
 
-        public override void PoolCopyOfItem(ItemActor itemInstance)
+        public override void PoolCopyOfItem(ItemEntity itemInstance)
         {
             if (leftInventory.ContainsItem(itemInstance.Item.ItemId))
             {
@@ -250,7 +250,7 @@ namespace ItemHandler
                 if (stackTo.Count >= itemFrom.StackLimit)
                     return false;
 
-                ItemActor itemObjFrom = invFrom.DropFromInventory(stackIndexFrom, fromItemIndex, true, true);
+                ItemEntity itemObjFrom = invFrom.DropFromInventory(stackIndexFrom, fromItemIndex, true, true);
                 stackTo.Add(itemObjFrom.Item);
                 invTo.PoolCopyOfItem(itemObjFrom);
                 return true;

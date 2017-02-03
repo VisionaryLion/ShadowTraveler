@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Actors;
+using Entities;
 
 
 namespace CC2D
@@ -64,8 +64,8 @@ namespace CC2D
 
         [SerializeField]
         [HideInInspector]
-        [AssignActorAutomaticly]
-        SimpleMovementActor actor;
+        [AssignEntityAutomaticly]
+        SimpleMovingEntity actor;
 
 
         public event Action<RaycastHit2D> onControllerCollidedEvent;

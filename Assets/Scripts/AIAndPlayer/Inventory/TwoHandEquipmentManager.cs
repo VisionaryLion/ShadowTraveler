@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Actors;
+using Entities;
 using System.Collections;
 using System;
 
@@ -7,10 +7,10 @@ namespace ItemHandler
 {
     public class TwoHandEquipmentManager : MonoBehaviour
     {
-        [AssignActorAutomaticly]
+        [AssignEntityAutomaticly]
         [SerializeField]
         [HideInInspector]
-        BasicEntityEquipmentActor actor;
+        ActingEquipmentEntity actor;
 
         [SerializeField]
         public Transform equipmentSpawnPointLeft;
@@ -19,26 +19,17 @@ namespace ItemHandler
         [SerializeField]
         EquipmentOffset equipmentOffset;
 
-        public delegate void equipItem(IItem item);
-        public delegate void depleteItem();
-        
-        public event equipItem EquipLeftHandler;
-        public event equipItem EquipRightHandler;
-
-        public event depleteItem DepleteLeft;
-        public event depleteItem DepleteRight;
-
 
         public IItem CurrentEquipedItemLeft { get { return leftHandItemActor.Item; } }
         public IItem CurrentEquipedItemRight { get { return rightHandItemActor.Item; } }
 
-        TwoHandItemActor leftHandItemActor;
+        TwoHandItemEntity leftHandItemActor;
         int leftHandItemIndex;
 
-        TwoHandItemActor rightHandItemActor;
+        TwoHandItemEntity rightHandItemActor;
         int rightHandItemIndex;
 
-        TwoHandItemActor itemInProccessOfPicking;
+        TwoHandItemEntity itemInProccessOfPicking;
         int targetedHand;
 
         bool isInProcessOfEquiping = false;
@@ -61,7 +52,7 @@ namespace ItemHandler
             }*/
         }
 
-        private void ApplyTransformation(TwoHandItemActor target, bool rightHand)
+        private void ApplyTransformation(TwoHandItemEntity target, bool rightHand)
         {
             target.transform.parent = (rightHand) ? equipmentSpawnPointRight : equipmentSpawnPointLeft;
             target.transform.localScale = Vector3.one;
@@ -81,14 +72,14 @@ namespace ItemHandler
             isInProcessOfEquiping = false;
         }
 
-        public void EquipItem(bool rightHand, ItemActor toEquipObject, int itemIndex)
+        public void EquipItem(bool rightHand, ItemEntity toEquipObject, int itemIndex)
         {
 
             if (!actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 1))
                 return;
 
-            Debug.Assert(toEquipObject.GetType() == typeof(TwoHandItemActor));
-            TwoHandItemActor toEquipActor = (TwoHandItemActor)toEquipObject;
+            Debug.Assert(toEquipObject.GetType() == typeof(TwoHandItemEntity));
+            TwoHandItemEntity toEquipActor = (TwoHandItemEntity)toEquipObject;
 
             actor.Animator.SetTrigger("EquipItem");
             actor.AnimationHandler.SetAnyStateTransitionPriority(1, 1);
@@ -115,7 +106,7 @@ namespace ItemHandler
             if (actor.CompareTag("Player") && actor.TwoHandInventory.FilledSlotCount == 1)
                 return;
 
-            ItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
+            ItemEntity itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
             int nxtIndex = actor.TwoHandInventory.GetNextNotEmptyStack(itemIndex);
@@ -125,18 +116,18 @@ namespace ItemHandler
                 EquipItem(rightHand, actor.TwoHandInventory.GetObjectOfItem(nxtIndex), nxtIndex);
                 if (rightHand)
                 {
-                    EquipRightHandler(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);                    
+                    HUDManager.hudManager.EquipRight(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
                 }
                 else
                 {
-                    EquipLeftHandler(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
+                    HUDManager.hudManager.EquipLeft(actor.TwoHandInventory.GetObjectOfItem(nxtIndex).Item);
                 }
             }
         }
 
         public void DepleteEquipedItem(bool rightHand, int count)
         {
-            TwoHandItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
+            TwoHandItemEntity itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
             if (itemActor == null)
                 return;
 
@@ -149,13 +140,11 @@ namespace ItemHandler
                 if (rightHand)
                 {
                     rightHandItemActor = null;
-                    DepleteRight();
+                    Debug.Log("empty");
+                    HUDManager.hudManager.EmptyRight();
                 }
                 else
-                {
                     leftHandItemActor = null;
-                    DepleteLeft();
-                }
                 EquipNextItem(rightHand);
             }
             else
@@ -166,14 +155,14 @@ namespace ItemHandler
 
         public void DropEquipedItem(bool rightHand)
         {
-            TwoHandItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
+            TwoHandItemEntity itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
             if (itemActor == null)
                 return;
 
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
 
             actor.TwoHandInventory.DropFromInventory(rightHandItemIndex);
-            rightHandItemActor.TriggerDrop();
+            itemActor.TriggerDrop();
 
             if (actor.TwoHandInventory.GetTopItemOfStack(itemIndex) == null)
             {
@@ -191,7 +180,7 @@ namespace ItemHandler
 
         public void UnequipItem(bool rightHand)
         {
-            TwoHandItemActor itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
+            TwoHandItemEntity itemActor = rightHand ? rightHandItemActor : leftHandItemActor;
 
             if (itemActor == null)
             {
@@ -199,7 +188,7 @@ namespace ItemHandler
             }
 
             int itemIndex = rightHand ? rightHandItemIndex : leftHandItemIndex;
-            (rightHand ? rightHandItemActor : leftHandItemActor).TriggerUnequiped();
+            itemActor.TriggerUnequiped();
             actor.TwoHandInventory.PoolCopyOfItem(itemActor);
 
             if (rightHand)
@@ -210,12 +199,12 @@ namespace ItemHandler
                 leftHandItemActor = null;
         }
 
-        public bool TryPickMeUp(ItemActor itemActor)
+        public bool TryPickMeUp(ItemEntity itemActor)
         {
             if (itemInProccessOfPicking != null || isInProcessOfEquiping)
                 return false;
 
-            if (typeof(TwoHandItemActor) != itemActor.GetType())
+            if (typeof(TwoHandItemEntity) != itemActor.GetType())
                 return false;
 
             int freePlace;
@@ -239,7 +228,7 @@ namespace ItemHandler
             actor.Animator.SetTrigger("PickUp");
             actor.AnimationHandler.StartListenToAnimationEvent("PickUpReachedItem", new AnimationHandler.AnimationEvent(PickUpReachedItemHandler));
             actor.AnimationHandler.StartListenToAnimationEnd("Item_Pick_up_Anim", new AnimationHandler.AnimationEvent(PickUpFinishedHandler));
-            itemInProccessOfPicking = (TwoHandItemActor)itemActor;
+            itemInProccessOfPicking = (TwoHandItemEntity)itemActor;
             targetedHand = freePlace;
             UnequipItem(freePlace == 1);
             return true;
@@ -262,22 +251,24 @@ namespace ItemHandler
                 leftHandItemIndex = actor.TwoHandInventory.AddItem(itemInProccessOfPicking.Item, targetedHand);
                 itemInProccessOfPicking.gameObject.SetActive(true);
 
+                itemInProccessOfPicking.TriggerPickUp(actor);
                 itemInProccessOfPicking.TriggerEquiped(actor, false);
                 leftHandItemActor = itemInProccessOfPicking;
 
-                if (EquipRightHandler != null)
-                    EquipLeftHandler(itemInProccessOfPicking.Item);
+               // HUDManager.hudManager.EquipLeft(itemInProccessOfPicking.Item);
+               //Not possible -> binds system to UI (has to be the other way around)
+
             }
             else
             {
                 rightHandItemIndex = actor.TwoHandInventory.AddItem(itemInProccessOfPicking.Item, targetedHand);
                 itemInProccessOfPicking.gameObject.SetActive(true);
 
+                itemInProccessOfPicking.TriggerPickUp(actor);
                 itemInProccessOfPicking.TriggerEquiped(actor, true);
                 rightHandItemActor = itemInProccessOfPicking;
 
-                if(EquipRightHandler != null)
-                    EquipRightHandler(itemInProccessOfPicking.Item);
+                //HUDManager.hudManager.EquipRight(itemInProccessOfPicking.Item);
 
             }
             actor.SetBlockAllNonMovement(false);
