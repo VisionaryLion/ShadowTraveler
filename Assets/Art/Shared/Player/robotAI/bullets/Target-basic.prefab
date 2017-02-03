@@ -210,7 +210,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6b21b9ca2e32e4644b7382dbe2e44e15, type: 2}
+  - {fileID: 2100000, guid: 6504348e4020f704091cfa9c17902dd4, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -224,7 +224,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1084868809
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b55d42ef651f9b7479a3a93ab85d9170, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
