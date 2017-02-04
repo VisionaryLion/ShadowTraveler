@@ -163,6 +163,7 @@ MonoBehaviour:
     id=\"27\" />\r\n          <SequenceNode id=\"36\" />\r\n          <ConditionEvalNode
     id=\"38\" />\r\n          <ActionNode id=\"30\" />\r\n          <ActionNode id=\"33\"
     />\r\n          <ActionNode id=\"34\" />\r\n        </nodes>\r\n      </_nodes>\r\n
+    \     <_selectedNode>\r\n        <ActionNode id=\"7\" />\r\n      </_selectedNode>\r\n
     \   </BehaviorTree>\r\n    <RepeatDecorator id=\"1\">\r\n      <_data>\r\n        <data
     selected=\"False\" position=\"488 10\" name=\"Repeat\" description=\"Repeats the
     execution of its child node\" cardinality=\"1\" hasParent=\"False\">\r\n          <BehaviorTree
@@ -220,7 +221,7 @@ MonoBehaviour:
     hasParent=\"True\">\r\n          <BehaviorTree id=\"0\" />\r\n          <ConditionEvalNode
     id=\"8\" />\r\n          <PrioritySelectorNode id=\"2\" />\r\n        </data>\r\n
     \     </_data>\r\n    </ConditionEvalNode>\r\n    <ActionNode id=\"7\">\r\n      <_data>\r\n
-    \       <data selected=\"False\" position=\"1070 299\" name=\"DoPatrol\" description=\"Follows
+    \       <data selected=\"True\" position=\"1070 299\" name=\"DoPatrol\" description=\"Follows
     a predefined patrol route, starting with the nearest patrol point.\" cardinality=\"0\"
     hasParent=\"True\">\r\n          <BehaviorTree id=\"0\" />\r\n          <ActionNode
     id=\"7\" />\r\n          <ConditionEvalNode id=\"8\" />\r\n        </data>\r\n
