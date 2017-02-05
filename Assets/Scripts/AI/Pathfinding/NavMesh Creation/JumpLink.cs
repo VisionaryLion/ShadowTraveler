@@ -20,10 +20,8 @@ namespace Pathfinding2D
         {
             xVel = link.jumpArc.v ;
             jumpForce = link.jumpArc.j;
-            targetNodeIndex = link.nodeIndexB;
-            targetVertIndex = link.nodeVertIndexB;
-            startPoint = link.navPointA;
-            endPoint = link.navPointB;
+            targetPos = link.navPosB;
+            startPoint = link.navPosA.navPoint;
             xMin = link.jumpArc.minX;
             xMax = link.jumpArc.maxX;
             yMin = link.jumpArc.minY;

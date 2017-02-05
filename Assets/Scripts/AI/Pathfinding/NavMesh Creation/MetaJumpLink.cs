@@ -19,19 +19,9 @@ namespace NavData2d.Editor
         public float xSpeedScale = 1;
 
         [SerializeField, ReadOnly]
-        public Vector2 navPointA;
+        public NavPosition navPosA;
         [SerializeField, ReadOnly]
-        public Vector2 navPointB;
-
-        [SerializeField, ReadOnly]
-        public int nodeIndexA;
-        [SerializeField, ReadOnly]
-        public int nodeIndexB;
-
-        [SerializeField, ReadOnly]
-        public int nodeVertIndexA;
-        [SerializeField, ReadOnly]
-        public int nodeVertIndexB;
+        public NavPosition navPosB;
 
         [SerializeField]
         public JumpArcSegment jumpArc;
@@ -64,35 +54,20 @@ namespace NavData2d.Editor
             inverseLink.worldPointB = this.worldPointA;
             inverseLink.xSpeedScale = this.xSpeedScale;
             inverseLink.isBiDirectional = this.isBiDirectional;
-            inverseLink.navPointA = this.navPointB;
-            inverseLink.navPointB = this.navPointA;
+            inverseLink.navPosA = this.navPosB;
+            inverseLink.navPosB = this.navPosA;
             inverseLink.RecalculateJumpArc(groundWalkerSettings);
             return inverseLink;
         }
 
         public bool TryRemapPoints(NavigationData2D navData)
         {
-            Vector2 navPoint;
-            int mappedVertIndex;
-            int mappedNodeIndex;
-            if (navData.TryMapPoint(worldPointA, out navPoint, out mappedVertIndex, out mappedNodeIndex))
-            {
-                this.navPointA = navPoint;
-                this.nodeIndexA = mappedNodeIndex;
-                this.nodeVertIndexA = mappedVertIndex;
-            }
-            else
+            if (!navData.TryMapPoint(worldPointA, out navPosA))
             {
                 return false;
             }
 
-            if (navData.TryMapPoint(worldPointB, out navPoint, out mappedVertIndex, out mappedNodeIndex))
-            {
-                this.navPointB = navPoint;
-                this.nodeIndexB = mappedNodeIndex;
-                this.nodeVertIndexB = mappedVertIndex;
-            }
-            else
+            if (!navData.TryMapPoint(worldPointB, out navPosB))
             {
                 return false;
             }
@@ -101,28 +76,28 @@ namespace NavData2d.Editor
 
         public void RecalculateJumpArc(NavAgentGroundWalkerSettings groundWalkerSettings)
         {
-            float t = Mathf.Abs(navPointB.x - navPointA.x) / (groundWalkerSettings.maxXVel * xSpeedScale);
-            float arcTargetJ = (groundWalkerSettings.gravity * t * 0.5f) + ((navPointB.y - navPointA.y) / t);
+            float t = Mathf.Abs(navPosB.navPoint.x - navPosA.navPoint.x) / (groundWalkerSettings.maxXVel * xSpeedScale);
+            float arcTargetJ = (groundWalkerSettings.gravity * t * 0.5f) + ((navPosB.navPoint.y - navPosA.navPoint.y) / t);
 
             if (Mathf.Abs(arcTargetJ) > groundWalkerSettings.jumpForce || arcTargetJ < 0)
                 isJumpLinkValid = false;
             else
                 isJumpLinkValid = true;
             if (jumpArc == null)
-                jumpArc = new JumpArcSegment(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPointA.x, navPointB.x);
+                jumpArc = new JumpArcSegment(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPosA.navPoint.x, navPosB.navPoint.x);
             else
-                jumpArc.UpdateArc(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPointA.x, navPointB.x);
+                jumpArc.UpdateArc(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPosA.navPoint.x, navPosB.navPoint.x);
         }
 
         public void DrawJumpLink(float agentWidth, float agentHeight, bool showInSceneDetailed, bool isBiDirectional, bool editable)
         {
             Handles.color = Color.white;
 
-            Handles.DrawLine(navPointA, navPointB);
-            Vector2 tangent = (navPointB - navPointA);
+            Handles.DrawLine(navPosA.navPoint, navPosB.navPoint);
+            Vector2 tangent = (navPosB.navPoint - navPosA.navPoint);
             float dist = tangent.magnitude;
             tangent /= dist;
-            Vector2 arrowOrigin = (tangent * (dist / 2)) + navPointA;
+            Vector2 arrowOrigin = (tangent * (dist / 2)) + navPosA.navPoint;
 
 
             if (!isBiDirectional)
@@ -160,15 +135,15 @@ namespace NavData2d.Editor
 
             if (!showInSceneDetailed)
             {
-                Handles.DrawWireDisc(navPointA, Vector3.forward, 0.1f);
-                Handles.DrawWireDisc(navPointB, Vector3.forward, 0.1f);
+                Handles.DrawWireDisc(navPosA.navPoint, Vector3.forward, 0.1f);
+                Handles.DrawWireDisc(navPosB.navPoint, Vector3.forward, 0.1f);
 
                 Handles.color = isJumpLinkValid ? Color.green : Color.red;
             }
             else
             {
-                Handles.DrawLine(navPointA, worldPointA);
-                Handles.DrawLine(navPointB, worldPointB);
+                Handles.DrawLine(navPosA.navPoint, worldPointA);
+                Handles.DrawLine(navPosB.navPoint, worldPointB);
                 if (editable)
                 {
                     worldPointA = Handles.PositionHandle(worldPointA, Quaternion.identity);
@@ -183,23 +158,23 @@ namespace NavData2d.Editor
 
                 Vector2 upRight, downRight, upLeft, downLeft;
                 float halfWidth = agentWidth / 2;
-                upRight = new Vector2(navPointA.x - halfWidth, navPointA.y + agentHeight);
-                upLeft = new Vector2(navPointA.x + halfWidth, navPointA.y + agentHeight);
-                downLeft = new Vector2(navPointA.x + halfWidth, navPointA.y);
-                downRight = new Vector2(navPointA.x - halfWidth, navPointA.y);
+                upRight = new Vector2(navPosA.navPoint.x - halfWidth, navPosA.navPoint.y + agentHeight);
+                upLeft = new Vector2(navPosA.navPoint.x + halfWidth, navPosA.navPoint.y + agentHeight);
+                downLeft = new Vector2(navPosA.navPoint.x + halfWidth, navPosA.navPoint.y);
+                downRight = new Vector2(navPosA.navPoint.x - halfWidth, navPosA.navPoint.y);
                 Handles.DrawLine(upRight, upLeft);
                 Handles.DrawLine(upLeft, downLeft);
                 Handles.DrawLine(downLeft, downRight);
                 Handles.DrawLine(downRight, upRight);
 
-                Vector2 endPointOffset = navPointB - navPointA;
+                Vector2 endPointOffset = navPosB.navPoint - navPosA.navPoint;
                 Handles.DrawLine(upRight + endPointOffset, upLeft + endPointOffset);
                 Handles.DrawLine(upLeft + endPointOffset, downLeft + endPointOffset);
                 Handles.DrawLine(downLeft + endPointOffset, downRight + endPointOffset);
                 Handles.DrawLine(downRight + endPointOffset, upRight + endPointOffset);
 
-                Handles.DrawWireDisc(navPointA, Vector3.forward, 0.05f);
-                Handles.DrawWireDisc(navPointB, Vector3.forward, 0.05f);
+                Handles.DrawWireDisc(navPosA.navPoint, Vector3.forward, 0.05f);
+                Handles.DrawWireDisc(navPosB.navPoint, Vector3.forward, 0.05f);
 
                 Handles.DrawWireDisc(downRight, Vector3.forward, 0.1f);
                 Handles.DrawWireDisc(downLeft, Vector3.forward, 0.1f);
@@ -209,12 +184,12 @@ namespace NavData2d.Editor
 
                 Handles.color = isJumpLinkValid ? Color.green : Color.red;
 
-                if (navPointA.x > navPointB.x)
+                if (navPosA.navPoint.x > navPosB.navPoint.x)
                 {
-                    upRight.x -= navPointA.x;
-                    upLeft.x -= navPointA.x;
-                    downLeft.x -= navPointA.x;
-                    downRight.x -= navPointA.x;
+                    upRight.x -= navPosA.navPoint.x;
+                    upLeft.x -= navPosA.navPoint.x;
+                    downLeft.x -= navPosA.navPoint.x;
+                    downRight.x -= navPosA.navPoint.x;
                     DrawJumpArc(upRight);
                     DrawJumpArc(upLeft);
                     DrawJumpArc(downLeft);
@@ -222,10 +197,10 @@ namespace NavData2d.Editor
                 }
                 else
                 {
-                    upRight.x -= navPointA.x;
-                    upLeft.x -= navPointA.x;
-                    downLeft.x -= navPointA.x;
-                    downRight.x -= navPointA.x;
+                    upRight.x -= navPosA.navPoint.x;
+                    upLeft.x -= navPosA.navPoint.x;
+                    downLeft.x -= navPosA.navPoint.x;
+                    downRight.x -= navPosA.navPoint.x;
                     DrawJumpArc(upRight);
                     DrawJumpArc(upLeft);
                     DrawJumpArc(downLeft);

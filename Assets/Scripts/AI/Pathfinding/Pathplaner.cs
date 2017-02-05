@@ -29,6 +29,13 @@ public class PathPlaner : MonoBehaviour
 
     Stack<PathRequest> requestBuffer;
 
+    public NavPosition MapPoint(Vector2 unmappedPoint)
+    {
+        NavPosition result;
+        navData.TryMapPoint(unmappedPoint, out result);
+        return result;
+    }
+
     public void RequestPath(PathRequest request)
     {
         requestBuffer.Push(request);
@@ -40,49 +47,27 @@ public class PathPlaner : MonoBehaviour
 
     public void FindRequestedPath(PathRequest request)
     {
-        NavNode start_node;
-        int start_vertIndex;
-        Vector2 start_point;
-        if (!navData.TryMapPoint(request.start, out start_point, out start_vertIndex, out start_node))
-        {
-            //No path can be found!
-            Debug.Log("Couldn't map points. -> no path");
-            request.callback(null);
-            return;
-        }
-
-        NavNode goal_node;
-        int goal_vertIndex;
-        Vector2 goal_point;
-        if (!navData.TryMapPoint(request.goal, out goal_point, out goal_vertIndex, out goal_node))
-        {
-            //No path can be found!
-            Debug.Log("Couldn't map points. -> no path");
-            request.callback(null);
-            return;
-        }
-
         //trivial case: Start and Goal are on the same line
         float mult;
-        if (start_node == goal_node && goal_vertIndex == start_vertIndex && IsLineTraversable(request, start_point, goal_point, out mult))
+        if (request.start.navNodeIndex == request.goal.navNodeIndex && request.start.navVertIndex == request.goal.navVertIndex && IsLineTraversable(request, request.start.navPoint, request.goal.navPoint, out mult))
         {
-            request.callback(new NavPath(new IPathSegment[] { new PathSegment(start_point, goal_point, Vector2.Distance(start_point, goal_point) / navData.navAgentSettings.maxXVel) }, goal_point));
+            request.callback(new NavPath(new IPathSegment[] { new PathSegment(request.start.navPoint, request.goal.navPoint, Vector2.Distance(request.start.navPoint, request.goal.navPoint) / navData.navAgentSettings.maxXVel) }, request.goal.navPoint));
             return;
         }
         closedNodes.Clear();
         closedLinks.Clear();
         openList.Clear();
 
-        IPathNode cNode = new PathNode_Start(start_node, start_vertIndex, Vector2.Distance(start_node.verts[start_vertIndex].PointB, goal_point), start_point);
+        IPathNode cNode = new PathNode_Start(navData.nodes[request.start.navNodeIndex], request.start.navVertIndex, Vector2.Distance(navData.nodes[request.start.navNodeIndex].verts[request.start.navVertIndex].PointB, request.goal.navPoint), request.start.navPoint);
         openList.Enqueue(cNode, cNode.totalCost);
         float costSoFar;
         float costMultiplier = 1;
-        Vector2 previousPoint = start_point;
+        Vector2 previousPoint = request.start.navPoint;
 
         while (openList.Count > 0)
         {
             cNode = openList.Dequeue();
-            if (cNode.navNode == goal_node && cNode.navVertIndex == goal_vertIndex && IsLineTraversable(request, cNode.StartPoint, goal_point, out costMultiplier))
+            if (cNode.navNode == navData.nodes[request.goal.navNodeIndex] && cNode.navVertIndex == request.goal.navVertIndex && IsLineTraversable(request, cNode.StartPoint, request.goal.navPoint, out costMultiplier))
             {
                 goto FoundPath;
             }
@@ -98,7 +83,7 @@ public class PathPlaner : MonoBehaviour
                 if (!IsNodeClosed(cNode.navNode, neighbourLeft) && IsLineTraversable(request, cNode.StartPoint, cNode.NavVert.PointB, out costMultiplier))
                 {
                     costSoFar = cNode.costSoFar + cNode.navNode.verts[neighbourLeft].distanceBC;
-                    IPathNode newNode = new PathNode_Edge(cNode, cNode.navNode, neighbourLeft, false, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[neighbourLeft].PointB));
+                    IPathNode newNode = new PathNode_Edge(cNode, cNode.navNode, neighbourLeft, false, costSoFar, Vector2.Distance(request.goal.navPoint, cNode.navNode.verts[neighbourLeft].PointB));
                     openList.Enqueue(newNode, newNode.costSoFar);
                 }
             }
@@ -108,7 +93,7 @@ public class PathPlaner : MonoBehaviour
                 if (!IsNodeClosed(cNode.navNode, neighbourRight) && IsLineTraversable(request, cNode.StartPoint, cNode.navNode.verts[neighbourRight].PointB, out costMultiplier))
                 {
                     costSoFar = cNode.costSoFar + cNode.NavVert.distanceBC * costMultiplier;
-                    IPathNode newNode = new PathNode_Edge(cNode, cNode.navNode, neighbourRight, true, costSoFar, Vector2.Distance(goal_point, cNode.navNode.verts[neighbourRight].PointB));
+                    IPathNode newNode = new PathNode_Edge(cNode, cNode.navNode, neighbourRight, true, costSoFar, Vector2.Distance(request.goal.navPoint, cNode.navNode.verts[neighbourRight].PointB));
                     openList.Enqueue(newNode, newNode.costSoFar);
                 }
             }
@@ -123,7 +108,7 @@ public class PathPlaner : MonoBehaviour
                     if (!IsLinkClosed(cLink) && IsLineTraversable(request, cNode.StartPoint, cLink.startPoint, out costMultiplier))
                     {
                         costSoFar = cNode.costSoFar + cLink.traversCosts;
-                        IPathNode newNode = new PathNode_Link(cNode, navData.nodes[cLink.targetNodeIndex], cLink.targetVertIndex, costSoFar, Vector2.Distance(goal_point, cLink.endPoint), linkIndecies[iLink]);
+                        IPathNode newNode = new PathNode_Link(cNode, navData.nodes[cLink.targetPos.navNodeIndex], cLink.targetPos.navVertIndex, costSoFar, Vector2.Distance(request.goal.navPoint, cLink.targetPos.navPoint), linkIndecies[iLink]);
                         openList.Enqueue(newNode, newNode.costSoFar);
                         closedLinks.Add(cLink);
                     }
@@ -140,7 +125,7 @@ public class PathPlaner : MonoBehaviour
         FoundPath:
 
         List<IPathSegment> pathSegments = new List<IPathSegment>(50);
-        Vector2 prevPoint = goal_point;
+        Vector2 prevPoint = request.goal.navPoint;
 
         while (cNode.parent != null)
         {
@@ -152,21 +137,21 @@ public class PathPlaner : MonoBehaviour
             else//link
             {
                 var linkNode = (PathNode_Link)cNode;
-                pathSegments.Add(new PathSegment(linkNode.Link.endPoint, prevPoint, float.MaxValue));
+                pathSegments.Add(new PathSegment(linkNode.Link.targetPos.navPoint, prevPoint, float.MaxValue));
                 prevPoint = cNode.EndPoint;
                 pathSegments.Add(new JumpSegment((JumpLink)linkNode.Link));
                 prevPoint = linkNode.Link.startPoint;
             }
             cNode = cNode.parent;
         }
-        pathSegments.Add(new PathSegment(start_point, prevPoint, float.MaxValue));
+        pathSegments.Add(new PathSegment(request.start.navPoint, prevPoint, float.MaxValue));
 
         IPathSegment[] inversedSeg = new IPathSegment[pathSegments.Count];
         for (int iSeg = 0, iInv = pathSegments.Count - 1; iSeg < pathSegments.Count; iSeg++, iInv--)
         {
             inversedSeg[iSeg] = pathSegments[iInv];
         }
-        request.callback(new NavPath(inversedSeg, request.goal));
+        request.callback(new NavPath(inversedSeg, request.goal.navPoint));
     }
 
     bool IsLineTraversable(PathRequest requestData, Vector2 pointA, Vector2 pointB, out float costMultiplier)
@@ -401,7 +386,7 @@ public class PathPlaner : MonoBehaviour
         {
             get
             {
-                return Link.endPoint;
+                return Link.startPoint;
             }
         }
 
@@ -411,14 +396,14 @@ public class PathPlaner : MonoBehaviour
         {
             get
             {
-                return Link.endPoint;
+                return Link.targetPos.navPoint;
             }
         }
 
         public override void GetNeighbours(out int neighbourLeft, out int neighbourRight)
         {
             var endNode = NavNode;
-            if (Link.targetVertIndex + 1 >= endNode.verts.Length)
+            if (Link.targetPos.navVertIndex + 1 >= endNode.verts.Length)
             {
                 if (endNode.isClosed)
                 {
@@ -429,9 +414,9 @@ public class PathPlaner : MonoBehaviour
             }
             else
             {
-                neighbourRight = Link.targetVertIndex + 1;
+                neighbourRight = Link.targetPos.navVertIndex + 1;
             }
-            if (Link.targetVertIndex - 1 < 0)
+            if (Link.targetPos.navVertIndex - 1 < 0)
             {
                 if (endNode.isClosed)
                 {
@@ -442,7 +427,7 @@ public class PathPlaner : MonoBehaviour
             }
             else
             {
-                neighbourLeft = Link.targetVertIndex - 1;
+                neighbourLeft = Link.targetPos.navVertIndex - 1;
             }
         }
     }
@@ -452,14 +437,14 @@ public class PathRequest
 {
     public delegate void PathCompleted(NavPath path);
 
-    public readonly Vector2 start;
-    public readonly Vector2 goal;
+    public readonly NavPosition start;
+    public readonly NavPosition goal;
     public readonly LightSkin skin;
     public readonly LightMarker[] lightMarker;
     public bool startsInNotWalkableLight;
     public readonly PathCompleted callback;
 
-    public PathRequest(Vector2 start, Vector2 goal, PathCompleted callback, LightSkin skin, bool startsInNotWalkableLight, params LightMarker[] lightMarker)
+    public PathRequest(NavPosition start, NavPosition goal, PathCompleted callback, LightSkin skin, bool startsInNotWalkableLight, params LightMarker[] lightMarker)
     {
         this.skin = skin;
         this.start = start;

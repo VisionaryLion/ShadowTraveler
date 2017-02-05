@@ -94,7 +94,7 @@ namespace NavData2d.Editor
                         Debug.Assert(false); // Should never happen!
                     }
                     Debug.Assert(inverseLink.jumpArc.j > 0);
-                    if (linkTable.TryGetValue(navData.nodes[inverseLink.nodeIndexA], out cList))
+                    if (linkTable.TryGetValue(navData.nodes[inverseLink.navPosA.navNodeIndex], out cList))
                     {
                         cList.Add(inverseLink);
                     }
@@ -102,11 +102,11 @@ namespace NavData2d.Editor
                     {
                         cList = new List<MetaJumpLink>(2);
                         cList.Add(inverseLink);
-                        linkTable.Add(navData.nodes[inverseLink.nodeIndexA], cList);
+                        linkTable.Add(navData.nodes[inverseLink.navPosA.navNodeIndex], cList);
                     }
                 }
 
-                if (linkTable.TryGetValue(navData.nodes[link.nodeIndexA], out cList))
+                if (linkTable.TryGetValue(navData.nodes[link.navPosA.navNodeIndex], out cList))
                 {
                     cList.Add(link);
                 }
@@ -114,7 +114,7 @@ namespace NavData2d.Editor
                 {
                     cList = new List<MetaJumpLink>(2);
                     cList.Add(link);
-                    linkTable.Add(navData.nodes[link.nodeIndexA], cList);
+                    linkTable.Add(navData.nodes[link.navPosA.navNodeIndex], cList);
                 }
             }
             Dictionary<int, List<int>> vertLinkTable;
@@ -128,7 +128,7 @@ namespace NavData2d.Editor
                 {
                     cLink = keyPair.Value[iLink];
                     allLinks[iLink] = new Pathfinding2D.JumpLink(cLink);
-                    if (vertLinkTable.TryGetValue(cLink.nodeVertIndexA, out cLinkList))
+                    if (vertLinkTable.TryGetValue(cLink.navPosA.navVertIndex, out cLinkList))
                     {
                         cLinkList.Add(iLink);
                     }
@@ -136,7 +136,7 @@ namespace NavData2d.Editor
                     {
                         cLinkList = new List<int>(2);
                         cLinkList.Add(iLink);
-                        vertLinkTable.Add(cLink.nodeVertIndexA, cLinkList);
+                        vertLinkTable.Add(cLink.navPosA.navVertIndex, cLinkList);
                     }
                 }
                 keyPair.Key.links = allLinks;

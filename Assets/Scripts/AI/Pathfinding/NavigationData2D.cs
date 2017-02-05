@@ -27,34 +27,14 @@ namespace NavData2d
         public NavNode[] nodes; // sorted by x Value. Min -> Max
         public NavAgentGroundWalkerSettings navAgentSettings;
 
-        public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint)
-        {
-            int mappedVert;
-            NavNode mappedNode;
-            return TryMapPoint(point, out nearestPoint, out mappedVert, out mappedNode);
-        }
-
-        public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint, out int mappedVertIndex, out NavNode mappedNode)
-        {
-            int mappedNodeIndex;
-            bool result = TryMapPoint(point, out nearestPoint, out mappedVertIndex, out mappedNodeIndex);
-            if (result)
-                mappedNode = nodes[mappedNodeIndex];
-            else
-                mappedNode = null;
-            return result;
-        }
-
-        public bool TryMapPoint(Vector2 point, out Vector2 nearestPoint, out int mappedVertIndex, out int mappedNodeIndex)
+        public bool TryMapPoint(Vector2 point, out NavPosition navPosition)
         {
             NavNode map_cNavNode;
             int cVertIndex;
-            mappedVertIndex = 0;
-            mappedNodeIndex = 0;
             float map_minDist = float.MaxValue;
             float dist;
             Vector2 cPoint;
-            nearestPoint = Vector2.zero;
+            navPosition = new NavPosition();
 
             for (int iNavNode = 0; iNavNode < nodes.Length; iNavNode++)
             {
@@ -78,9 +58,9 @@ namespace NavData2d
                 {
                     if (dist < map_minDist)
                     {
-                        mappedVertIndex = cVertIndex;
-                        mappedNodeIndex = iNavNode;
-                        nearestPoint = cPoint;
+                        navPosition.navVertIndex = cVertIndex;
+                        navPosition.navNodeIndex = iNavNode;
+                        navPosition.navPoint = cPoint;
                         if (dist <= mapPointInstantAcceptDeviation)
                         {
                             return true;

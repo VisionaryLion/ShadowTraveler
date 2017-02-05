@@ -13,14 +13,14 @@ namespace NavData2d
             for (int iHandlePos = 0; iHandlePos < handlePositions.Length; iHandlePos++)
             {
                 var hPos = handlePositions[iHandlePos];
-                navData2d.TryMapPoint(hPos.handlePosition, out hPos.navPosition.navPoint, out hPos.navPosition.navVertIndex, out hPos.navPosition.navNodeIndex);
+                navData2d.TryMapPoint(hPos.handlePosition, out hPos.navPosition);
             }
         }
 
         public void MapHandlePositionToNavData(int index, NavigationData2D navData2d)
         {
             var hPos = handlePositions[index];
-            navData2d.TryMapPoint(hPos.handlePosition, out hPos.navPosition.navPoint, out hPos.navPosition.navVertIndex, out hPos.navPosition.navNodeIndex);
+            navData2d.TryMapPoint(hPos.handlePosition, out hPos.navPosition);
         }
 
         [System.Serializable]

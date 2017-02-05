@@ -21,7 +21,7 @@ public class JumpSegment : IPathSegment
 
     public JumpSegment(JumpLink link)
     {
-        goal = link.endPoint;
+        goal = link.targetPos.navPoint;
         start = link.startPoint;
 
         jumpForce = link.jumpForce;

@@ -179,27 +179,7 @@ public class NavDebugger : MonoBehaviour
 
                 }
                 break;
-            case DebugWhichSet.NavigationData2D:
-                if (navData2D != null)
-                {
-
-                    navData2D.DrawForDebug();
-                    Vector2 mappedPoint;
-                    if (navData2D.TryMapPoint(closestTestPoint.position, out mappedPoint))
-                    {
-                        Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
-                        DebugExtension.DebugPoint(mappedPoint);
-                    }
-                    /* System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                     int pathsPerSecond = 0;
-                     while (watch.ElapsedMilliseconds < 1000)
-                     {*/
-
-                    /*  pathsPerSecond++;
-                  }
-                  Debug.Log("Can compute "+ (pathsPerSecond)+" paths per second");*/
-                }
-                break;
+            
         }
     }
     float timer = 0;

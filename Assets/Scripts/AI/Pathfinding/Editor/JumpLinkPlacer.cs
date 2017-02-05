@@ -116,10 +116,10 @@ namespace NavData2d.Editor
                     link.xSpeedScale = EditorGUILayout.Slider("Speed Percentage", link.xSpeedScale, 0, 1);
                     GUI.enabled = false;
 
-                    EditorGUILayout.Vector2Field("NavPointA", link.navPointA);
-                    EditorGUILayout.Vector2Field("NavPointB", link.navPointB);
-                    EditorGUILayout.IntField("NodeIndexA", link.nodeIndexA);
-                    EditorGUILayout.IntField("NodeIndexB", link.nodeIndexB);
+                    EditorGUILayout.Vector2Field("NavPointA", link.navPosA.navPoint);
+                    EditorGUILayout.Vector2Field("NavPointB", link.navPosB.navPoint);
+                    EditorGUILayout.IntField("NodeIndexA", link.navPosA.navNodeIndex);
+                    EditorGUILayout.IntField("NodeIndexB", link.navPosB.navNodeIndex);
 
                     GUI.enabled = true;
                 }
