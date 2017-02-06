@@ -385,14 +385,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b808f63c106e042ff9194fa3e2ca9644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _renderInSceneView: 0
+  _renderInSceneView: 1
   _linearLightBlending: 1
   _shadows: 1
   _ambientLight: {r: 0, g: 0, b: 0, a: 1}
   _exposure: 1.1
   _lightMapScale: 8
   _shadowMapScale: 2
-  _minLightPenetration: 0.2
+  _minLightPenetration: 0.3
   _fogColor: {r: 1, g: 1, b: 1, a: 0}
   _scatterColor: {r: 0.08823532, g: 0.08823532, b: 0.08823532, a: 0}
   _softHardMix: 0

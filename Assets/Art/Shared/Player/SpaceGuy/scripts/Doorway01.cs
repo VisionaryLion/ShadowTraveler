@@ -59,4 +59,14 @@ public class Doorway01 : MonoBehaviour {
         }
     }
 
+    void ActivateDoor()
+    {
+        DoorHasPower = true;
+    }
+
+    void DeactivateDoor()
+    {
+        DoorHasPower = false;
+    }
+
 }
