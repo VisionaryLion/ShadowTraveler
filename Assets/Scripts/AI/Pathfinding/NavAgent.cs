@@ -47,47 +47,37 @@ public class NavAgent : MonoBehaviour
 
     public void SetDestination(NavData2d.NavPosition dest, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false, LightMarker[] lightMarker = null)
     {
+        if (StartPoint.navNodeIndex == -1 || dest.navNodeIndex == -1) //We don't know where we are, abort!
+        {
+            onPathFinished.Invoke(false);
+            return;
+        }
         if (lightMarker == null)
             lightMarker = emptyMarkerArray;
         Debug.Assert(cPathFoundCallback == null);
         cPathFoundCallback = onPathFinished;
-        if (!actor.CharacterController2D.isGrounded)
+        pathPlaner.FindRequestedPath(new PathRequest(StartPoint, dest, OnPathCompleted, lightSkin, startsInUncomfortableLight, lightMarker));
+        reachedGoal = false;
+    }
+
+    public void FleeFrom(Vector2[] threats, float targetDistanceFromThreats, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false, LightMarker[] lightMarker = null)
+    {
+        if (StartPoint.navNodeIndex == -1) //We don't know where we are, abort!
         {
-            OnPathCompleted(null);
+            onPathFinished.Invoke(false);
             return;
         }
-        pathPlaner.FindRequestedPath(new PathRequest(StartPoint, dest, OnPathCompleted, lightSkin, startsInUncomfortableLight, lightMarker));
+        if (lightMarker == null)
+            lightMarker = emptyMarkerArray;
+        Debug.Assert(cPathFoundCallback == null);
+        cPathFoundCallback = onPathFinished;
+        pathPlaner.Flee(new FleeRequest(StartPoint, threats, OnPathCompleted, lightSkin, startsInUncomfortableLight, targetDistanceFromThreats, lightMarker));
         reachedGoal = false;
     }
 
     public void SetDestination(Vector2 dest, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false, LightMarker[] lightMarker = null)
     {
         SetDestination(pathPlaner.MapPoint(dest), onPathFinished, startsInUncomfortableLight, lightMarker);
-    }
-
-    public void UpdateDestination(NavData2d.NavPosition dest, OnPathComputationFinished onPathFinished)
-    {
-        if (cPath.path == null)
-        {
-            SetDestination(dest, onPathFinished);
-            return;
-        }
-        if (cPath.path.goal == dest.navPoint)
-            return;
-        Debug.Assert(cPathFoundCallback == null);
-        cPathFoundCallback = onPathFinished;
-        if (!actor.CharacterController2D.isGrounded)
-        {
-            OnUpdatePathCompleted(null);
-            return;
-        }
-        pathPlaner.FindRequestedPath(new PathRequest(StartPoint, dest, OnUpdatePathCompleted, lightSkin, false, emptyMarkerArray));
-        reachedGoal = false;
-    }
-
-    public void UpdateDestination(Vector2 dest, OnPathComputationFinished onPathFinished)
-    {
-        UpdateDestination(pathPlaner.MapPoint(dest), onPathFinished);
     }
 
     public void Stop()

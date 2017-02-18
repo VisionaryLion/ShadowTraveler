@@ -64,6 +64,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000012417007644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000010808096080}
+  - 114: {fileID: 114000010381653114}
+  m_Layer: 0
+  m_Name: LightMaker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000014267421852
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,6 +97,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4000010808096080
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012417007644}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_Children: []
+  m_Father: {fileID: 4000013551474696}
+  m_RootOrder: 3
 --- !u!4 &4000012155368388
 Transform:
   m_ObjectHideFlags: 1
@@ -100,14 +129,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012307589440}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.2264595, y: -24.424953, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -28.55, y: -20.49, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 224000012254070252}
   - {fileID: 224000011431973942}
   - {fileID: 4000012155368388}
+  - {fileID: 4000010808096080}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!58 &58000013138576672
@@ -154,6 +184,24 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &114000010381653114
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012417007644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60602ef4a20fe4c43a79f158a3b62d16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 4.48
+  height: 10.55
+  centerOffset: {x: 0, y: -5.3}
+  colorA: {r: 1, g: 1, b: 1, a: 1}
+  colorB: {r: 1, g: 1, b: 1, a: 1}
+  pathfindingColor: {r: 0, g: 0, b: 0, a: 0}
+  squaredInterpolation: 0
 --- !u!114 &114000010458043506
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -206,7 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71a8f2eeaeaa2b47aa5331399acb74b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entity: {fileID: 0}
+  entity: {fileID: 114000011417523118}
   lightSrc: {fileID: 114000012036658924}
 --- !u!114 &114000012036658924
 MonoBehaviour:
@@ -311,5 +359,5 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.744}
   m_AnchorMax: {x: 0.5, y: 0.744}
   m_AnchoredPosition: {x: -0.016512033, y: -0.0031521171}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 20, y: 53.66}
   m_Pivot: {x: 0, y: 0.5}

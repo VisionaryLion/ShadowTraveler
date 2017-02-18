@@ -62,12 +62,12 @@ namespace NavData2d.Editor
 
         public bool TryRemapPoints(NavigationData2D navData)
         {
-            if (!navData.TryMapPoint(worldPointA, out navPosA))
+            if (!navData.SamplePoint(worldPointA, out navPosA))
             {
                 return false;
             }
 
-            if (!navData.TryMapPoint(worldPointB, out navPosB))
+            if (!navData.SamplePoint(worldPointB, out navPosB))
             {
                 return false;
             }

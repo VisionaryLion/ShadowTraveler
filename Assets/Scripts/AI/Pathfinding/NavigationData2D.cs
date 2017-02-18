@@ -27,7 +27,7 @@ namespace NavData2d
         public NavNode[] nodes; // sorted by x Value. Min -> Max
         public NavAgentGroundWalkerSettings navAgentSettings;
 
-        public bool TryMapPoint(Vector2 point, out NavPosition navPosition)
+        public bool SamplePoint(Vector2 point, out NavPosition navPosition)
         {
             NavNode map_cNavNode;
             int cVertIndex;
