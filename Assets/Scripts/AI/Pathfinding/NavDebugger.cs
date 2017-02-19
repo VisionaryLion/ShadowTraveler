@@ -25,6 +25,10 @@ public class NavDebugger : MonoBehaviour
     public NavAgentGroundWalkerSettings agentSettings;
     [SerializeField]
     public NavPath path;
+    public Collider2D forceLast;
+    public int autoSolveTill;
+    [SerializeField]
+    LightSkin lightSkin;
     public bool showDebug;
 
     public Transform goal;
@@ -40,40 +44,55 @@ public class NavDebugger : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        try
+        {
+            System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
 
-        System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+            Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
+            for (int ic = 0; ic < allCollider.Length; ic++)
+            {
+                if (allCollider[ic] == forceLast)
+                {
+                    allCollider[ic] = allCollider[allCollider.Length - 1];
+                    allCollider[allCollider.Length - 1] = forceLast;
+                    break;
+                }
+            }
+            long totalEllapsedTime = 0;
 
-        Collider2D[] allCollider = GameObject.FindObjectsOfType<Collider2D>();
-        long totalEllapsedTime = 0;
+            cgs = CollisionGeometrySetBuilder.Build(allCollider, circleVertCount);
+            Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
-        cgs = CollisionGeometrySetBuilder.Build(allCollider, circleVertCount);
-        Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+            totalEllapsedTime += watch.ElapsedMilliseconds;
+            watch.Reset();
+            watch.Start();
 
-        totalEllapsedTime += watch.ElapsedMilliseconds;
-        watch.Reset();
-        watch.Start();
+            outlineTree = ContourTree.Build(cgs, nodeMergeDist, maxEdgeDeviation);
+            Debug.Log("OutlineTreeBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
-        outlineTree = ContourTree.Build(cgs, nodeMergeDist, maxEdgeDeviation);
-        Debug.Log("OutlineTreeBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+            totalEllapsedTime += watch.ElapsedMilliseconds;
+            watch.Reset();
+            watch.Start();
 
-        totalEllapsedTime += watch.ElapsedMilliseconds;
-        watch.Reset();
-        watch.Start();
+            exTrees = ExpandedTree.Build(outlineTree, minHeightTest);
+            Debug.Log("ExpandedTreeSetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
 
-        exTrees = ExpandedTree.Build(outlineTree, minHeightTest);
-        Debug.Log("ExpandedTreeSetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+            totalEllapsedTime += watch.ElapsedMilliseconds;
+            watch.Reset();
+            watch.Start();
 
-        totalEllapsedTime += watch.ElapsedMilliseconds;
-        watch.Reset();
-        watch.Start();
+            /* navData2D = new RawNavigationData2DBuilder(agentSettings).Build(exTrees, ScriptableObject.CreateInstance<RawNavigationData2D>())
+                 .ToNavigationData2D();
+             Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");*/
 
-       /* navData2D = new RawNavigationData2DBuilder(agentSettings).Build(exTrees, ScriptableObject.CreateInstance<RawNavigationData2D>())
-            .ToNavigationData2D();
-        Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");*/
-
-        totalEllapsedTime += watch.ElapsedMilliseconds;
-        watch.Stop();
-        Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");
+            totalEllapsedTime += watch.ElapsedMilliseconds;
+            watch.Stop();
+            Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.StackTrace);
+        }
     }
 
     void PathCalcFinished(NavPath path)
@@ -84,10 +103,12 @@ public class NavDebugger : MonoBehaviour
     }
 
     int counter = -1;
+    bool show;
+    bool error;
     // Update is called once per frame
     void Update()
     {
-        PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, PathCalcFinished));
+        //PathPlaner.Instance.FindRequestedPath(new PathRequest(start.position, goal.position, PathCalcFinished, lightSkin, false));
 
         if (!showDebug)
             return;
@@ -95,8 +116,9 @@ public class NavDebugger : MonoBehaviour
         switch (debugConfig)
         {
             case DebugWhichSet.OutlineTree:
-                if (Input.GetKeyDown(KeyCode.Space))
+                if ((Input.GetKeyDown(KeyCode.Space) || counter < autoSolveTill) && !error)
                 {
+                    Debug.Log("wspace");
                     timer = 0;
                     if (counter == -1)
                     {
@@ -105,13 +127,21 @@ public class NavDebugger : MonoBehaviour
                     }
                     if (counter < cgs.colliderVerts.Count)
                     {
-                        outlineTree.AddContour(cgs.colliderVerts[counter]);
+                        try
+                        {
+                            outlineTree.AddContour(cgs.colliderVerts[counter]);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError(e.StackTrace);
+                            error = true;
+                        }
                         counter++;
                     }
                 }
                 break;
         }
-
+        timer += Time.deltaTime;
         switch (debugConfig)
         {
             case DebugWhichSet.CollisionGeometrySet:
@@ -124,11 +154,13 @@ public class NavDebugger : MonoBehaviour
                 if (outlineTree != null)
                 {
                     outlineTree.VisualDebug();
-                    if (counter > 0 && timer < 1)
+                    if (timer % 1 < 0.1f)
+                        show = !show;
+                    if (counter > 0 && show)
                     {
                         Contour cC = new Contour(cgs.colliderVerts[counter - 1]);
                         cC.VisualDebug(Utility.DifferentColors.GetColor(0));
-                        timer += Time.deltaTime;
+                        
                     }
                 }
                 break;

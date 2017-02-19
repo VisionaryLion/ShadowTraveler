@@ -1,24 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 using ItemHandler;
-using Actors;
+using Entities;
 using System;
 
 namespace Equipment
 {
-    public class Flashlight : MonoBehaviour, IEquipment
+    public class Flashlight : MonoBehaviour
     {
+        [SerializeField, AssignEntityAutomaticly, HideInInspector]
+        TwoHandItemEntity entity;
         [SerializeField]
         SFLight lightSrc;
 
-        public void OnEquiped()
+        void Start()
         {
-            enabled = true;
+            entity.EquipedHandler += Entity_EquipedHandler;
+            entity.UnequipedHandler += Entity_UnequipedHandler;
         }
 
-        public void OnUnequiped()
+        private void Entity_UnequipedHandler()
         {
             enabled = false;
+        }
+
+        private void Entity_EquipedHandler(ActingEquipmentEntity equiper)
+        {
+            enabled = true;
         }
 
         void Update()

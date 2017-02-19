@@ -18,6 +18,7 @@ namespace Utility.Polygon2D
 
         public void Add(Vector2 p0, Vector2 p1)
         {
+            VectorHistoryDrawer.EnqueueNewLines(0, p0, p1);
             for (int i = 0; i < openChains.Count; i++)
             {
                 PointChain c = openChains[i];
@@ -44,6 +45,7 @@ namespace Utility.Polygon2D
                     return;
                 }
             }
+
             openChains.Add(new PointChain(ref p0, ref p1));
         }
 
@@ -53,6 +55,17 @@ namespace Utility.Polygon2D
             for (int iChain = 0; iChain < result.Length; iChain++)
             {
                 result[iChain] = new Contour(closedChains[iChain].chain.ToArray());
+            }
+            //Debug.Assert(openChains.Count == 0);
+            if (openChains.Count != 0)
+            {
+                foreach (PointChain chain in openChains)
+                {
+                    foreach (var v in chain.chain)
+                    {
+                        Debug.Log(v);
+                    }
+                }
             }
             return result;
         }

@@ -115,14 +115,14 @@ namespace Utility.Polygon2D
             }
             else if (other.FirstPoint == FirstPoint)
             {
-                Debug.Log("Shouldn't happen (firstPoint == Firstpoint)");
+                Debug.Log("Shouldn't happen (firstPoint == Firstpoint) and will lead to a wrapping issue!");
                 chain.RemoveFirst();
                 other.chain.Reverse();
                 chain.PrependRange(other.chain);
             }
             else if (other.LastPoint == LastPoint)
             {
-                Debug.Log("Shouldn't happen (LastPoint == LastPoint)");
+                Debug.Log("Shouldn't happen (LastPoint == LastPoint) and will lead to a wrapping issue!");
                 chain.RemoveLast();
                 other.chain.Reverse();
                 chain.AppendRange(other.chain);

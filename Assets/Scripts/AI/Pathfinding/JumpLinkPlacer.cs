@@ -130,13 +130,13 @@ namespace Pathfinding2D
             public void RecalculateJumpArc(NavAgentGroundWalkerSettings groundWalkerSettings)
             {
                 float t = Mathf.Abs(navPointB.x - navPointA.x) / (groundWalkerSettings.maxXVel * xSpeedScale);
-                float arcTargetJ = (groundWalkerSettings.gravity * t * 0.5f) - ((navPointA.y - navPointB.y) / t);
+                float arcTargetJ = (groundWalkerSettings.gravity * t * 0.5f) + ((navPointB.y - navPointA.y) / t);
 
                 if (Mathf.Abs(arcTargetJ) > groundWalkerSettings.jumpForce || arcTargetJ < 0)
                     isJumpLinkValid = false;
                 else
                     isJumpLinkValid = true;
-
+                Debug.Log("arcTargetJ = "+arcTargetJ);
                 if (jumpArc == null)
                     jumpArc = new JumpArcSegment(arcTargetJ, groundWalkerSettings.gravity, groundWalkerSettings.maxXVel * xSpeedScale, navPointA.x, navPointB.x);
                 else

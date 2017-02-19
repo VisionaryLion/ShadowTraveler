@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
-using Actors;
+using Entities;
 using System;
 using System.Collections.Generic;
 
 public class AnimationHandler : MonoBehaviour
 {
     [SerializeField]
-    [AssignActorAutomaticly]
+    [AssignEntityAutomaticly]
     [HideInInspector]
-    AnimationActor actor;
+    AnimationEntity actor;
 
     public delegate void AnimationEvent();
 

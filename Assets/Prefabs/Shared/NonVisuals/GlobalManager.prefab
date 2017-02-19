@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1000013428373394}
   m_IsPrefabParent: 1
+--- !u!1 &1000010702799098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000010079380368}
+  - 114: {fileID: 114000013177453322}
+  m_Layer: 0
+  m_Name: Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000010865397782
 GameObject:
   m_ObjectHideFlags: 0
@@ -53,6 +69,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012686561466}
   - 114: {fileID: 114000010654420344}
+  - 114: {fileID: 114000013231023052}
+  - 114: {fileID: 114000011794734338}
   m_Layer: 0
   m_Name: Singeltons
   m_TagString: Untagged
@@ -95,6 +113,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4000010079380368
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010702799098}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4000011254406390}
+  m_RootOrder: 4
 --- !u!4 &4000011135419582
 Transform:
   m_ObjectHideFlags: 1
@@ -123,6 +154,7 @@ Transform:
   - {fileID: 4000014005646756}
   - {fileID: 4000014252213906}
   - {fileID: 4000011135419582}
+  - {fileID: 4000010079380368}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &4000012686561466
@@ -189,7 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f159f75bbc80a48a7a2ab11e599cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenuUIRoot: {fileID: 0}
+  pauseMenuUIRoot: {fileID: 1000014142242360}
 --- !u!114 &114000010531690888
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -226,6 +258,18 @@ MonoBehaviour:
   deathStateHandler: {fileID: 114000012325204734}
   pauseMenuStateHandler: {fileID: 114000010143003158}
   gamePlayStateHandler: {fileID: 114000010531690888}
+--- !u!114 &114000011794734338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012872804480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 704d2907586f8314aa2ca88d8782fbd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navData: {fileID: 11400000, guid: 3bde37f4e5acee04f943654172039cb3, type: 2}
 --- !u!114 &114000012250471480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -255,7 +299,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 113a48b3ff88dc449bcee2410a5b7ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathUIRoot: {fileID: 0}
+  deathUIRoot: {fileID: 1000014142242360}
+--- !u!114 &114000013177453322
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010702799098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cbe9e364e8531945b8410f7a467b227, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalLightMarker:
+  - {fileID: 0}
+--- !u!114 &114000013231023052
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012872804480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad1fcefae3d7e843a14ab821516cb01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navData: {fileID: 11400000, guid: 3bde37f4e5acee04f943654172039cb3, type: 2}
 --- !u!114 &114000013311307378
 MonoBehaviour:
   m_ObjectHideFlags: 1

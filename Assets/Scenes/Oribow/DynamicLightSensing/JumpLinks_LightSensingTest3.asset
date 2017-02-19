@@ -1,0 +1,664 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a82d16676a061343b524028b4b84ba8, type: 3}
+  m_Name: JumpLinks_LightSensingTest3
+  m_EditorClassIdentifier: 
+  jumpLinks:
+  - worldPointA: {x: -22.95109, y: -2.6693234}
+    worldPointB: {x: -25.138494, y: -5.990715}
+    xSpeedScale: 0.2750006
+    navPointA: {x: -22.95109, y: -2.84}
+    navPointB: {x: -25.138496, y: -7.34}
+    nodeIndexA: 4
+    nodeIndexB: 0
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 2.2967906
+      halfG: 10
+      v: 2.750006
+      doubleG: 40
+      minX: -25.138496
+      maxX: -22.95109
+      startX: -22.95109
+      endX: -25.138496
+      minY: -4.500001
+      maxY: 0.032970294
+    isJumpLinkValid: 1
+    isBiDirectional: 0
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -22.486671, y: 1.7542591}
+    worldPointB: {x: -30.080742, y: -4.938501}
+    xSpeedScale: 0.80000013
+    navPointA: {x: -22.486671, y: 1.0600001}
+    navPointB: {x: -30.080742, y: -7.34}
+    nodeIndexA: 3
+    nodeIndexB: 0
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 0.6435751
+      halfG: 10
+      v: 8.000001
+      doubleG: 40
+      minX: -30.080742
+      maxX: -22.486671
+      startX: -22.486671
+      endX: -30.080742
+      minY: -8.400002
+      maxY: 0.0025886805
+    isJumpLinkValid: 1
+    isBiDirectional: 0
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -12.588047, y: -1.6340125}
+    worldPointB: {x: -10.531311, y: -7.0690055}
+    xSpeedScale: 0.28749952
+    navPointA: {x: -12.740001, y: -2.84}
+    navPointB: {x: -10.531307, y: -7.34}
+    nodeIndexA: 4
+    nodeIndexB: 0
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 1.8248999
+      halfG: 10
+      v: 2.8749952
+      doubleG: 40
+      minX: -12.740001
+      maxX: -10.531307
+      startX: -12.740001
+      endX: -10.531307
+      minY: -4.4999995
+      maxY: 0.020814123
+    isJumpLinkValid: 1
+    isBiDirectional: 0
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -1.0542121, y: -3.6574078}
+    worldPointB: {x: 1.1264017, y: -6.9860506}
+    xSpeedScale: 0.25156355
+    navPointA: {x: -1.0542121, y: -4.34}
+    navPointB: {x: 1.1264019, y: -7.34}
+    nodeIndexA: 6
+    nodeIndexB: 0
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 5.2073345
+      halfG: 10
+      v: 2.5156355
+      doubleG: 40
+      minX: -1.0542121
+      maxX: 1.1264019
+      startX: -1.0542121
+      endX: 1.1264019
+      minY: -3
+      maxY: 0.16947708
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -7.1865253, y: -3.768904}
+    worldPointB: {x: -9.382267, y: -6.779312}
+    xSpeedScale: 0.3250007
+    navPointA: {x: -7.06, y: -4.34}
+    navPointB: {x: -9.382267, y: -7.34}
+    nodeIndexA: 6
+    nodeIndexB: 0
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 2.9469287
+      halfG: 10
+      v: 3.2500072
+      doubleG: 40
+      minX: -9.382267
+      maxX: -7.06
+      startX: -7.06
+      endX: -9.382267
+      minY: -3
+      maxY: 0.05427743
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -5.335683, y: -3.099924}
+    worldPointB: {x: -2.9480543, y: -1.5166728}
+    xSpeedScale: 0.2990634
+    navPointA: {x: -5.335683, y: -4.34}
+    navPointB: {x: -2.9480557, y: -1.9400002}
+    nodeIndexA: 6
+    nodeIndexB: 10
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 10.989814
+      halfG: 10
+      v: 2.9906342
+      doubleG: 40
+      minX: -5.335683
+      maxX: -2.9480557
+      startX: -5.335683
+      endX: -2.9480557
+      minY: 0
+      maxY: 0.75485003
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: 8.512192, y: -3.2337213}
+    worldPointB: {x: 6.3610487, y: -6.5340214}
+    xSpeedScale: 0.33750093
+    navPointA: {x: 8.512192, y: -4.6400003}
+    navPointB: {x: 6.3610516, y: -7.34}
+    nodeIndexA: 1
+    nodeIndexB: 0
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 2.1375947
+      halfG: 10
+      v: 3.3750093
+      doubleG: 40
+      minX: 6.3610516
+      maxX: 8.512192
+      startX: 8.512192
+      endX: 6.3610516
+      minY: -2.6999998
+      maxY: 0.028558195
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: 18.29818, y: -4.2708235}
+    worldPointB: {x: 21.298178, y: -6.238658}
+    xSpeedScale: 0.44999978
+    navPointA: {x: 18.29818, y: -4.6400003}
+    navPointB: {x: 21.29818, y: -7.34}
+    nodeIndexA: 1
+    nodeIndexB: 0
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 2.616672
+      halfG: 10
+      v: 4.4999976
+      doubleG: 40
+      minX: 18.29818
+      maxX: 21.29818
+      startX: 18.29818
+      endX: 21.29818
+      minY: -2.7000005
+      maxY: 0.04279358
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: 9.203595, y: -2.3827715}
+    worldPointB: {x: 6.7648625, y: -1.1118531}
+    xSpeedScale: 0.28999957
+    navPointA: {x: 9.203595, y: -4.6400003}
+    navPointB: {x: 6.7648625, y: -1.9400002}
+    nodeIndexA: 1
+    nodeIndexB: 10
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 11.620114
+      halfG: 10
+      v: 2.8999958
+      doubleG: 40
+      minX: 6.7648625
+      maxX: 9.203595
+      startX: 9.203595
+      endX: 6.7648625
+      minY: 0
+      maxY: 0.8439191
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -0.47864628, y: -1.4234957}
+    worldPointB: {x: 0.83655345, y: 0.09785414}
+    xSpeedScale: 0.23749956
+    navPointA: {x: -0.47864676, y: -1.9400002}
+    navPointB: {x: 0.8365531, y: -0.44000003}
+    nodeIndexA: 10
+    nodeIndexB: 9
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 8.246403
+      halfG: 10
+      v: 2.3749957
+      doubleG: 40
+      minX: -0.47864676
+      maxX: 0.8365531
+      startX: -0.47864676
+      endX: 0.8365531
+      minY: 0
+      maxY: 0.42501974
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: 7.1486735, y: -1.2416236}
+    worldPointB: {x: 6.2519264, y: 0.349635}
+    xSpeedScale: 0.14437462
+    navPointA: {x: 7.06, y: -1.9400002}
+    navPointB: {x: 6.2519264, y: -0.44000003}
+    nodeIndexA: 10
+    nodeIndexB: 9
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 8.277039
+      halfG: 10
+      v: 1.4437462
+      doubleG: 40
+      minX: 6.2519264
+      maxX: 7.06
+      startX: 7.06
+      endX: 6.2519264
+      minY: 0
+      maxY: 0.42818356
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: 4.7381263, y: 0.71038496}
+    worldPointB: {x: 5.598168, y: 1.6417658}
+    xSpeedScale: 0.15000015
+    navPointA: {x: 4.7381263, y: -0.44000003}
+    navPointB: {x: 5.5981674, y: 1.36}
+    nodeIndexA: 9
+    nodeIndexB: 2
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 8.87299
+      halfG: 10
+      v: 1.5000015
+      doubleG: 40
+      minX: 4.7381263
+      maxX: 5.5981674
+      startX: 4.7381263
+      endX: 5.5981674
+      minY: 0
+      maxY: 0.49206215
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: 6.3116755, y: 1.834873}
+    worldPointB: {x: 4.4798565, y: 4.3530855}
+    xSpeedScale: 0.28749982
+    navPointA: {x: 6.311676, y: 1.36}
+    navPointB: {x: 4.4798565, y: 3.4600003}
+    nodeIndexA: 2
+    nodeIndexB: 5
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 9.667452
+      halfG: 10
+      v: 2.874998
+      doubleG: 40
+      minX: 4.4798565
+      maxX: 6.311676
+      startX: 6.311676
+      endX: 4.4798565
+      minY: 0
+      maxY: 0.58412266
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -2.9934173, y: 2.264201}
+    worldPointB: {x: 0.006582737, y: 2.264201}
+    xSpeedScale: 1
+    navPointA: {x: -3.44, y: 1.0600001}
+    navPointB: {x: 0.44000006, y: -0.44000003}
+    nodeIndexA: 8
+    nodeIndexB: 9
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 0.014020616
+      halfG: 10
+      v: 10
+      doubleG: 40
+      minX: -3.44
+      maxX: 0.44000006
+      startX: -3.44
+      endX: 0.44000006
+      minY: -1.5000001
+      maxY: 0.0000012286105
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -7.204615, y: 1.9808786}
+    worldPointB: {x: -5.350782, y: 4.105795}
+    xSpeedScale: 0.33750013
+    navPointA: {x: -7.2046156, y: 1.0600001}
+    navPointB: {x: -5.2599993, y: 3.4600003}
+    nodeIndexA: 8
+    nodeIndexB: 5
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 9.927172
+      halfG: 10
+      v: 3.3750012
+      doubleG: 40
+      minX: -7.2046156
+      maxX: -5.2599993
+      startX: -7.2046156
+      endX: -5.2599993
+      minY: 0
+      maxY: 0.6159296
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -10.037192, y: 1.7610799}
+    worldPointB: {x: -12.9947605, y: 1.8087403}
+    xSpeedScale: 1
+    navPointA: {x: -9.46, y: 1.0600001}
+    navPointB: {x: -13.040001, y: 1.0600001}
+    nodeIndexA: 8
+    nodeIndexB: 3
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 3.5800009
+      halfG: 10
+      v: 10
+      doubleG: 40
+      minX: -13.040001
+      maxX: -9.46
+      startX: -9.46
+      endX: -13.040001
+      minY: -0.000000042676938
+      maxY: 0.08010254
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -11.494485, y: 1.0324293}
+    worldPointB: {x: -12.885416, y: 1.5969777}
+    xSpeedScale: 0.2500001
+    navPointA: {x: -11.494486, y: -0.74}
+    navPointB: {x: -13.040001, y: 1.0600001}
+    nodeIndexA: 7
+    nodeIndexB: 3
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 9.09371
+      halfG: 10
+      v: 2.500001
+      doubleG: 40
+      minX: -13.040001
+      maxX: -11.494486
+      startX: -11.494486
+      endX: -13.040001
+      minY: 0
+      maxY: 0.51684725
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -11.128574, y: 0.26924384}
+    worldPointB: {x: -9.519035, y: 1.4192493}
+    xSpeedScale: 0.31249985
+    navPointA: {x: -11.128574, y: -0.74}
+    navPointB: {x: -9.46, y: 1.0600001}
+    nodeIndexA: 7
+    nodeIndexB: 8
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 8.710581
+      halfG: 10
+      v: 3.1249986
+      doubleG: 40
+      minX: -11.128574
+      maxX: -9.46
+      startX: -11.128574
+      endX: -9.46
+      minY: 0
+      maxY: 0.47421387
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -11.443319, y: -0.31487393}
+    worldPointB: {x: -12.730987, y: -2.82527}
+    xSpeedScale: 0.20000134
+    navPointA: {x: -11.443319, y: -0.74}
+    navPointB: {x: -12.740001, y: -2.84}
+    nodeIndexA: 7
+    nodeIndexB: 4
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 3.2443042
+      halfG: 10
+      v: 2.0000134
+      doubleG: 40
+      minX: -12.740001
+      maxX: -11.443319
+      startX: -11.443319
+      endX: -12.740001
+      minY: -2.1
+      maxY: 0.06578443
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: 16.050245, y: 2.3954163}
+    worldPointB: {x: 18.43539, y: -4.0605464}
+    xSpeedScale: 0.28750038
+    navPointA: {x: 15.76, y: 1.36}
+    navPointB: {x: 18.43539, y: -4.6400003}
+    nodeIndexA: 2
+    nodeIndexB: 1
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 2.8580265
+      halfG: 10
+      v: 2.8750038
+      doubleG: 40
+      minX: 15.76
+      maxX: 18.43539
+      startX: 15.76
+      endX: 18.43539
+      minY: -6.0000005
+      maxY: 0.05105197
+    isJumpLinkValid: 1
+    isBiDirectional: 0
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -5.2242713, y: 4.47133}
+    worldPointB: {x: -12.992741, y: 1.7119601}
+    xSpeedScale: 1
+    navPointA: {x: -5.224271, y: 3.4600003}
+    navPointB: {x: -13.040001, y: 1.0600001}
+    nodeIndexA: 5
+    nodeIndexB: 3
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 4.7449994
+      halfG: 10
+      v: 10
+      doubleG: 40
+      minX: -13.040001
+      maxX: -5.224271
+      startX: -5.224271
+      endX: -13.040001
+      minY: -2.4
+      maxY: 0.14071888
+    isJumpLinkValid: 1
+    isBiDirectional: 0
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -2.9246688, y: -1.6687938}
+    worldPointB: {x: -5.409671, y: 0.14399743}
+    xSpeedScale: 0.46750003
+    navPointA: {x: -2.9246688, y: -1.9400002}
+    navPointB: {x: -5.5400004, y: -0.74}
+    nodeIndexA: 10
+    nodeIndexB: 7
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 7.7393355
+      halfG: 10
+      v: 4.675
+      doubleG: 40
+      minX: -5.5400004
+      maxX: -2.9246688
+      startX: -2.9246688
+      endX: -5.5400004
+      minY: 0
+      maxY: 0.3743582
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -12.943166, y: -2.5080073}
+    worldPointB: {x: -7.153035, y: -2.8378751}
+    xSpeedScale: 1
+    navPointA: {x: -12.943166, y: -2.84}
+    navPointB: {x: -7.06, y: -4.34}
+    nodeIndexA: 4
+    nodeIndexB: 6
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 3.3335173
+      halfG: 10
+      v: 10
+      doubleG: 40
+      minX: -12.943166
+      maxX: -7.06
+      startX: -12.943166
+      endX: -7.06
+      minY: -1.5000004
+      maxY: 0.06945211
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -0.75979143, y: -1.0780544}
+    worldPointB: {x: -3.4655461, y: 1.6815923}
+    xSpeedScale: 0.3874995
+    navPointA: {x: -0.7597914, y: -1.9400002}
+    navPointB: {x: -3.4655461, y: 1.0600001}
+    nodeIndexA: 10
+    nodeIndexB: 8
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 11.278995
+      halfG: 10
+      v: 3.8749952
+      doubleG: 40
+      minX: -3.4655461
+      maxX: -0.7597914
+      startX: -0.7597914
+      endX: -3.4655461
+      minY: 0
+      maxY: 0.79509825
+    isJumpLinkValid: 1
+    isBiDirectional: 1
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1
+  - worldPointA: {x: -5.6929064, y: -0.44201422}
+    worldPointB: {x: -3.35763, y: -3.162747}
+    xSpeedScale: 0.31092194
+    navPointA: {x: -5.6929064, y: -0.74}
+    navPointB: {x: -3.3576298, y: -4.34}
+    nodeIndexA: 7
+    nodeIndexB: 6
+    nodeVertIndexA: 1
+    nodeVertIndexB: 1
+    jumpArc:
+      j: 2.7177238
+      halfG: 10
+      v: 3.1092193
+      doubleG: 40
+      minX: -5.6929064
+      maxX: -3.3576298
+      startX: -5.6929064
+      endX: -3.3576298
+      minY: -3.6000001
+      maxY: 0.046162643
+    isJumpLinkValid: 1
+    isBiDirectional: 0
+    jumpLinkSettings:
+      showDetails: 0
+      showInScene: 1
+      showInSceneDetailed: 1

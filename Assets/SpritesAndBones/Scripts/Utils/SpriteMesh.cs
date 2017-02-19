@@ -30,6 +30,7 @@ using System.IO;
 using System;
 using System.Collections;
 using System.Linq;
+using Utility;
 
 public class SpriteMesh {
 #if UNITY_EDITOR

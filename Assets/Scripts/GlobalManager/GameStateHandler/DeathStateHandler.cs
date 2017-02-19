@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+<<<<<<< HEAD
 using Actors;
 using System;
+=======
+using Entities;
+>>>>>>> refs/remotes/origin/CloudsLevel-01
 
 namespace Manager
 {
@@ -11,7 +15,7 @@ namespace Manager
         [SerializeField]
         GameObject deathUIRoot;
 
-        PlayerActor actor;
+        PlayerEntity actor;
 
         public GameStateType StateType
         {
@@ -23,13 +27,13 @@ namespace Manager
 
         void Start()
         {
-            actor = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
+            actor = EntityDatabase.GetInstance().FindFirst<PlayerEntity>();
             actor.IHealth.OnDeath += IHealth_OnDeath;
         }
 
         private void IHealth_OnDeath(object sender, Combat.IDamageInfo e)
         {
-            GameStateManager.GetInstance().StartNewState(this);
+            GameStateManager.Instance.StartNewState(this);
         }
 
         public void OnStateActive()
@@ -38,7 +42,7 @@ namespace Manager
             {
                 if (Input.anyKeyDown)
                 {
-                    GameStateManager.GetInstance().EndCurrentState();
+                    GameStateManager.Instance.EndCurrentState();
                     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
                 }
             }

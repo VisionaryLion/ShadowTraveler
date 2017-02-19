@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Actors;
+using Entities;
 using System.Collections;
 using Manager;
 
@@ -9,15 +9,15 @@ namespace Combat
     {
         [SerializeField]
         [HideInInspector]
-        [AssignActorAutomaticly]
-        BasicEntityActor actor;
+        [AssignEntityAutomaticly]
+        ActingEntity actor;
 
-        GameStateActor gameStateActor;
+        GameStateEntity gameStateActor;
 
         void Start()
         {
             actor.IHealth.OnDeath += HealthComponent_OnDeath;
-            gameStateActor = ActorDatabase.GetInstance().FindFirst<GameStateActor>();
+            gameStateActor = EntityDatabase.GetInstance().FindFirst<GameStateEntity>();
         }
 
         private void HealthComponent_OnDeath(object sender, IDamageInfo info)

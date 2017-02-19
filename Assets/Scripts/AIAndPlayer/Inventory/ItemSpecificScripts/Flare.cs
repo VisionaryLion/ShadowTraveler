@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
 using ItemHandler;
 using System;
 
@@ -9,8 +9,8 @@ namespace Equipment
     public class Flare : MonoBehaviour
     {
 
-        [SerializeField, HideInInspector, AssignActorAutomaticly]
-        TwoHandItemActor actor;
+        [SerializeField, HideInInspector, AssignEntityAutomaticly]
+        TwoHandItemEntity actor;
 
 
         [SerializeField]
@@ -26,7 +26,7 @@ namespace Equipment
         [SerializeField]
         Vector2 throwForce;
 
-        BasicEntityEquipmentActor equiperActor;
+        ActingEquipmentEntity equiperActor;
         bool isBurning = false;
         bool burnedOut = false;
         bool detachedAndBurning = false;
@@ -55,7 +55,7 @@ namespace Equipment
             }
         }
 
-        private void Actor_PickUpHandler(BasicEntityEquipmentActor equiper)
+        private void Actor_PickUpHandler(ActingEquipmentEntity equiper)
         {
             equiperActor = equiper;
             rigidbody2d.isKinematic = true;
@@ -72,7 +72,7 @@ namespace Equipment
             //enabled = false;
         }
 
-        private void OnEquiped(BasicEntityEquipmentActor equiper)
+        private void OnEquiped(ActingEquipmentEntity equiper)
         {
             enabled = true;
         }

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
 
 public class InteractiveInputDefinition : ScriptableObject
 {
-    public delegate void InputCallback(BasicEntityActor actor);
+    public delegate void InputCallback(ActingEntity actor);
 
     public string button;
     public string description;

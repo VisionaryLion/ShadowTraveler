@@ -422,7 +422,7 @@ public class SwitchActivateByActor : ISwitchActivation, ISerializationCallbackRe
     {
         if (_onLeave != left)
             return false;
-        Actors.Actor[] actors = target.GetComponentsInChildren<Actors.Actor>();
+        Entities.Entity[] actors = target.GetComponentsInChildren<Entities.Entity>();
         for (int iActor = 0; iActor < actors.Length; iActor++)
         {
             if (actors[iActor].GetType().Equals(_ActorType))
@@ -433,7 +433,7 @@ public class SwitchActivateByActor : ISwitchActivation, ISerializationCallbackRe
 
     public void OnAfterDeserialize()
     {
-        _ActorType = Actors.Actor.ActorSubtypes[staticActorTypeIndex];
+        _ActorType = Entities.Entity.EntitySubtypes[staticActorTypeIndex];
     }
 
     public void OnBeforeSerialize()
@@ -443,7 +443,7 @@ public class SwitchActivateByActor : ISwitchActivation, ISerializationCallbackRe
             staticActorTypeIndex = 0;
             return;
         }
-        staticActorTypeIndex = Actors.Actor.ActorTypeToStaticIndex(_ActorType);
+        staticActorTypeIndex = Entities.Entity.EntityTypeToStaticIndex(_ActorType);
         if (staticActorTypeIndex == -1)
             staticActorTypeIndex = 0;
     }
@@ -491,14 +491,14 @@ public class SwitchActivateByKey : ISwitchActivation
     {
         if (left)
         {
-            Actors.BasicEntityActor actor = target.GetComponentInChildren<Actors.BasicEntityActor>();
+            Entities.ActingEntity actor = target.GetComponentInChildren<Entities.ActingEntity>();
             if (actor == null)
                 return false;
             actor.InteractiveInputHandler.RemoveInputListener(interactiveInputDef);
         }
         else
         {
-            Actors.BasicEntityActor actor = target.GetComponentInChildren<Actors.BasicEntityActor>();
+            Entities.ActingEntity actor = target.GetComponentInChildren<Entities.ActingEntity>();
             if (actor == null)
                 return false;
             if (!initDone)
@@ -516,7 +516,7 @@ public class SwitchActivateByKey : ISwitchActivation
         return false;
     }
 
-    void OnButton(Actors.BasicEntityActor actor)
+    void OnButton(Entities.ActingEntity actor)
     {
         switchCallback.FlipSwitchOn();
     }

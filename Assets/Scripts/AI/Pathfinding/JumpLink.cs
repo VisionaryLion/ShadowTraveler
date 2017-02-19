@@ -27,7 +27,7 @@ namespace Pathfinding2D
             xMax = link.jumpArc.maxX;
             yMin = link.jumpArc.minY;
             yMax = link.jumpArc.maxY;
-            traversCosts = xMax - xMin;
+            traversCosts = Mathf.Abs(xMax - xMin);
         }
     }
 }

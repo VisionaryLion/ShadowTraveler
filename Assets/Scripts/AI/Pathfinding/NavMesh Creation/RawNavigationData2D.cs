@@ -76,11 +76,9 @@ public class RawNavigationData2D : ScriptableObject
             map_cNavNode = nodes[iNavNode];
 
             //Extended bounds test
-            if (map_cNavNode.min.x - mapPointMaxDeviation > point.x || map_cNavNode.max.x + mapPointMaxDeviation < point.x
-            || map_cNavNode.min.y - mapPointMaxDeviation > point.y || map_cNavNode.max.y + mapPointMaxDeviation < point.y)
+            if (map_cNavNode.bounds.min.x - mapPointMaxDeviation > point.x || map_cNavNode.bounds.max.x + mapPointMaxDeviation < point.x
+            || map_cNavNode.bounds.min.y - mapPointMaxDeviation > point.y || map_cNavNode.bounds.max.y + mapPointMaxDeviation < point.y)
             {
-                Bounds b = new Bounds();
-                b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
                 //Failed test
                 continue;
             }
@@ -88,8 +86,6 @@ public class RawNavigationData2D : ScriptableObject
             if (map_cNavNode.isClosed && map_cNavNode.Contains(point))
             {
                 //maybe later check children, not implemented though
-                Bounds b = new Bounds();
-                b.SetMinMax(map_cNavNode.min, map_cNavNode.max);
                 return false;
             }
 
@@ -157,8 +153,7 @@ public class RawNavNode
     const float maxDeviationInside = 0.1f;
     const float maxDeviationOutside = 0.001f;
 
-    public Vector2 min;
-    public Vector2 max;
+    public Bounds bounds;
     public bool isClosed;
     public int hierachyIndex; // 0 = hole, 1 = solid, 2 = hole, 3 = solid, ...
 
@@ -169,8 +164,7 @@ public class RawNavNode
     public RawNavNode(RawNavVert[] verts, Bounds bounds, bool isClosed, int hierachyIndex)
     {
         this.verts = verts;
-        min = bounds.min;
-        max = bounds.max;
+        this.bounds = bounds;
         this.isClosed = isClosed;
         this.hierachyIndex = hierachyIndex;
     }
@@ -179,7 +173,7 @@ public class RawNavNode
     {
         Debug.Assert(isClosed);
 
-        if (min.x > point.x || max.x < point.x || min.y > point.y || max.y < point.y)
+        if (!bounds.Contains(point))
         {
             //Bound test failed
             return false;
@@ -258,7 +252,7 @@ public class RawNavNode
         {
             verts[iVert] = this.verts[iVert].ToNavVert();
         }
-        return new NavNode(verts, min, max, isClosed, hierachyIndex);
+        return new NavNode(verts, bounds, isClosed, hierachyIndex);
     }
 
     public void VisualDebug(int colorId)

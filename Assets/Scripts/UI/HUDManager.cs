@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using Actors;
+using Entities;
 
 
 namespace ItemHandler
@@ -24,14 +24,14 @@ namespace ItemHandler
         [SerializeField]
         Image rightItemIcon;
 
-        PlayerActor player;
+        PlayerEntity player;
         Sprite emptySprite = null;
         public static HUDManager hudManager;
 
         void Awake()
         {
             hudManager = this;
-            player = ActorDatabase.GetInstance().FindFirst<PlayerActor>();
+            player = EntityDatabase.GetInstance().FindFirst<PlayerEntity>();
 
             EmptyLeft();
             EmptyRight();

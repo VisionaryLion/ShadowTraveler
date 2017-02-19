@@ -1,14 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using Actors;
+using Entities;
 
 namespace Manager
 {
     public class GamePlayStateHandler : MonoBehaviour, IGameState
+<<<<<<< HEAD
     {
         [AssignActorAutomaticly]
         GameStateActor actor;
+=======
+    {    
+        [AssignEntityAutomaticly]
+        GameStateEntity actor;
+>>>>>>> refs/remotes/origin/CloudsLevel-01
 
         public GameStateType StateType
         {
@@ -20,14 +26,14 @@ namespace Manager
 
         void Start()
         {
-            GameStateManager.GetInstance().AssignDefaultState(this);
+            GameStateManager.Instance.AssignDefaultState(this);
         }
 
         public void OnStateActive()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                GameStateManager.GetInstance().StartNewState(actor.PauseMenuStateHandler);
+                GameStateManager.Instance.StartNewState(actor.PauseMenuStateHandler);
             }
         }
 

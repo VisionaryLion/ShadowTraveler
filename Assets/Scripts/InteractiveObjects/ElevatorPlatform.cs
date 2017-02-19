@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Actors;
+using Entities;
 using FMODUnity;
 
 public class ElevatorPlatform : MonoBehaviour
 {
-    [SerializeField, AssignActorAutomaticly, HideInInspector]
-    ElevatorActor actor;
+    [SerializeField, AssignEntityAutomaticly, HideInInspector]
+    ElevatorEntity actor;
 
     [SerializeField]
     Transform[] levels;
@@ -38,7 +38,7 @@ public class ElevatorPlatform : MonoBehaviour
         elevatorDown.onButtonDown = OnDownButtonDown;
     }
 
-    void OnUpButtonDown(BasicEntityActor entityActor)
+    void OnUpButtonDown(ActingEntity entityActor)
     {
         if (currentLevel < levels.Length - 1)
         {
@@ -56,7 +56,7 @@ public class ElevatorPlatform : MonoBehaviour
         }
     }
 
-    void OnDownButtonDown(BasicEntityActor entityActor)
+    void OnDownButtonDown(ActingEntity entityActor)
     {
         if (currentLevel > 0)
         {
@@ -110,7 +110,7 @@ public class ElevatorPlatform : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        BasicEntityActor actor = col.GetComponent<BasicEntityActor>();
+        ActingEntity actor = col.GetComponent<ActingEntity>();
         if (actor == null)
             return;
         if (currentLevel < levels.Length -1)
@@ -121,7 +121,7 @@ public class ElevatorPlatform : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D col)
     {
-        BasicEntityActor actor = col.GetComponent<BasicEntityActor>();
+        ActingEntity actor = col.GetComponent<ActingEntity>();
         if (actor == null)
             return;
         actor.InteractiveInputHandler.RemoveInputListener(elevatorUp);

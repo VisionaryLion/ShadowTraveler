@@ -13,8 +13,9 @@ public class PathSegment : IPathSegment
     float xMax;
     int moveDir;
     float timeOut;
+    float targetVelocity;
 
-    public PathSegment (Vector2 start, Vector2 goal, float timeOut)
+    public PathSegment(Vector2 start, Vector2 goal, float timeOut)
     {
         if (start.x > goal.x)
         {
@@ -41,8 +42,17 @@ public class PathSegment : IPathSegment
         }
     }
 
-    public override void UpdateMovementInput(MovementInput input)
+    public override void UpdateMovementInput(MovementInput input, CC2DThightAIMotor motor)
     {
+        if (((Vector2)motor.transform.position - goal).sqrMagnitude < 4)
+        {
+            if (motor.Velocity.x > targetVelocity)
+            {
+                input.horizontal = 0;
+                input.horizontalRaw = 0;
+                return;
+            }
+        }
         input.horizontal = moveDir;
         input.horizontalRaw = moveDir;
     }
@@ -56,23 +66,36 @@ public class PathSegment : IPathSegment
 
     public override bool ReachedTarget(Vector2 position)
     {
+        float f = (position - goal).sqrMagnitude;
         if ((position - goal).sqrMagnitude <= 0.05f)
             return true;
         return false;
     }
 
-    public override void InitTravers(CC2DThightAIMotor motor)
+    public override void InitTravers(CC2DThightAIMotor motor, IPathSegment nextSeg)
     {
-        
+        if (nextSeg != null)
+        {
+            targetVelocity = nextSeg.StartSpeed(motor);
+        }
+        else
+        {
+            targetVelocity = StartSpeed(motor);
+        }
     }
 
     public override void StopTravers(CC2DThightAIMotor motor)
     {
-        
+
     }
 
     public override void Visualize()
     {
         Debug.DrawLine(start, goal, Color.green);
+    }
+
+    public override float StartSpeed(CC2DThightAIMotor motor)
+    {
+        return motor.MaxWalkSpeed;
     }
 }

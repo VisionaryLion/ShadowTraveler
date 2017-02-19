@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using Actors;
+using Entities;
 
 /*
 Author: Oribow
@@ -9,9 +9,9 @@ namespace Combat
 {
     public class BasicDamageReceptor : IDamageReciever
     {
-        [AssignActorAutomaticly]
+        [AssignEntityAutomaticly]
         [SerializeField]
-        HealthActor actor;
+        HealthEntity actor;
         [SerializeField]
         float multiplikator = 1;
 

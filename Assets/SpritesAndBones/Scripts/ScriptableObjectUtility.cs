@@ -27,57 +27,64 @@ using UnityEditor;
 #endif
 using System.IO;
 
-public static class ScriptableObjectUtility {
-    /// <summary>
-    //	This makes it easy to create, name and place unique new ScriptableObject asset files.
-    /// </summary>
-   #if UNITY_EDITOR
-		public static void CreateAsset (Object asset)
-		{
-            CreateAsset(asset, "/New " + asset.GetType().ToString());
-		}
-
-		public static void CreateAsset (Object asset, string filename)
-		{
-			string path = AssetDatabase.GetAssetPath (Selection.activeObject);
-			if (path == "") {
-				path = "Assets";
-			} else if (Path.GetExtension (path) != "") {
-				path = path.Replace (Path.GetFileName (AssetDatabase.GetAssetPath (Selection.activeObject)), "");
-			}
-			
-			string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath (path + "/" + filename + ".asset");
-			
-			AssetDatabase.CreateAsset (asset, assetPathAndName);
-			
-			
-			AssetDatabase.SaveAssets ();
-			
-			Selection.activeObject = asset;
-		}
-
-    public static void CreateAsset<T>(string name) where T : ScriptableObject
+namespace Utility
+{
+    public static class ScriptableObjectUtility
     {
-        T asset = ScriptableObject.CreateInstance<T>();
-
-        string path = AssetDatabase.GetAssetPath(Selection.activeObject);
-        if (path == "")
+        /// <summary>
+        //	This makes it easy to create, name and place unique new ScriptableObject asset files.
+        /// </summary>
+#if UNITY_EDITOR
+        public static void CreateAsset(Object asset)
         {
-            path = "Assets";
-        }
-        else if (Path.GetExtension(path) != "")
-        {
-            path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
+            CreateAsset(asset, "/New " + asset.GetType().ToString());
         }
 
-        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/" + name + ".asset");
+        public static void CreateAsset(Object asset, string filename)
+        {
+            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (path == "")
+            {
+                path = "Assets";
+            }
+            else if (Path.GetExtension(path) != "")
+            {
+                path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
+            }
 
-        ProjectWindowUtil.CreateAsset(asset, assetPathAndName);
+            string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/" + filename + ".asset");
 
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        EditorUtility.FocusProjectWindow();
-        Selection.activeObject = asset;
-    }
+            AssetDatabase.CreateAsset(asset, assetPathAndName);
+
+
+            AssetDatabase.SaveAssets();
+
+            Selection.activeObject = asset;
+        }
+
+        public static void CreateAsset<T>(string name) where T : ScriptableObject
+        {
+            T asset = ScriptableObject.CreateInstance<T>();
+
+            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            if (path == "")
+            {
+                path = "Assets";
+            }
+            else if (Path.GetExtension(path) != "")
+            {
+                path = path.Replace(Path.GetFileName(AssetDatabase.GetAssetPath(Selection.activeObject)), "");
+            }
+
+            string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(path + "/" + name + ".asset");
+
+            ProjectWindowUtil.CreateAsset(asset, assetPathAndName);
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EditorUtility.FocusProjectWindow();
+            Selection.activeObject = asset;
+        }
 #endif
+    }
 }

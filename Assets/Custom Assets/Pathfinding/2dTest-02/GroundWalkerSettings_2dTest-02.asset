@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ec06694e8b283d439a376ceade6b302, type: 3}
+  m_Name: GroundWalkerSettings_2dTest-02
+  m_EditorClassIdentifier: 
+  height: 2.2061098
+  width: 0.6821537
+  jumpForce: 16.7332
+  gravity: 20
+  maxXVel: 10
+  slopeLimit: 50
