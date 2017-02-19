@@ -106,11 +106,11 @@ namespace ItemHandler
                 if (leftInventory.FreeSlotCount <= 0)
                     return -1;
                 return LocalToWorldIndex(0, leftInventory.AddItemToEmptyStack(obj));
-            }            
+            }
             else
             {
                 return LocalToWorldIndex(1, rightInventory.AddItemToEmptyStack(obj));
-            }
+            }            
         }
 
         public override bool ContainsItem(int id)
@@ -311,6 +311,7 @@ namespace ItemHandler
 
         public int GetPreferedInventoryIndexForAdding(IItem item)
         {
+            if (item.IsEquipment)
             {
                 return 0;
             }
