@@ -6,7 +6,7 @@ public class SwitchPressurePlate : MonoBehaviour
 {
     public enum TargetType
     {
-        Door, Light, LaserWall, GravityVent
+        Door, Light, GravityVent
     }
 
     public TargetType targetType;
@@ -22,10 +22,8 @@ public class SwitchPressurePlate : MonoBehaviour
     public Doorway01 TargetDoor;
     [Tooltip("This is the Lights that will be turned on or off by the switch.")]
     public Lightbulb[] TargetLights;
-    [Tooltip("This is the LaserWall that will be turned on or off by the switch.")]
-    public LaserWall TargetLaserWall;
 
-    private 
+    //private 
     
 
     // Use this for initialization
@@ -49,19 +47,16 @@ public class SwitchPressurePlate : MonoBehaviour
             {
                 case TargetType.Door:
                     //set door variables
-                    TargetDoor.DoorHasPower = !TargetDoor.DoorHasPower;
+                    TargetDoor.HasPower = !TargetDoor.HasPower;
                     break;
 
                 case TargetType.Light:
                     //set Light variables
                     foreach (Lightbulb light in TargetLights)
                     {
-                        light.LightHasPower = true;
+                        light.HasPower = true;
+                        //light.GetComponent<Lightbulb>().ChangeLightIntensity();
                     }
-                    break;
-                case TargetType.LaserWall:
-                    //set LaserWall variables
-                    //TargetLaserWall.LaserWallHasPower = !TargetLaserWall.LaserWallHasPower;
                     break;
                 case TargetType.GravityVent:
                     //set GravityVent variables
@@ -80,18 +75,15 @@ public class SwitchPressurePlate : MonoBehaviour
             {
                 case TargetType.Door:
                     //set door variables
-                    TargetDoor.DoorHasPower = !TargetDoor.DoorHasPower;
+                    TargetDoor.HasPower = !TargetDoor.HasPower;
                     break;
                 case TargetType.Light:
                     //set Light variables
                     foreach (Lightbulb light in TargetLights)
                     {
-                        light.LightHasPower = false;
+                        light.HasPower = false;
+                        //light.GetComponent<Lightbulb>().ChangeLightIntensity();
                     }
-                    break;
-                case TargetType.LaserWall:
-                    //set LaserWall variables
-                    //TargetLaserWall.LaserWallHasPower = !TargetLaserWall.LaserWallHasPower;
                     break;
                 case TargetType.GravityVent:
                     //set GravityVent variables

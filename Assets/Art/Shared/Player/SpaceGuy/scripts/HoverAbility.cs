@@ -21,8 +21,7 @@ public class HoverAbility : MonoBehaviour
     public float HoverDuration = 1.2f;
     [Tooltip("Determines how fast the hover will regernerate. Higher is faster.")]
     public float regenRate = .05f;
-    public Image HoverUIbar;
-        
+    public Image HoverUIbar;        
 
     //Every 'regenDelay' seconds the player regains 'regenRate' fuel
     //PROBLEM: The player can spam the Joystick1Button4 and cause the fuel to regenerate faster
@@ -43,7 +42,7 @@ public class HoverAbility : MonoBehaviour
         }
         //Hoverbar fill
         //We can replace and improve the UI image later
-        HoverUIbar.fillAmount = (1 - HoverTime);        
+        HoverUIbar.fillAmount = (1 - HoverTime);   
     }
 
         private IEnumerator RegainFuelOverTime()
