@@ -14,6 +14,8 @@ TagManager:
   - Bullet
   - FollowFriend
   - Ground
+  - RobotAILocation
+  - Weapon
   layers:
   - Default
   - TransparentFX
