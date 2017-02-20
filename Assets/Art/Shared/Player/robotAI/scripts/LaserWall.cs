@@ -10,10 +10,16 @@ public class LaserWall : MonoBehaviour {
     public float animationSpeed = 1.25f;    //higher is faster, but could effect laser distance
     public static bool laserActive = true;  //this could be used to disable laser when the power is off
 
+    public AudioClip LaserActivateSFX;
+    public AudioClip LaserDeactivateSFX;
+    public float LaserSFXVol = 0.4f;
+
+    AudioSource source;
 
     // Use this for initialization
     void Start()
     {
+        source = GetComponent<AudioSource>();
         StartCoroutine(LaserPulse());
     }
 	
@@ -27,6 +33,7 @@ public class LaserWall : MonoBehaviour {
             //laser is retracted
             Base.GetComponent<Collider2D>().enabled = false;
             this.GetComponent<Collider2D>().enabled = false;
+            source.PlayOneShot(LaserDeactivateSFX, LaserSFXVol);
             while (theScale.y > 1)
             {
                 theScale.y = theScale.y - animationSpeed;
@@ -39,6 +46,7 @@ public class LaserWall : MonoBehaviour {
             //laser is active
             Base.GetComponent<Collider2D>().enabled = true;
             this.GetComponent<Collider2D>().enabled = true;
+            source.PlayOneShot(LaserActivateSFX, LaserSFXVol);
             while (theScale.y < laserYScale)
             {
                 theScale.y = theScale.y + animationSpeed;

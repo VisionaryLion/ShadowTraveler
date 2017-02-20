@@ -4,27 +4,32 @@ using UnityEngine.UI;
 
 public class Doorway01 : MonoBehaviour {
 
-    //scene to go to
-    public bool DoorHasPower = true; //add static later
+    //add destination scene and player position
+    public bool HasPower = true;
     public GameObject doorLight;
     public Color lightOnColor;
     public Color lightOffColor;
     public Text text;
     public string DestinationName;
 
-    Animator animator;
-    //Text text;
+    public AudioClip DoorOpenSFX;
+    public AudioClip DoorCloseSFX;
+    public float doorVol = 1;
 
-	// Use this for initialization
+    AudioSource source;
+    Animator animator;
+
+
 	void Start () {
         animator = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
         text.text = DestinationName;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (DoorHasPower == true)
+        if (HasPower == true)
         {
             //light is green
             doorLight.GetComponent<SpriteRenderer>().color = lightOnColor;
@@ -41,7 +46,7 @@ public class Doorway01 : MonoBehaviour {
     {
         if ((other.gameObject.CompareTag("Player")))
         {
-            if (DoorHasPower == true)
+            if (HasPower == true)
             {
                 animator.SetBool("DoorActive", true);
             }
@@ -52,11 +57,21 @@ public class Doorway01 : MonoBehaviour {
     {
         if ((other.gameObject.CompareTag("Player")))
         {
-            if (DoorHasPower == true)
+            if (HasPower == true)
             {
                 animator.SetBool("DoorActive", false);
             }
         }
+    }
+
+    void playDoorOpenSFX()
+    {
+        source.PlayOneShot(DoorOpenSFX, doorVol);
+    }
+
+    void playDoorCloseSFX()
+    {
+        source.PlayOneShot(DoorCloseSFX, doorVol);
     }
 
 }
