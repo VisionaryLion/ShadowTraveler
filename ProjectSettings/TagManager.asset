@@ -15,6 +15,7 @@ TagManager:
   - Bullet
   - FollowFriend
   - Ground
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -32,7 +33,7 @@ TagManager:
   - Player
   - IgnorePlayer
   - Ground
-  - 
+  - Wall
   - 
   - 
   - 
@@ -84,6 +85,9 @@ TagManager:
     locked: 0
   - name: Water
     uniqueID: 3298160659
+    locked: 0
+  - name: Wall
+    uniqueID: 3086388399
     locked: 0
   - name: Ground
     uniqueID: 1686353437
