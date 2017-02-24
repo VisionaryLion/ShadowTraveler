@@ -6,15 +6,9 @@ using Entities;
 namespace Manager
 {
     public class GamePlayStateHandler : MonoBehaviour, IGameState
-<<<<<<< HEAD
-    {
-        [AssignActorAutomaticly]
-        GameStateActor actor;
-=======
     {    
         [AssignEntityAutomaticly]
         GameStateEntity actor;
->>>>>>> refs/remotes/origin/CloudsLevel-01
 
         public GameStateType StateType
         {
@@ -31,8 +25,10 @@ namespace Manager
 
         public void OnStateActive()
         {
+            Debug.Log("act");
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                Debug.Log("esc");
                 GameStateManager.Instance.StartNewState(actor.PauseMenuStateHandler);
             }
         }

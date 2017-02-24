@@ -1,9 +1,7 @@
 ﻿//#define Glide
-<<<<<<< HEAD
 #undef DEBUG
-=======
 //#define DEBUG_THIS
->>>>>>> refs/remotes/origin/CloudsLevel-01
+
 
 using UnityEngine;
 using Utility.ExtensionMethods;

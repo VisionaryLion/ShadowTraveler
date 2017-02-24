@@ -12,7 +12,7 @@ namespace Manager
         public void Resume()
 
         {
-            GameStateManager.GetInstance().EndCurrentState();
+            GameStateManager.Instance.EndCurrentState();
         }
 
         public void LoadScene(string sceneIndex)

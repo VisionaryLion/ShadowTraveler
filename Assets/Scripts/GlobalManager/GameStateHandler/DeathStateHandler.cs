@@ -1,12 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
-<<<<<<< HEAD
-using Actors;
 using System;
-=======
 using Entities;
->>>>>>> refs/remotes/origin/CloudsLevel-01
 
 namespace Manager
 {
