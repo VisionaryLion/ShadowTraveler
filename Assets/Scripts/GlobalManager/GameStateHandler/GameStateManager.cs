@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 namespace Manager
 {
+    public enum GameStateType {
+        Play,
+        Pause,
+        Death
+    }
+
     public class GameStateManager
     {
 
@@ -80,5 +86,7 @@ namespace Manager
         /// Will be called every frame this object has focus. Replacement for Update.
         /// </summary>
         void OnStateActive();
+
+        GameStateType StateType { get; }
     }
 }

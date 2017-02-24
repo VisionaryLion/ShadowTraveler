@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class ReadOnlyAttribute : PropertyAttribute
 {
 
 }
+
+#if UNITY_EDITOR
 
 [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
 public class ReadOnlyDrawer : PropertyDrawer
@@ -51,3 +55,5 @@ public class ForceWritableDrawer : PropertyDrawer
         GUI.enabled = oldValue;
     }
 }
+
+#endif

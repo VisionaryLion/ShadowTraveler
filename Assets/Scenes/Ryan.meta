@@ -2,6 +2,17 @@ fileFormatVersion: 2
 guid: 5e3c2458e835e104fa0157c4dde58107
 folderAsset: yes
 timeCreated: 1478131065
+<<<<<<< HEAD
+=======
+guid: 9bdff4ba6ea02a54e8558a9d7be0671c
+folderAsset: yes
+<<<<<<< HEAD
+timeCreated: 1475018529
+=======
+timeCreated: 1476407544
+>>>>>>> refs/remotes/origin/master
+=======
+>>>>>>> refs/remotes/origin/CloudsLevel-01
 licenseType: Free
 DefaultImporter:
   userData: 
