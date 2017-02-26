@@ -36,6 +36,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 224000012773571568}
   - 212: {fileID: 212000011159893742}
+  - 114: {fileID: 114000011400078560}
   m_Layer: 0
   m_Name: lightbulb
   m_TagString: Untagged
@@ -43,6 +44,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
+--- !u!114 &114000011400078560
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013979930916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2718e682d6b66be4593630f23c6506f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LightHasPower: 0
+  Light: {fileID: 1000011363395520}
+  LightOffIntensity: 0.15
+  LightOnIntensity: 1.15
 --- !u!114 &114000013955778366
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -37,7 +37,7 @@ GameObject:
   - 4: {fileID: 4000012072287962}
   m_Layer: 0
   m_Name: crate-02
-  m_TagString: Untagged
+  m_TagString: Box
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

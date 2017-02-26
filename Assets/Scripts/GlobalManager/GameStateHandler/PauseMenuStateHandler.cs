@@ -1,11 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace Manager
 {
     public class PauseMenuStateHandler : MonoBehaviour, IGameState
     {
         public GameObject pauseMenuUIRoot;
+
+        public GameStateType StateType
+        {
+            get
+            {
+                return GameStateType.Pause;
+            }
+        }
 
         public void OnStateActive()
         {
@@ -19,7 +28,6 @@ namespace Manager
         {
             pauseMenuUIRoot.SetActive(true);
             Time.timeScale = 0;
-
         }
 
         public void OnStateEnd()

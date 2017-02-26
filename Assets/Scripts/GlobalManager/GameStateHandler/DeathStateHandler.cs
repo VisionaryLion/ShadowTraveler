@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
 using Entities;
 
 namespace Manager
@@ -11,6 +12,14 @@ namespace Manager
         GameObject deathUIRoot;
 
         PlayerEntity actor;
+
+        public GameStateType StateType
+        {
+            get
+            {
+                return GameStateType.Death;
+            }
+        }
 
         void Start()
         {
