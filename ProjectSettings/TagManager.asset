@@ -16,6 +16,8 @@ TagManager:
   - FollowFriend
   - Ground
   - Box
+  - Light
+  - Monster
   layers:
   - Default
   - TransparentFX
