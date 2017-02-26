@@ -30,7 +30,7 @@ namespace LightSensing
             {
                 if (m.IsPointInsideMarker(position))
                 {
-                    finalColor += m.SampleColorAt(position);
+                    finalColor += m.SampleLightAt(position);
                 }
             }
             finalColor.a = 1;

@@ -6,9 +6,7 @@ using CC2D;
 [Serializable]
 public abstract class IOffNodeLink
 {
-    public int targetNodeIndex;
-    public int targetVertIndex;
+    public NavData2d.NavPosition targetPos;
     public Vector2 startPoint;
-    public Vector2 endPoint;
     public float traversCosts;
 }

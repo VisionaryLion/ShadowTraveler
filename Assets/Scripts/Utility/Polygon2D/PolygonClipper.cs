@@ -2,12 +2,13 @@
 using Utility.ExtensionMethods;
 using System.Collections.Generic;
 using NavMesh2D.Core;
+using System;
 
 namespace Utility.Polygon2D
 {
     public static class PolygonClipper
     {
-        static readonly float fudgeFactor = 0.001f;
+        static readonly double fudgeFactor = 0.00001;
 
         public enum BoolOpType { INTERSECTION, UNION, DIFFERENCE, XOR };
         public enum ResultType { NoOverlap, SuccesfullyClipped, FullyContained, FullyContains };
@@ -50,11 +51,11 @@ namespace Utility.Polygon2D
 
             SweepRay sweepRay = new SweepRay(20);
             SweepEvent cEvent;
-            float minRightBounds = Mathf.Min(sp.Bounds.max.x, cp.Bounds.max.x);
+            double minRightBounds = Math.Min(sp.Bounds.max.x, cp.Bounds.max.x);
             bool changesMade = false;
             Connector connector = new Connector(10);
             int orgCount = eventQueue.Count;
-            const float fudgeFactor = 0.00001f;
+            const double fudgeFactor = 0.00001;
             VectorHistoryDrawer.SetNewestOnlyFlag(5, true);
             VectorHistoryDrawer.SetNewestOnlyFlag(3, true);
             VectorHistoryDrawer.SetNewestOnlyFlag(6, true);
@@ -62,11 +63,11 @@ namespace Utility.Polygon2D
             {
                 cEvent = eventQueue.Dequeue();
                 VectorHistoryDrawer.MoveFurther();
-                VectorHistoryDrawer.EnqueueNewLines(3, new Color[] { cEvent.left ? Color.green : Color.red, Color.white }, new Vector2[] { cEvent.p, cEvent.other.p }, new string[] { "", "" });
+                VectorHistoryDrawer.EnqueueNewLines(3, new Color[] { cEvent.left ? Color.green : Color.red, Color.white }, new Vector2d[] { cEvent.p, cEvent.other.p }, new string[] { "", "" });
                 foreach (var er in sweepRay.s)
                 {
-                    VectorHistoryDrawer.EnqueueNewLines(5, new Color[] { er.inOut ? Color.green : Color.red }, new Vector2[] { er.p, er.other.p }, new string[] { "", "" });
-                    VectorHistoryDrawer.EnqueueNewLines(6, new Color[] { er.inside ? Color.green : Color.red }, new Vector2[] { er.p, er.other.p }, new string[] { "", "" });
+                    VectorHistoryDrawer.EnqueueNewLines(5, new Color[] { er.inOut ? Color.green : Color.red }, new Vector2d[] { er.p, er.other.p }, new string[] { "", "" });
+                    VectorHistoryDrawer.EnqueueNewLines(6, new Color[] { er.inside ? Color.green : Color.red }, new Vector2d[] { er.p, er.other.p }, new string[] { "", "" });
                 }
 
                 if (!cEvent.left)
@@ -88,9 +89,8 @@ namespace Utility.Polygon2D
                             colorToDebug = Color.red;
                             break;
                     }
-                    VectorHistoryDrawer.EnqueueNewLines(1, new Color[] { colorToDebug, colorToDebug }, new Vector2[] { cEvent.p, cEvent.other.p }, new string[] { "", "" });
+                    VectorHistoryDrawer.EnqueueNewLines(1, new Color[] { colorToDebug, colorToDebug }, new Vector2d[] { cEvent.p, cEvent.other.p }, new string[] { "", "" });
                 }
-                DebugExtension.DebugArrow(cEvent.p, cEvent.other.p - cEvent.p, Color.Lerp(Color.black, Color.white, eventQueue.Count / orgCount));
                 if ((op == BoolOpType.INTERSECTION && (cEvent.p.x > minRightBounds + fudgeFactor)) || (op == BoolOpType.DIFFERENCE && cEvent.p.x > sp.Bounds.max.x + fudgeFactor))
                 {
                     //Exit the loop. No more intersections are to be found.
@@ -128,8 +128,8 @@ namespace Utility.Polygon2D
                     {
                         if (pos - 2 < 0)
                         {
-                            /*cEvent.inside = true;
-                            cEvent.inOut = false;*/
+                            cEvent.inside = true;
+                            cEvent.inOut = false;/*
                             cEvent.inside = false;
                             //cEvent.inOut = false;
                             if (prev.type != cEvent.type)
@@ -140,19 +140,19 @@ namespace Utility.Polygon2D
                             else
                             {
                                 //cEvent.inOut = true;
-                            }
+                            }*/
                         }
                         else
                         {
                             SweepEvent sliEvent = sweepRay.Previous(pos - 1);
                             if (prev.pl == cEvent.pl)
                             {
-                                //cEvent.inOut = !prev.inOut;
+                                cEvent.inOut = !prev.inOut;
                                 cEvent.inside = !sliEvent.inOut;
                             }
                             else
                             {
-                                //cEvent.inOut = !sliEvent.inOut;
+                                cEvent.inOut = !sliEvent.inOut;
                                 cEvent.inside = !prev.inOut;
                             }
                         }
@@ -160,12 +160,12 @@ namespace Utility.Polygon2D
                     else if (cEvent.pl == prev.pl)
                     { // previous line segment in S belongs to the same polygon that "cEvent" belongs to
                         cEvent.inside = prev.inside;
-                        //cEvent.inOut = !prev.inOut;
+                        cEvent.inOut = !prev.inOut;
                     }
                     else
                     {                          // previous line segment in S belongs to a different polygon that "cEvent" belongs to
                         cEvent.inside = !prev.inOut;
-                        //cEvent.inOut = prev.inside;
+                        cEvent.inOut = prev.inside;
                     }
 
                     SweepEvent nextEvent = sweepRay.Next(pos);
@@ -178,6 +178,8 @@ namespace Utility.Polygon2D
                 {// the line segment must be removed from S
                     VectorHistoryDrawer.EnqueueNewLines(4, cEvent.p, cEvent.other.p);
                     int pos = sweepRay.Find(cEvent.other);
+                    if (pos == -1)
+                        Debug.Log("Not good!");
                     switch (cEvent.type)
                     {
                         case (EdgeType.NORMAL):
@@ -224,25 +226,25 @@ namespace Utility.Polygon2D
         {
             SweepEvent se1;
             SweepEvent se2;
-            Vector2 cVal;
-            Vector2 cPrevVal = c.verticies[c.verticies.Count - 1];
+            Vector2d cVal;
+            Vector2d cPrevVal = c.verticies[c.verticies.Count - 1];
             for (int iVert = 0; iVert < c.verticies.Count; iVert++)
             {
                 cVal = c.verticies[iVert];
-                if (Approximately(cVal.x, cPrevVal.x))
+                if (cVal == cPrevVal)
+                    return;
+
+                if (cVal.x < cPrevVal.x)
                 {
-                    if (cVal.y < cPrevVal.y)
-                    {
-                        se1 = new SweepEvent(cVal, true, false, pType);
-                        se2 = new SweepEvent(cPrevVal, false, true, pType);
-                    }
-                    else
-                    {
-                        se1 = new SweepEvent(cVal, false, false, pType);
-                        se2 = new SweepEvent(cPrevVal, true, true, pType);
-                    }
+                    se1 = new SweepEvent(cVal, true, false, pType);
+                    se2 = new SweepEvent(cPrevVal, false, true, pType);
                 }
-                else if (cVal.x < cPrevVal.x)
+                else if (cVal.x > cPrevVal.x)
+                {
+                    se1 = new SweepEvent(cVal, false, false, pType);
+                    se2 = new SweepEvent(cPrevVal, true, true, pType);
+                }
+                else if (cVal.y < cPrevVal.y)
                 {
                     se1 = new SweepEvent(cVal, true, false, pType);
                     se2 = new SweepEvent(cPrevVal, false, true, pType);
@@ -260,31 +262,31 @@ namespace Utility.Polygon2D
             }
         }
 
-        private static int FindIntersection(SweepEvent se1, SweepEvent se2, out Vector2 pA, out Vector2 pB)
+        private static int FindIntersection(SweepEvent se1, SweepEvent se2, out Vector2d pA, out Vector2d pB)
         {
             //Assign the resulting points some dummy values
-            pA = Vector2.zero;
-            pB = Vector2.zero;
-            Vector2 se1_Begin = (se1.left) ? se1.p : se1.other.p;
-            Vector2 se1_End = (se1.left) ? se1.other.p : se1.p;
-            Vector2 se2_Begin = (se2.left) ? se2.p : se2.other.p;
-            Vector2 se2_End = (se2.left) ? se2.other.p : se2.p;
+            pA = Vector2d.zero;
+            pB = Vector2d.zero;
+            Vector2d se1_Begin = (se1.left) ? se1.p : se1.other.p;
+            Vector2d se1_End = (se1.left) ? se1.other.p : se1.p;
+            Vector2d se2_Begin = (se2.left) ? se2.p : se2.other.p;
+            Vector2d se2_End = (se2.left) ? se2.other.p : se2.p;
 
-            Vector2 d0 = se1_End - se1_Begin;
-            Vector2 d1 = se2_End - se2_Begin;
-            Vector2 e = se2_Begin - se1_Begin;
+            Vector2d d0 = se1_End - se1_Begin;
+            Vector2d d1 = se2_End - se2_Begin;
+            Vector2d e = se2_Begin - se1_Begin;
 
-            float sqrEpsilon = 0.00001f; // 0.001 before
+            double sqrEpsilon = 0.0000001; // 0.001 before
 
-            float kross = d0.x * d1.y - d0.y * d1.x;
-            float sqrKross = kross * kross;
-            float sqrLen0 = d0.sqrMagnitude;
-            float sqrLen1 = d1.sqrMagnitude;
+            double kross = d0.x * d1.y - d0.y * d1.x;
+            double sqrKross = kross * kross;
+            double sqrLen0 = d0.sqrMagnitude;
+            double sqrLen1 = d1.sqrMagnitude;
 
             if (sqrKross > sqrEpsilon * sqrLen0 * sqrLen1)
             {
                 // lines of the segments are not parallel
-                float s = (e.x * d1.y - e.y * d1.x) / kross;
+                double s = (e.x * d1.y - e.y * d1.x) / kross;
                 if ((s < 0) || (s > 1))
                 {
                     return 0;
@@ -304,7 +306,7 @@ namespace Utility.Polygon2D
             }
 
             // lines of the segments are parallel
-            float sqrLenE = e.sqrMagnitude;
+            double sqrLenE = e.sqrMagnitude;
             kross = e.x * d0.y - e.y * d0.x;
             sqrKross = kross * kross;
             if (sqrKross > sqrEpsilon * sqrLen0 * sqrLenE)
@@ -314,12 +316,12 @@ namespace Utility.Polygon2D
             }
 
             // Lines of the segments are the same. Need to test for overlap of segments.
-            float s0 = (d0.x * e.x + d0.y * e.y) / sqrLen0;  // so = Dot (D0, E) * sqrLen0
-            float s1 = s0 + (d0.x * d1.x + d0.y * d1.y) / sqrLen0;  // s1 = s0 + Dot (D0, D1) * sqrLen0
-            float smin = Mathf.Min(s0, s1);
-            float smax = Mathf.Max(s0, s1);
-            float[] w = new float[2];
-            int imax = FindIntersection(0.0f, 1.0f, smin, smax, w);
+            double s0 = (d0.x * e.x + d0.y * e.y) / sqrLen0;  // so = Dot (D0, E) * sqrLen0
+            double s1 = s0 + (d0.x * d1.x + d0.y * d1.y) / sqrLen0;  // s1 = s0 + Dot (D0, D1) * sqrLen0
+            double smin = Mathd.Min(s0, s1);
+            double smax = Mathd.Max(s0, s1);
+            double[] w = new double[2];
+            int imax = FindIntersection(0.0, 1.0, smin, smax, w);
 
             if (imax > 0)
             {
@@ -336,7 +338,7 @@ namespace Utility.Polygon2D
             return imax;
         }
 
-        private static int FindIntersection(float u0, float u1, float v0, float v1, float[] w)
+        private static int FindIntersection(double u0, double u1, double v0, double v1, double[] w)
         {
             if ((u1 < v0) || (u0 > v1))
                 return 0;
@@ -366,13 +368,13 @@ namespace Utility.Polygon2D
         private static void HandlePossibleIntersection(HeapPriorityQueue<SweepEvent> eventQueue, SweepEvent e1, SweepEvent e2, ref bool changesMade)
         {
 
-            Vector2 ip1, ip2;  // intersection points
+            Vector2d ip1, ip2;  // intersection points
             int nintersections;
 
             if ((nintersections = FindIntersection(e1, e2, out ip1, out ip2)) == 0)
                 return;
 
-            if ((nintersections == 1) && (ApproximatelyEqual(e1.p, e2.p) || ApproximatelyEqual(e1.other.p, e2.other.p)))
+            if ((nintersections == 1) && (e1.p == e2.p || e1.other.p == e2.other.p))
             {
                 //Debug.Log(" The line segments intersect at an endpoint of both line segments \n" + e1.ToString() + "\n" + e2.ToString());
                 return; // the line segments intersect at an endpoint of both line segments
@@ -391,16 +393,16 @@ namespace Utility.Polygon2D
             {
                 //Debug.Log("The line segments associated to e1 and e2 intersect \n" + e1.ToString() + "\n" + e2.ToString());
                 msgs = "The line segments associated to e1 and e2 intersect \n" + e1.ToString() + "\n" + e2.ToString();
-                if (!ApproximatelyEqual(e1.p, ip1) && !ApproximatelyEqual(e1.other.p, ip1))  // if ip1 is not an endpoint of the line segment associated to e1 then divide "e1"
+                if (e1.p != ip1 && e1.other.p != ip1)  // if ip1 is not an endpoint of the line segment associated to e1 then divide "e1"
                     DivideEdge(eventQueue, e1, ip1);
-                if (!ApproximatelyEqual(e2.p, ip1) && !ApproximatelyEqual(e2.other.p, ip1))  // if ip1 is not an endpoint of the line segment associated to e2 then divide "e2"
+                if (e2.p != ip1 && e2.other.p != ip1)  // if ip1 is not an endpoint of the line segment associated to e2 then divide "e2"
                     DivideEdge(eventQueue, e2, ip1);
                 return;
             }
 
             // The line segments overlap
             List<SweepEvent> sortedEvents = new List<SweepEvent>(4);
-            if (ApproximatelyEqual(e1.p, e2.p))
+            if (e1.p == e2.p)
             {
                 sortedEvents.Add(null);
             }
@@ -415,7 +417,7 @@ namespace Utility.Polygon2D
                 sortedEvents.Add(e2);
             }
 
-            if (ApproximatelyEqual(e1.other.p, e2.other.p))
+            if (e1.other.p == e2.other.p)
             {
                 sortedEvents.Add(null);
             }
@@ -469,7 +471,7 @@ namespace Utility.Polygon2D
             DivideEdge(eventQueue, sortedEvents[3].other, sortedEvents[2].p);
         }
 
-        private static void DivideEdge(HeapPriorityQueue<SweepEvent> eventQueue, SweepEvent e, Vector2 p)
+        private static void DivideEdge(HeapPriorityQueue<SweepEvent> eventQueue, SweepEvent e, Vector2d p)
         {
             // "Right event" of the "left line segment" resulting from dividing e (the line segment associated to e)
             SweepEvent r = new SweepEvent(p, false, e.other.wrapWiseLeft, e.pl, e.type);
@@ -494,8 +496,8 @@ namespace Utility.Polygon2D
             eventQueue.Enqueue(r);
             eventQueue.Enqueue(l);
 
-            VectorHistoryDrawer.EnqueueNewLines(2, new Vector2[] { e.p, e.other.p }, new string[] { msgs, msgs });
-            VectorHistoryDrawer.EnqueueNewLines(2, new Vector2[] { l.p, l.other.p }, new string[] { msgs, msgs });
+            VectorHistoryDrawer.EnqueueNewLines(2, new Vector2d[] { e.p, e.other.p }, new string[] { msgs, msgs });
+            VectorHistoryDrawer.EnqueueNewLines(2, new Vector2d[] { l.p, l.other.p }, new string[] { msgs, msgs });
         }
 
         private static ResultType EvaluateResult(BoolOpType op, bool edgesIntersect, Contour[] result, Contour sp, Contour cp)
@@ -525,8 +527,8 @@ namespace Utility.Polygon2D
                     {
                         return ResultType.NoOverlap;
                     }
-                    Bounds expandedBoundsSP = sp.Bounds;
-                    expandedBoundsSP.Expand(new Vector3(fudgeFactor, fudgeFactor, 0));
+                    Boundsd expandedBoundsSP = sp.Bounds;
+                    expandedBoundsSP.Expand(new Vector3d(fudgeFactor, fudgeFactor, 0));
                     if (result[0].Bounds.ContainsBounds(expandedBoundsSP))
                     {
                         return ResultType.FullyContained;
@@ -542,34 +544,31 @@ namespace Utility.Polygon2D
             throw new System.Exception("Unknown operation type: " + op);
         }
 
-        public static bool ApproximatelyEqual(Vector2 v1, Vector2 v2)
+        public static bool ApproximatelyEqual(Vector2d v1, Vector2d v2)
         {
-            return (v1 - v2).magnitude < fudgeFactor;
+            return (v1 - v2).sqrMagnitude < 0.0000000000000001;
         }
 
-        public static bool Approximately(float f1, float f2)
+        public static bool Approximately(double f1, double f2)
         {
-            if (f1 > f2)
-                return (f1 - f2) < fudgeFactor;
-            else
-                return (f2 - f1) < fudgeFactor;
+            return Math.Abs(f1 - f2) < 0.00000001;
         }
 
         class SweepEvent : PriorityQueueNode
         {
-            public Vector2 p;           // point associated with the event
+            public Vector2d p;           // point associated with the event
             public bool left;         // is the point the left endpoint of the segment (p, other.p)?
             public PolygonType pl;    // Polygon to which the associated segment belongs to
             public SweepEvent other; // Event associated to the other endpoint of the segment
                                      /**  Does the segment (p, other.p) represent an inside-outside transition in the polygon for a vertical ray from (p.x, -infinite) that crosses the segment? */
-            public bool inOut { get { return wrapWiseLeft != left; } }
+            public bool inOut;// { get { return wrapWiseLeft != left; } }
             public EdgeType type;
             public bool inside; // Only used in "left" events. Is the segment (p, other.p) inside the other polygon?
 
             public bool wrapWiseLeft;
 
             /** Class constructor */
-            public SweepEvent(Vector2 point, bool left, bool wrapWiseLeft, PolygonType pTyp, EdgeType t = EdgeType.NORMAL)
+            public SweepEvent(Vector2d point, bool left, bool wrapWiseLeft, PolygonType pTyp, EdgeType t = EdgeType.NORMAL)
             {
                 p = point;
                 this.left = left;
@@ -579,9 +578,9 @@ namespace Utility.Polygon2D
             }
 
             /** Is the line segment (p, other.p) below point x */
-            public bool IsBelow(Vector2 o) { return (left) ? ExtendedGeometry.SignedAreaDoubledTris(p, other.p, o) > 0 : ExtendedGeometry.SignedAreaDoubledTris(other.p, p, o) > 0; }
+            public bool IsBelow(Vector2d o) { return (left) ? ExtendedGeometry.SignedAreaDoubledTris(p, other.p, o) > 0 : ExtendedGeometry.SignedAreaDoubledTris(other.p, p, o) > 0; }
             /** Is the line segment (p, other.p) above point x */
-            public bool IsAbove(Vector2 o) { return !IsBelow(o); }
+            public bool IsAbove(Vector2d o) { return !IsBelow(o); }
 
             // Return true(1) means that e1 is placed at the event queue after e2, i.e,, e1 is processed by the algorithm after e2
             // -1|0|1
@@ -590,19 +589,19 @@ namespace Utility.Polygon2D
                 if (other.GetType() == typeof(SweepEvent))
                 {
                     SweepEvent so = (SweepEvent)other;
-                    if (!Approximately(p.x, so.p.x))
+                    if (p.x < so.p.x)
                     {
-                        if (p.x > so.p.x)
-                            return 1;
-                        else
-                            return -1;
+                        return -1;
                     }
-                    if (!Approximately(p.y, so.p.y))
+                    else if (p.x > so.p.x)
                     {
-                        if (p.y > so.p.y)
-                            return 1;
-                        else
+                        return 1;
+                    }
+                    else if (p != so.p)
+                    {
+                        if (p.y < so.p.y)
                             return -1;
+                        return 1;
                     }
                     if (left != so.left)
                     {
@@ -700,11 +699,11 @@ namespace Utility.Polygon2D
                 if (se1 == se2)
                     return false;
 
-                if (!PolygonClipper.Approximately(ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.p), 0) || !PolygonClipper.Approximately(ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.other.p), 0))
+                if (ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.p) != 0 || ExtendedGeometry.SignedAreaDoubledTris(se1.p, se1.other.p, se2.other.p) != 0)
                 {
                     // Segments are not collinear
                     // If they share their left endpoint use the right endpoint to sort
-                    if (ApproximatelyEqual(se1.p, se2.p))
+                    if (se1.p == se2.p)
                         return se1.IsBelow(se2.other.p);
 
                     if (se1.CompareTo(se2) < 0)// has the segment associated to e1 been sorted in evp before the segment associated to e2?
@@ -713,7 +712,7 @@ namespace Utility.Polygon2D
                     return se2.IsAbove(se1.p);
                 }
                 // Segments are collinear. Just a consistent criterion is used
-                if (ApproximatelyEqual(se1.p, se2.p))
+                if (se1.p == se2.p)
                     return se1.GetHashCode() < se2.GetHashCode(); //Not sure here. Seems like lines exactly overlap each other. Didnt found the < operator though.
 
                 return se1.CompareTo(se2) < 0;

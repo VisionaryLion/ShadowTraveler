@@ -124280,6 +124280,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2074971593}
   - 114: {fileID: 2074971592}
+  - 114: {fileID: 2074971594}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -124298,7 +124299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147f8772a79a5ae46afbdce4bbd33981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  circleVertCount: 0
+  circleVertCount: 10
   debugConfig: 1
   minHeightTest: 0
   nodeMergeDist: 0
@@ -124326,6 +124327,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!114 &2074971594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2074971591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ddea9cc5bed3f48a8fcb4002391ac5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
+  channelOffset: {x: 0, y: 0, z: 0}
+  historyOffset: {x: 0, y: 0, z: 0}
+  clearData: 0
+  historyToDraw: 0
+  pointsOfChannel: 0
+  historyDataCount: 0
+  currentLines: []
+  time: 0
 --- !u!1 &2076539916
 GameObject:
   m_ObjectHideFlags: 0
