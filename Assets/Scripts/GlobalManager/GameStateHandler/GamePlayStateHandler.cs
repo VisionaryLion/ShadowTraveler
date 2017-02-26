@@ -25,10 +25,8 @@ namespace Manager
 
         public void OnStateActive()
         {
-            Debug.Log("act");
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Debug.Log("esc");
                 GameStateManager.Instance.StartNewState(actor.PauseMenuStateHandler);
             }
         }

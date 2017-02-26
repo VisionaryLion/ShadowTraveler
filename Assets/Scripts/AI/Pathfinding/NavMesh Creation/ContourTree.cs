@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Utility.Polygon2D;
 using Utility.ExtensionMethods;
+using System;
+using System.Collections;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -36,7 +38,7 @@ namespace NavMesh2D.Core
             {
                 result.AddContour(cgSet.colliderVerts[iCol]);
             }
-            result.Optimize(nodeMergeDist, maxEdgeDeviation);
+            //result.Optimize(nodeMergeDist, maxEdgeDeviation);
             return result;
         }
 

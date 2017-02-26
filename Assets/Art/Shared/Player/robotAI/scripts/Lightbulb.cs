@@ -3,27 +3,46 @@ using System.Collections;
 
 public class Lightbulb : MonoBehaviour {
 
-    public bool LightHasPower = false;
+    [SerializeField]
+    private bool LightHasPower = false;
     public GameObject Light;
-    public float LightOffIntensity = 0.15f;
+    public Renderer lightBulbMat;
+    public float LightOffIntensity = 0;
     public float LightOnIntensity = 1.15f;
 
     // Use this for initialization
     void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
         if (LightHasPower == true)
         {
             //light is ON
             Light.GetComponent<SFLight>().intensity = LightOnIntensity;
+            lightBulbMat.material.SetFloat("_LightAffectionIntensity", 0);
         }
         else
         {
             //light is OFF
             Light.GetComponent<SFLight>().intensity = LightOffIntensity;
+            lightBulbMat.material.SetFloat("_LightAffectionIntensity", 1);
         }
+    }
+
+    public void ToogleStatus(bool state)
+    {
+        if (state == LightHasPower)
+            return;
+        LightHasPower = state;
+        if (LightHasPower == true)
+        {
+            //light is ON
+            Light.GetComponent<SFLight>().intensity = LightOnIntensity;
+            lightBulbMat.material.SetFloat("_LightAffectionIntensity", 0);
+        }
+        else
+        {
+            //light is OFF
+            Light.GetComponent<SFLight>().intensity = LightOffIntensity;
+            lightBulbMat.material.SetFloat("_LightAffectionIntensity", 1);
+        }
+        
     }
 }

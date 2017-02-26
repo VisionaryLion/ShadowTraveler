@@ -82,7 +82,7 @@ namespace Equipment
                     isBurning = true;
                     lightSrc.enabled = true;
                     flareParticle.Play();
-                    HUDManager.hudManager.startBurn(entity.EquipedWithRightHand ? true : false, item);
+                    //HUDManager.hudManager.startBurn(entity.EquipedWithRightHand ? true : false, item);
                 }
             }
             else if(!burnedOut)
@@ -107,12 +107,12 @@ namespace Equipment
 
                     if (entity.EquipedWithRightHand)
                     {
-                        HUDManager.hudManager.decreaseRight = false;
-                        HUDManager.hudManager.EmptyRight();                        
+                       // HUDManager.hudManager.decreaseRight = false;
+                      //  HUDManager.hudManager.EmptyRight();                        
                     } else
                     {
-                        HUDManager.hudManager.decreaseLeft = false;
-                        HUDManager.hudManager.EmptyLeft();
+                      //  HUDManager.hudManager.decreaseLeft = false;
+                      //  HUDManager.hudManager.EmptyLeft();
                     }
                 }
             }

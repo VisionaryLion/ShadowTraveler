@@ -56,7 +56,7 @@ public class SwitchPressurePlate : MonoBehaviour
                     //set Light variables
                     foreach (Lightbulb light in TargetLights)
                     {
-                        light.LightHasPower = true;
+                        light.ToogleStatus(true);
                     }
                     break;
                 case TargetType.LaserWall:
@@ -86,7 +86,7 @@ public class SwitchPressurePlate : MonoBehaviour
                     //set Light variables
                     foreach (Lightbulb light in TargetLights)
                     {
-                        light.LightHasPower = false;
+                        light.ToogleStatus(false);
                     }
                     break;
                 case TargetType.LaserWall:
