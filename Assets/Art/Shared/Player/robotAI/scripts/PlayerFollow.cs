@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerFollow : MonoBehaviour 
+public class PlayerFollow : MonoBehaviour
 {
-	public float xMargin = 1f;		// Distance in the x axis the player can move before the friend follows.
-	public float yMargin = 1f;		// Distance in the y axis the player can move before the friend follows.
-	public float xSmooth = 8f;		// How smoothly the friend catches up with it's target movement in the x axis.
-	public float ySmooth = 8f;		// How smoothly the friend catches up with it's target movement in the y axis.
+    public float xMargin = 1f;      // Distance in the x axis the player can move before the friend follows.
+    public float yMargin = 1f;      // Distance in the y axis the player can move before the friend follows.
+    public float xSmooth = 8f;      // How smoothly the friend catches up with it's target movement in the x axis.
+    public float ySmooth = 8f;		// How smoothly the friend catches up with it's target movement in the y axis.
     [SerializeField]
     float RotationSpeed = 15;
-    
+
     public Transform aiFollowerPos;		// Reference to the player's transform location, specifically the gameobject "RobotAILocation"
     //private Transform Guntip;       // Reference to the gun's tip
     public Vector2 Guntip;
@@ -24,10 +24,11 @@ public class PlayerFollow : MonoBehaviour
     public GameObject PullOrb;
     public GameObject PullLine;
     public GameObject ThrowLine;
+    public GameObject lightBeam;
 
     private bool holding = false;
     private float ThrowDelay = .08f;
-    
+
     void Update()
     {
         if (Input.GetButton("RobotFire")) //&& (holding = false)
@@ -39,39 +40,43 @@ public class PlayerFollow : MonoBehaviour
             Grab();
         }
         if (Input.GetButtonUp("RobotGrab")) //(Input.GetKeyUp(KeyCode.Joystick1Button5)
-        {     
+        {
             DropObject();
+        }
+        if (Input.GetButtonDown("Flashlight"))
+        {
+            ToggleLight();
         }
     }
 
-	void FixedUpdate ()
-	{
-		TrackPlayer();
+    void FixedUpdate()
+    {
+        TrackPlayer();
         RotateMe();
 
-        Guntip = new Vector2(Gunshot.transform.position.x, Gunshot.transform.position.y);        
+        Guntip = new Vector2(Gunshot.transform.position.x, Gunshot.transform.position.y);
     }
-	
-	void TrackPlayer ()
-	{
-		// By default the target x and y coordinates of the camera are it's current x and y coordinates.
-		float targetX = transform.position.x;
-		float targetY = transform.position.y;
 
-		// ... the target x coordinate should be a Lerp between the camera's current x position and the player's current x position.
-		targetX = Mathf.Lerp(transform.position.x, aiFollowerPos.position.x, xSmooth * Time.deltaTime);
+    void TrackPlayer()
+    {
+        // By default the target x and y coordinates of the camera are it's current x and y coordinates.
+        float targetX = transform.position.x;
+        float targetY = transform.position.y;
 
-		// ... the target y coordinate should be a Lerp between the camera's current y position and the player's current y position.
-		targetY = Mathf.Lerp(transform.position.y, aiFollowerPos.position.y, ySmooth * Time.deltaTime);
-        
-		// Set the camera's position to the target position with the same z component.
-		transform.position = new Vector3(targetX, targetY, transform.position.z);
-	}
+        // ... the target x coordinate should be a Lerp between the camera's current x position and the player's current x position.
+        targetX = Mathf.Lerp(transform.position.x, aiFollowerPos.position.x, xSmooth * Time.deltaTime);
 
-   
+        // ... the target y coordinate should be a Lerp between the camera's current y position and the player's current y position.
+        targetY = Mathf.Lerp(transform.position.y, aiFollowerPos.position.y, ySmooth * Time.deltaTime);
+
+        // Set the camera's position to the target position with the same z component.
+        transform.position = new Vector3(targetX, targetY, transform.position.z);
+    }
+
+
     void RotateMe()
     {
-        transform.Rotate(0.0f, 0.0f, -Input.GetAxis("RobotHorizontal") * RotationSpeed);  
+        transform.Rotate(0.0f, 0.0f, -Input.GetAxis("RobotHorizontal") * RotationSpeed);
     }
 
     void Shoot()
@@ -106,6 +111,11 @@ public class PlayerFollow : MonoBehaviour
         PullLine.SetActive(false);
         //activate throw for a short time
         StartCoroutine(ThrowTime());
+    }
+
+    void ToggleLight()
+    {
+        lightBeam.SetActive(!lightBeam.IsActive());
     }
 
     private IEnumerator ThrowTime()
