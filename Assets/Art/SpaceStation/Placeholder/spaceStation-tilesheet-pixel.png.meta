@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: edebcda6fe1373a459d90bd1207e97d5
-timeCreated: 1486318402
+timeCreated: 1486520216
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -53,6 +53,7 @@ TextureImporter:
     21300092: chain-02
     21300094: chain-03
     21300096: chain-04
+    21300098: gear-05
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -75,10 +76,10 @@ TextureImporter:
   cubemapConvolutionSteps: 7
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
-  textureFormat: -1
+  textureFormat: -3
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 0
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -661,52 +662,13 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: chain-01
+      name: gear-05
       rect:
         serializedVersion: 2
-        x: 1941
-        y: 1817
-        width: 104
-        height: 104
-      alignment: 9
-      pivot: {x: 0.5, y: 0.7}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: chain-02
-      rect:
-        serializedVersion: 2
-        x: 1922
-        y: 1668
-        width: 64
-        height: 144
-      alignment: 9
-      pivot: {x: 0.5, y: 0.7}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: chain-03
-      rect:
-        serializedVersion: 2
-        x: 1850
-        y: 1698
-        width: 64
-        height: 168
-      alignment: 9
-      pivot: {x: 0.5, y: 0.75}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: chain-04
-      rect:
-        serializedVersion: 2
-        x: 1879
-        y: 1869
-        width: 56
-        height: 104
+        x: 1672
+        y: 922
+        width: 373
+        height: 372
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

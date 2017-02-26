@@ -83,5 +83,10 @@ namespace Utility.ExtensionMethods
         {
             return source.Contains(other.min) && source.Contains(other.max);
         }
+
+        public static bool ContainsBounds(this Boundsd source, Boundsd other)
+        {
+            return source.Contains(other.min) && source.Contains(other.max);
+        }
     }
 }

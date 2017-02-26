@@ -22,5 +22,17 @@ namespace ItemHandler
                 item = (DurableItem)value;
             }
         }
+
+        public DurableItem DurableItem
+        {
+            get
+            {
+                return item;
+            }
+            set
+            {
+                item = value;
+            }
+        }
     }
 }

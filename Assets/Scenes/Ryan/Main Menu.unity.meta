@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Scenes/Ryan/Main Menu.unity.meta
 guid: bea086610ebbdb6429bbda99f1b9ba03
 timeCreated: 1475019620
+=======
+guid: 52bb5ec9899504d418d6a61c2d0ffb8e
+timeCreated: 1488059804
+>>>>>>> origin/CloudsLevel-01:Assets/StreamingAssets/Robot_Assistant.bank.meta
 licenseType: Free
 DefaultImporter:
   userData: 

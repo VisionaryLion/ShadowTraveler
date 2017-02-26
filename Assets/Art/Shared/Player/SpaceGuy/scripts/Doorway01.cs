@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class Doorway01 : MonoBehaviour {
 
     //scene to go to
-    public bool DoorHasPower = true; //add static later
+    public bool HasPower = true; //add static later
     public GameObject doorLight;
     public Color lightOnColor;
     public Color lightOffColor;
@@ -19,12 +19,8 @@ public class Doorway01 : MonoBehaviour {
 	void Start () {
         animator = GetComponent<Animator>();
         text.text = DestinationName;
-    }
-	
-	// Update is called once per frame
-	void Update () {
 
-        if (DoorHasPower == true)
+        if (HasPower == true)
         {
             //light is green
             doorLight.GetComponent<SpriteRenderer>().color = lightOnColor;
@@ -35,15 +31,31 @@ public class Doorway01 : MonoBehaviour {
             doorLight.GetComponent<SpriteRenderer>().color = lightOffColor;
         }
 
-	}
+    }
+	
+	// Update is called once per frame
+	void Update () {
+        if (HasPower == true)
+        {
+            //light is green
+            doorLight.GetComponent<SpriteRenderer>().color = lightOnColor;
+        }
+        else
+        {
+            //light is red
+            doorLight.GetComponent<SpriteRenderer>().color = lightOffColor;
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if ((other.gameObject.CompareTag("Player")))
         {
-            if (DoorHasPower == true)
+            if (HasPower == true)
             {
                 animator.SetBool("DoorActive", true);
+                //light is green
+                //doorLight.GetComponent<SpriteRenderer>().color = lightOnColor;
             }
         }
     }
@@ -52,21 +64,23 @@ public class Doorway01 : MonoBehaviour {
     {
         if ((other.gameObject.CompareTag("Player")))
         {
-            if (DoorHasPower == true)
+            if (HasPower == true)
             {
                 animator.SetBool("DoorActive", false);
+                //light is red
+                //doorLight.GetComponent<SpriteRenderer>().color = lightOffColor;
             }
         }
     }
 
     void ActivateDoor()
     {
-        DoorHasPower = true;
+        HasPower = true;
     }
 
     void DeactivateDoor()
     {
-        DoorHasPower = false;
+        HasPower = false;
     }
 
 }

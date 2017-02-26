@@ -8,9 +8,9 @@ namespace LightSensing
 {
     public class CubeLightMarker : LightMarker
     {
-        [SerializeField]
+        [SerializeField, Range(0.1f, 100)]
         float width;
-        [SerializeField]
+        [SerializeField, Range(0.1f, 100)]
         float height;
         [SerializeField]
         Vector2 centerOffset;
@@ -20,10 +20,11 @@ namespace LightSensing
         [SerializeField]
         Color colorB;
         [SerializeField]
+        Color pathfindingColor;
+        [SerializeField]
         bool squaredInterpolation;
 
         float widthHalfed;
-        float heightHalfed;
         Bounds chachedBounds;
 
         public override Bounds Bounds
@@ -32,10 +33,10 @@ namespace LightSensing
             {
                 if (transform.hasChanged)
                 {
-                    Vector2 pointA = transform.TransformPoint(new Vector2(centerOffset.x - widthHalfed, centerOffset.y - heightHalfed));
-                    Vector2 pointB = transform.TransformPoint(new Vector2(centerOffset.x + widthHalfed, centerOffset.y - heightHalfed));
-                    Vector2 pointC = transform.TransformPoint(new Vector2(centerOffset.x + widthHalfed, centerOffset.y + heightHalfed));
-                    Vector2 pointD = transform.TransformPoint(new Vector2(centerOffset.x - widthHalfed, centerOffset.y + heightHalfed));
+                    Vector2 pointA = transform.TransformPoint(new Vector2(centerOffset.x - widthHalfed, centerOffset.y));
+                    Vector2 pointB = transform.TransformPoint(new Vector2(centerOffset.x + widthHalfed, centerOffset.y));
+                    Vector2 pointC = transform.TransformPoint(new Vector2(centerOffset.x + widthHalfed, centerOffset.y + height));
+                    Vector2 pointD = transform.TransformPoint(new Vector2(centerOffset.x - widthHalfed, centerOffset.y + height));
                     chachedBounds = new Bounds(pointA, Vector3.zero);
                     chachedBounds.Encapsulate(pointB);
                     chachedBounds.Encapsulate(pointC);
@@ -57,16 +58,29 @@ namespace LightSensing
         public override bool IsPointInsideMarker(Vector2 pos)
         {
             pos = transform.InverseTransformPoint(pos);
-            return pos.x >= centerOffset.x - widthHalfed && pos.x <= centerOffset.x + widthHalfed && pos.y >= centerOffset.y - heightHalfed && pos.y <= centerOffset.y + heightHalfed;
+            return pos.x >= centerOffset.x - widthHalfed && pos.x <= centerOffset.x + widthHalfed && pos.y >= centerOffset.y && pos.y <= centerOffset.y + height;
         }
 
-        public override Color SampleColorAt(Vector2 pos)
+        public override bool IsTraversable(LightSkin skin, out float traverseCostsMulitplier)
+        {
+            return skin.IsTraversable(pathfindingColor, out traverseCostsMulitplier);
+        }
+
+        public override bool OverlapsSegment(Vector2 segmentA, Vector2 segmentB)
+        {
+            segmentA = transform.InverseTransformPoint(segmentA);
+            segmentB = transform.InverseTransformPoint(segmentB);
+
+            return Utility.ExtendedGeometry.DoesLineIntersectBounds(segmentA, segmentB, Bounds);
+        }
+
+        public override Color SampleLightAt(Vector2 pos)
         {
             pos = transform.InverseTransformPoint(pos);
-            return SampleColorAt(pos.y - (centerOffset.y - heightHalfed));
+            return SampleColorAt(pos.y - centerOffset.y);
         }
 
-        public Color SampleColorAt(float distanceFromSource)
+        private Color SampleColorAt(float distanceFromSource)
         {
             distanceFromSource /= height;
             if (squaredInterpolation)
@@ -74,23 +88,9 @@ namespace LightSensing
             return Color.Lerp(colorA, colorB, distanceFromSource);
         }
 
-        public override bool IsTraversable(LightSkin skin, Vector2 pointA, Vector2 pointB, out float traverseCostsMulitplier)
-        {
-            pointA = transform.InverseTransformPoint(pointA);
-            pointB = transform.InverseTransformPoint(pointB);
-            traverseCostsMulitplier = 1;
-
-            if (!Utility.ExtendedGeometry.DoesLineIntersectBounds(pointA, pointB, Bounds))
-                return true;
-
-            float maxY = Mathf.Max(pointA.y, pointB.y) - (centerOffset.y - heightHalfed);
-            return skin.IsTraversable(SampleColorAt(maxY), out traverseCostsMulitplier);
-        }
-
         void Awake()
         {
             widthHalfed = width / 2;
-            heightHalfed = height / 2;
             transform.hasChanged = true;
         }
 
@@ -103,10 +103,10 @@ namespace LightSensing
             Vector2 to;
             for (float iStep = 0; iStep <= 1; iStep += stepSize)
             {
-                float y = (centerOffset.y - heightHalfed) + iStep * height;
+                float y = (centerOffset.y) + iStep * height;
                 if (squaredInterpolation)
                 {
-                    Gizmos.color = Color.Lerp(colorA, colorB, Mathf.Sqrt(iStep));
+                    Gizmos.color = Color.Lerp(colorA, colorB, Mathf.Sqrt(iStep)); ;
                 }
                 else
                 {
@@ -116,9 +116,11 @@ namespace LightSensing
                 to = transform.TransformPoint(new Vector3(centerOffset.x + widthHalfed, y, 0));
                 Gizmos.DrawLine(from, to);
             }
-            from = transform.TransformPoint(new Vector3(centerOffset.x - widthHalfed, centerOffset.y + heightHalfed, 0));
-            to = transform.TransformPoint(new Vector3(centerOffset.x + widthHalfed, centerOffset.y + heightHalfed, 0));
+            from = transform.TransformPoint(new Vector3(centerOffset.x - widthHalfed, centerOffset.y + height, 0));
+            to = transform.TransformPoint(new Vector3(centerOffset.x + widthHalfed, centerOffset.y + height, 0));
             Gizmos.DrawLine(from, to);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(centerOffset, 0.1f);
         }
 #endif
     }

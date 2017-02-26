@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class VectorHistoryDrawer : MonoBehaviour
 {
 
-    static VectorHistoryDrawer instance;
+    public static VectorHistoryDrawer instance;
 
     public static void EnqueueNewLines(int channel, params Vector2[] lines)
     {
@@ -19,6 +19,24 @@ public class VectorHistoryDrawer : MonoBehaviour
             instance.EnqueueLines(channel, colors, lines, msg);
     }
     public static void EnqueueNewLines(int channel, Vector2[] lines, string[] msg)
+    {
+        if (instance != null)
+            instance.EnqueueLines(channel, lines, msg);
+    }
+
+    public static void EnqueueNewLines(int channel, params Vector2d[] lines)
+    {
+        if (instance != null)
+            instance.EnqueueLines(channel, lines);
+    }
+
+    public static void EnqueueNewLines(int channel, Color[] colors, Vector2d[] lines, string[] msg)
+    {
+        if (instance != null)
+            instance.EnqueueLines(channel, colors, lines, msg);
+    }
+
+    public static void EnqueueNewLines(int channel, Vector2d[] lines, string[] msg)
     {
         if (instance != null)
             instance.EnqueueLines(channel, lines, msg);
@@ -40,7 +58,7 @@ public class VectorHistoryDrawer : MonoBehaviour
     public Vector3 channelOffset;
     public Vector3 historyOffset;
     public bool clearData;
-    [Range(0, 30)]
+    [Range(0, 33)]
     public int historyToDraw;
     public int pointsOfChannel;
     [ReadOnly]
@@ -50,7 +68,7 @@ public class VectorHistoryDrawer : MonoBehaviour
 
     List<List<List<LineData>>> data;
     List<bool> drawOnlyNewest;
-    int time;
+    public int time;
 
     public void EnqueueLines(int channel, params Vector2[] lines)
     {
@@ -84,6 +102,41 @@ public class VectorHistoryDrawer : MonoBehaviour
         for (int iLine = 0; iLine < lines.Length; iLine += 2)
         {
             data[channel][time].Add(new LineData(lines[iLine], lines[iLine + 1], Utility.DifferentColors.GetColor(time + data[channel][time].Count), msg[iLine]));
+        }
+    }
+
+    public void EnqueueLines(int channel, params Vector2d[] lines)
+    {
+        if (lines.Length % 2 != 0)
+            throw new System.Exception("The supplied line array has to have an even length!");
+        EnsureCapacity(channel);
+        for (int iLine = 0; iLine < lines.Length; iLine += 2)
+        {
+            data[channel][time].Add(new LineData((Vector2)lines[iLine], (Vector2)lines[iLine + 1], Utility.DifferentColors.GetColor(time + data[channel][time].Count)));
+        }
+    }
+
+    public void EnqueueLines(int channel, Color[] colors, Vector2d[] lines, string[] msg)
+    {
+        if (lines.Length % 2 != 0)
+            throw new System.Exception("The supplied line array has to have an even length!");
+
+        EnsureCapacity(channel);
+        for (int iLine = 0; iLine < lines.Length; iLine += 2)
+        {
+            data[channel][time].Add(new LineData((Vector2)lines[iLine], (Vector2)lines[iLine + 1], colors[iLine], msg[iLine]));
+        }
+    }
+
+    public void EnqueueLines(int channel, Vector2d[] lines, string[] msg)
+    {
+        if (lines.Length % 2 != 0)
+            throw new System.Exception("The supplied line array has to have an even length!");
+
+        EnsureCapacity(channel);
+        for (int iLine = 0; iLine < lines.Length; iLine += 2)
+        {
+            data[channel][time].Add(new LineData((Vector2)lines[iLine], (Vector2)lines[iLine + 1], Utility.DifferentColors.GetColor(time + data[channel][time].Count), msg[iLine]));
         }
     }
 
@@ -171,6 +224,8 @@ public class VectorHistoryDrawer : MonoBehaviour
         historyDataCount = data[pointsOfChannel][Mathf.Clamp(historyToDraw, 0, data[pointsOfChannel].Count - 1)].Count;
         for (int iCha = 0; iCha < data.Count; iCha++)
         {
+            if (data[iCha].Count == 0)
+                continue;
             DrawLines(iCha, Mathf.Clamp(historyToDraw, 0, data[iCha].Count - 1));
         }
     }

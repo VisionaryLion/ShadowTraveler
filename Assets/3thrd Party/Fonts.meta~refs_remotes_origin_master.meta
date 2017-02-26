@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/3thrd Party/Fonts.meta~refs_remotes_origin_master.meta
 guid: 9a55d32835e1c334cb89c17f432501da
 timeCreated: 1487466436
+=======
+guid: f8fcb12567f76064a9c6c59c73561e17
+timeCreated: 1488059804
+>>>>>>> origin/CloudsLevel-01:Assets/StreamingAssets/SpaceStation_Level1.bank.meta
 licenseType: Free
 DefaultImporter:
   userData: 

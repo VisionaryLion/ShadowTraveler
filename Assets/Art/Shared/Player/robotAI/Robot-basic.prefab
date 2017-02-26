@@ -37,10 +37,10 @@ GameObject:
   - 114: {fileID: 114000010007341228}
   m_Layer: 0
   m_Name: Light-beam
-  m_TagString: Untagged
+  m_TagString: Light
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!1 &1000010254774850
 GameObject:
@@ -107,9 +107,11 @@ GameObject:
   - 4: {fileID: 4000010722010368}
   - 212: {fileID: 212000013021983332}
   - 114: {fileID: 114000010474412310}
+  - 61: {fileID: 61000013693857164}
+  - 114: {fileID: 114000011007676332}
   m_Layer: 0
   m_Name: Robot-basic
-  m_TagString: FollowFriend
+  m_TagString: Light
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -163,7 +165,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!1 &1000012776428832
 GameObject:
@@ -212,10 +214,10 @@ GameObject:
   - 114: {fileID: 114000014074660608}
   m_Layer: 0
   m_Name: Light-body
-  m_TagString: Untagged
+  m_TagString: Light
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &4000010411007312
 Transform:
@@ -237,7 +239,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011331017626}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.77, y: 6.51, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -469,6 +471,20 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 8, y: 6}
+--- !u!61 &61000013693857164
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011331017626}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 19.4, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 32.7, y: 7.3}
 --- !u!114 &114000010007341228
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -511,6 +527,18 @@ MonoBehaviour:
   PullOrb: {fileID: 1000012204877062}
   PullLine: {fileID: 1000013244318840}
   ThrowLine: {fileID: 1000010375018724}
+--- !u!114 &114000011007676332
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011331017626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e461db57cb7494ca541be466394923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monster: {fileID: 0}
 --- !u!114 &114000012573923574
 MonoBehaviour:
   m_ObjectHideFlags: 1

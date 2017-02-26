@@ -37,14 +37,13 @@ namespace BehaviorBrick.Conditions
 
         List<Entity> queueryResultBuffer;
         EntityDatabase actorDatabase;
-        float sightRangeSquared;
 
         public IsNPCInSight()
         {
             queueryResultBuffer = new List<Entity>(5);
             visibleNpcs = new ResizableList<VisibleNPCs>(5, 7);
             actorDatabase = EntityDatabase.GetInstance();
-            sightRangeSquared = sightRange * sightRange;
+            
         }
 
         public override bool Check()
@@ -52,7 +51,7 @@ namespace BehaviorBrick.Conditions
             queueryResultBuffer.Clear();
             visibleNpcs.Clear();
             actorDatabase.Find<ActingEntity>(ref queueryResultBuffer);
-
+            float sightRangeSquared = sightRange * sightRange;
             ActingEntity ae;
             foreach (var e in queueryResultBuffer)
             {

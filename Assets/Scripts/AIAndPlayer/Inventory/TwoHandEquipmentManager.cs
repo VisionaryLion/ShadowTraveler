@@ -87,7 +87,7 @@ namespace ItemHandler
             ApplyTransformation(toEquipActor, rightHand);
             toEquipActor.TriggerEquiped(actor, rightHand);
             if (rightHand)
-            {
+            {                
                 rightHandItemActor = toEquipActor;
                 rightHandItemIndex = itemIndex;
                 actor.AnimationHandler.StartListenToAnimationEnd("Equip_Item_Anim", new AnimationHandler.AnimationEvent(EquipFinishedRightHandler));
@@ -208,9 +208,9 @@ namespace ItemHandler
                 return false;
 
             int freePlace;
-            if (leftHandItemActor == null && actor.TwoHandInventory.CouldAddItemLeft(itemActor.Item))
+            if (itemActor.Item.IsEquipment && leftHandItemActor == null && actor.TwoHandInventory.CouldAddItemLeft(itemActor.Item))
                 freePlace = 0;
-            else if (rightHandItemActor == null && actor.TwoHandInventory.CouldAddItemRight(itemActor.Item))
+            else if (!itemActor.Item.IsEquipment && rightHandItemActor == null && actor.TwoHandInventory.CouldAddItemRight(itemActor.Item))
                 freePlace = 1;
             else
             {

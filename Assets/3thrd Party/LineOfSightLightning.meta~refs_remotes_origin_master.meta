@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/3thrd Party/LineOfSightLightning.meta~refs_remotes_origin_master.meta
 guid: 1cda5c9d2c1b3db48ba334fd0b6363a4
 timeCreated: 1487466435
+=======
+guid: 14904d5fb11bac143973217bea478daf
+timeCreated: 1488059803
+>>>>>>> origin/CloudsLevel-01:Assets/StreamingAssets/Player.bank.meta
 licenseType: Free
 DefaultImporter:
   userData: 

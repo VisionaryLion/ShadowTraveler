@@ -4,6 +4,7 @@ using Pada1.BBCore;
 using Pada1.BBCore.Tasks;
 using Entities;
 using Pada1.BBCore.Framework;
+using NavData2d;
 
 namespace BBUnity.Actions
 {
@@ -16,14 +17,14 @@ namespace BBUnity.Actions
         public AIEntity entity;
         [InParam("Waypoints")]
         [Help("Waypoints of patrol route")]
-        public PositionHolder2D patrolPoints;
+        public NavPositionHolder patrolPoints;
 
         private int currentPatrolPosition;
 
         public override void OnStart()
         {
             FindNearestWayPoint();
-            entity.NavAgent.SetDestination(patrolPoints.positions[currentPatrolPosition], new NavAgent.OnPathComputationFinished(OnPathComputationFinished));
+            entity.NavAgent.SetDestination(patrolPoints.handlePositions[currentPatrolPosition].navPosition, new NavAgent.OnPathComputationFinished(OnPathComputationFinished));
         }
 
         public override TaskStatus OnUpdate()
@@ -52,12 +53,12 @@ namespace BBUnity.Actions
 
         void FindNearestWayPoint()
         {
-            float nearestDist = (patrolPoints.positions[0] - (Vector2)entity.transform.position).sqrMagnitude;
+            float nearestDist = (patrolPoints.handlePositions[0].navPosition.navPoint - (Vector2)entity.transform.position).sqrMagnitude;
             currentPatrolPosition = 0;
             float tmpDist;
-            for (int iPos = 1; iPos < patrolPoints.positions.Count; iPos++)
+            for (int iPos = 1; iPos < patrolPoints.handlePositions.Length; iPos++)
             {
-                tmpDist = (patrolPoints.positions[iPos] - (Vector2)entity.transform.position).sqrMagnitude;
+                tmpDist = (patrolPoints.handlePositions[iPos].navPosition.navPoint - (Vector2)entity.transform.position).sqrMagnitude;
                 if (tmpDist < nearestDist)
                 {
                     currentPatrolPosition = iPos;
@@ -69,9 +70,9 @@ namespace BBUnity.Actions
         void MoveToNextWaypoint()
         {
             currentPatrolPosition++;
-            if (currentPatrolPosition >= patrolPoints.positions.Count)
+            if (currentPatrolPosition >= patrolPoints.handlePositions.Length)
                 currentPatrolPosition = 0;
-            entity.NavAgent.SetDestination(patrolPoints.positions[currentPatrolPosition], new NavAgent.OnPathComputationFinished(OnPathComputationFinished));
+            entity.NavAgent.SetDestination(patrolPoints.handlePositions[currentPatrolPosition].navPosition, new NavAgent.OnPathComputationFinished(OnPathComputationFinished));
         }
     }
 }

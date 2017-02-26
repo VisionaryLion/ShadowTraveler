@@ -114,8 +114,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1276989}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.28, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 12.24, y: 0, z: 0}
+  m_LocalScale: {x: 1.0136054, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 221324117}
@@ -72601,8 +72601,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1406918126}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -36.542, y: -6.03, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -36.542, y: -6.02, z: 0}
+  m_LocalScale: {x: 1, y: 1.0351648, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1323210421}
@@ -97843,8 +97843,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1868785903}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.27, y: 25.71, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -4.29, y: 25.71, z: 0}
+  m_LocalScale: {x: 1.0066193, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 221324117}
@@ -106553,6 +106553,26 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114000013951190854, guid: 59b8253cc8b42a243a72d866ae6cf32d,
+        type: 2}
+      propertyPath: _renderInSceneView
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013951190854, guid: 59b8253cc8b42a243a72d866ae6cf32d,
+        type: 2}
+      propertyPath: _ambientLight.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013951190854, guid: 59b8253cc8b42a243a72d866ae6cf32d,
+        type: 2}
+      propertyPath: _ambientLight.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013951190854, guid: 59b8253cc8b42a243a72d866ae6cf32d,
+        type: 2}
+      propertyPath: _ambientLight.b
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 59b8253cc8b42a243a72d866ae6cf32d, type: 2}
   m_IsPrefabParent: 0
@@ -111761,6 +111781,7 @@ MonoBehaviour:
   pointsOfChannel: 0
   historyDataCount: 0
   currentLines: []
+  time: 0
 --- !u!114 &2138719064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111781,7 +111802,7 @@ MonoBehaviour:
   path:
     goal: {x: 0, y: 0}
   forceLast: {fileID: 0}
-  autoSolveTill: 400
+  autoSolveTill: -1
   lightSkin: {fileID: 0}
   showDebug: 1
   goal: {fileID: 0}

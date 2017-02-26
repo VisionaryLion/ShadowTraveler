@@ -1,11 +1,16 @@
 fileFormatVersion: 2
 <<<<<<< HEAD
+<<<<<<< HEAD
 guid: b012e52fcb415fe4fb3f0fb09e58b2aa
 timeCreated: 1475018502
 =======
 guid: 7cfa3bf0e53ea1e4c92533917f1bc75a
 timeCreated: 1485726669
 >>>>>>> refs/remotes/origin/CloudsLevel-01
+=======
+guid: 5d37ea6ff4a56574b802784ed1672661
+timeCreated: 1488059752
+>>>>>>> origin/CloudsLevel-01
 licenseType: Free
 NativeFormatImporter:
   userData: 

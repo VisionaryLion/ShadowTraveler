@@ -173,7 +173,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BulletHit: {fileID: 198000010692038166, guid: 9ed219a778c92b746aa10defe2f4cf0f,
     type: 2}
-  bounceCount: 2
+  bounceCount: 20
 --- !u!212 &212000014143608832
 SpriteRenderer:
   m_ObjectHideFlags: 1

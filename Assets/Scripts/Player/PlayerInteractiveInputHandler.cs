@@ -16,6 +16,7 @@ public class PlayerInteractiveInputHandler : InteractiveInputHandler
     InteractiveInputDefinition currentDef;
     void Update()
     {
+        
         if (blockAllInput)
             return;
 

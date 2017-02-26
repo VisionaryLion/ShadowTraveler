@@ -23,32 +23,36 @@ namespace BBUnity.Actions
         [OutParam("Latest Known Enemy Pos")]
         Vector2 latestEnemyPos;
 
-        bool isAllOk;
+        bool pathIsFound;
         float squaredRad;
 
         public override void OnStart()
         {
             entity.NavAgent.SetDestination(enemy.transform.position, new NavAgent.OnPathComputationFinished(OnPathComputationFinished));
-            isAllOk = true;
+            pathIsFound = true;
             squaredRad = attackRad * attackRad;
+            latestEnemyPos = enemy.transform.position;
         }
 
         private void OnPathComputationFinished(bool foundPath)
         {
-            if (!foundPath)
-                isAllOk = false;
+            pathIsFound = foundPath;
         }
 
         public override TaskStatus OnUpdate()
         {
-            if (!isAllOk)
+            if (!pathIsFound)
                 return TaskStatus.FAILED;
 
             if (squaredRad >= (enemy.transform.position - entity.transform.position).sqrMagnitude)
             {
                 Debug.Log("Attack -> DIE YOU MONSTER!");
             }
-            entity.NavAgent.UpdateDestination(enemy.transform.position, new NavAgent.OnPathComputationFinished(OnPathComputationFinished));
+            else if (latestEnemyPos != (Vector2)enemy.transform.position)
+            {
+                entity.NavAgent.SetDestination(enemy.transform.position, new NavAgent.OnPathComputationFinished(OnPathComputationFinished));
+                latestEnemyPos = enemy.transform.position;
+            }
             return TaskStatus.RUNNING;
         }
 

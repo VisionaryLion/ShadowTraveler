@@ -11,11 +11,14 @@ TagManager:
   - onlyTrigger
   - Enemy
   - Crouch
-  - RobotAILocation
   - Bullet
   - FollowFriend
   - Ground
   - Box
+  - Light
+  - Monster
+  - RobotAILocation
+  - Weapon
   layers:
   - Default
   - TransparentFX

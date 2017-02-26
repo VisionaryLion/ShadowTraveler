@@ -6,13 +6,10 @@ using System;
 
 namespace Equipment
 {
-    public class Flare : MonoBehaviour
+    public class Flare : ItemSpecificBase
     {
-
-        [SerializeField, HideInInspector, AssignEntityAutomaticly]
-        TwoHandItemEntity actor;
-
-
+        [SerializeField]
+        int noCC2DInteractionLayer;
         [SerializeField]
         SFLight lightSrc;
         [SerializeField]
@@ -25,23 +22,22 @@ namespace Equipment
         ParticleSystem flareParticle;
         [SerializeField]
         Vector2 throwForce;
+        [SerializeField]
+        ItemPickup itemPickUpper;
 
-        ActingEquipmentEntity equiperActor;
         bool isBurning = false;
         bool burnedOut = false;
         bool detachedAndBurning = false;
         DurableItem item;
 
-        void Start()
+        protected override void Start()
         {
-            Debug.Assert(actor.Item.GetType() == typeof(DurableItem));
-            item = (DurableItem)actor.Item;
-            actor.EquipedHandler += OnEquiped;
-            actor.UnequipedHandler += OnUnequiped;
-            actor.PickUpHandler += Actor_PickUpHandler;
-            actor.DropedHandler += Actor_DropedHandler;
+            base.Start();
+            Debug.Assert(entity.Item.GetType() == typeof(DurableItem));
+            item = (DurableItem)entity.ItemHolder.Item;
+            entity.PickUpHandler += Actor_PickUpHandler;
+            entity.DropedHandler += Actor_DropedHandler;
             Debug.Assert(item.duration > 0);
-            enabled = false;
         }
 
         private void Actor_DropedHandler()
@@ -50,21 +46,22 @@ namespace Equipment
             {
                 rigidbody2d.isKinematic = false;
                 mainCollider.enabled = true;
-                equiperActor = null;
+                equipedEntity = null;
                 flareParticle.Stop();
             }
         }
 
         private void Actor_PickUpHandler(ActingEquipmentEntity equiper)
         {
-            equiperActor = equiper;
+            equipedEntity = equiper;
             rigidbody2d.isKinematic = true;
             mainCollider.enabled = false;
 
         }
 
-        private void OnUnequiped()
+        protected override void Entity_UnequipedHandler()
         {
+            base.Entity_UnequipedHandler();
             if (isBurning && !burnedOut)
             {
                 //Throw away!!!
@@ -72,21 +69,20 @@ namespace Equipment
             //enabled = false;
         }
 
-        private void OnEquiped(ActingEquipmentEntity equiper)
-        {
-            enabled = true;
-        }
-
         // Update is called once per frame
         void Update()
         {
+            if (!IsOnPlayer())
+                return;
+
             if (!isBurning)
             {
-                if (Input.GetMouseButtonDown(actor.EquipedWithRightHand ? 1 : 0))
+                if (Input.GetMouseButtonDown(entity.EquipedWithRightHand ? 1 : 0))
                 {
                     isBurning = true;
                     lightSrc.enabled = true;
                     flareParticle.Play();
+                    //HUDManager.hudManager.startBurn(entity.EquipedWithRightHand ? true : false, item);
                 }
             }
             else if(!burnedOut)
@@ -96,40 +92,43 @@ namespace Equipment
                 {
                     burnedOut = true;
                     lightSrc.enabled = false;
-                    if (!detachedAndBurning)
-                    {
-                        equiperActor.TwoHandEquipmentManager.DropEquipedItem(actor.EquipedWithRightHand);
-                        actor.transform.parent = OrganisationalTransforms.Instance.DroppedItemRoot;
-                    }
-                    else
-                    {
-                        flareParticle.Stop();
-                    }
+                    flareParticle.Stop();
+                    if(!detachedAndBurning)
+                    DetachFlare();
                 }
-                else if (Input.GetMouseButtonDown(actor.EquipedWithRightHand ? 1 : 0))
+                else if (Input.GetMouseButtonDown(entity.EquipedWithRightHand ? 1 : 0))
                 {
-                    detachedAndBurning = true;
-                    actor.transform.parent = null;
-                    equiperActor.TwoHandEquipmentManager.DepleteEquipedItem(actor.EquipedWithRightHand, 1);                    
                     rigidbody2d.isKinematic = false;
-                    mainCollider.enabled = true;
-                    
+
                     Vector2 dirForce = throwForce;
-                    dirForce.x *= equiperActor.CC2DMotor.FacingDir;
+                    dirForce.x *= equipedEntity.CC2DMotor.FacingDir;
                     rigidbody2d.AddForce(dirForce, ForceMode2D.Impulse);
-                    equiperActor = null;
-                    this.enabled = false;
+                    DetachFlare();
 
-
-                    if(actor.EquipedWithRightHand)
+                    if (entity.EquipedWithRightHand)
                     {
-                        HUDManager.hudManager.EmptyRight();
+                       // HUDManager.hudManager.decreaseRight = false;
+                        //HUDManager.hudManager.EmptyRight();                        
                     } else
                     {
-                        HUDManager.hudManager.EmptyLeft();
+                        //HUDManager.hudManager.decreaseLeft = false;
+                       // HUDManager.hudManager.EmptyLeft();
                     }
                 }
             }
+        }
+
+        void DetachFlare()
+        {
+            itemPickUpper.enabled = false;
+            equipedEntity.TwoHandEquipmentManager.DepleteEquipedItem(entity.EquipedWithRightHand, 1);
+            entity.transform.parent = OrganisationalTransforms.Instance.DroppedItemRoot;
+            rigidbody2d.isKinematic = false;
+            mainCollider.enabled = true;
+            detachedAndBurning = true;
+            equipedEntity = null;
+            this.enabled = false;
+            this.gameObject.layer = noCC2DInteractionLayer;
         }
     }
 }
