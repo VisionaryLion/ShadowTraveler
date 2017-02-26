@@ -100,7 +100,7 @@ namespace ItemHandler
         }
 
         public override int AddItemToEmptyStack(ItemEntity obj)
-        {
+        {            
             if (leftInventory.FreeSlotCount >= rightInventory.FreeSlotCount)
             {
                 if (leftInventory.FreeSlotCount <= 0)
@@ -110,7 +110,7 @@ namespace ItemHandler
             else
             {
                 return LocalToWorldIndex(1, rightInventory.AddItemToEmptyStack(obj));
-            }
+            }            
         }
 
         public override bool ContainsItem(int id)
@@ -310,14 +310,9 @@ namespace ItemHandler
         }
 
         public int GetPreferedInventoryIndexForAdding(IItem item)
-         {
-            int preferabillityLeft = leftInventory.ItemAddingPreferability(item);
-            int preferabillityRight = rightInventory.ItemAddingPreferability(item);
-
-            if (preferabillityLeft >= preferabillityRight)
+        {
+            if (item.IsEquipment)
             {
-                if (preferabillityLeft == -1)
-                    return -1;
                 return 0;
             }
             else
