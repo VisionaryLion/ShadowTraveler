@@ -69,8 +69,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000012686561466}
   - 114: {fileID: 114000010654420344}
-  - 114: {fileID: 114000013231023052}
   - 114: {fileID: 114000011794734338}
+  - 114: {fileID: 114000010147263772}
   m_Layer: 0
   m_Name: Singeltons
   m_TagString: Untagged
@@ -221,7 +221,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5f159f75bbc80a48a7a2ab11e599cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenuUIRoot: {fileID: 1000014142242360}
+  pauseMenuUIRoot: {fileID: 0}
+--- !u!114 &114000010147263772
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012872804480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9498f4ac476a72840a2cf5d0b013d5c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DroppedItemRoot: {fileID: 0}
 --- !u!114 &114000010531690888
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -299,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 113a48b3ff88dc449bcee2410a5b7ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathUIRoot: {fileID: 1000014142242360}
+  deathUIRoot: {fileID: 0}
 --- !u!114 &114000013177453322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -311,20 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cbe9e364e8531945b8410f7a467b227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  globalLightMarker:
-  - {fileID: 0}
---- !u!114 &114000013231023052
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012872804480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad1fcefae3d7e843a14ab821516cb01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  navData: {fileID: 11400000, guid: 3bde37f4e5acee04f943654172039cb3, type: 2}
+  globalLightMarker: []
 --- !u!114 &114000013311307378
 MonoBehaviour:
   m_ObjectHideFlags: 1

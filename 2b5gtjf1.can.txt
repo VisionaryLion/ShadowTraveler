@@ -1,0 +1,141 @@
+﻿Merge remote-tracking branch 'refs/remotes/origin/master' into UI
+
+# Conflicts:
+#	Assets/3thrd Party/Fonts.meta
+#	Assets/3thrd Party/Fonts/Muro.otf.meta
+#	Assets/3thrd Party/Fonts/RabbidHighwaySignII.otf.meta
+#	Assets/FMODStudioCache.asset.meta
+#	Assets/Prefabs/Shared/UI/UI.prefab
+#	Assets/Scripts/UI.meta
+#	Assets/StreamingAssets/Items.bank.meta
+#	Assets/StreamingAssets/Player.bank.meta
+#	Assets/StreamingAssets/SpaceStation_Level1.bank.meta
+#	Assets/StreamingAssets/SpaceStation_Level1.strings.bank.meta
+#	Assets/StreamingAssets/Spider.bank.meta
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch UI
+# Your branch is up-to-date with 'origin/UI'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   Assets/3thrd Party/Fonts.meta
+#	new file:   Assets/3thrd Party/Fonts.meta~refs_remotes_origin_master
+#	modified:   Assets/3thrd Party/Fonts/Muro.otf.meta
+#	modified:   Assets/3thrd Party/Fonts/RabbidHighwaySignII.otf.meta
+#	modified:   Assets/3thrd Party/LineOfSightLightning.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_0
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_0.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_1
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_1.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_2
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_2.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_3
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_3.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_4
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~HEAD_4.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_0
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_0.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_1
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_1.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_2
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_2.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_3
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_3.meta
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_4
+#	new file:   Assets/3thrd Party/codeandweb.com.meta~refs_remotes_origin_Crouching_4.meta
+#	new file:   Assets/3thrd Party/codeandweb.com/Editor.meta
+#	new file:   Assets/Art/Shared/Minimap.meta~HEAD
+#	new file:   Assets/Art/Shared/Minimap.meta~HEAD.meta
+#	new file:   Assets/Art/Shared/Minimap.meta~refs_remotes_origin_ItemSystemFix
+#	new file:   Assets/Art/Shared/Minimap.meta~refs_remotes_origin_ItemSystemFix.meta
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD.meta
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_0
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_0.meta
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_1
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~HEAD_1.meta
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching.meta
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_0
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_0.meta
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_1
+#	new file:   Assets/Art/Shared/Minimap/Render Texture.meta~refs_remotes_origin_Crouching_1.meta
+#	new file:   Assets/Art/Shared/Player/Animations/CrouchWalk_Anim.anim
+#	new file:   Assets/Art/Shared/Player/Animations/CrouchWalk_Anim.anim.meta
+#	new file:   Assets/Art/Shared/Player/Animations/Crouching_Anim.anim
+#	new file:   Assets/Art/Shared/Player/Animations/Crouching_Anim.anim.meta
+#	modified:   Assets/Art/Shared/Player/Animations/PlayerControllerFront.controller
+#	new file:   Assets/Custom Assets.meta~HEAD
+#	new file:   Assets/Custom Assets.meta~HEAD.meta
+#	new file:   Assets/Custom Assets.meta~refs_remotes_origin_master
+#	new file:   Assets/Custom Assets.meta~refs_remotes_origin_master.meta
+#	modified:   Assets/Custom Assets/Items/Flare.asset
+#	modified:   Assets/Custom Assets/Items/Flashlight.asset
+#	modified:   Assets/Custom Assets/Items/Flashlight.asset.meta
+#	new file:   Assets/Custom Assets/Objectives.meta
+#	new file:   Assets/Custom Assets/Objectives/World 2.meta
+#	new file:   Assets/Custom Assets/Objectives/World 3.meta
+#	modified:   Assets/FMODStudioCache.asset.meta
+#	modified:   Assets/Prefabs/Shared/Enemys/PathfindingEnemy.prefab
+#	modified:   Assets/Prefabs/Shared/Inventory/Items/Crowbar.prefab
+#	modified:   Assets/Prefabs/Shared/Inventory/Items/Flare.prefab
+#	modified:   Assets/Prefabs/Shared/Inventory/Items/Flashlight.prefab
+#	modified:   Assets/Prefabs/Shared/Player/Player.prefab
+#	modified:   Assets/Prefabs/Shared/UI/UI.prefab
+#	modified:   Assets/Scenes/GreenFox.meta
+#	modified:   Assets/Scenes/GreenFox/MovementTest1.unity
+#	modified:   Assets/Scenes/Kyle/DemoLevel_01.unity
+#	modified:   Assets/Scenes/Kyle/DemoLevel_02.unity
+#	modified:   Assets/Scenes/Oribow/PathfindingTest2.unity
+#	modified:   Assets/Scenes/Ryan.meta
+#	modified:   Assets/Scenes/Ryan/DemoLevel_02.unity
+#	new file:   Assets/Scenes/Ryan/MovementTest2.unity
+#	new file:   Assets/Scenes/Ryan/MovementTest2.unity.meta
+#	new file:   Assets/Scripts/AI/EquipItem.cs
+#	new file:   Assets/Scripts/AI/EquipItem.cs.meta
+#	modified:   Assets/Scripts/AI/Pathfinding/NavAgent.cs
+#	modified:   Assets/Scripts/AI/SimpleAIMovementInput.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/Inventory.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/ItemSpecificScripts/Flare.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/ItemSpecificScripts/SwingCrowbar.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Inventory/TwoHandEquipmentManager.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Movement/CC2DMotor.cs
+#	modified:   Assets/Scripts/AIAndPlayer/Movement/Core/MovementInput.cs
+#	modified:   Assets/Scripts/GlobalManager/Actors/Core/Actor.cs
+#	modified:   Assets/Scripts/GlobalManager/Actors/Core/BasicEntityActor.cs
+#	renamed:    Assets/Scripts/GlobalManager/Actors/Core/BasicEntityTwoHandEquipmentActor.cs -> Assets/Scripts/GlobalManager/Actors/Core/BasicEntityEquipmentActor.cs
+#	renamed:    Assets/Scripts/GlobalManager/Actors/Core/BasicEntityTwoHandEquipmentActor.cs.meta -> Assets/Scripts/GlobalManager/Actors/Core/BasicEntityEquipmentActor.cs.meta
+#	modified:   Assets/Scripts/GlobalManager/Actors/ThightAIMovementActor.cs
+#	modified:   Assets/Scripts/Player/CC2DPlayerMotor.cs
+#	modified:   Assets/Scripts/Player/HumanInput.cs
+#	modified:   Assets/Scripts/SmartSwitch/Editor/SmartTriggerSwitchEditor.cs
+#	modified:   Assets/Scripts/SmartSwitch/SmartTriggerSwitch.cs
+#	modified:   Assets/Scripts/UI.meta
+#	new file:   Assets/Scripts/UI/HUDManager.cs
+#	new file:   Assets/Scripts/UI/HUDManager.cs.meta
+#	new file:   Assets/Sound/Fmod/Items.meta
+#	new file:   Assets/Sound/Fmod/Level1_SpaceStation.meta
+#	new file:   Assets/Sound/Fmod/Spiders.meta
+#	modified:   Assets/StreamingAssets/Items.bank.meta
+#	modified:   Assets/StreamingAssets/Player.bank.meta
+#	modified:   Assets/StreamingAssets/Robot_Assistant.bank.meta
+#	modified:   Assets/StreamingAssets/SpaceStation_Level1.bank.meta
+#	modified:   Assets/StreamingAssets/SpaceStation_Level1.strings.bank.meta
+#	modified:   Assets/StreamingAssets/Spider.bank.meta
+#	new file:   pyspx0sg.lnj.txt
+#
+

@@ -16,7 +16,7 @@ namespace Utility.Polygon2D
             closedChains = new List<PointChain>(capacity);
         }
 
-        public void Add(Vector2 p0, Vector2 p1)
+        public void Add(Vector2d p0, Vector2d p1)
         {
             VectorHistoryDrawer.EnqueueNewLines(0, p0, p1);
             for (int i = 0; i < openChains.Count; i++)
@@ -26,6 +26,7 @@ namespace Utility.Polygon2D
                 {
                     if (c.IsClosed)
                     {
+                        //Debug.Log("Closed a chain. "+VectorHistoryDrawer.instance.time);
                         closedChains.Add(c);
                         openChains.RemoveAt(i);
                         i--;
@@ -55,17 +56,6 @@ namespace Utility.Polygon2D
             for (int iChain = 0; iChain < result.Length; iChain++)
             {
                 result[iChain] = new Contour(closedChains[iChain].chain.ToArray());
-            }
-            //Debug.Assert(openChains.Count == 0);
-            if (openChains.Count != 0)
-            {
-                foreach (PointChain chain in openChains)
-                {
-                    foreach (var v in chain.chain)
-                    {
-                        Debug.Log(v);
-                    }
-                }
             }
             return result;
         }

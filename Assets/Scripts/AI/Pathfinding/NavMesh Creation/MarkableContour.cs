@@ -19,16 +19,16 @@ namespace NavMesh2D.Core
 
         public MarkableContour(Contour contour, bool isSolid, bool isClosed)
         {
-            bounds = contour.Bounds;
+            bounds = (Bounds)contour.Bounds;
             this.isSolid = isSolid;
             this.isClosed = isClosed;
 
             pointNodeCount = contour.VertexCount;
-            PointNode cSeg = new PointNode(contour.verticies[0]);
+            PointNode cSeg = new PointNode((Vector2)contour.verticies[0]);
             firstPoint = cSeg;
             for (int iVert = 1; iVert < contour.verticies.Count; iVert++)
             {
-                cSeg.Next = new PointNode(contour.verticies[iVert]);
+                cSeg.Next = new PointNode((Vector2)contour.verticies[iVert]);
                 cSeg.Next.Previous = cSeg;
                 cSeg = cSeg.Next;
             }

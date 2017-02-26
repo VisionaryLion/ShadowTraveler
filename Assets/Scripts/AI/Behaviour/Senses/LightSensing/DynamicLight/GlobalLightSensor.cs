@@ -24,7 +24,7 @@ namespace LightSensing
             {
                 if (marker.IsPointInsideMarker(pos))
                 {
-                    result += marker.SampleColorAt(pos);
+                    result += marker.SampleLightAt(pos);
                     touchedMarkers.Add(marker);
                 }
             }

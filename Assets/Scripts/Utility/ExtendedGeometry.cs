@@ -24,6 +24,11 @@ namespace Utility
             return (det < 0 ? -1 : (det > 0 ? +1 : 0));
         }
 
+        public static double SignedAreaDoubledTris(Vector2d a, Vector2d b, Vector2d c)
+        {
+            return (a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y);
+        }
+
         public static float SignedAreaDoubledTris(Vector2 a, Vector2 b, Vector2 c)
         {
             return (a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y);

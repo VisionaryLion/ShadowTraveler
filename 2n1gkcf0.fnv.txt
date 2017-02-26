@@ -1,0 +1,14 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch UI
+# Your branch is up-to-date with 'origin/UI'.
+#
+# Changes to be committed:
+#	new file:   Assets/3thrd Party/Fonts.meta~refs_remotes_origin_master.meta
+#	new file:   Assets/3thrd Party/LineOfSightLightning.meta~HEAD.meta
+#	new file:   Assets/3thrd Party/LineOfSightLightning.meta~refs_remotes_origin_master.meta
+#	new file:   Assets/Art/SpaceStation.meta
+#	new file:   Assets/Scripts/Visual Effects.meta
+#
+

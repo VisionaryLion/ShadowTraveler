@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Plugins/Android/fmod.jar.meta:Assets/Plugins/Android/fmod.jar.meta
+guid: cba124c31f7e10640bc2ff9464f8ac15
+PluginImporter:
+  serializedVersion: 1
+  iconMap: {}
+  executionOrder: {}
+  isPreloaded: 0
+  platformData:
+    Android:
+      enabled: 1
+      settings: {}
+    Any:
+      enabled: 0
+      settings: {}
+    Editor:
+      enabled: 0
+      settings:
+        DefaultValueInitialized: true
+=======
+guid: faf960686d24d4222b64707f14c23424
+DefaultImporter:
+>>>>>>> DynamicLightSensing:Assets/EG - Align Editor/Examples/Scenes/Example 1 - Fall on Terrain.unity.meta:Assets/EG - Align Editor/Examples/Scenes/Example 1 - Fall on Terrain.unity.meta
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

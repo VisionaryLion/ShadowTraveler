@@ -6,28 +6,10 @@ using System;
 
 namespace Equipment
 {
-    public class Flashlight : MonoBehaviour
+    public class Flashlight : ItemSpecificBase
     {
-        [SerializeField, AssignEntityAutomaticly, HideInInspector]
-        TwoHandItemEntity entity;
         [SerializeField]
         SFLight lightSrc;
-
-        void Start()
-        {
-            entity.EquipedHandler += Entity_EquipedHandler;
-            entity.UnequipedHandler += Entity_UnequipedHandler;
-        }
-
-        private void Entity_UnequipedHandler()
-        {
-            enabled = false;
-        }
-
-        private void Entity_EquipedHandler(ActingEquipmentEntity equiper)
-        {
-            enabled = true;
-        }
 
         void Update()
         {
@@ -35,6 +17,14 @@ namespace Equipment
             {
                 lightSrc.enabled = !lightSrc.enabled;
             }
+        }
+
+        void LateUpdate()
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            Vector2 dir = (mousePos - (Vector2)transform.position).normalized * equipedEntity.CC2DMotor.FacingDir;
+            transform.right = dir;
         }
     }
 }

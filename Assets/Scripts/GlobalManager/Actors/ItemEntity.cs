@@ -11,6 +11,7 @@ namespace Entities
 
         #region public
         public IItem Item { get { return itemHolder.Item; } set { itemHolder.Item = value; } }
+        public IItemHolder ItemHolder { get { return itemHolder; } }
 
         public delegate void OnEquiped(ActingEquipmentEntity equiper);
         public delegate void OnUnequiped();
