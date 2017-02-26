@@ -4,12 +4,9 @@ using Utility.Polygon2D;
 using Utility.ExtensionMethods;
 #if UNITY_EDITOR
 using UnityEditor;
-<<<<<<< HEAD
 #endif
-=======
 using System;
 using System.Collections;
->>>>>>> origin/CloudsLevel-01
 
 namespace NavMesh2D.Core
 {
