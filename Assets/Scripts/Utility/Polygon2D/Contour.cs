@@ -6,36 +6,36 @@ using UnityEngine;
 namespace NavMesh2D.Core
 {
     [Serializable]
-    public class Contour : IEnumerable<Vector2>
+    public class Contour : IEnumerable<Vector2d>
     {
         public int VertexCount { get { return verticies.Count; } }
-        public Bounds Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } }
+        public Boundsd Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } }
         public bool IsEmpty { get { return verticies.Count == 0; } }
-        public List<Vector2> verticies;
+        public List<Vector2d> verticies;
 
         [SerializeField]
-        private Bounds bounds;
+        private Boundsd bounds;
         [SerializeField]
         private bool areBoundsValid;
 
-        public Contour(params Vector2[] verticies)
+        public Contour(params Vector2d[] verticies)
         {
-            this.verticies = new List<Vector2>(verticies);
+            this.verticies = new List<Vector2d>(verticies);
             CalcBounds();
         }
 
-        public Contour(List<Vector2> verticies)
+        public Contour(List<Vector2d> verticies)
         {
-            this.verticies = new List<Vector2>();
+            this.verticies = new List<Vector2d>();
             this.verticies.AddRange(verticies);
             CalcBounds();
         }
 
-        public void AddVertex(Vector2 v)
+        public void AddVertex(Vector2d v)
         {
             verticies.Add(v);
-            bounds.max = Vector2.Max(bounds.max, v);
-            bounds.min = Vector2.Min(bounds.min, v);
+            bounds.max = Vector2d.Max(bounds.max, v);
+            bounds.min = Vector2d.Min(bounds.min, v);
         }
 
         public void RemoveVertexAt(int pos)
@@ -46,7 +46,7 @@ namespace NavMesh2D.Core
             areBoundsValid = false;
         }
 
-        public Vector2 this[int key]
+        public Vector2d this[int key]
         {
             get { return verticies[key]; }
         }
@@ -68,9 +68,9 @@ namespace NavMesh2D.Core
 
         public void Optimize(float nodeMergeDist, float maxEdgeDeviation)
         {
-            Vector2 prevVert = verticies[verticies.Count - 1];
-            Vector2 prevPrevVert = verticies[verticies.Count - 2];
-            float srqMergeDist = nodeMergeDist * nodeMergeDist;
+            Vector2d prevVert = verticies[verticies.Count - 1];
+            Vector2d prevPrevVert = verticies[verticies.Count - 2];
+            double srqMergeDist = nodeMergeDist * nodeMergeDist;
             for (int i = 0; i < verticies.Count && verticies.Count > 3; i++)
             {
                 if ((prevVert - verticies[i]).sqrMagnitude <= srqMergeDist)
@@ -81,9 +81,9 @@ namespace NavMesh2D.Core
                 }
                 else
                 {
-                    Vector2 nA = prevPrevVert - prevVert;
-                    Vector2 nB = verticies[i] - prevVert;
-                    float angle = Vector2.Angle(nA, nB);
+                    Vector2d nA = prevPrevVert - prevVert;
+                    Vector2d nB = verticies[i] - prevVert;
+                    double angle = Vector2d.Angle(nA, nB);
 
                     if (angle >= 180 - maxEdgeDeviation)
                     {
@@ -107,9 +107,9 @@ namespace NavMesh2D.Core
             return CalcArea() >= 0;
         }
 
-        public float CalcArea()
+        public double CalcArea()
         {
-            float area = 0;
+            double area = 0;
             int j = verticies.Count - 1;
 
             for (int i = 0; i < verticies.Count; i++)
@@ -122,22 +122,22 @@ namespace NavMesh2D.Core
 
         public void VisualDebug(Color color)
         {
-            Vector2 prev = verticies[verticies.Count - 1];
-            foreach (Vector2 vert in verticies)
+            Vector2d prev = verticies[verticies.Count - 1];
+            foreach (Vector2d vert in verticies)
             {
-                Debug.DrawLine(prev, vert, color);
+                Debug.DrawLine((Vector2)prev, (Vector2)vert, color);
                 prev = vert;
             }
         }
 
-        public IEnumerator<Vector2> GetEnumerator()
+        public IEnumerator<Vector2d> GetEnumerator()
         {
-            return ((IEnumerable<Vector2>)verticies).GetEnumerator();
+            return ((IEnumerable<Vector2d>)verticies).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<Vector2>)verticies).GetEnumerator();
+            return ((IEnumerable<Vector2d>)verticies).GetEnumerator();
         }
 
         private void CalcBounds()
@@ -147,8 +147,8 @@ namespace NavMesh2D.Core
             bounds.max = verticies[0];
             for (int iVert = 1; iVert < verticies.Count; iVert++)
             {
-                bounds.max = Vector2.Max(bounds.max, verticies[iVert]);
-                bounds.min = Vector2.Min(bounds.min, verticies[iVert]);
+                bounds.max = Vector2d.Max(bounds.max, verticies[iVert]);
+                bounds.min = Vector2d.Min(bounds.min, verticies[iVert]);
             }
         }
     }

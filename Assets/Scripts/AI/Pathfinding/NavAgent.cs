@@ -8,6 +8,19 @@ public class NavAgent : MonoBehaviour
     [SerializeField, HideInInspector, AssignEntityAutomaticly]
     ThightAIMovementEntity actor;
 
+    NavData2d.NavPosition StartPoint
+    {
+        get
+        {
+            if (cacheRefreshTime != Time.unscaledTime)
+                RefreshStartPointMapping();
+            return startPointCache;
+        }
+    }
+
+    NavData2d.NavPosition startPointCache;
+    float cacheRefreshTime;
+
     [SerializeField]
     Transform pathStartPoint;
     [SerializeField]
@@ -32,42 +45,39 @@ public class NavAgent : MonoBehaviour
 
     public delegate void OnPathComputationFinished(bool foundPath);
 
-    public void SetDestination(Vector2 dest, LightMarker[] lightMarker, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false)
+    public void SetDestination(NavData2d.NavPosition dest, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false, LightMarker[] lightMarker = null)
     {
-        Debug.Assert(cPathFoundCallback == null);
-        cPathFoundCallback = onPathFinished;
-        if (!actor.CharacterController2D.isGrounded)
+        if (StartPoint.navNodeIndex == -1 || dest.navNodeIndex == -1) //We don't know where we are, abort!
         {
-            OnPathCompleted(null);
+            onPathFinished.Invoke(false);
             return;
         }
-        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnPathCompleted, lightSkin, startsInUncomfortableLight, lightMarker));
+        if (lightMarker == null)
+            lightMarker = emptyMarkerArray;
+        Debug.Assert(cPathFoundCallback == null);
+        cPathFoundCallback = onPathFinished;
+        pathPlaner.FindRequestedPath(new PathRequest(StartPoint, dest, OnPathCompleted, lightSkin, startsInUncomfortableLight, lightMarker));
         reachedGoal = false;
     }
 
-    public void SetDestination(Vector2 dest, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false)
+    public void FleeFrom(Vector2[] threats, float targetDistanceFromThreats, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false, LightMarker[] lightMarker = null)
     {
-        SetDestination(dest, emptyMarkerArray, onPathFinished);
-    }
-
-    public void UpdateDestination(Vector2 dest, OnPathComputationFinished onPathFinished)
-    {
-        if (cPath.path == null)
+        if (StartPoint.navNodeIndex == -1) //We don't know where we are, abort!
         {
-            SetDestination(dest, emptyMarkerArray, onPathFinished);
+            onPathFinished.Invoke(false);
             return;
         }
-        if (cPath.path.goal == dest)
-            return;
+        if (lightMarker == null)
+            lightMarker = emptyMarkerArray;
         Debug.Assert(cPathFoundCallback == null);
         cPathFoundCallback = onPathFinished;
-        if (!actor.CharacterController2D.isGrounded)
-        {
-            OnUpdatePathCompleted(null);
-            return;
-        }
-        pathPlaner.FindRequestedPath(new PathRequest(pathStartPoint.position, dest, OnUpdatePathCompleted, lightSkin, false, emptyMarkerArray));
+        pathPlaner.Flee(new FleeRequest(StartPoint, threats, OnPathCompleted, lightSkin, startsInUncomfortableLight, targetDistanceFromThreats, lightMarker));
         reachedGoal = false;
+    }
+
+    public void SetDestination(Vector2 dest, OnPathComputationFinished onPathFinished, bool startsInUncomfortableLight = false, LightMarker[] lightMarker = null)
+    {
+        SetDestination(pathPlaner.MapPoint(dest), onPathFinished, startsInUncomfortableLight, lightMarker);
     }
 
     public void Stop()
@@ -159,6 +169,12 @@ public class NavAgent : MonoBehaviour
     void EnableMovementAgain()
     {
         actor.CC2DThightAIMotor.StopUsingManualSpeed();
+    }
+
+    void RefreshStartPointMapping()
+    {
+        startPointCache = pathPlaner.MapPoint(pathStartPoint.position);
+        cacheRefreshTime = Time.unscaledTime;
     }
 
     class NavPathIterator

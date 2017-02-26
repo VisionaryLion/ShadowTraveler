@@ -24,11 +24,14 @@ namespace BehaviorBrick.Conditions
 
         public IsLightLevelComfortable()
         {
-            touchedMarker = new List<LightMarker>();
+            touchedMarker = new List<LightMarker>(4);
         }
 
         public override bool Check()
         {
+            bool check = GetLevelOfComfort(
+                GlobalLightSensor.Instance.GetDynamicLightAt(entity.transform.position, ref touchedMarker).grayscale) == LightLevelOfComfort.Comfort;
+            DebugPanel.Log("IsLightLevelComfortable", entity.name, check);
             return inverse ^ GetLevelOfComfort(
                 GlobalLightSensor.Instance.GetDynamicLightAt(entity.transform.position, ref touchedMarker).grayscale) == LightLevelOfComfort.Comfort;
         }

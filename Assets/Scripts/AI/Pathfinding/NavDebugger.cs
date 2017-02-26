@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using NavMesh2D.Core;
 using NavMesh2D;
 using Utility.Polygon2D;
+using NavData2d;
 
 public class NavDebugger : MonoBehaviour
 {
@@ -62,7 +63,7 @@ public class NavDebugger : MonoBehaviour
 
             cgs = CollisionGeometrySetBuilder.Build(allCollider, circleVertCount);
             Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
-
+            
             totalEllapsedTime += watch.ElapsedMilliseconds;
             watch.Reset();
             watch.Start();
@@ -84,14 +85,14 @@ public class NavDebugger : MonoBehaviour
             /* navData2D = new RawNavigationData2DBuilder(agentSettings).Build(exTrees, ScriptableObject.CreateInstance<RawNavigationData2D>())
                  .ToNavigationData2D();
              Debug.Log("NavigationData2DBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");*/
-
+             
             totalEllapsedTime += watch.ElapsedMilliseconds;
             watch.Stop();
             Debug.Log("Total build time is " + (totalEllapsedTime / 1000f) + " sec.");
         }
         catch (Exception e)
         {
-            Debug.Log(e.StackTrace);
+            Debug.Log(e.Message +" -> "+ e.StackTrace);
         }
     }
 
@@ -178,27 +179,7 @@ public class NavDebugger : MonoBehaviour
 
                 }
                 break;
-            case DebugWhichSet.NavigationData2D:
-                if (navData2D != null)
-                {
-
-                    navData2D.DrawForDebug();
-                    Vector2 mappedPoint;
-                    if (navData2D.TryMapPoint(closestTestPoint.position, out mappedPoint))
-                    {
-                        Debug.DrawLine(closestTestPoint.position, mappedPoint, Color.green);
-                        DebugExtension.DebugPoint(mappedPoint);
-                    }
-                    /* System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                     int pathsPerSecond = 0;
-                     while (watch.ElapsedMilliseconds < 1000)
-                     {*/
-
-                    /*  pathsPerSecond++;
-                  }
-                  Debug.Log("Can compute "+ (pathsPerSecond)+" paths per second");*/
-                }
-                break;
+            
         }
     }
     float timer = 0;

@@ -7,13 +7,13 @@ namespace Utility.Polygon2D
 {
     public class Polygon : IEnumerable<Contour>
     {
-        public Bounds Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } }
+        public Boundsd Bounds { get { if (!areBoundsValid) CalcBounds(); return bounds; } }
         public int ContourCount { get { return contours.Count; } }
         public bool IsEmpty { get { return contours.Count == 0; } }
         public int TotalVertexCount { get { return totalVertexCount; } }
 
         private bool areBoundsValid;
-        private Bounds bounds;
+        private Boundsd bounds;
         private List<Contour> contours;
         private int totalVertexCount;
 
@@ -54,8 +54,8 @@ namespace Utility.Polygon2D
             //Recalculate the bounds
             for (int iVert = 0; iVert < c.verticies.Count; iVert++)
             {
-                bounds.max = Vector2.Max(bounds.max, c.verticies[iVert]);
-                bounds.min = Vector2.Min(bounds.min, c.verticies[iVert]);
+                bounds.max = Vector2d.Max(bounds.max, c.verticies[iVert]);
+                bounds.min = Vector2d.Min(bounds.min, c.verticies[iVert]);
             }
             //Updated vertex count
             totalVertexCount += c.VertexCount;
@@ -124,8 +124,8 @@ namespace Utility.Polygon2D
             {
                 for (int iVert = 0; iVert < contours[iCo].verticies.Count; iVert++)
                 {
-                    bounds.max = Vector2.Max(bounds.max, contours[iCo].verticies[iVert]);
-                    bounds.min = Vector2.Min(bounds.min, contours[iCo].verticies[iVert]);
+                    bounds.max = Vector2d.Max(bounds.max, contours[iCo].verticies[iVert]);
+                    bounds.min = Vector2d.Min(bounds.min, contours[iCo].verticies[iVert]);
                 }
             }
         }

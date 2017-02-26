@@ -18,6 +18,9 @@ namespace LightSensing
         [SerializeField]
         Color edgeColor;
         [SerializeField]
+        Color pathfindingColor;
+
+        [SerializeField]
         bool squaredInterpolation;
 
         float sqrRadius;
@@ -62,14 +65,44 @@ namespace LightSensing
             return false;
         }
 
-        public override Color SampleColorAt(Vector2 pos)
+        const float LineCircle_FudgeFactor = 0.00001f;
+        public override bool IsTraversable(LightSkin skin, out float traverseCostsMulitplier)
+        {
+            return skin.IsTraversable(pathfindingColor, out traverseCostsMulitplier);
+        }
+
+        public override bool OverlapsSegment(Vector2 segmentA, Vector2 segmentB)
+        {
+            if (!Utility.ExtendedGeometry.DoesLineIntersectBounds(segmentA, segmentB, Bounds))
+            {
+                return false;
+            }
+            segmentA = transform.InverseTransformPoint(segmentA);
+            segmentB = transform.InverseTransformPoint(segmentB);
+
+            Vector2 dir = (segmentB - segmentA).normalized;
+            float t = dir.x * (centerOffset.x - segmentA.x) + dir.y * (centerOffset.y - segmentA.y);
+            Vector2 tangent = t * dir + segmentA;
+            float distToCenter = (tangent - centerOffset).magnitude;
+
+            if (distToCenter <= radius)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override Color SampleLightAt(Vector2 pos)
         {
             pos = transform.InverseTransformPoint(pos);
             float dist = (pos - centerOffset).magnitude;
             return SampleColorAt(dist);
         }
 
-        public Color SampleColorAt(float distanceFromCenter)
+        private Color SampleColorAt(float distanceFromCenter)
         {
             distanceFromCenter /= radius;
             if (squaredInterpolation)
@@ -77,41 +110,6 @@ namespace LightSensing
                 distanceFromCenter = Mathf.Sqrt(distanceFromCenter);
             }
             return Color.Lerp(centerColor, edgeColor, distanceFromCenter);
-        }
-
-        const float LineCircle_FudgeFactor = 0.00001f;
-        public override bool IsTraversable(LightSkin skin, Vector2 pointA, Vector2 pointB, out float traverseCostsMulitplier)
-        {
-            Debug.DrawLine(pointA, pointB, Color.cyan);
-            Debug.DrawLine(pointA + Vector2.up * 0.2f, pointB + Vector2.up * 0.2f, Color.cyan);
-            traverseCostsMulitplier = 1;
-           // DebugExtension.DebugBounds(Bounds, Color.magenta);
-            Vector2 dir2 = (pointA + ((pointB - pointA).magnitude / 2) * (pointB - pointA).normalized) - Center;
-            if (!Utility.ExtendedGeometry.DoesLineIntersectBounds(pointA, pointB, Bounds))
-            {
-                //Debug.DrawRay(Center, dir2, Color.magenta);
-                return true;
-            }
-
-            
-            pointA = transform.InverseTransformPoint(pointA);
-            pointB = transform.InverseTransformPoint(pointB);
-
-            Vector2 dir = (pointB - pointA).normalized;
-            float t = dir.x * (centerOffset.x - pointA.x) + dir.y * (centerOffset.y - pointA.y);
-            Vector2 tangent = t * dir + pointA;
-            float distToCenter = (tangent - centerOffset).magnitude;
-           
-            if (distToCenter <= radius)
-            {
-                //Debug.DrawRay(Center, dir2, Color.green);
-                return skin.IsTraversable(SampleColorAt(distToCenter), out traverseCostsMulitplier);
-            }
-            else
-            {
-                //Debug.DrawRay(Center, dir2, Color.red);
-                return true;
-            }
         }
 
         void Awake()

@@ -5,7 +5,7 @@ using Pada1.BBCore.Tasks;
 
 namespace BBUnity.Actions
 {
-    [Action("Transform/FindNearest")]
+    [Action("Transform/FindNearestPosition")]
     [Help("Determines the nearest point and returns it.")]
     public class NearestPosition : BasePrimitiveAction
     {
