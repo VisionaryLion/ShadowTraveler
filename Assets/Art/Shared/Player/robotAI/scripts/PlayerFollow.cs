@@ -76,7 +76,19 @@ public class PlayerFollow : MonoBehaviour
 
     void RotateMe()
     {
-        transform.Rotate(0.0f, 0.0f, -Input.GetAxis("RobotHorizontal") * RotationSpeed);
+        float input;
+
+        if (Input.GetAxis("RobotHorizontalJoystick") != 0)
+        {
+            input = Input.GetAxis("RobotHorizontalJoystick");
+        }
+        else
+        {
+            input = Input.GetAxis("RobotHorizontalMouse");
+        }
+
+
+        transform.Rotate(0.0f, 0.0f, -input * RotationSpeed);
     }
 
     void Shoot()

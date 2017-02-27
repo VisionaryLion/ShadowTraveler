@@ -5801,8 +5801,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -509, y: -212}
-  m_SizeDelta: {x: 681, y: 119}
+  m_AnchoredPosition: {x: -392, y: -212}
+  m_SizeDelta: {x: 915, y: 119}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2058591595
 MonoBehaviour:
@@ -5837,7 +5837,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The Abyss
+  m_Text: Shadow Traveler
 --- !u!222 &2058591596
 CanvasRenderer:
   m_ObjectHideFlags: 0

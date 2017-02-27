@@ -57,6 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LightHasPower: 0
   Light: {fileID: 1000012624801038}
+  lightBulbMat: {fileID: 212000011090059462}
   LightOffIntensity: 0.25
   LightOnIntensity: 1.15
 --- !u!114 &114000012864982682
