@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PlayerSFX : MonoBehaviour {
 
+    public static PlayerSFX playerSFX;
+
     public AudioClip footStepWalkSFX01;
     public AudioClip footStepWalkSFX02;
     public AudioClip footStepRunSFX01;
@@ -10,13 +12,20 @@ public class PlayerSFX : MonoBehaviour {
     public AudioClip footStepCrouchSFX01;
     public AudioClip footStepCrouchSFX02;
     public AudioClip JetpackSFX;
+    public AudioClip GunSFX;
 
-    public float footStepWalkVol = 0.3f;
-    public float footStepRunVol = 0.6f;
-    public float CrouchStepVol = 0.1f;
-    public float JetpackSFXVol = .8f;
+    public float footStepWalkVol = 0.3f * (MasterVolume.volumeHandler.gameSettings.masterVolume * MasterVolume.volumeHandler.gameSettings.sfxVolume);
+    public float footStepRunVol = 0.6f * (MasterVolume.volumeHandler.gameSettings.masterVolume * MasterVolume.volumeHandler.gameSettings.sfxVolume);
+    public float CrouchStepVol = 0.1f * (MasterVolume.volumeHandler.gameSettings.masterVolume * MasterVolume.volumeHandler.gameSettings.sfxVolume);
+    public float JetpackSFXVol = .8f * (MasterVolume.volumeHandler.gameSettings.masterVolume * MasterVolume.volumeHandler.gameSettings.sfxVolume);
+    public float GunSFXVol = 1 * (MasterVolume.volumeHandler.gameSettings.masterVolume * MasterVolume.volumeHandler.gameSettings.sfxVolume);
 
     AudioSource PlayerSource;
+    
+    void Awake()
+    {
+        playerSFX = this;
+    }
 
     void Start () {
         PlayerSource = GetComponent<AudioSource>();
@@ -55,5 +64,10 @@ public class PlayerSFX : MonoBehaviour {
     void playJetpackSFX()
     {
         PlayerSource.PlayOneShot(JetpackSFX, JetpackSFXVol);
+    }
+
+    public void playGunSFX()
+    {
+        PlayerSource.PlayOneShot(GunSFX, GunSFXVol);
     }
 }
