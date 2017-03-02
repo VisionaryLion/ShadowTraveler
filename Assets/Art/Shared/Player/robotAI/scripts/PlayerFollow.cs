@@ -99,6 +99,7 @@ public class PlayerFollow : MonoBehaviour
         {
             if (Time.time > fireRate + lastShot)
             {
+                PlayerSFX.playerSFX.playGunSFX();
                 //Instantiate a bullet
                 GameObject bulletClone = Instantiate(Bullet, Guntip, Quaternion.identity) as GameObject;
                 Rigidbody2D clonerb = bulletClone.GetComponent<Rigidbody2D>();

@@ -525,7 +525,7 @@ MonoBehaviour:
   footStepRunSFX02: {fileID: 8300000, guid: 23267797f404d4b408bd6a47c8700dab, type: 3}
   footStepCrouchSFX01: {fileID: 8300000, guid: a3193f784652dad42a7adb605754294b, type: 3}
   footStepCrouchSFX02: {fileID: 8300000, guid: 23267797f404d4b408bd6a47c8700dab, type: 3}
-  JetpackSFX: {fileID: 0}
+  JetpackSFX: {fileID: 8300000, guid: ebe718f2808ef084ab4d42f987e9dfc0, type: 3}
   footStepWalkVol: 0
   footStepRunVol: 0.2
   CrouchStepVol: 0.1

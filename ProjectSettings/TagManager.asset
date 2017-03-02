@@ -15,6 +15,10 @@ TagManager:
   - FollowFriend
   - Ground
   - Wall
+  - RobotAILocation
+  - Box
+  - SFX
+  - BG
   layers:
   - Default
   - TransparentFX
