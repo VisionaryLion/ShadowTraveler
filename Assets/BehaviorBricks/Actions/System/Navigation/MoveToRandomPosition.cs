@@ -9,7 +9,7 @@ namespace BBUnity.Actions
     [Help("Gets a random position from a given area and moves the game object to that point by using a NavMeshAgent")]
     public class MoveToRandomPosition : GOAction
     {
-        private NavMeshAgent navAgent;
+        private UnityEngine.AI.NavMeshAgent navAgent;
 
         [InParam("area")]
         [Help("game object that must have a BoxCollider or SphereColider, which will determine the area from which the position is extracted")]
@@ -17,11 +17,11 @@ namespace BBUnity.Actions
 
         public override void OnStart()
         {
-            navAgent = gameObject.GetComponent<NavMeshAgent>();
+            navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
             if (navAgent == null)
             {
                 Debug.LogWarning("The " + gameObject.name + " game object does not have a Nav Mesh Agent component to navigate. One with default values has been added", gameObject);
-                navAgent = gameObject.AddComponent<NavMeshAgent>();
+                navAgent = gameObject.AddComponent<UnityEngine.AI.NavMeshAgent>();
             }
             navAgent.SetDestination(getRandomPosition());
             navAgent.Resume();
