@@ -503,6 +503,7 @@ MonoBehaviour:
   xSmooth: 5
   ySmooth: 5
   RotationSpeed: 15
+  aiFollowerPos: {fileID: 0}
   Guntip: {x: 0, y: 0}
   Gunshot: {fileID: 1000011603555054}
   fireRate: 0.2
@@ -511,6 +512,7 @@ MonoBehaviour:
   PullOrb: {fileID: 1000012204877062}
   PullLine: {fileID: 1000013244318840}
   ThrowLine: {fileID: 1000010375018724}
+  lightBeam: {fileID: 1000010078027478}
 --- !u!114 &114000012573923574
 MonoBehaviour:
   m_ObjectHideFlags: 1

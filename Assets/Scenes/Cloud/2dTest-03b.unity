@@ -98684,20 +98684,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1000011331017626, guid: 8a384518cbf3b9244acdccf29b515a1c, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 114000010474412310, guid: 8a384518cbf3b9244acdccf29b515a1c,
         type: 2}
       propertyPath: aiFollowerPos
       value: 
       objectReference: {fileID: 1725915911}
-    - target: {fileID: 114000010474412310, guid: 8a384518cbf3b9244acdccf29b515a1c,
-        type: 2}
-      propertyPath: lightBeam
-      value: 
-      objectReference: {fileID: 1645333456}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8a384518cbf3b9244acdccf29b515a1c, type: 2}
   m_IsPrefabParent: 0
@@ -99924,11 +99915,6 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
---- !u!1 &1645333456 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1000010078027478, guid: 8a384518cbf3b9244acdccf29b515a1c,
-    type: 2}
-  m_PrefabInternal: {fileID: 1621872761}
 --- !u!4 &1646391100 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4000014280977844, guid: c5975e371f0cd9348be8a75c1463210b,
