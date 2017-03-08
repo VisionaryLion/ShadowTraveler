@@ -19,6 +19,7 @@ TagManager:
   - Box
   - SFX
   - BG
+  - Door
   layers:
   - Default
   - TransparentFX
@@ -37,7 +38,7 @@ TagManager:
   - IgnorePlayer
   - Ground
   - Wall
-  - 
+  - Door
   - 
   - 
   - 

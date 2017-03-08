@@ -62,8 +62,8 @@ public class TargetPractice : MonoBehaviour {
         //check if collision is with bullet
         if ((coll.gameObject.CompareTag("Bullet"))){
             //play particle effect on hitting anything
-            GameObject expl = Instantiate(TargetExplode, transform.position, Quaternion.identity) as GameObject;
-            Destroy(expl, 1); // delete the particle after 3 seconds
+            //GameObject expl = Instantiate(TargetExplode, transform.position, Quaternion.identity) as GameObject;
+            //Destroy(expl, 1); // delete the particle after 3 seconds
             //subtract health
             HP = HP - PlayerFollow.damage; //gets damage from the PlayerFollow script
 

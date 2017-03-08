@@ -13,7 +13,7 @@ namespace BBUnity.Actions
         [Help("Target game object towards this game object will be moved")]
         public GameObject target;
 
-        private NavMeshAgent navAgent;
+        private UnityEngine.AI.NavMeshAgent navAgent;
 
         private Transform targetTransform;
 
@@ -26,11 +26,11 @@ namespace BBUnity.Actions
             }
             targetTransform = target.transform;
 
-            navAgent = gameObject.GetComponent<NavMeshAgent>();
+            navAgent = gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
             if (navAgent == null)
             {
                 Debug.LogWarning("The " + gameObject.name + " game object does not have a Nav Mesh Agent component to navigate. One with default values has been added", gameObject);
-                navAgent = gameObject.AddComponent<NavMeshAgent>();
+                navAgent = gameObject.AddComponent<UnityEngine.AI.NavMeshAgent>();
             }
 			navAgent.SetDestination(targetTransform.position);
             navAgent.Resume();
