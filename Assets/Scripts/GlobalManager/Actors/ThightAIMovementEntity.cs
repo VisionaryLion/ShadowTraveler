@@ -8,14 +8,11 @@ namespace Entities
     public class ThightAIMovementEntity : IMovementEntity
     {
         [SerializeField]
-        CC2DThightAIMotor cC2DThightAIMotor;
-        [SerializeField]
-        NavAgent navAgent;
+        CC2DAIMotor cC2DThightAIMotor;
         [SerializeField]
         AnimationEntity animationEntity;
 
-        public CC2DThightAIMotor CC2DThightAIMotor { get { return cC2DThightAIMotor; } }
-        public NavAgent NavAgent { get { return navAgent; } }
+        public CC2DAIMotor CC2DThightAIMotor { get { return cC2DThightAIMotor; } }
         public override CC2DMotor CC2DMotor { get { return cC2DThightAIMotor; } }
 
 
@@ -24,8 +21,7 @@ namespace Entities
         {
             base.Refresh();
 
-            cC2DThightAIMotor = GetComponentInChildren<CC2DThightAIMotor>();
-            navAgent = GetComponentInChildren<NavAgent>();
+            cC2DThightAIMotor = GetComponentInChildren<CC2DAIMotor>();
             animationEntity = GetComponentInChildren<AnimationEntity>();
         }
 #endif

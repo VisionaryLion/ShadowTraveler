@@ -151,7 +151,7 @@ namespace FMODUnity
 
         void Initialiase(bool forceNoNetwork)
         {
-            UnityEngine.Debug.Log("FMOD Studio: Creating runtime system instance");
+            //UnityEngine.Debug.Log("FMOD Studio: Creating runtime system instance");
 
             FMOD.RESULT result;
             result = FMOD.Studio.System.create(out studioSystem);

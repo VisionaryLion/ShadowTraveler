@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using CC2D;
 
-public class CC2DThightAIMotor : CC2DMotor
+public class CC2DAIMotor : CC2DMotor
 {
     bool useManualXSpeed;
     float manualXSpeed;

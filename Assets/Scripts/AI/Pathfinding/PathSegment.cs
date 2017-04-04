@@ -42,7 +42,7 @@ public class PathSegment : IPathSegment
         }
     }
 
-    public override void UpdateMovementInput(MovementInput input, CC2DThightAIMotor motor)
+    public override void UpdateMovementInput(MovementInput input, CC2DAIMotor motor)
     {
         if (((Vector2)motor.transform.position - goal).sqrMagnitude < 4)
         {
@@ -72,7 +72,7 @@ public class PathSegment : IPathSegment
         return false;
     }
 
-    public override void InitTravers(CC2DThightAIMotor motor, IPathSegment nextSeg)
+    public override void InitTravers(CC2DAIMotor motor, IPathSegment nextSeg)
     {
         if (nextSeg != null)
         {
@@ -84,7 +84,7 @@ public class PathSegment : IPathSegment
         }
     }
 
-    public override void StopTravers(CC2DThightAIMotor motor)
+    public override void StopTravers(CC2DAIMotor motor)
     {
 
     }
@@ -94,7 +94,7 @@ public class PathSegment : IPathSegment
         Debug.DrawLine(start, goal, Color.green);
     }
 
-    public override float StartSpeed(CC2DThightAIMotor motor)
+    public override float StartSpeed(CC2DAIMotor motor)
     {
         return motor.MaxWalkSpeed;
     }

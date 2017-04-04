@@ -311,7 +311,7 @@ namespace SpritesAndBones
             mesh.uv = uv.ToArray();
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            mesh.Optimize();
+            ;
 
             //GameObject go = new GameObject();
             //MeshFilter mf = go.AddComponent<MeshFilter>();
