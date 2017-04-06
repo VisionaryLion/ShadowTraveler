@@ -486,7 +486,7 @@ namespace FMODUnity
         {
             if (studioSystem != null)
             {
-                UnityEngine.Debug.Log("FMOD Studio: Destroying runtime system instance");
+                //UnityEngine.Debug.Log("FMOD Studio: Destroying runtime system instance");
                 studioSystem.release();
                 studioSystem = null;
             }

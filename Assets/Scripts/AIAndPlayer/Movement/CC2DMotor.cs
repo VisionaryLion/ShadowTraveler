@@ -164,7 +164,7 @@ namespace CC2D
         public Vector2 Velocity { get { return _cVelocity; } }
         public MState MotorState { get { return _cMState; } }
         public MState PrevMotorState { get { return _prevMState; } }
-        public float MaxWalkSpeed { get { return walkHMaxSpeed; } }
+        public float MaxWalkSpeed { get { return walkHMaxSpeed; } set { walkHMaxSpeed = value; } }
 
         public void ResetPlayerMovementInput()
         {

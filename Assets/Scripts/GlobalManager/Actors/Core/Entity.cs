@@ -165,7 +165,7 @@ namespace Entities
                     if (attributes[iAttr].GetType() == typeof(RemindToConfigureField))
                     {
                         RemindToConfigureField rtcf = (RemindToConfigureField)attributes[iAttr];
-                        Debug.LogWarning(GenerateSetUpReminder(info.Name, type.Name, rtcf.addMsg));
+                        //Debug.LogWarning(GenerateSetUpReminder(info.Name, type.Name, rtcf.addMsg));
                     }
                 }
             }

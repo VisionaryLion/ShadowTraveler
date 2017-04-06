@@ -14,6 +14,9 @@ namespace CC2D
         ThightAIMovementEntity actor;
 
         [SerializeField]
+        Transform player;
+
+        [SerializeField]
         int numLights = 0;
 
         [SerializeField]
@@ -21,6 +24,15 @@ namespace CC2D
         [SerializeField]
         bool checkingLight = false;
         MovementInput bufferedInput;
+
+        [SerializeField]
+        bool isAggro = false;
+        [SerializeField]
+        float radius;
+        [SerializeField]
+        float aggroSpeed;
+        [SerializeField]
+        float normalSpeed;
 
         public enum State
         {
@@ -40,7 +52,6 @@ namespace CC2D
             bufferedInput.horizontalRaw = 1;
             bufferedInput.horizontal = 1;
         }
-
         // Update is called once per frame
         void Update()
         {
@@ -94,45 +105,88 @@ namespace CC2D
 
             #endregion
 
+            isAggro = false;
+
+            Collider2D[] overlap = Physics2D.OverlapCircleAll(transform.position, radius);
+            foreach (Collider2D coll in overlap)
+            {
+                if (coll.gameObject.CompareTag("Player"))
+                {
+                    isAggro = true;
+                    player = coll.gameObject.transform;
+                }
+            }
+
             switch (state)
             {
                 case State.Patrol:
 
+
+                    actor.CC2DThightAIMotor.MaxWalkSpeed = normalSpeed;
+
+                    checkFlip();
+
                     if (numLights == 0 && !checkingLight)
-                    {                        
-                        startFindLight();
-                        break;                  
-                    }
-                    
-                    if (facingRight)
                     {
-                        if (actor.CharacterController2D.collisionState.right)
-                        {                                                        
-                            Flip();
-                        }
+                        startFindLight();
+                        break;
                     }
-                    else {
-                        if (actor.CharacterController2D.collisionState.left)
-                        {                            
-                            Flip();
-                        }
+
+                    if (isAggro)
+                    {
+                        StartAggro();
+                        break;
                     }
 
                     break;
 
-                case State.Aggro:
+                case State.Aggro:                                                            
+
+                    checkFlip();
+
+                    if (numLights == 0 && !checkingLight)
+                    {
+                        startFindLight();
+                        break;
+                    }
+
+                    if (!isAggro)
+                    {
+                        state = State.Patrol;
+                    }
+
+                    actor.CC2DThightAIMotor.MaxWalkSpeed = aggroSpeed;
 
                     break;
 
                 case State.FindLight:
-                    
+
                     break;
 
                 case State.Cower:
-
+                    actor.CC2DThightAIMotor.MaxWalkSpeed = ((actor.CC2DThightAIMotor.MaxWalkSpeed) * 0f);
                     break;
             }
         }
+
+        void checkFlip()
+        {
+
+            if (facingRight)
+            {
+                if (actor.CharacterController2D.collisionState.right)
+                {
+                    Flip();
+                }
+            }
+            else {
+                if (actor.CharacterController2D.collisionState.left)
+                {
+                    Flip();
+                }
+            }
+        }
+
 
         void OnTriggerEnter2D(Collider2D collision)
         {
@@ -156,9 +210,22 @@ namespace CC2D
             StartCoroutine(tryFlip()); // flips enemy, checks if in light, else goto findlight
         }
 
+        void StartAggro()
+        {
+            Debug.Log("startAggro");
+            state = State.Aggro;
+            actor.CC2DThightAIMotor.MaxWalkSpeed = ((actor.CC2DThightAIMotor.MaxWalkSpeed) * 1.2f);
+        }
+
+        void StopAggro()
+        {
+            state = State.Patrol;
+            actor.CC2DThightAIMotor.MaxWalkSpeed = ((actor.CC2DThightAIMotor.MaxWalkSpeed) / 1.2f);
+        }
+
         void Flip()
         {
-            Debug.Log("flip");
+            //Debug.Log("flip");
             facingRight = !facingRight;
             bufferedInput.horizontal *= -1;
             bufferedInput.horizontalRaw *= -1;

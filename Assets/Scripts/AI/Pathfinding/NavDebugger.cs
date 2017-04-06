@@ -62,7 +62,7 @@ public class NavDebugger : MonoBehaviour
             long totalEllapsedTime = 0;
 
             cgs = CollisionGeometrySetBuilder.Build(allCollider, circleVertCount);
-            Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
+            //Debug.Log("CollisionGeometrySetBuilder finished in " + (watch.ElapsedMilliseconds / 1000f) + " sec.");
             
             totalEllapsedTime += watch.ElapsedMilliseconds;
             watch.Reset();
@@ -92,7 +92,7 @@ public class NavDebugger : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log(e.Message +" -> "+ e.StackTrace);
+            //Debug.Log(e.Message +" -> "+ e.StackTrace);
         }
     }
 
@@ -119,7 +119,7 @@ public class NavDebugger : MonoBehaviour
             case DebugWhichSet.OutlineTree:
                 if ((Input.GetKeyDown(KeyCode.Space) || counter < autoSolveTill) && !error)
                 {
-                    Debug.Log("wspace");
+                    //Debug.Log("wspace");
                     timer = 0;
                     if (counter == -1)
                     {
