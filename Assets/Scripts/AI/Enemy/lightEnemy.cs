@@ -223,12 +223,21 @@ namespace CC2D
             actor.CC2DThightAIMotor.MaxWalkSpeed = ((actor.CC2DThightAIMotor.MaxWalkSpeed) / 1.2f);
         }
 
-        void Flip()
+        public void Flip()
         {
-            //Debug.Log("flip");
             facingRight = !facingRight;
-            bufferedInput.horizontal *= -1;
+
             bufferedInput.horizontalRaw *= -1;
+            bufferedInput.horizontal *= -1;
+
+            Vector3 scale = this.transform.localScale;
+            scale.x *= -1;
+
+            this.transform.localScale = scale;
+            
+            
+
+            //skeleton.GetComponent<Bone>().FlipY();
         }
 
         IEnumerator tryFlip()
@@ -244,7 +253,7 @@ namespace CC2D
             {
                 state = State.Patrol;
             }
-        }
+       } 
 
     }
 }

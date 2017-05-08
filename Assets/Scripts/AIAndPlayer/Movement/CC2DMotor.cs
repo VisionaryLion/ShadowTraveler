@@ -368,8 +368,9 @@ namespace CC2D
         }
 
         protected void FlipFacingDir()
-        {
-            spriteRoot.localScale = new Vector3(-spriteRoot.localScale.x, spriteRoot.localScale.y, spriteRoot.localScale.z);
+        {   
+            if(!transform.CompareTag("Enemy"))                             
+                spriteRoot.localScale = new Vector3(-spriteRoot.localScale.x, spriteRoot.localScale.y, spriteRoot.localScale.z);
             _cFacingDir *= -1;
         }
 
