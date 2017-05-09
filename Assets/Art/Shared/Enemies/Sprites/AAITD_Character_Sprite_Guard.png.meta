@@ -1,0 +1,350 @@
+fileFormatVersion: 2
+guid: dfcda5816f935514caa1e387d44051ef
+timeCreated: 1494288219
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Sholder_R
+    21300002: Head
+    21300004: Sholder_L
+    21300006: Elbow_R
+    21300008: Neck
+    21300010: Elbow_L
+    21300012: Wrist_R
+    21300014: Torso
+    21300016: Wrist_L
+    21300018: Thigh_R
+    21300020: Hips
+    21300022: Thigh_L
+    21300024: Knee_R
+    21300026: Knee_L
+    21300028: Ankle_R
+    21300030: Toe_R
+    21300032: Ankle_L
+    21300034: Toe_L
+    21300036: AAITD_Character_Sprite_New_01_0
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: 4
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+  - buildTarget: WebGL
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Sholder_R
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 112
+        width: 12
+        height: 22
+      alignment: 9
+      pivot: {x: 0.79454756, y: 0.8907013}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Head
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 118
+        width: 13
+        height: 17
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Sholder_L
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 112
+        width: 12
+        height: 22
+      alignment: 9
+      pivot: {x: 0.2054526, y: 0.8833986}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elbow_R
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 90
+        width: 7
+        height: 18
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Neck
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 104
+        width: 7
+        height: 10
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Elbow_L
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 90
+        width: 7
+        height: 18
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Wrist_R
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 78
+        width: 6
+        height: 8
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Torso
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 64
+        width: 21
+        height: 37
+      alignment: 9
+      pivot: {x: 0.5539445, y: 0.6485705}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Wrist_L
+      rect:
+        serializedVersion: 2
+        x: 70
+        y: 78
+        width: 6
+        height: 8
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Thigh_R
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 47
+        width: 10
+        height: 23
+      alignment: 9
+      pivot: {x: 0.7008278, y: 0.8806998}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hips
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 42
+        width: 20
+        height: 17
+      alignment: 2
+      pivot: {x: 0.5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Thigh_L
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 47
+        width: 10
+        height: 29
+      alignment: 9
+      pivot: {x: 0.45983392, y: 0.73268336}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Knee_R
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 12
+        width: 8
+        height: 32
+      alignment: 9
+      pivot: {x: 0.56220126, y: 0.9992224}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Knee_L
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 12
+        width: 8
+        height: 32
+      alignment: 9
+      pivot: {x: 0.562201, y: 0.99922216}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ankle_R
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 3
+        width: 9
+        height: 8
+      alignment: 9
+      pivot: {x: 0.37504038, y: 0.851449}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Toe_R
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 3
+        width: 9
+        height: 4
+      alignment: 9
+      pivot: {x: 0.16082382, y: 0.5803311}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ankle_L
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 3
+        width: 9
+        height: 8
+      alignment: 9
+      pivot: {x: 0.33354104, y: 0.8210254}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Toe_L
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 3
+        width: 9
+        height: 4
+      alignment: 9
+      pivot: {x: 0.17500983, y: 0.6248424}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: AAITD_Character_Sprite_New_01_0
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 30
+        width: 1
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
