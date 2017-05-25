@@ -22,6 +22,7 @@ namespace Combat
 
         private void HealthComponent_OnDeath(object sender, IDamageInfo info)
         {
+            Debug.Log("death");
             actor.AnimationHandler.SetAnyStateTransitionPriority(0, 3);
             actor.Animator.SetTrigger("Death");
             actor.SetBlockAllInput(true);

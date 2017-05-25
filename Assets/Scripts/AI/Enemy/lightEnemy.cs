@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Entities;
+using Manager;
 
 
 namespace CC2D
@@ -12,7 +13,16 @@ namespace CC2D
         [HideInInspector]
         [AssignEntityAutomaticly]
         ThightAIMovementEntity actor;
+        [SerializeField]
+        
+        [AssignEntityAutomaticly]
+        HealthEntity health;
 
+        [SerializeField]
+        [HideInInspector]
+        [AssignEntityAutomaticly]
+        ActingEntity actingEntity;
+        
         [SerializeField]
         Transform player;
 
@@ -30,6 +40,8 @@ namespace CC2D
         [SerializeField]
         float radius;
         [SerializeField]
+        float range;
+        [SerializeField]
         float aggroSpeed;
         [SerializeField]
         float normalSpeed;
@@ -38,8 +50,10 @@ namespace CC2D
         {
             Patrol,
             Aggro,
+            Swing,
             FindLight,
-            Cower
+            Cower,
+            Dead
         }
 
         public State state = State.Patrol;
@@ -51,6 +65,7 @@ namespace CC2D
 
             bufferedInput.horizontalRaw = 1;
             bufferedInput.horizontal = 1;
+            health = GetComponentInChildren<HealthEntity>();
         }
         // Update is called once per frame
         void Update()
@@ -117,20 +132,17 @@ namespace CC2D
                 }
             }
 
+            if (health.IHealth.IsDeath)
+                state = State.Dead;
+
             switch (state)
             {
                 case State.Patrol:
 
-
                     actor.CC2DThightAIMotor.MaxWalkSpeed = normalSpeed;
 
                     checkFlip();
-
-                    if (numLights == 0 && !checkingLight)
-                    {
-                        startFindLight();
-                        break;
-                    }
+                    checkLights();
 
                     if (isAggro)
                     {
@@ -143,21 +155,42 @@ namespace CC2D
                 case State.Aggro:                                                            
 
                     checkFlip();
-
-                    if (numLights == 0 && !checkingLight)
-                    {
-                        startFindLight();
-                        break;
-                    }
+                    checkLights();
 
                     if (!isAggro)
                     {
                         state = State.Patrol;
                     }
-
+                    
                     actor.CC2DThightAIMotor.MaxWalkSpeed = aggroSpeed;
 
+                    if (Mathf.Abs(calcDist()) <= range)
+                    {
+                        StartSwing();
+                    }
+                    else if (calcDist() > 0)
+                    {
+                        if(!facingRight)
+                        {
+                            Flip();
+                        }
+                    }
+                    else if (calcDist() < 0)
+                    {
+                        if (facingRight)
+                        {
+                            Flip();
+                        }
+                    }
+
                     break;
+
+                case State.Swing:
+
+                    //bufferedInput.
+
+                    break;
+
 
                 case State.FindLight:
 
@@ -165,6 +198,12 @@ namespace CC2D
 
                 case State.Cower:
                     actor.CC2DThightAIMotor.MaxWalkSpeed = ((actor.CC2DThightAIMotor.MaxWalkSpeed) * 0f);
+                    break;
+
+                case State.Dead:
+
+                    bufferedInput.horizontalRaw = 0;
+                    bufferedInput.horizontal = 0;
                     break;
             }
         }
@@ -185,6 +224,19 @@ namespace CC2D
                     Flip();
                 }
             }
+        }
+
+        void checkLights()
+        {
+            if (numLights == 0 && !checkingLight)
+            {
+                startFindLight();
+            }
+        }
+
+        float calcDist()
+        {
+            return (player.transform.position.x - this.transform.position.x);
         }
 
 
@@ -223,6 +275,14 @@ namespace CC2D
             actor.CC2DThightAIMotor.MaxWalkSpeed = ((actor.CC2DThightAIMotor.MaxWalkSpeed) / 1.2f);
         }
 
+        void StartSwing()
+        {
+            state = State.Swing;
+
+            //bufferedInput.()
+        }
+
+
         public void Flip()
         {
             facingRight = !facingRight;
@@ -234,10 +294,6 @@ namespace CC2D
             scale.x *= -1;
 
             this.transform.localScale = scale;
-            
-            
-
-            //skeleton.GetComponent<Bone>().FlipY();
         }
 
         IEnumerator tryFlip()
@@ -253,7 +309,6 @@ namespace CC2D
             {
                 state = State.Patrol;
             }
-       } 
-
+       }
     }
 }

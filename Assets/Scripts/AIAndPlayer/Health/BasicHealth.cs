@@ -222,6 +222,7 @@ namespace Combat
 
         public override void FireEvents(IDamageInfo dmgInf)
         {
+
             if (isSilent)
                 return;
             IDamageInfo overrideSaveDmg = (IDamageInfo)dmgInf.Clone();
