@@ -4,18 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Climbable
-  - Projectile
-  - WithFriction
-  - MovingPlatform
-  - onlyTrigger
+  - Speech
   - Enemy
-  - Crouch
-  - Bullet
-  - FollowFriend
-  - Ground
-  - RobotAILocation
-  - Weapon
+  - SpawnBox
   layers:
   - Default
   - TransparentFX
@@ -25,14 +16,14 @@ TagManager:
   - UI
   - 
   - 
-  - CC2D
-  - Trigger
-  - Rigidbody
-  - Platform
-  - Shadows
+  - Cave
   - Player
-  - IgnorePlayer
-  - Ground
+  - Enemy
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -52,4 +43,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Particles
+    uniqueID: 3172999263
     locked: 0

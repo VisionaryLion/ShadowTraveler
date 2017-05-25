@@ -133,7 +133,7 @@ public class AutoSave : EditorWindow
 		EditorApplication.SaveScene ();
 #endif
 		if (AutoSavePreferences.saveAssets) {
-			EditorApplication.SaveAssets ();
+			AssetDatabase.SaveAssets ();
 			AssetDatabase.SaveAssets ();
 		}
 		if (instance != null) {
