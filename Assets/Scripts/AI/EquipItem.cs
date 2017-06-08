@@ -11,10 +11,14 @@ public class EquipItem : MonoBehaviour {
     [AssignEntityAutomaticly]
     ActingEquipmentEntity actor;
 
+    StaticItemHolder item;
+
 	void Start ()
     {
         GameObject clone = Instantiate(itemToEquip);
+        item = clone.GetComponent<StaticItemHolder>();
         actor.TwoHandInventory.AddItem(clone.GetComponent<TwoHandItemEntity>());        
-        actor.TwoHandEquipmentManager.EquipNextItem(false);        
+        actor.TwoHandEquipmentManager.EquipNextItem(false);
+        Destroy(clone);
     }
 }

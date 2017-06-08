@@ -3,24 +3,18 @@ using System.Collections;
 using Entities;
 using Manager;
 
-
 namespace CC2D
 {
     public class lightEnemy : MonoBehaviour
     {
 
-        [SerializeField]
-        [HideInInspector]
-        [AssignEntityAutomaticly]
+        [SerializeField, HideInInspector, AssignEntityAutomaticly]
         ThightAIMovementEntity actor;
-        [SerializeField]
-        
-        [AssignEntityAutomaticly]
+
+        [SerializeField, AssignEntityAutomaticly]
         HealthEntity health;
 
-        [SerializeField]
-        [HideInInspector]
-        [AssignEntityAutomaticly]
+        [SerializeField, HideInInspector, AssignEntityAutomaticly]
         ActingEntity actingEntity;
         
         [SerializeField]
@@ -46,10 +40,13 @@ namespace CC2D
         [SerializeField]
         float normalSpeed;
 
+        bool isSwinging;
+
         public enum State
         {
             Patrol,
             Aggro,
+            Stare,
             Swing,
             FindLight,
             Cower,
@@ -152,16 +149,17 @@ namespace CC2D
 
                     break;
 
-                case State.Aggro:                                                            
+                case State.Aggro:
 
                     checkFlip();
-                    checkLights();
+                    
+                    checkAggroLights();
 
                     if (!isAggro)
                     {
                         state = State.Patrol;
                     }
-                    
+
                     actor.CC2DThightAIMotor.MaxWalkSpeed = aggroSpeed;
 
                     if (Mathf.Abs(calcDist()) <= range)
@@ -170,7 +168,7 @@ namespace CC2D
                     }
                     else if (calcDist() > 0)
                     {
-                        if(!facingRight)
+                        if (!facingRight)
                         {
                             Flip();
                         }
@@ -186,13 +184,57 @@ namespace CC2D
                     break;
 
                 case State.Swing:
-
-                    //bufferedInput.
-
+                    if (!isSwinging)
+                    {
+                        if (Mathf.Abs(calcDist()) <= range)
+                        {
+                            StartSwing();
+                        } else
+                        {
+                            StartAggro();
+                        }
+                    }
                     break;
 
 
                 case State.FindLight:
+
+                    break;
+
+                case State.Stare:
+                    
+                    bufferedInput.horizontalRaw = 0;
+                    bufferedInput.horizontal = 0;
+
+                    if (!isSwinging)
+                    {
+                        if (Mathf.Abs(calcDist()) <= range)
+                        {
+                            StartSwing();
+                        }                        
+                    }
+                                        
+                    if (calcDist() > 0)
+                    {
+                        if (!facingRight)
+                        {
+                            Flip();
+                            StartAggro();
+                        }
+                    }
+                    else if (calcDist() < 0)
+                    {
+                        if (facingRight)
+                        {
+                            Flip();
+                            StartAggro();
+                        }
+                    }
+
+                    if(numLights > 0)
+                    {
+                        state = State.Patrol;
+                    }
 
                     break;
 
@@ -234,6 +276,14 @@ namespace CC2D
             }
         }
 
+        void checkAggroLights()
+        {
+            if (numLights == 0 && !checkingLight)
+            {
+                state = State.Stare;
+            }
+        }
+
         float calcDist()
         {
             return (player.transform.position.x - this.transform.position.x);
@@ -264,7 +314,7 @@ namespace CC2D
 
         void StartAggro()
         {
-            Debug.Log("startAggro");
+            inputOn();
             state = State.Aggro;
             actor.CC2DThightAIMotor.MaxWalkSpeed = ((actor.CC2DThightAIMotor.MaxWalkSpeed) * 1.2f);
         }
@@ -277,11 +327,16 @@ namespace CC2D
 
         void StartSwing()
         {
+            StartCoroutine(setSwinging());
             state = State.Swing;
-
-            //bufferedInput.()
+            this.GetComponentInChildren<EnemyCrowbar>().Swing();
         }
-
+        
+        public void inputOn()
+        {
+            bufferedInput.horizontalRaw = facingRight ? 1 : -1;
+            bufferedInput.horizontal = facingRight ? 1 : -1;
+        }
 
         public void Flip()
         {
@@ -310,5 +365,12 @@ namespace CC2D
                 state = State.Patrol;
             }
        }
+
+        IEnumerator setSwinging()
+        {
+            isSwinging = true;
+            yield return new WaitForSeconds(1.5f);
+            isSwinging = false;
+        }
     }
 }

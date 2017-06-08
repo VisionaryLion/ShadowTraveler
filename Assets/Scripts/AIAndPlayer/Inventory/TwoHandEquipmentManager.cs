@@ -74,7 +74,6 @@ namespace ItemHandler
 
         public void EquipItem(bool rightHand, ItemEntity toEquipObject, int itemIndex)
         {
-
             if (!actor.AnimationHandler.CanAquireAnyStateTransitionPriority(1, 1))
                 return;
 

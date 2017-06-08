@@ -2698,7 +2698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 10
+  currentHealth: 1
   resistance:
     resistances:
     - 1
@@ -11353,6 +11353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 855369732}
   - component: {fileID: 855369733}
+  - component: {fileID: 855369735}
   - component: {fileID: 855369731}
   - component: {fileID: 855369730}
   - component: {fileID: 855369729}
@@ -11362,8 +11363,9 @@ GameObject:
   - component: {fileID: 855369725}
   - component: {fileID: 855369724}
   - component: {fileID: 855369723}
+  - component: {fileID: 855369734}
   m_Layer: 8
-  m_Name: Enemy
+  m_Name: Player - Kristin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11382,14 +11384,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actor: {fileID: 855369730}
   health: {fileID: 0}
-  actingEntity: {fileID: 855369733}
+  actingEntity: {fileID: 855369735}
   player: {fileID: 0}
   numLights: 0
   facingRight: 1
   checkingLight: 0
   isAggro: 0
   radius: 10
-  range: 1
+  range: 2
   aggroSpeed: 3
   normalSpeed: 3
   state: 0
@@ -11619,6 +11621,37 @@ MonoBehaviour:
   healthEntity: {fileID: 1700593330}
   animationEntity: {fileID: 855369731}
   nameIndex: 276
+--- !u!114 &855369734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 855369722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929d0acecf323b8488fbcb74dd95e037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemToEquip: {fileID: 1000012685190068, guid: 0d9c1777ea99c1547a289e952da32893,
+    type: 2}
+--- !u!114 &855369735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 855369722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e34e1e0c7b477484d86a70ef65d41261, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  relationshipMarker: {fileID: 161984911}
+  movementEntity: {fileID: 855369730}
+  healthEntity: {fileID: 1700593330}
+  animationEntity: {fileID: 855369731}
+  nameIndex: 399
+  twoHandInventory: {fileID: 1820393684}
+  twoHandEquipmentManager: {fileID: 1820393685}
 --- !u!1 &866713360
 GameObject:
   m_ObjectHideFlags: 0
@@ -19587,6 +19620,11 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114000012139841878, guid: 3b203f00937e13e4c8e37ac695e8d7ae,
+        type: 2}
+      propertyPath: item.canBePickedUp
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3b203f00937e13e4c8e37ac695e8d7ae, type: 2}
   m_IsPrefabParent: 0
@@ -22135,7 +22173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60ba0a2ea4e4764499009d7b0674d47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 855369733}
+  actor: {fileID: 855369735}
 --- !u!4 &1700593334
 Transform:
   m_ObjectHideFlags: 0
@@ -23867,9 +23905,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 400b417d4bca58d46950afe74b10a44d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
-  equipmentSpawnPointLeft: {fileID: 0}
-  equipmentSpawnPointRight: {fileID: 0}
+  actor: {fileID: 855369735}
+  equipmentSpawnPointLeft: {fileID: 2058886591}
+  equipmentSpawnPointRight: {fileID: 1995352555}
   equipmentOffset:
     offsets: []
 --- !u!1 &1825284822
