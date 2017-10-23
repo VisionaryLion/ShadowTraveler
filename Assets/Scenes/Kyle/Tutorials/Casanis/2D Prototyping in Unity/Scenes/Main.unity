@@ -454,6 +454,34 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b737475c56884aa408d2886c33a18eff, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1317783162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1317783163}
+  m_Layer: 0
+  m_Name: checkGround
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1317783163
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1317783162}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1692061642}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1692061639
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,6 +569,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 322994737}
+  - {fileID: 1317783163}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -600,7 +629,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a862c2bd13c24b46a4898400369fb0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 3
+  maxSpeed: 4
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  groundCheck: {fileID: 1317783163}
+  jumpHeight: 250
 --- !u!1001 &2100164681
 Prefab:
   m_ObjectHideFlags: 0
@@ -639,6 +673,11 @@ Prefab:
     - target: {fileID: 4164607680753480, guid: cdd57a85d5aedbc42bc5d1cf04d25854, type: 2}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 212579729773812870, guid: cdd57a85d5aedbc42bc5d1cf04d25854,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cdd57a85d5aedbc42bc5d1cf04d25854, type: 2}
