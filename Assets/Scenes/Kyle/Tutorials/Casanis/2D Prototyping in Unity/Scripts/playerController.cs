@@ -17,7 +17,13 @@ public class playerController : MonoBehaviour {
     Rigidbody2D myRB; //reference to the rigidbody on the player
     Animator myAnim; //reference to the player's animator
     bool facingRight; //variable for if the player is facing to the right is true or not
-    
+
+    //for shooting
+    public Transform gunTip; //reference to the location of where the missle starts from
+    public GameObject bullet; //reference to the missile/projectile
+    float fireRate = 0.5f; //how often the player can fire the missile or 1 rocket every X seconds
+    float nextFire = 0f; //time when the player can fire again
+
     // Use this for initialization
 	void Start () {
         myRB = GetComponent<Rigidbody2D>(); //GetComponent looks at the asset the script is attached to for a certain object
@@ -29,11 +35,16 @@ public class playerController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        
+        //player jumping
         if (grounded && Input.GetAxis("Jump") > 0) { //checks if the player is on the ground and hit the jump button
             grounded = false;
             myAnim.SetBool("isGrounded", grounded); //assigns isGrounded (parameter from the animator) to the bool variable that checks if the player is grounded or not
             myRB.AddForce(new Vector2(0, jumpHeight)); //adds force to the player's Y
         }
+
+        //player shooting
+        if (Input.GetAxisRaw("Fire1") > 0) fireRocket(); //checks if the player hit the Fire1 button and then calls the fireRocket function
     }
 
     // Update is called once per frame (no matter how long the frame took) VS FixedUpdate is called after a specific amount of time all the time (it's exact)
@@ -58,10 +69,23 @@ public class playerController : MonoBehaviour {
         }
 	}
 
+    //flips the player's facing direction
     void flip() {
         facingRight = !facingRight; //reverses whichever way the player was facing
         Vector3 theScale = transform.localScale; //applies the transfrom values (x,y,z) from the player to the localScale and puts it to theScale
         theScale.x *= -1; //makes the x value of the scale negative or positive depending on its current value
         transform.localScale = theScale; //sets the new value back onto the transform value on the player
+    }
+
+    void fireRocket() {
+        //checks if the time in the game is greater than the time the player can fire next
+        if (Time.time > nextFire) {
+            nextFire = Time.time + fireRate; //Makes the time the player can fire next equal to the time in the game + the rate at which the player can fire
+            if (facingRight) {
+                Instantiate(bullet, gunTip.position, Quaternion.Euler(new Vector3(0, 0, 0))); //instantiate the projectile at the gun tip's location with 0 rotation
+            } else if(!facingRight) {
+                Instantiate(bullet, gunTip.position, Quaternion.Euler(new Vector3(0, 0, 180f))); //instantiate the projectile at the gun tip's location with 180 degreee rotation on the z axis
+            }
+        }
     }
 }
