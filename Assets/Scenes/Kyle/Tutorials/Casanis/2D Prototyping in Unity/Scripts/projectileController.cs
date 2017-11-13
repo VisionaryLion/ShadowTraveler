@@ -22,4 +22,9 @@ public class projectileController : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    //immediately stops the projectile from moving by setting its velocity to zero
+    public void removeForce() {
+        myRB.velocity = new Vector2(0, 0);
+    }
 }
