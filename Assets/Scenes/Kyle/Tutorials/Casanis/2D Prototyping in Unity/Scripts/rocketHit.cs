@@ -27,6 +27,11 @@ public class rocketHit : MonoBehaviour {
             myPC.removeForce(); //calls the removeForce function
             Instantiate(explosionEffect, transform.position, transform.rotation); //creates the explosion effect
             Destroy(gameObject); //destroys this object (the missile) and not the projectile
+            //if the other object has the enemy tag
+            if (other.tag == "Enemy") {
+                enemyHealth hurtEnemy = other.gameObject.GetComponent<enemyHealth>(); //assigns a new variable (hurtEnemy) to the enemyHealth script that references the object the script is on
+                hurtEnemy.addDamage(weaponDamage); //calls the addDamage function in the enemyHealth script and assigns the damage value to the variable weaponDamage defined on the rocket
+            } 
         }
             
     }
@@ -39,6 +44,12 @@ public class rocketHit : MonoBehaviour {
             myPC.removeForce(); //calls the removeForce function
             Instantiate(explosionEffect, transform.position, transform.rotation); //creates the explosion effect
             Destroy(gameObject); //destroys this object (the missile) and not the projectile
+            //if the other object has the enemy tag
+            if (other.tag == "Enemy")
+            {
+                enemyHealth hurtEnemy = other.gameObject.GetComponent<enemyHealth>(); //assigns a new variable (hurtEnemy) to the enemyHealth script that references the object the script is on
+                hurtEnemy.addDamage(weaponDamage); //calls the addDamage function in the enemyHealth script and assigns the damage value to the variable weaponDamage defined on the rocket
+            }
         }
     }
 }
